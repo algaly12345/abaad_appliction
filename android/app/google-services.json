@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "152545430254",
+    "project_id": "abaad-f0859",
+    "storage_bucket": "abaad-f0859.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:152545430254:android:aeca9d597b9927110941ff",
+        "android_client_info": {
+          "package_name": "sa.pdm.abaad.abaad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "152545430254-2phj2gos420daqmc0e9fvm598d9tr4ja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWqupD2nfWEF8zzmd_-atrQ9dDSBUVCjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "152545430254-2phj2gos420daqmc0e9fvm598d9tr4ja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
