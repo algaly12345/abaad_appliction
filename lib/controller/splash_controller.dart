@@ -26,8 +26,10 @@ class SplashController extends GetxController implements GetxService {
     bool _isSuccess = false;
     if(response.statusCode == 200) {
       _configModel = ConfigModel.fromJson(response.body);
+      print("--------------------------sssss----${response}");
       _isSuccess = true;
     }else {
+      print("------------------------------${response.hasError}");
       ApiChecker.checkApi(response);
       if(response.statusText == ApiClient.noInternetMessage) {
         _hasConnection = false;

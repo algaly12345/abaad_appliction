@@ -1,0 +1,21 @@
+{
+  "select_language": "Select Language",
+  "save": "Save",
+  "select_a_language": "Select a language",
+  "on_boarding_1_title": "title on borden one ",
+  "on_boarding_2_title": "title2 on borden one ",
+  "on_boarding_3_title": "title3 on borden one ",
+  "on_boarding_1_description": " data dd datg  t dat asdfdsfs fsdfdsf lksjdfljsldjf ljljsdflj lsjdflsd",
+  "on_boarding_2_description": "data dd datg  t dat asdfdsfs fsdfdsf lksjdfljsldjf ljljsdflj lsjdflsd dsfsd fsdf sdfsdfsdf.",
+  "on_boarding_3_description": "data dd datg  t dat asdfdsfs fsdfdsf lksjdfljsldjf ljljsdflj lsjdflsd dfgfdg dgfsfg dfgdfgdfgdfgdfg",
+  "skip": "Skip",
+  "next": "Next",
+  "get_started": "Get Started",
+  "sign_in": "Sign In",
+  "sign_up": "Sign Up",
+  "email": "E-mail",
+  "password": "Password",
+  "full_name" : "full name",
+  "terms_conditions": "Terms & Conditions",
+  "i_agree_with": "I agree with"
+}

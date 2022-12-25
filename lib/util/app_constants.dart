@@ -5,13 +5,13 @@ class AppConstants {
   static const String APP_NAME = 'Baad';
   static const double APP_VERSION = 1.0;
   static const String LOGIN_URI = '/api/v1/auth/login';
-  static const String BASE_URL = 'http://192.168.43.37/demo';
-  static const String REGISTER_URI = '/api/v1/auth/sign-up';
+  static const String BASE_URL = 'http://192.168.75.37/abaad_server_side';
+  static const String REGISTER_URI = '/api/v1/auth/register';
   static const String THEME = 'theme';
   static const String TOKEN = 'abaad_token';
   static const String COUNTRY_CODE = 'country_code';
   static const String LANGUAGE_CODE = 'language_code';
-  static const String ZONE_ID = 'zoneId';
+  // static const String ZONE_ID = 'zoneId';
   static const String LOCALIZATION_KEY = 'X-localization';
   static const String USER_ADDRESS = 'user_address';
   static const String TOKEN_URI = '/api/v1/customer/cm-firebase-token';

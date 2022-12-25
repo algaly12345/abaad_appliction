@@ -104,8 +104,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     return Column(children: [
 
                       Image.asset(Images.logo, width: 100),
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      Image.asset(Images.logo_name, width: 100),
+                      // SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      // Image.asset(Images.logo_name, width: 100),
                       SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
 
                       Text('sign_in'.tr.toUpperCase(), style: robotoBlack.copyWith(fontSize: 30)),
@@ -164,26 +164,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       SizedBox(height: 10),
 
-                      Row(children: [
-                        Expanded(
-                          child: ListTile(
-                            onTap: () => authController.toggleRememberMe(),
-                            leading: Checkbox(
-                              activeColor: Theme.of(context).primaryColor,
-                              value: authController.isActiveRememberMe,
-                              onChanged: (bool isChecked) => authController.toggleRememberMe(),
-                            ),
-                            title: Text('remember_me'.tr),
-                            contentPadding: EdgeInsets.zero,
-                            dense: true,
-                            horizontalTitleGap: 0,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => null,
-                          child: Text('${'forgot_password'.tr}?'),
-                        ),
-                      ]),
                       SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                       ConditionCheckBox(authController: authController),
@@ -191,16 +171,24 @@ class _SignInScreenState extends State<SignInScreen> {
 
                       !authController.isLoading ? Row(children: [
                         Expanded(child: CustomButton(
-                          buttonText: 'sign_up'.tr,
-                          transparent: true,
-                          onPressed: () => Get.toNamed(RouteHelper.getSignUpRoute()),
-                        )),
-                        Expanded(child: CustomButton(
                           buttonText: 'sign_in'.tr,
                           onPressed: authController.acceptTerms ? () => _login(authController, _countryDialCode) : null,
                         )),
                       ]) : Center(child: CircularProgressIndicator()),
-                      SizedBox(height: 30),
+
+
+
+                   Row(children: [
+                        Expanded(child: CustomButton(
+                          buttonText: 'sign_up'.tr,
+                          transparent: true,
+                          onPressed: () => Get.toNamed(RouteHelper.getSignUpRoute()),
+                        )),
+                      ])
+
+
+
+
 
                       // SocialLoginWidget(),
 
@@ -233,16 +221,16 @@ class _SignInScreenState extends State<SignInScreen> {
     }else if (!_isValid) {
       showCustomSnackBar('invalid_phone_number'.tr);
     }else {
-      authController.login(_numberWithCountryCode, "123456789").then((status) async {
+      authController.login(_numberWithCountryCode, "1234567").then((status) async {
         if (status.isSuccess) {
           if (authController.isActiveRememberMe) {
-            authController.saveUserNumberAndPassword(_phone, "123456789", countryDialCode);
+            authController.saveUserNumberAndPassword(_phone, "1234567", countryDialCode);
           } else {
             authController.clearUserNumberAndPassword();
           }
           String _token = status.message.substring(1, status.message.length);
           if(Get.find<SplashController>().configModel.customerVerification && int.parse(status.message[0]) == 0) {
-            List<int> _encoded = utf8.encode("123456789");
+            List<int> _encoded = utf8.encode("1234567");
             String _data = base64Encode(_encoded);
             Get.toNamed(RouteHelper.getVerificationRoute(_numberWithCountryCode, _token, RouteHelper.signUp, _data));
           }else {

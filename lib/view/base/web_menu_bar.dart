@@ -12,10 +12,6 @@ import 'package:get/get.dart';
 class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
-    bool _showJoin = (Get.find<SplashController>().configModel.toggleDmRegistration
-        || Get.find<SplashController>().configModel.toggleRestaurantRegistration) && ResponsiveHelper.isDesktop(context);
-
-
     return Center(child: Container(
       width: Dimensions.WEB_MAX_WIDTH,
       color: Theme.of(context).cardColor,

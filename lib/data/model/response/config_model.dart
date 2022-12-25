@@ -5,50 +5,26 @@ class ConfigModel {
   String phone;
   String email;
   BaseUrls baseUrls;
-  String currencySymbol;
-  bool cashOnDelivery;
-  bool digitalPayment;
-  String termsAndConditions;
-  String privacyPolicy;
-  String aboutUs;
+
+
   String country;
   DefaultLocation defaultLocation;
-  String appUrlAndroid;
+  // String appUrlAndroid;
   String appUrlIos;
   bool customerVerification;
-  bool orderDeliveryVerification;
-  String currencySymbolDirection;
+
+  double marketingCommission;
+  int agentRegistration;
+  String aboutUs;
+  String privacyPolicy;
+  String termsConditions;
   int appMinimumVersionAndroid;
   int appMinimumVersionIos;
-  double perKmShippingCharge;
-  double minimumShippingCharge;
-  double freeDeliveryOver;
   bool demo;
   bool maintenanceMode;
-  int popularFood;
-  int popularRestaurant;
-  int mostReviewedFoods;
-  int newRestaurant;
-  String orderConfirmationModel;
-  bool showDmEarning;
-  bool canceledByDeliveryman;
-  bool canceledByRestaurant;
-  String timeformat;
-  bool toggleVegNonVeg;
-  bool toggleDmRegistration;
-  bool toggleRestaurantRegistration;
-  List<SocialLogin> socialLogin;
-  int scheduleOrderSlotDuration;
-  int digitAfterDecimalPoint;
-  int loyaltyPointExchangeRate;
-  double loyaltyPointItemPurchasePoint;
-  int loyaltyPointStatus;
-  int minimumPointToTransfer;
-  int customerWalletStatus;
-  int dmTipsStatus;
-  int refEarningStatus;
-  double refEarningExchangeRate;
-  int theme;
+  bool phoneVerification;
+
+
 
   ConfigModel(
       {this.businessName,
@@ -57,50 +33,21 @@ class ConfigModel {
         this.phone,
         this.email,
         this.baseUrls,
-        this.currencySymbol,
-        this.cashOnDelivery,
-        this.digitalPayment,
-        this.termsAndConditions,
         this.privacyPolicy,
         this.aboutUs,
         this.country,
         this.defaultLocation,
-        this.appUrlAndroid,
+        // this.appUrlAndroid,
         this.appUrlIos,
         this.customerVerification,
-        this.orderDeliveryVerification,
-        this.currencySymbolDirection,
         this.appMinimumVersionAndroid,
         this.appMinimumVersionIos,
-        this.perKmShippingCharge,
-        this.minimumShippingCharge,
-        this.freeDeliveryOver,
+        this.termsConditions,
+        this.marketingCommission,
         this.demo,
         this.maintenanceMode,
-        this.popularFood,
-        this.popularRestaurant,
-        this.mostReviewedFoods,
-        this.newRestaurant,
-        this.orderConfirmationModel,
-        this.showDmEarning,
-        this.canceledByDeliveryman,
-        this.canceledByRestaurant,
-        this.timeformat,
-        this.toggleVegNonVeg,
-        this.toggleDmRegistration,
-        this.toggleRestaurantRegistration,
-        this.socialLogin,
-        this.scheduleOrderSlotDuration,
-        this.digitAfterDecimalPoint,
-        this.loyaltyPointExchangeRate,
-        this.loyaltyPointItemPurchasePoint,
-        this.loyaltyPointStatus,
-        this.minimumPointToTransfer,
-        this.customerWalletStatus,
-        this.dmTipsStatus,
-        this.refEarningStatus,
-        this.refEarningExchangeRate,
-        this.theme
+        this.agentRegistration,
+        this.phoneVerification,
       });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -110,55 +57,26 @@ class ConfigModel {
     phone = json['phone'];
     email = json['email'];
     baseUrls = json['base_urls'] != null ? BaseUrls.fromJson(json['base_urls']) : null;
-    currencySymbol = json['currency_symbol'];
-    cashOnDelivery = json['cash_on_delivery'];
-    digitalPayment = json['digital_payment'];
-    termsAndConditions = json['terms_and_conditions'];
     privacyPolicy = json['privacy_policy'];
     aboutUs = json['about_us'];
     country = json['country'];
     defaultLocation = json['default_location'] != null ? DefaultLocation.fromJson(json['default_location']) : null;
-    appUrlAndroid = json['app_url_android'];
+    // appUrlAndroid = json['app_url_android'];
     appUrlIos = json['app_url_ios'];
     customerVerification = json['customer_verification'];
-    orderDeliveryVerification = json['order_delivery_verification'];
-    currencySymbolDirection = json['currency_symbol_direction'];
-    appMinimumVersionAndroid = json['app_minimum_version_android'];
-    appMinimumVersionIos = json['app_minimum_version_ios'];
-    perKmShippingCharge = json['per_km_shipping_charge'].toDouble();
-    minimumShippingCharge = json['minimum_shipping_charge'].toDouble();
-    freeDeliveryOver = json['free_delivery_over'] != null ? double.parse(json['free_delivery_over'].toString()) : null;
     demo = json['demo'];
     maintenanceMode = json['maintenance_mode'];
-    popularFood = json['popular_food'];
-    popularRestaurant = json['popular_restaurant'];
-    newRestaurant = json['new_restaurant'];
-    mostReviewedFoods = json['most_reviewed_foods'];
-    orderConfirmationModel = json['order_confirmation_model'];
-    showDmEarning = json['show_dm_earning'];
-    canceledByDeliveryman = json['canceled_by_deliveryman'];
-    canceledByRestaurant = json['canceled_by_restaurant'];
-    timeformat = json['timeformat'];
-    toggleVegNonVeg = json['toggle_veg_non_veg'];
-    toggleDmRegistration = json['toggle_dm_registration'];
-    toggleRestaurantRegistration = json['toggle_restaurant_registration'];
-    if (json['social_login'] != null) {
-      socialLogin = <SocialLogin>[];
-      json['social_login'].forEach((v) {
-        socialLogin.add(new SocialLogin.fromJson(v));
-      });
-    }
-    scheduleOrderSlotDuration = json['schedule_order_slot_duration'] == 0 ? 30 : json['schedule_order_slot_duration'];
-    digitAfterDecimalPoint = json['digit_after_decimal_point'];
-    loyaltyPointExchangeRate = json['loyalty_point_exchange_rate'];
-    loyaltyPointItemPurchasePoint = json['loyalty_point_item_purchase_point'].toDouble();
-    loyaltyPointStatus = json['loyalty_point_status'];
-    minimumPointToTransfer = json['minimum_point_to_transfer'];
-    customerWalletStatus = json['customer_wallet_status'];
-    dmTipsStatus = json['dm_tips_status'];
-    refEarningStatus = json['ref_earning_status'];
-    refEarningExchangeRate = json['ref_earning_exchange_rate'].toDouble();
-    theme = json['theme'];
+    agentRegistration = json['agent_registration'];
+    customerVerification = json['customer_verification'];
+    termsConditions =json["terms_conditions"];
+    appMinimumVersionAndroid = json['app_minimum_version_android'];
+    appMinimumVersionIos = json['app_minimum_version_ios'];
+    marketingCommission = json['app_minimum_version_ios'];
+    appMinimumVersionIos = json['app_minimum_version_ios'];
+    phoneVerification = json['phone_verification'];
+    marketingCommission =json['marketing_commission'];
+
+
   }
 
   Map<String, dynamic> toJson() {
@@ -171,115 +89,69 @@ class ConfigModel {
     if (this.baseUrls != null) {
       data['base_urls'] = this.baseUrls.toJson();
     }
-    data['currency_symbol'] = this.currencySymbol;
-    data['cash_on_delivery'] = this.cashOnDelivery;
-    data['digital_payment'] = this.digitalPayment;
-    data['terms_and_conditions'] = this.termsAndConditions;
+    data['terms_conditions'] = this.termsConditions;
     data['privacy_policy'] = this.privacyPolicy;
     data['about_us'] = this.aboutUs;
     data['country'] = this.country;
     if (this.defaultLocation != null) {
       data['default_location'] = this.defaultLocation.toJson();
     }
-    data['app_url_android'] = this.appUrlAndroid;
-    data['app_url_ios'] = this.appUrlIos;
+    // data['app_url_android'] = this.appUrlAndroid;
+    // data['app_url_ios'] = this.appUrlIos;
     data['customer_verification'] = this.customerVerification;
-    data['order_delivery_verification'] = this.orderDeliveryVerification;
-    data['currency_symbol_direction'] = this.currencySymbolDirection;
-    data['app_minimum_version_android'] = this.appMinimumVersionAndroid;
-    data['app_minimum_version_ios'] = this.appMinimumVersionIos;
-    data['per_km_shipping_charge'] = this.perKmShippingCharge;
-    data['minimum_shipping_charge'] = this.minimumShippingCharge;
-    data['free_delivery_over'] = this.freeDeliveryOver;
     data['demo'] = this.demo;
     data['maintenance_mode'] = this.maintenanceMode;
-    data['popular_food'] = this.popularFood;
-    data['popular_restaurant'] = this.popularRestaurant;
-    data['new_restaurant'] = this.newRestaurant;
-    data['most_reviewed_foods'] = this.mostReviewedFoods;
-    data['order_confirmation_model'] = this.orderConfirmationModel;
-    data['show_dm_earning'] = this.showDmEarning;
-    data['canceled_by_deliveryman'] = this.canceledByDeliveryman;
-    data['canceled_by_restaurant'] = this.canceledByRestaurant;
-    data['timeformat'] = this.timeformat;
-    data['toggle_veg_non_veg'] = this.toggleVegNonVeg;
-    data['toggle_dm_registration'] = this.toggleDmRegistration;
-    data['toggle_restaurant_registration'] = this.toggleRestaurantRegistration;
-    if (this.socialLogin != null) {
-      data['social_login'] = this.socialLogin.map((v) => v.toJson()).toList();
-    }
-    data['schedule_order_slot_duration'] = this.scheduleOrderSlotDuration;
-    data['digit_after_decimal_point'] = this.digitAfterDecimalPoint;
-    data['loyalty_point_exchange_rate'] = this.loyaltyPointExchangeRate;
-    data['loyalty_point_item_purchase_point'] = this.loyaltyPointItemPurchasePoint;
-    data['loyalty_point_status'] = this.loyaltyPointStatus;
-    data['minimum_point_to_transfer'] = this.minimumPointToTransfer;
-    data['customer_wallet_status'] = this.customerWalletStatus;
-    data['dm_tips_status'] = this.dmTipsStatus;
-    data['ref_earning_status'] = this.refEarningStatus;
-    data['ref_earning_exchange_rate'] = this.refEarningExchangeRate;
-    data['theme'] = this.theme;
+    data['customer_verification'] = this.customerVerification;
+    data['app_minimum_version_android'] = this.appMinimumVersionAndroid;
+    data['app_minimum_version_ios'] = this.appMinimumVersionIos;
+
+    data['agent_registration'] = this.agentRegistration;
+    data['phone_verification'] = this.phoneVerification;
+    data['marketing_commission'] = this.marketingCommission;
+
     return data;
   }
 }
 
 class BaseUrls {
-  String productImageUrl;
-  String customerImageUrl;
-  String bannerImageUrl;
+  String estateImageUrl;
   String categoryImageUrl;
+  String customerImageUrl;
   String reviewImageUrl;
+  String agentImageUrl;
+  String activitiesImageUrl;
   String notificationImageUrl;
-  String restaurantImageUrl;
-  String restaurantCoverPhotoUrl;
-  String deliveryManImageUrl;
-  String chatImageUrl;
-  String campaignImageUrl;
-  String businessLogoUrl;
 
   BaseUrls(
-      {this.productImageUrl,
-        this.customerImageUrl,
-        this.bannerImageUrl,
+      {  this.estateImageUrl,
         this.categoryImageUrl,
+        this.customerImageUrl,
         this.reviewImageUrl,
+        this.agentImageUrl,
         this.notificationImageUrl,
-        this.restaurantImageUrl,
-        this.restaurantCoverPhotoUrl,
-        this.deliveryManImageUrl,
-        this.chatImageUrl,
-        this.campaignImageUrl,
-        this.businessLogoUrl});
+      });
 
   BaseUrls.fromJson(Map<String, dynamic> json) {
-    productImageUrl = json['product_image_url'];
+    estateImageUrl = json['estate_image_url'];
+    customerImageUrl = json['category_image_url'];
     customerImageUrl = json['customer_image_url'];
-    bannerImageUrl = json['banner_image_url'];
-    categoryImageUrl = json['category_image_url'];
-    reviewImageUrl = json['review_image_url'];
+    categoryImageUrl = json['review_image_url'];
+    agentImageUrl = json['agent_image_url'];
+    activitiesImageUrl = json['activities_image_url'];
     notificationImageUrl = json['notification_image_url'];
-    restaurantImageUrl = json['restaurant_image_url'];
-    restaurantCoverPhotoUrl = json['restaurant_cover_photo_url'];
-    deliveryManImageUrl = json['delivery_man_image_url'];
-    chatImageUrl = json['chat_image_url'];
-    campaignImageUrl = json['campaign_image_url'];
-    businessLogoUrl = json['business_logo_url'];
+
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product_image_url'] = this.productImageUrl;
-    data['customer_image_url'] = this.customerImageUrl;
-    data['banner_image_url'] = this.bannerImageUrl;
+    data['estate_image_url'] = this.estateImageUrl;
     data['category_image_url'] = this.categoryImageUrl;
+    data['customer_image_url'] = this.customerImageUrl;
     data['review_image_url'] = this.reviewImageUrl;
+    data['agent_image_url'] = this.agentImageUrl;
+    data['activities_image_url'] = this.activitiesImageUrl;
     data['notification_image_url'] = this.notificationImageUrl;
-    data['restaurant_image_url'] = this.restaurantImageUrl;
-    data['restaurant_cover_photo_url'] = this.restaurantCoverPhotoUrl;
-    data['delivery_man_image_url'] = this.deliveryManImageUrl;
-    data['chat_image_url'] = this.chatImageUrl;
-    data['campaign_image_url'] = this.campaignImageUrl;
-    data['business_logo_url'] = this.businessLogoUrl;
+
     return data;
   }
 }

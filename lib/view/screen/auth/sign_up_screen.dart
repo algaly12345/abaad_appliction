@@ -27,13 +27,13 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final FocusNode _firstNameFocus = FocusNode();
-  final FocusNode _lastNameFocus = FocusNode();
+  // final FocusNode _lastNameFocus = FocusNode();
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _phoneFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _confirmPasswordFocus = FocusNode();
   final FocusNode _referCodeFocus = FocusNode();
-  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -69,13 +69,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 return Column(children: [
 
+                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                   Image.asset(Images.logo, width: 100),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                   Image.asset(Images.logo_name, width: 100),
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
 
-                  Text('sign_up'.tr.toUpperCase(), style: robotoBlack.copyWith(fontSize: 30)),
-                  SizedBox(height: 50),
+                  Text('sign_up'.tr.toUpperCase(), style: robotoBlack.copyWith(fontSize: 20)),
+                  SizedBox(height: 30),
 
                   Container(
                     decoration: BoxDecoration(
@@ -86,26 +87,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Column(children: [
 
                       CustomTextField(
-                        hintText: 'first_name'.tr,
-                        controller: _firstNameController,
+                        hintText: 'full_name'.tr,
+                        controller: _fullNameController,
                         focusNode: _firstNameFocus,
-                        nextFocus: _lastNameFocus,
-                        inputType: TextInputType.name,
-                        capitalization: TextCapitalization.words,
-                        prefixIcon: Images.logo,
-                        divider: true,
-                      ),
-
-                      CustomTextField(
-                        hintText: 'last_name'.tr,
-                        controller: _lastNameController,
-                        focusNode: _lastNameFocus,
                         nextFocus: _emailFocus,
                         inputType: TextInputType.name,
                         capitalization: TextCapitalization.words,
-                        prefixIcon: Images.mail,
+                        prefixIcon: Images.full_name,
                         divider: true,
                       ),
+
+                      // CustomTextField(
+                      //   hintText: 'last_name'.tr,
+                      //   controller: _lastNameController,
+                      //   focusNode: _lastNameFocus,
+                      //   nextFocus: _emailFocus,
+                      //   inputType: TextInputType.name,
+                      //   capitalization: TextCapitalization.words,
+                      //   prefixIcon: Images.mail,
+                      //   divider: true,
+                      // ),
 
                       CustomTextField(
                         hintText: 'email'.tr,
@@ -167,7 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //   onSubmit: (text) => (GetPlatform.isWeb && authController.acceptTerms) ? _register(authController, _countryDialCode) : null,
                       // ),
 
-                      (Get.find<SplashController>().configModel.refEarningStatus == 1 ) ? CustomTextField(
+                       CustomTextField(
                         hintText: 'refer_code'.tr,
                         controller: _referCodeController,
                         focusNode: _referCodeFocus,
@@ -177,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         prefixIcon: Images.arabic,
                         divider: false,
                         prefixSize: 14,
-                      ) : SizedBox(),
+                      ),
 
                     ]),
                   ),
@@ -212,8 +213,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _register(AuthController authController, String countryCode) async {
-    String _firstName = _firstNameController.text.trim();
-    String _lastName = _lastNameController.text.trim();
+    String _fullName = _fullNameController.text.trim();
     String _email = _emailController.text.trim();
     String _number = _phoneController.text.trim();
     // String _password = _passwordController.text.trim();
@@ -230,10 +230,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       } catch (e) {}
     }
 
-    if (_firstName.isEmpty) {
+    if (_fullName.isEmpty) {
       showCustomSnackBar('enter_your_first_name'.tr);
-    }else if (_lastName.isEmpty) {
-      showCustomSnackBar('enter_your_last_name'.tr);
     }else if (_email.isEmpty) {
       showCustomSnackBar('enter_email_address'.tr);
     }else if (!GetUtils.isEmail(_email)) {
@@ -254,13 +252,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       showCustomSnackBar('invalid_refer_code'.tr);
     }else {
       SignUpBody signUpBody = SignUpBody(
-        fName: _firstName, lName: _lastName, email: _email, phone: _numberWithCountryCode, password: "123456789",
+        fName: _fullName, email: _email, phone: _numberWithCountryCode, password: "123456789",
         refCode: _referCode,
       );
       authController.registration(signUpBody).then((status) async {
         if (status.isSuccess) {
           if(Get.find<SplashController>().configModel.customerVerification) {
-            List<int> _encoded = utf8.encode("123456789");
+            List<int> _encoded = utf8.encode("1234567");
             String _data = base64Encode(_encoded);
             Get.toNamed(RouteHelper.getVerificationRoute(_numberWithCountryCode, status.message, RouteHelper.signUp, _data));
           }else {

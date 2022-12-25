@@ -64,7 +64,7 @@ class RouteHelper {
 
 
   static List<GetPage> routes = [
-    //GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
+     GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
     GetPage(name: splash, page: () {
       NotificationBody _data;
       if(Get.parameters['data'] != 'null') {
@@ -74,7 +74,9 @@ class RouteHelper {
       return SplashScreen(body: _data);
     }),
     GetPage(name: language, page: () => ChooseLanguageScreen(fromMenu: Get.parameters['page'] == 'menu')),
+
     GetPage(name: onBoarding, page: () => OnBoardingScreen()),
+
     GetPage(name: signIn, page: () => SignInScreen(
       exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding,
     )),

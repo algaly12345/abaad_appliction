@@ -81,20 +81,22 @@ class _SplashScreenState extends State<SplashScreen> {
             Get.offNamed(RouteHelper.getUpdateRoute(AppConstants.APP_VERSION < _minimumVersion));
           }else {
             if(widget.body != null) {
-              if (widget.body.notificationType == NotificationType.order) {
-              //  Get.offNamed(RouteHelper.getOrderDetailsRoute(widget.body.orderId));
-              }else if(widget.body.notificationType == NotificationType.general){
-              //  Get.offNamed(RouteHelper.getNotificationRoute());
-              }else {
-               // Get.offNamed(RouteHelper.getChatRoute(notificationBody: widget.body, conversationID: widget.body.conversationId));
-              }
+              // if (widget.body.notificationType == NotificationType.order) {
+              // //  Get.offNamed(RouteHelper.getOrderDetailsRoute(widget.body.orderId));
+              // }else if(widget.body.notificationType == NotificationType.general){
+              // //  Get.offNamed(RouteHelper.getNotificationRoute());
+              // }else {
+              //  // Get.offNamed(RouteHelper.getChatRoute(notificationBody: widget.body, conversationID: widget.body.conversationId));
+              // }
             }else {
               if (Get.find<AuthController>().isLoggedIn()) {
                 Get.find<AuthController>().updateToken();
                 // await Get.find<WishListController>().getWishList();
                 if (Get.find<LocationController>().getUserAddress() != null) {
                   Get.offNamed(RouteHelper.getInitialRoute());
+                  print("----------------------------omeromer");
                 } else {
+                  print("----------------------------omeromer");
                   Get.offNamed(RouteHelper.getAccessLocationRoute('splash'));
                 }
               } else {
