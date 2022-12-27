@@ -16,13 +16,11 @@ class OnBoardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.find<OnBoardingController>().getOnBoardingList();
-
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
       body: GetBuilder<OnBoardingController>(
         builder: (onBoardingController) => onBoardingController.onBoardingList.length > 0 ? SafeArea(
           child: Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(children: [
-
             Expanded(child: PageView.builder(
               itemCount: onBoardingController.onBoardingList.length,
               controller: _pageController,
