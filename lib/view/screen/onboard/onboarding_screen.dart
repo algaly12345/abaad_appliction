@@ -12,7 +12,6 @@ import 'package:get/get.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   final PageController _pageController = PageController();
-
   @override
   Widget build(BuildContext context) {
     Get.find<OnBoardingController>().getOnBoardingList();
