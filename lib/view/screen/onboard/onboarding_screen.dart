@@ -27,7 +27,6 @@ class OnBoardingScreen extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-
                   Padding(
                     padding: EdgeInsets.all(context.height*0.05),
                     child: Image.asset(onBoardingController.onBoardingList[index].imageUrl, height: context.height*0.4),
