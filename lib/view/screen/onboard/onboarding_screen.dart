@@ -9,7 +9,6 @@ import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 class OnBoardingScreen extends StatelessWidget {
   final PageController _pageController = PageController();
   @override
