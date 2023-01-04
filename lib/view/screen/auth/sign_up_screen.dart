@@ -252,7 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       showCustomSnackBar('invalid_refer_code'.tr);
     }else {
       SignUpBody signUpBody = SignUpBody(
-        fName: _fullName, email: _email, phone: _numberWithCountryCode, password: "123456789",
+        fName: _fullName, email: _email, phone: _numberWithCountryCode, password: "1234567",
         refCode: _referCode,
       );
       authController.registration(signUpBody).then((status) async {

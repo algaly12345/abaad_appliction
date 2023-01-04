@@ -33,11 +33,10 @@ class RouteHelper {
   static const String pickMap = '/pick-map';
   static const String interest = '/interest';
   static const String main = '/main';
+  static const String profile = '/profile';
 
 
-
-
-
+  static const String dashboard = '/dashboard';
 
 
 
@@ -54,17 +53,19 @@ class RouteHelper {
   }
   static String getLanguageRoute(String page) => '$language?page=$page';
   static String getOnBoardingRoute() => '$onBoarding';
+  static String getDashboardRoute(String page) =>'$dashboard?page=$page';
   static String getSignInRoute(String page) => '$signIn?page=$page';
   static String getSignUpRoute() => '$signUp';
   static String getVerificationRoute(String number, String token, String page, String pass) {
     return '$verification?page=$page&number=$number&token=$token&pass=$pass';
   }
+
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
 
 
 
   static List<GetPage> routes = [
-     GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
+    GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
     GetPage(name: splash, page: () {
       NotificationBody _data;
       if(Get.parameters['data'] != 'null') {
@@ -78,7 +79,7 @@ class RouteHelper {
     GetPage(name: onBoarding, page: () => OnBoardingScreen()),
 
     GetPage(name: signIn, page: () => SignInScreen(
-      exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding,
+      exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding|| Get.parameters['page'] == dashboard
     )),
     GetPage(name: signUp, page: () => SignUpScreen()),
     GetPage(name: verification, page: () {
@@ -101,10 +102,8 @@ class RouteHelper {
         canRoute: Get.parameters['route'] == 'true',
       );
     }),
-    GetPage(name: main, page: () => getRoute(DashboardScreen(
-      pageIndex: Get.parameters['page'] == 'home' ? 0 : Get.parameters['page'] == 'favourite' ? 1
-          : Get.parameters['page'] == 'cart' ? 2 : Get.parameters['page'] == 'order' ? 3 : Get.parameters['page'] == 'menu' ? 4 : 0,
-    ))),
+    GetPage(name: dashboard, page: () => getRoute(DashboardScreen())),
+    GetPage(name: profile, page: () => getRoute(DashboardScreen())),
   ];
 
 

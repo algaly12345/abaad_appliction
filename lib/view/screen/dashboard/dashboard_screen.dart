@@ -1,6 +1,13 @@
 import 'dart:async';
+
+import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/helper/responsive_helper.dart';
+import 'package:abaad/util/dimensions.dart';
+import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'widget/bottom_nav_item.dart';
 
 class DashboardScreen extends StatefulWidget {
   final int pageIndex;
@@ -25,6 +32,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     _pageController = PageController(initialPage: widget.pageIndex);
 
+    _screens = [
+      HomeScreen(),
+      // FavouriteScreen(),
+      // CartScreen(fromNav: true),
+      // OrderScreen(),
+      Container(),
+    ];
+
     Future.delayed(Duration(seconds: 1), () {
       setState(() {});
     });
@@ -37,12 +52,73 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: () async {
+        if (_pageIndex != 0) {
+          _setPage(0);
+          return false;
+        } else {
+          if(_canExit) {
+            return true;
+          }else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('back_press_again_to_exit'.tr, style: TextStyle(color: Colors.white)),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+              margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+            ));
+            _canExit = true;
+            Timer(Duration(seconds: 2), () {
+              _canExit = false;
+            });
+            return false;
+          }
+        }
+      },
       child: Scaffold(
-        body: Center(
-          child: Text("HomeScreen"),
+        key: _scaffoldKey,
+
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+        bottomNavigationBar: ResponsiveHelper.isDesktop(context) ? SizedBox() : GetBuilder<AuthController>(builder: (orderController) {
+
+            return BottomAppBar(
+              elevation: 5,
+              notchMargin: 5,
+              clipBehavior: Clip.antiAlias,
+              shape: CircularNotchedRectangle(),
+
+              child: Padding(
+                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                child: Row(children: [
+                  BottomNavItem(iconData: Icons.home, isSelected: _pageIndex == 0, onTap: () => _setPage(0)),
+                  BottomNavItem(iconData: Icons.favorite, isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
+                  Expanded(child: SizedBox()),
+                  BottomNavItem(iconData: Icons.shopping_bag, isSelected: _pageIndex == 3, onTap: () => _setPage(3)),
+                  BottomNavItem(iconData: Icons.menu, isSelected: _pageIndex == 4, onTap: () {
+                    Get.bottomSheet(null, backgroundColor: Colors.transparent, isScrollControlled: true);
+                  }),
+                ]),
+              ),
+            );
+          }
+        ),
+        body: PageView.builder(
+          controller: _pageController,
+          itemCount: _screens.length,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return _screens[index];
+          },
         ),
       ),
     );
   }
 
+  void _setPage(int pageIndex) {
+    setState(() {
+      _pageController.jumpToPage(pageIndex);
+      _pageIndex = pageIndex;
+    });
+  }
 }
