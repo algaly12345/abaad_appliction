@@ -9,6 +9,7 @@ import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/view/base/no_internet_screen.dart';
+import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:connectivity/connectivity.dart';
 
 import 'package:flutter/material.dart';
@@ -104,7 +105,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     Get.offNamed(RouteHelper.getOnBoardingRoute());
                   }
                 } else {
-                  Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
+                  Get.to(DashboardScreen(pageIndex: 0));
+                  // Get.offNamed(RouteHelper.getInitialRoute());
+                //  Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
                 }
               }
             }

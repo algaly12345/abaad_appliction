@@ -22,7 +22,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _pageIndex = 0;
   List<Widget> _screens;
   GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
-  bool _canExit = GetPlatform.isWeb ? true : false;
 
   @override
   void initState() {
@@ -57,9 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _setPage(0);
           return false;
         } else {
-          if(_canExit) {
-            return true;
-          }else {
+
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('back_press_again_to_exit'.tr, style: TextStyle(color: Colors.white)),
               behavior: SnackBarBehavior.floating,
@@ -67,12 +64,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               duration: Duration(seconds: 2),
               margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
             ));
-            _canExit = true;
+
             Timer(Duration(seconds: 2), () {
-              _canExit = false;
+
             });
             return false;
-          }
+
         }
       },
       child: Scaffold(

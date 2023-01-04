@@ -9,12 +9,13 @@ import 'package:abaad/view/base/not_found.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
-import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
+
 import 'package:abaad/view/screen/language/language_screen.dart';
 import 'package:abaad/view/screen/locationlocation/access_location_screen.dart';
 import 'package:abaad/view/screen/locationlocation/pick_map_screen.dart';
 import 'package:abaad/view/screen/onboard/onboarding_screen.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
+import 'package:abaad/view/screen/test.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get.dart';
@@ -36,12 +37,9 @@ class RouteHelper {
   static const String profile = '/profile';
 
 
-  static const String dashboard = '/dashboard';
 
 
-
-
-
+  static String getProfileRoute() => '$profile';
   static String getInitialRoute() => '$initial';
   static String getSplashRoute(NotificationBody body) {
     String _data = 'null';
@@ -53,7 +51,7 @@ class RouteHelper {
   }
   static String getLanguageRoute(String page) => '$language?page=$page';
   static String getOnBoardingRoute() => '$onBoarding';
-  static String getDashboardRoute(String page) =>'$dashboard?page=$page';
+
   static String getSignInRoute(String page) => '$signIn?page=$page';
   static String getSignUpRoute() => '$signUp';
   static String getVerificationRoute(String number, String token, String page, String pass) {
@@ -65,7 +63,7 @@ class RouteHelper {
 
 
   static List<GetPage> routes = [
-    GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
+    GetPage(name: initial, page: () => getRoute(TestScreen())),
     GetPage(name: splash, page: () {
       NotificationBody _data;
       if(Get.parameters['data'] != 'null') {
@@ -79,7 +77,7 @@ class RouteHelper {
     GetPage(name: onBoarding, page: () => OnBoardingScreen()),
 
     GetPage(name: signIn, page: () => SignInScreen(
-      exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding|| Get.parameters['page'] == dashboard
+      exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding
     )),
     GetPage(name: signUp, page: () => SignUpScreen()),
     GetPage(name: verification, page: () {
@@ -102,8 +100,7 @@ class RouteHelper {
         canRoute: Get.parameters['route'] == 'true',
       );
     }),
-    GetPage(name: dashboard, page: () => getRoute(DashboardScreen())),
-    GetPage(name: profile, page: () => getRoute(DashboardScreen())),
+
   ];
 
 

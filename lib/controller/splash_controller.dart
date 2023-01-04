@@ -2,6 +2,7 @@ import 'package:abaad/data/api/api_checker.dart';
 import 'package:abaad/data/api/api_client.dart';
 import 'package:abaad/data/model/response/config_model.dart';
 import 'package:abaad/data/model/response/splash_repo.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,6 +26,7 @@ class SplashController extends GetxController implements GetxService {
     Response response = await splashRepo.getConfigData();
     bool _isSuccess = false;
     if(response.statusCode == 200) {
+      Get.offAllNamed(RouteHelper.getInitialRoute());
       _configModel = ConfigModel.fromJson(response.body);
       print("--------------------------sssss----${response}");
       _isSuccess = true;

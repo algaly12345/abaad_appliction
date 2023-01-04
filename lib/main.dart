@@ -35,7 +35,7 @@ Future<void> main() async {
       apiKey: 'AIzaSyCeaw_gVN0iQwFHyuF8pQ6PbVDmSVQw8AY',
       appId: '1:1049699819506:web:a4b5e3bedc729aab89956b',
       messagingSenderId: '1049699819506',
-      projectId: 'abaad-bd3ee',
+      projectId: 'stackfood-bd3ee',
     ));
   }else {
     await Firebase.initializeApp();
@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
       if (isSuccess) {
         if (Get.find<AuthController>().isLoggedIn()) {
           Get.find<AuthController>().updateToken();
-          // await Get.find<WishListController>().getWishList();
+
         }
       }
     });
@@ -90,6 +90,7 @@ class MyApp extends StatelessWidget {
           || Get.find<LocationController>().getUserAddress().zoneData == null)) {
         Get.find<AuthController>().clearSharedAddress();
       }
+
       _route();
     }
 
