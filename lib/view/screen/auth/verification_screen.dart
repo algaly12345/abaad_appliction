@@ -163,8 +163,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           ),
                         ), dismissible: false);
                         Future.delayed(Duration(seconds: 2), () {
-                          // Get.offNamed(RouteHelper.getAccessLocationRoute('verification'));
-                          Get.offNamed(RouteHelper.getInitialRoute());
+                       Get.offNamed(RouteHelper.getAccessLocationRoute('verification'));
+                          // Get.offNamed(RouteHelper.getInitialRoute());
                         });
                       }else {
                         showCustomSnackBar(value.message);

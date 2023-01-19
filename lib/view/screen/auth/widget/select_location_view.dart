@@ -8,7 +8,6 @@ import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
-import 'package:abaad/view/screen/locationlocation/widget/location_search_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -54,17 +53,17 @@ class _SelectLocationViewState extends State<SelectLocationView> {
             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
             InkWell(
-              onTap: () async {
-                var _p = await Get.dialog(LocationSearchDialog(mapController: widget.fromView ? _mapController : _screenMapController));
-                Position _position = _p;
-                if(_position != null) {
-                  _cameraPosition = CameraPosition(target: LatLng(_position.latitude, _position.longitude), zoom: 16);
-                  if(!widget.fromView) {
-                    widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
-                    authController.setLocation(_cameraPosition.target);
-                  }
-                }
-              },
+              // onTap: () async {
+              //   var _p = await Get.dialog(LocationSearchDialog(mapController: widget.fromView ? _mapController : _screenMapController));
+              //   Position _position = _p;
+              //   if(_position != null) {
+              //     _cameraPosition = CameraPosition(target: LatLng(_position.latitude, _position.longitude), zoom: 16);
+              //     if(!widget.fromView) {
+              //       widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+              //       authController.setLocation(_cameraPosition.target);
+              //     }
+              //   }
+              // },
               child: Container(
                 height: 50,
                 padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),

@@ -9,9 +9,19 @@ class Images {
   static const String onboard_1 = 'assets/image/onboard_1.png';
   static const String onboard_2 = 'assets/image/onboard_2.png';
   static const String onboard_3 = 'assets/image/onboard_3.png';
-  static const String pick_marker = 'assets/image/pick_marker.png';
+  static const String  pick_marker = 'assets/image/pick_marker.png';
   static const String estate_marker = 'assets/image/pick_marker.png';
   static const String full_name='assets/image/full_name.png';
+  static const String estate_default='assets/image/estate_location.png';
+  static const String point_right_colors='assets/image/point_right_color.png';
+  static const String setroom="assets/image/setroom.png";
+  static const String map="assets/image/map.png";
+  static const String bathroom="assets/image/bathroom.png";
+  static const String bed="assets/image/bed.png";
+  static const String bc="assets/image/bc.png";
+  static const String arrowCircle="assets/image/arrow-circle-right.png";
+
+
 
   static const String mail = 'assets/image/mail.png';
 

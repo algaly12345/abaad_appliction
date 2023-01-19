@@ -47,4 +47,6 @@ class ResponsiveHelper {
       return false;
     }
   }
+
+  static double getHeight(context) => MediaQuery.of(context).size.height;
 }

@@ -26,7 +26,7 @@ class AuthRepo {
 
 
   Future<Response> getZoneList() async {
-    return await apiClient.getData(AppConstants.ZONE_LIST_URI);
+    return await apiClient.getData(AppConstants.ZONE_ALL);
   }
 
 

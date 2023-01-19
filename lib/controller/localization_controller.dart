@@ -44,7 +44,7 @@ class LocalizationController extends GetxController implements GetxService {
     );
     saveLanguage(_locale);
     if(Get.find<LocationController>().getUserAddress() != null) {
-      HomeScreen.loadData(true);
+
     }
     update();
   }

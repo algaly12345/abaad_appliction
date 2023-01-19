@@ -1,26 +1,21 @@
 
 import 'dart:convert';
 
-import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
-import 'package:abaad/util/app_constants.dart';
-import 'package:abaad/view/base/not_found.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
-
 import 'package:abaad/view/screen/language/language_screen.dart';
-import 'package:abaad/view/screen/locationlocation/access_location_screen.dart';
-import 'package:abaad/view/screen/locationlocation/pick_map_screen.dart';
-import 'package:abaad/view/screen/onboard/onboarding_screen.dart';
+import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
+import 'package:abaad/view/screen/map/map_screen.dart';
+import 'package:abaad/view/screen/onboard/old/onboarding_screen.dart';
+import 'package:abaad/view/screen/onboard/on_boarding_page.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
 import 'package:abaad/view/screen/test.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get.dart';
-
-
 class RouteHelper {
   static const String initial = '/';
   static const String splash = '/splash';
@@ -35,12 +30,14 @@ class RouteHelper {
   static const String interest = '/interest';
   static const String main = '/main';
   static const String profile = '/profile';
+  static const String mapView = '/map-view';
 
 
 
 
   static String getProfileRoute() => '$profile';
   static String getInitialRoute() => '$initial';
+  static String getMapViewRoute() => '$mapView';
   static String getSplashRoute(NotificationBody body) {
     String _data = 'null';
     if(body != null) {
@@ -62,8 +59,9 @@ class RouteHelper {
 
 
 
+
   static List<GetPage> routes = [
-    GetPage(name: initial, page: () => getRoute(TestScreen())),
+    // GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
     GetPage(name: splash, page: () {
       NotificationBody _data;
       if(Get.parameters['data'] != 'null') {
@@ -74,7 +72,8 @@ class RouteHelper {
     }),
     GetPage(name: language, page: () => ChooseLanguageScreen(fromMenu: Get.parameters['page'] == 'menu')),
 
-    GetPage(name: onBoarding, page: () => OnBoardingScreen()),
+    GetPage(name: onBoarding, page: () => OnboardingScreen()),
+    GetPage(name: mapView, page: () => getRoute(MapScreen())),
 
     GetPage(name: signIn, page: () => SignInScreen(
       exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding
@@ -88,18 +87,10 @@ class RouteHelper {
         password: _data,
       );
     }),
-    GetPage(name: accessLocation, page: () => AccessLocationScreen(
-      fromSignUp: Get.parameters['page'] == signUp, fromHome: Get.parameters['page'] == 'home', route: null,
+    GetPage(name: accessLocation, page: () => DashboardScreen(
+      fromSignUp: Get.parameters['page'] == signUp, fromHome: Get.parameters['page'] == 'home', route: null,pageIndex: 0,
     )),
-    GetPage(name: pickMap, page: () {
-      PickMapScreen _pickMapScreen = Get.arguments;
-      bool _fromAddress = Get.parameters['page'] == 'add-address';
-      return (_fromAddress && _pickMapScreen == null) ? NotFound() : _pickMapScreen != null ? _pickMapScreen
-          : PickMapScreen(
-        fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: _fromAddress, route: Get.parameters['page'],
-        canRoute: Get.parameters['route'] == 'true',
-      );
-    }),
+
 
   ];
 

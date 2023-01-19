@@ -60,7 +60,7 @@ class _SignInScreenState extends State<SignInScreen> {
             } else if (GetPlatform.isIOS) {
               exit(0);
             } else {
-              Navigator.pushNamed(context, RouteHelper.getInitialRoute());
+              Navigator.pushNamed(context, RouteHelper.getAccessLocationRoute('verification'));
             }
             return Future.value(false);
           } else {

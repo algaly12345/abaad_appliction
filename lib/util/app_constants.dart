@@ -36,8 +36,11 @@ class AppConstants {
   static const String SEARCH_LOCATION_URI = '/api/v1/config/place-api-autocomplete';
   static const String PLACE_DETAILS_URI = '/api/v1/config/place-api-details';
   static const String VERIFY_PHONE_URI = '/api/v1/auth/verify-phone';
+  static const String CATEGORIES = '/api/v1/categories';
+  static const String CATEGORY_ESTATEURI = '/api/v1/estate/get-estate';
+  static const String ZONE_ALL = '/api/v1/zones';
 
-  // Delivery Tips
+
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];
 
 

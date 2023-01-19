@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:abaad/controller/onboarding_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/helper/responsive_helper.dart';
@@ -7,6 +9,8 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
+import 'package:abaad/view/screen/draw.dart';
+import 'package:abaad/view/screen/test.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 class OnBoardingScreen extends StatelessWidget {
@@ -14,7 +18,9 @@ class OnBoardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.find<OnBoardingController>().getOnBoardingList();
+    var screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: const Color(0xFF03182A),
       appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
       body: GetBuilder<OnBoardingController>(
         builder: (onBoardingController) => onBoardingController.onBoardingList.length > 0 ? SafeArea(
@@ -24,29 +30,50 @@ class OnBoardingScreen extends StatelessWidget {
               controller: _pageController,
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Padding(
-                    padding: EdgeInsets.all(context.height*0.05),
-                    child: Image.asset(onBoardingController.onBoardingList[index].imageUrl, height: context.height*0.4),
-                  ),
-
-                  Text(
-                    onBoardingController.onBoardingList[index].title,
-                    style: robotoMedium.copyWith(fontSize: context.height*0.022),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: context.height*0.025),
-
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-                    child: Text(
-                      onBoardingController.onBoardingList[index].description,
-                      style: robotoRegular.copyWith(fontSize: context.height*0.015, color: Theme.of(context).disabledColor),
-                      textAlign: TextAlign.center,
+                return Stack(
+                  children: [
+                    Container(
+                      height: 160,
+                    //  child: HeaderWidget(160, true, Icons.person),
                     ),
-                  ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
+                        height: 160,
+                        child: Column(
+                          children: [
+                            Flexible(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    onBoardingController.onBoardingList[index].title,
+                                    style: robotoMedium.copyWith(fontSize: context.height*0.033, color: Theme.of(context).disabledColor),
+                                    textAlign: TextAlign.center,
 
-                ]);
+
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Text(
+                                    onBoardingController.onBoardingList[index].description,
+                                    style: robotoRegular.copyWith(fontSize: context.height*0.020, color: Theme.of(context).backgroundColor),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: _pageIndicators(onBoardingController, context),
+                            // ),
+                            // SizedBox(height: context.height*0.05),
+                            // const SizedBox(height: 75)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
               },
               onPageChanged: (index) {
                 onBoardingController.changeSelectIndex(index);

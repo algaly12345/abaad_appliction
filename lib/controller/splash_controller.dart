@@ -26,7 +26,7 @@ class SplashController extends GetxController implements GetxService {
     Response response = await splashRepo.getConfigData();
     bool _isSuccess = false;
     if(response.statusCode == 200) {
-      Get.offAllNamed(RouteHelper.getInitialRoute());
+      Get.offAllNamed(RouteHelper.getAccessLocationRoute('verification'));
       _configModel = ConfigModel.fromJson(response.body);
       print("--------------------------sssss----${response}");
       _isSuccess = true;
@@ -58,7 +58,7 @@ class SplashController extends GetxController implements GetxService {
     _firstTimeConnectionCheck = isChecked;
   }
 
-  void setNearestRestaurantIndex(int index, {bool notify = true}) {
+  void setNearestEstateIndex(int index, {bool notify = true}) {
     _nearestRestaurantIndex = index;
     if(notify) {
       update();

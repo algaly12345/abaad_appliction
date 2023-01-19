@@ -24,6 +24,8 @@ class AuthController extends GetxController implements GetxService {
   bool _acceptTerms = true;
   XFile _pickedLogo;
   XFile _pickedCover;
+
+ // ZoneModel _zoneModel;
   List<ZoneModel> _zoneList;
   int _selectedZoneIndex = 0;
   LatLng _restaurantLocation;
@@ -50,6 +52,7 @@ class AuthController extends GetxController implements GetxService {
   int get identityTypeIndex => _identityTypeIndex;
   List<String> get dmTypeList => _dmTypeList;
   int get dmTypeIndex => _dmTypeIndex;
+//  ZoneModel get zoneModel => _zoneModel;
 
   Future<ResponseModel> registration(SignUpBody signUpBody) async {
     _isLoading = true;
@@ -212,16 +215,19 @@ class AuthController extends GetxController implements GetxService {
     _selectedZoneIndex = 0;
     _restaurantLocation = null;
     _zoneIds = null;
+
     Response response = await authRepo.getZoneList();
     if (response.statusCode == 200) {
       _zoneList = [];
       response.body.forEach((zone) => _zoneList.add(ZoneModel.fromJson(zone)));
+     // _zoneModel = ZoneModel.fromJson(response.body);
       setLocation(LatLng(
         double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
         double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
       ));
     } else {
       ApiChecker.checkApi(response);
+      print("zone_list${response.hasError}");
     }
     update();
   }
