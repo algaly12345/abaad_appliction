@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class EstateController extends GetxController implements GetxService {
-  final EstateRepo restaurantRepo;
-  EstateController({@required this.restaurantRepo});
+  final EstateRepo estateRepo;
+  EstateController({@required this.estateRepo});
 
   EstateModel _estateModel;
   List<Estate> _estateList;
@@ -49,10 +49,11 @@ class EstateController extends GetxController implements GetxService {
       _estateModel = null;
       update();
     }
-    Response response = await restaurantRepo.getRestaurantList(offset, _estateType);
+    Response response = await estateRepo.getEstateList(offset, _estateType);
     if (response.statusCode == 200) {
       if (offset == 1) {
         _estateModel = EstateModel.fromJson(response.body);
+        print("estate response ...............${_estateModel.totalSize}");
       }else {
         _estateModel.totalSize = EstateModel.fromJson(response.body).totalSize;
         _estateModel.offset = EstateModel.fromJson(response.body).offset;
@@ -81,19 +82,19 @@ class EstateController extends GetxController implements GetxService {
     }
 
 
-    Response response = await restaurantRepo.getRestaurantProductList(
+    Response response = await estateRepo.getRestaurantProductList(
         1, offset, type);
       if (response.statusCode == 200) {
         if (offset == 1) {
           _estateList = [];
         }
-        print("hager-------------------------------${response.body}");
+        print("awad-------------------------------${response.body}");
         _estateList.addAll(EstateModel.fromJson(response.body).estates);
         // _foodPageSize = ProductModel.fromJson(response.body).totalSize;
         // _foodPaginate = false;
         update();
       } else {
-        print("hager-------------------------------${response.body}");
+        print("awad-------------------------------${response.body}");
         ApiChecker.checkApi(response);
       }
   }

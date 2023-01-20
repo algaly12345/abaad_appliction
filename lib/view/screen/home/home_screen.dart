@@ -86,7 +86,7 @@ void dispose() {
             onTap: (){
               // Push.to(context, const ProfileScreen())
             },
-            child: Image.asset(Images.mail, width: 30.0, height: 30.0),
+            child:  Image.asset(Images.menu, width: 30.0, height: 30.0),
           ),
           const Spacer(),
           Column(
@@ -101,7 +101,7 @@ void dispose() {
             ],
           ),
           const Spacer(),
-          Image.asset(Images.mail, width: 30.0, height: 30.0),
+          Image.asset(Images.notification, width: 30.0, height: 30.0),
         ],
       ),
     const SizedBox(height: 15),

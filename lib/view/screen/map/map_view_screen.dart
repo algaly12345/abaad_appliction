@@ -6,6 +6,7 @@ import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
@@ -36,6 +37,7 @@ class MapViewScreen extends StatefulWidget {
 class _MapViewScreenState extends State<MapViewScreen> {
   GoogleMapController _controller;
  List<MarkerData> _customMarkers = [];
+  Timer _timer;
 
   List<MarkerData> _customMarkersZone = [];
   int _reload = 0;
@@ -103,7 +105,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
         ],
       ),
 
-      body:visable==0? GetBuilder<AuthController>(builder: (authController) {
+      body: GetBuilder<AuthController>(builder: (authController) {
 
         // print("zone_list${authController.zoneList}");
         List<int> _zoneIndexList = [];
@@ -122,8 +124,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
           GoogleMap(
             initialCameraPosition: const CameraPosition(zoom: 12, target: LatLng(
-                26.451363,
-                50.109046
+                24.263867,
+                45.033284
               // double.parse(Get.find<LocationController>().getUserAddress().latitude),
               // double.parse(Get.find<LocationController>().getUserAddress().longitude),
             )),
@@ -143,11 +145,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
         return Stack(
           children: [
             GoogleMap(
-              initialCameraPosition: const CameraPosition(zoom: 6, target: LatLng(
+              initialCameraPosition: const CameraPosition(zoom: 5, target: LatLng(
                 // double.parse(Get.find<LocationController>().getUserAddress().latitude),
                 // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-                  26.451363,
-                  50.109046
+                  24.263867,
+                  45.033284
               )),
               markers: markers,
               myLocationEnabled: false,
@@ -175,423 +177,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
     ) : Center(child: CircularProgressIndicator());
 
   })
-       : GetBuilder<EstateController>(builder: (restController) {
-        return restController.estateModel != null ? CustomGoogleMapMarkerBuilder(
-          customMarkers: _customMarkers,
-          builder: (context, markers) {
-            if (markers == null) {
-              return Stack(children: [
-
-                GoogleMap(
-                  initialCameraPosition: const CameraPosition(zoom: 12, target: LatLng(
-                      26.451363,
-                      50.109046
-                    // double.parse(Get.find<LocationController>().getUserAddress().latitude),
-                    // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-                  )),
-                  myLocationEnabled: false,
-                  compassEnabled: false,
-                  zoomControlsEnabled: true,
-                  onTap: (position) => Get.find<SplashController>().setNearestEstateIndex(-1),
-                  minMaxZoomPreference: MinMaxZoomPreference(0, 16),
-                  onMapCreated: (GoogleMapController controller) {
-
-                  },
-                ),
-
-                GetBuilder<SplashController>(builder: (splashController) {
-                  return splashController.nearestRestaurantIndex != -1 ? Positioned(
-                    bottom: 0,
-                    child: RestaurantDetailsSheet(callback: (int index) => _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-                      double.parse(restController.estateModel.estates[index].latitude),
-                      double.parse(restController.estateModel.estates[index].longitude),
-                    ), zoom: 16)))),
-                  ) : SizedBox();
-                }),
-
-              ]);
-            }
-            return Stack(children: [
-              GoogleMap(
-                initialCameraPosition: CameraPosition(zoom: 12, target: LatLng(
-                  // double.parse(Get.find<LocationController>().getUserAddress().latitude),
-                  // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-                    26.451363,
-                    50.109046
-                )),
-                markers: markers,
-                myLocationEnabled: false,
-                compassEnabled: false,
-                zoomControlsEnabled: true,
-                onTap: (position) => Get.find<SplashController>().setNearestEstateIndex(-1),
-                minMaxZoomPreference: MinMaxZoomPreference(0, 16),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller = controller;
-                  if(restController.estateModel != null ) {
-                    _setMarkers(restController.estateModel.estates);
-                  }
-                },
-              ),
-
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 7.0),
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10.0, right: 7.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-
-                          children: <Widget>[
-                            Row(
-                              children: [
-                                _textField(
-                                    label: 'search',
-                                    prefixIcon: const Icon(Icons.search),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(Icons.my_location,color: Colors.blue),
-                                      onPressed: () {
-                                        showCustomSnackBar("message");
-                                      },
-                                    ),
-                                    width: width,
-                                    locationCallback: (String value) {
-                                      setState(() {
-                                      });
-                                    }),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 4.0, right: 4.0),
-                                  padding: const EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.blue,
-                                      )),
-
-
-                                  child: const Icon(Icons.qr_code, size: 25 ,   color: Colors.blue,),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(9),
-                                  margin: const EdgeInsets.only(left: 4.0, right: 4.0),
-                                  decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.white,
-                                      )),
-
-
-                                  child: const Icon(Icons.filter_list_alt, size: 25 ,   color: Colors.white,),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  height: 200,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        padding: EdgeInsets.all(10.0),
-                        child: FloatingActionButton(
-                          backgroundColor: Colors.white,
-                          heroTag: 'recenterr',
-                          onPressed: () {
-
-                          },
-                          child: Icon(
-                            Icons.content_cut,
-                            color: Colors.grey,
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Color(0xFFECEDF1))),
-                        ),
-                      ),
-                      Container(
-                        height: 60,
-                        width: 60,
-                        padding: EdgeInsets.all(10.0),
-                        child: FloatingActionButton(
-                          backgroundColor: Colors.white,
-                          heroTag: 'recenterr',
-                          onPressed: () {
-
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Color(0xFFECEDF1))),
-                          child: const Icon(
-                            Icons.layers_outlined,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 60,
-                        width: 60,
-                        padding: EdgeInsets.all(10.0),
-                        child: FloatingActionButton(
-                          backgroundColor: Colors.white,
-                          heroTag: 'recenterr',
-                          onPressed: () {
-
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: const BorderSide(color: Color(0xFFECEDF1))),
-                          child: const Icon(
-                            Icons.my_location,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              GetBuilder<SplashController>(builder: (splashController) {
-                return splashController.nearestRestaurantIndex != -1 ? Positioned(
-                  bottom: 0,
-                  child: RestaurantDetailsSheet(callback: (int index) => _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-                    double.parse(restController.estateModel.estates[index].latitude),
-                    double.parse(restController.estateModel.estates[index].longitude),
-                  ), zoom: 16)))),
-                ) : SizedBox();
-              }),
-
-            ]);
-          },
-        ) : Center(child: CircularProgressIndicator());
-      }),
+      ,
 
 
 
 
-
-
-      //
-      // body: GetBuilder<EstateController>(builder: (restController) {
-      //   return restController.estateModel != null ? CustomGoogleMapMarkerBuilder(
-      //     customMarkers: _customMarkers,
-      //     builder: (context, markers) {
-      //       if (markers == null) {
-      //         return Stack(children: [
-      //
-      //           GoogleMap(
-      //             initialCameraPosition: const CameraPosition(zoom: 12, target: LatLng(
-      //                 26.451363,
-      //                 50.109046
-      //               // double.parse(Get.find<LocationController>().getUserAddress().latitude),
-      //               // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-      //             )),
-      //             myLocationEnabled: false,
-      //             compassEnabled: false,
-      //             zoomControlsEnabled: true,
-      //             onTap: (position) => Get.find<SplashController>().setNearestEstateIndex(-1),
-      //             minMaxZoomPreference: MinMaxZoomPreference(0, 16),
-      //             onMapCreated: (GoogleMapController controller) {
-      //
-      //             },
-      //           ),
-      //
-      //           GetBuilder<SplashController>(builder: (splashController) {
-      //             return splashController.nearestRestaurantIndex != -1 ? Positioned(
-      //               bottom: 0,
-      //               child: RestaurantDetailsSheet(callback: (int index) => _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-      //                 double.parse(restController.estateModel.estates[index].latitude),
-      //                 double.parse(restController.estateModel.estates[index].longitude),
-      //               ), zoom: 16)))),
-      //             ) : SizedBox();
-      //           }),
-      //
-      //         ]);
-      //       }
-      //       return Stack(children: [
-      //         GoogleMap(
-      //           initialCameraPosition: CameraPosition(zoom: 12, target: LatLng(
-      //             // double.parse(Get.find<LocationController>().getUserAddress().latitude),
-      //             // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-      //               26.451363,
-      //               50.109046
-      //           )),
-      //           markers: markers,
-      //           myLocationEnabled: false,
-      //           compassEnabled: false,
-      //           zoomControlsEnabled: true,
-      //           onTap: (position) => Get.find<SplashController>().setNearestEstateIndex(-1),
-      //           minMaxZoomPreference: MinMaxZoomPreference(0, 16),
-      //           onMapCreated: (GoogleMapController controller) {
-      //             _controller = controller;
-      //             if(restController.estateModel != null ) {
-      //               _setMarkers(restController.estateModel.estates);
-      //             }
-      //           },
-      //         ),
-      //
-      //         SafeArea(
-      //           child: Align(
-      //             alignment: Alignment.topCenter,
-      //             child: Flexible(
-      //               child: Padding(
-      //                 padding: const EdgeInsets.only(top: 7.0),
-      //                 child: Container(
-      //                   margin: const EdgeInsets.only(left: 10.0, right: 7.0),
-      //                   child: Column(
-      //                     mainAxisSize: MainAxisSize.min,
-      //
-      //                     children: <Widget>[
-      //                       Row(
-      //                         children: [
-      //                           _textField(
-      //                               label: 'search',
-      //                               prefixIcon: const Icon(Icons.search),
-      //                               suffixIcon: IconButton(
-      //                                 icon: Icon(Icons.my_location,color: Colors.blue),
-      //                                 onPressed: () {
-      //                                   showCustomSnackBar("message");
-      //                                 },
-      //                               ),
-      //                               width: width,
-      //                               locationCallback: (String value) {
-      //                                 setState(() {
-      //                                 });
-      //                               }),
-      //                           Container(
-      //                             margin: const EdgeInsets.only(left: 4.0, right: 4.0),
-      //                             padding: const EdgeInsets.all(7),
-      //                             decoration: BoxDecoration(
-      //                                 color: Colors.white,
-      //                                 borderRadius: BorderRadius.circular(5),
-      //                                 border: Border.all(
-      //                                   width: 1,
-      //                                   color: Colors.blue,
-      //                                 )),
-      //
-      //
-      //                             child: const Icon(Icons.qr_code, size: 25 ,   color: Colors.blue,),
-      //                           ),
-      //                           Container(
-      //                             padding: const EdgeInsets.all(9),
-      //                             margin: const EdgeInsets.only(left: 4.0, right: 4.0),
-      //                             decoration: BoxDecoration(
-      //                                 color: Colors.blue,
-      //                                 borderRadius: BorderRadius.circular(5),
-      //                                 border: Border.all(
-      //                                   width: 1,
-      //                                   color: Colors.white,
-      //                                 )),
-      //
-      //
-      //                             child: const Icon(Icons.filter_list_alt, size: 25 ,   color: Colors.white,),
-      //                           ),
-      //                         ],
-      //                       ),
-      //                     ],
-      //                   ),
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //         Align(
-      //           alignment: Alignment.bottomLeft,
-      //           child: Container(
-      //             height: 200,
-      //             child: Column(
-      //               children: [
-      //                 Container(
-      //                   height: 60,
-      //                   width: 60,
-      //                   padding: EdgeInsets.all(10.0),
-      //                   child: FloatingActionButton(
-      //                     backgroundColor: Colors.white,
-      //                     heroTag: 'recenterr',
-      //                     onPressed: () {
-      //
-      //                     },
-      //                     child: Icon(
-      //                       Icons.content_cut,
-      //                       color: Colors.grey,
-      //                     ),
-      //                     shape: RoundedRectangleBorder(
-      //                         borderRadius: BorderRadius.circular(10.0),
-      //                         side: BorderSide(color: Color(0xFFECEDF1))),
-      //                   ),
-      //                 ),
-      //                 Container(
-      //                   height: 60,
-      //                   width: 60,
-      //                   padding: EdgeInsets.all(10.0),
-      //                   child: FloatingActionButton(
-      //                     backgroundColor: Colors.white,
-      //                     heroTag: 'recenterr',
-      //                     onPressed: () {
-      //
-      //                     },
-      //                     shape: RoundedRectangleBorder(
-      //                         borderRadius: BorderRadius.circular(10.0),
-      //                         side: BorderSide(color: Color(0xFFECEDF1))),
-      //                     child: const Icon(
-      //                       Icons.layers_outlined,
-      //                       color: Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ),
-      //                 Container(
-      //                   height: 60,
-      //                   width: 60,
-      //                   padding: EdgeInsets.all(10.0),
-      //                   child: FloatingActionButton(
-      //                     backgroundColor: Colors.white,
-      //                     heroTag: 'recenterr',
-      //                     onPressed: () {
-      //
-      //                     },
-      //                     shape: RoundedRectangleBorder(
-      //                         borderRadius: BorderRadius.circular(10.0),
-      //                         side: const BorderSide(color: Color(0xFFECEDF1))),
-      //                     child: const Icon(
-      //                       Icons.my_location,
-      //                       color: Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //         ),
-      //
-      //         GetBuilder<SplashController>(builder: (splashController) {
-      //           return splashController.nearestRestaurantIndex != -1 ? Positioned(
-      //             bottom: 0,
-      //             child: RestaurantDetailsSheet(callback: (int index) => _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-      //               double.parse(restController.estateModel.estates[index].latitude),
-      //               double.parse(restController.estateModel.estates[index].longitude),
-      //             ), zoom: 16)))),
-      //           ) : SizedBox();
-      //         }),
-      //
-      //       ]);
-      //     },
-      //   ) : Center(child: CircularProgressIndicator());
-      // }),
     );
   }
 
@@ -606,8 +196,8 @@ void _setMarkersZone(List<ZoneModel> zone) async {
     marker: const Marker(markerId: MarkerId('id-0'), position: LatLng(
       // double.parse(Get.find<LocationController>().getUserAddress().latitude),
       // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-        26.451363,
-        50.109046
+        24.263867,
+        45.033284
     )),
     child: Image.asset(Images.mail, height: 20, width: 20),
   ));
@@ -625,7 +215,12 @@ void _setMarkersZone(List<ZoneModel> zone) async {
         _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
           double.parse(zone[index].latitude),
           double.parse(zone[index].longitude),
+
         ), zoom: 11)));
+        // Future.delayed(Duration(seconds: 1), () {
+          Get.offNamed(RouteHelper.getCategoryRoute(2));
+          // Get.offNamed(RouteHelper.getInitialRoute());
+        // });
 
     setState(() {
       visable=1;

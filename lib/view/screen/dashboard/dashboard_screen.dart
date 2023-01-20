@@ -4,6 +4,7 @@ import 'package:abaad/controller/auth_controller.dart';
 
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
+import 'package:abaad/util/images.dart';
 import 'package:abaad/view/screen/chat/chat_screen.dart';
 
 import 'package:abaad/view/screen/dashboard/widget/bottom_nav_item.dart';
@@ -134,11 +135,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Padding(
               padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
               child: Row(children: [
-                BottomNavItem(iconData: Icons.home_outlined,name: "الرئسية",isSelected: _pageIndex == 0, onTap: () => _setPage(0)),
-                BottomNavItem(iconData: Icons.checklist, name:"قائمة",isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
+                BottomNavItem(iconData: Images.home,name: "الرئسية",isSelected: _pageIndex == 0, onTap: () => _setPage(0)),
+                BottomNavItem(iconData: Images.menu, name:"قائمة",isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
                 Expanded(child: SizedBox()),
-                BottomNavItem(iconData: Icons.chat_bubble_outline,name: "المحادثة", isSelected: _pageIndex == 2, onTap: () => _setPage(2)),
-                BottomNavItem(iconData: Icons.favorite_border, name: "المحادثة",isSelected: _pageIndex == 3, onTap: () => _setPage(3),),
+                BottomNavItem(iconData: Images.messageText,name: "المحادثة", isSelected: _pageIndex == 2, onTap: () => _setPage(2)),
+                BottomNavItem(iconData: Images.heart, name: "المفضل",isSelected: _pageIndex == 3, onTap: () => _setPage(3),),
               ]),
             ),
 

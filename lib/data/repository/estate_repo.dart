@@ -7,15 +7,12 @@ class EstateRepo {
   final ApiClient apiClient;
   EstateRepo({@required this.apiClient});
 
-  Future<Response>  getRestaurantList(int offset, String filterBy) async {
+  Future<Response>  getEstateList(int offset, String filterBy) async {
     return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}/all?offset=$offset');
   }
 
-  Future<Response> getPopularRestaurantList(String type) async {
-    return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}?type=$type');
-  }
 
-  Future<Response> getLatestRestaurantList(String type) async {
+  Future<Response> getLatestEstateList(String type) async {
     return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}?type=$type');
   }
 

@@ -40,7 +40,7 @@ class RestaurantDetailsSheet extends StatelessWidget {
                 borderRadius: ResponsiveHelper.isMobile(context) ? BorderRadius.vertical(top: Radius.circular(30))
                     : BorderRadius.all(Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
               ),
-              child: Column(children: [
+              child: Stack(children: [
 
                 InkWell(
                   onTap: () => Get.find<SplashController>().setNearestEstateIndex(-1),

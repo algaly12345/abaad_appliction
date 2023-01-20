@@ -20,6 +20,7 @@ import 'package:abaad/data/repository/onboarding_repo.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 Future<Map<String, Map<String, String>>> init() async {
@@ -43,7 +44,7 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => LocationRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
   Get.lazyPut(() => OnBoardingController(onboardingRepo: Get.find()));
   Get.lazyPut(() => OnBoardingRepo());
-  Get.lazyPut(() => EstateController(restaurantRepo: Get.find()));
+  Get.lazyPut(() => EstateController(estateRepo: Get.find()));
   Get.lazyPut(() =>CategoryController(categoryRepo: Get.find()));
 
   // Retrieving localized data

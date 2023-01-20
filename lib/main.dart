@@ -22,6 +22,7 @@ import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'helper/get_di.dart' as di;
 
+
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
@@ -97,7 +98,7 @@ class MyApp extends StatelessWidget {
     return GetBuilder<ThemeController>(builder: (themeController) {
       return GetBuilder<LocalizationController>(builder: (localizeController) {
         return GetBuilder<SplashController>(builder: (splashController) {
-          return (GetPlatform.isWeb && splashController.configModel == null) ? SizedBox() : GetMaterialApp(
+          return  GetMaterialApp(
             title: AppConstants.APP_NAME,
             debugShowCheckedModeBanner: false,
             navigatorKey: Get.key,

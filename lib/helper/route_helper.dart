@@ -3,12 +3,14 @@ import 'dart:convert';
 
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
+import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
 import 'package:abaad/view/screen/language/language_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:abaad/view/screen/map/map_screen.dart';
+import 'package:abaad/view/screen/old.dart';
 import 'package:abaad/view/screen/onboard/old/onboarding_screen.dart';
 import 'package:abaad/view/screen/onboard/on_boarding_page.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
@@ -30,14 +32,14 @@ class RouteHelper {
   static const String interest = '/interest';
   static const String main = '/main';
   static const String profile = '/profile';
-  static const String mapView = '/map-view';
+  static const String categories = '/categories';
 
 
 
 
   static String getProfileRoute() => '$profile';
   static String getInitialRoute() => '$initial';
-  static String getMapViewRoute() => '$mapView';
+  static String getCategoryRoute(int id ) => '$categories?id=$id';
   static String getSplashRoute(NotificationBody body) {
     String _data = 'null';
     if(body != null) {
@@ -58,8 +60,6 @@ class RouteHelper {
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
 
 
-
-
   static List<GetPage> routes = [
     // GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
     GetPage(name: splash, page: () {
@@ -73,7 +73,6 @@ class RouteHelper {
     GetPage(name: language, page: () => ChooseLanguageScreen(fromMenu: Get.parameters['page'] == 'menu')),
 
     GetPage(name: onBoarding, page: () => OnboardingScreen()),
-    GetPage(name: mapView, page: () => getRoute(MapScreen())),
 
     GetPage(name: signIn, page: () => SignInScreen(
       exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding
@@ -92,7 +91,9 @@ class RouteHelper {
     )),
 
 
+    GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
   ];
+
 
 
   static String getUpdateRoute(bool isUpdate) => '$update?update=${isUpdate.toString()}';

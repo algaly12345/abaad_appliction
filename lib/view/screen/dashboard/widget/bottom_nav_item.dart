@@ -2,7 +2,7 @@ import 'package:abaad/util/styles.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavItem extends StatelessWidget {
-  final IconData iconData;
+  final String iconData;
   final Function onTap;
   final bool isSelected;
   final String name;
@@ -21,7 +21,7 @@ class BottomNavItem extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(iconData, color: isSelected ? Theme.of(context).primaryColor : Colors.grey, size: 30),
+                  Image.asset(iconData, color: isSelected ? Theme.of(context).primaryColor : Colors.grey, width: 30,height: 30),
                   SizedBox(
 
                     child: Text(

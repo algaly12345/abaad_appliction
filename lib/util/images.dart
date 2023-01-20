@@ -21,6 +21,12 @@ class Images {
   static const String bc="assets/image/bc.png";
   static const String arrowCircle="assets/image/arrow-circle-right.png";
 
+  static const String home = 'assets/image/home.png';
+  static const String heart = 'assets/image/heart.png';
+  static const String messageText = 'assets/image/message-text.png';
+  static const String menu = 'assets/image/menu.png';
+  static const String notification = 'assets/image/notification-bing.png';
+
 
 
   static const String mail = 'assets/image/mail.png';
