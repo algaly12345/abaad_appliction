@@ -19,7 +19,7 @@ class SplashController extends GetxController implements GetxService {
   DateTime get currentTime => DateTime.now();
   bool get firstTimeConnectionCheck => _firstTimeConnectionCheck;
   bool get hasConnection => _hasConnection;
-  int get nearestRestaurantIndex => _nearestRestaurantIndex;
+  int get nearestEstateIndex => _nearestRestaurantIndex;
 
   Future<bool> getConfigData() async {
     _hasConnection = true;

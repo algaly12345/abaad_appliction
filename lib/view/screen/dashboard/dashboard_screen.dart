@@ -46,7 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     _screens = [
        MapViewScreen(),
-      // MapPage(),
+      // Test(),
       HomeScreen(),
       ChatScreen(),
       FavouriteScreen(),
@@ -139,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 BottomNavItem(iconData: Images.menu, name:"قائمة",isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
                 Expanded(child: SizedBox()),
                 BottomNavItem(iconData: Images.messageText,name: "المحادثة", isSelected: _pageIndex == 2, onTap: () => _setPage(2)),
-                BottomNavItem(iconData: Images.heart, name: "المفضل",isSelected: _pageIndex == 3, onTap: () => _setPage(3),),
+                BottomNavItem(iconData: Images.heart, name: "المفضلة",isSelected: _pageIndex == 3, onTap: () => _setPage(3),),
               ]),
             ),
 

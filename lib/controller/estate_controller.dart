@@ -1,11 +1,14 @@
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
+import 'package:abaad/data/model/auto_complete_result.dart';
 import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/repository/estate_repo.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class EstateController extends GetxController implements GetxService {
@@ -143,5 +146,19 @@ class EstateController extends GetxController implements GetxService {
     update();
   }
 
+  final String key = 'AIzaSyDYQ4n3qgjC49HNL8zD-fp62SsNz5OnRjo';
+  final String types = 'geocode';
 
+  Future<List<AutoCompleteResult>> searchPlaces(String searchInput) async {
+    final String url =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchInput&types=$types&key=$key';
+
+    var response = await http.get(Uri.parse(url));
+
+    var json = convert.jsonDecode(response.body);
+
+    var results = json['predictions'] as List;
+
+    return results.map((e) => AutoCompleteResult.fromJson(e)).toList();
+  }
 }

@@ -37,19 +37,22 @@ class MapViewScreen extends StatefulWidget {
 class _MapViewScreenState extends State<MapViewScreen> {
   GoogleMapController _controller;
  List<MarkerData> _customMarkers = [];
-  Timer _timer;
 
   List<MarkerData> _customMarkersZone = [];
   int _reload = 0;
   Set<Polygon> _polygon = HashSet<Polygon>();
+  Set<Circle> _circles = Set<Circle>();
   int visable=0;
+
 
 
   @override
   void initState() {
     super.initState();
+
     MapViewScreen.loadData(false);
   }
+
 
   @override
   void dispose() {
@@ -288,6 +291,7 @@ void _setMarkersZone(List<ZoneModel> zone) async {
   if(_reload == 1) {
     _reload = 2;
   }
+
 }
 
   void _setMarkers(List<Estate> restaurants) async {
@@ -378,4 +382,6 @@ Widget _textField({
     ),
   );
 }}
+
+
 

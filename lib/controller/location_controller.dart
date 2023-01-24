@@ -10,6 +10,7 @@ import 'package:abaad/data/model/response/place_details_model.dart';
 import 'package:abaad/data/model/response/prediction_model.dart';
 import 'package:abaad/data/model/response/response_model.dart';
 import 'package:abaad/data/model/response/zone_response_model.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,6 @@ class LocationController extends GetxController implements GetxService {
   int get zoneID => _zoneID;
   bool get buttonDisabled => _buttonDisabled;
   GoogleMapController get mapController => _mapController;
-
   Future<AddressModel> getCurrentLocation(bool fromAddress, {GoogleMapController mapController, LatLng defaultLatLng, bool notify = true}) async {
     _loading = true;
     if(notify) {
@@ -214,27 +214,6 @@ class LocationController extends GetxController implements GetxService {
     }
   }
 
-  Future<ResponseModel> addAddress(AddressModel addressModel, bool fromCheckout, int restaurantZoneId) async {
-    _isLoading = true;
-    update();
-    Response response = await locationRepo.addAddress(addressModel);
-    _isLoading = false;
-    ResponseModel responseModel;
-    if (response.statusCode == 200) {
-      if(fromCheckout && !response.body['zone_ids'].contains(restaurantZoneId)) {
-        responseModel = ResponseModel(false, 'your_selected_location_is_from_different_zone'.tr);
-      }else {
-        getAddressList();
-      //  Get.find<OrderController>().setAddressIndex(0);
-        String message = response.body["message"];
-        responseModel = ResponseModel(true, message);
-      }
-    } else {
-      responseModel = ResponseModel(false, response.statusText == 'Out of coverage!' ? 'service_not_available_in_this_area'.tr : response.statusText);
-    }
-    update();
-    return responseModel;
-  }
 
   Future<ResponseModel> updateAddress(AddressModel addressModel, int addressId) async {
     _isLoading = true;
@@ -268,54 +247,6 @@ class LocationController extends GetxController implements GetxService {
   void setAddressTypeIndex(int index) {
     _addressTypeIndex = index;
     update();
-  }
-
-  void saveAddressAndNavigate(AddressModel address, bool fromSignUp, String route, bool canRoute) {
-    Get.back();
-    _setZoneData(address, fromSignUp, route, canRoute);
-  }
-
-  void _setZoneData(AddressModel address, bool fromSignUp, String route, bool canRoute) {
-    Get.find<LocationController>().getZone(address.latitude, address.longitude, false).then((response) async {
-      if (response.isSuccess) {
-        address.zoneId = response.zoneIds[0];
-        address.zoneIds = [];
-        address.zoneIds.addAll(response.zoneIds);
-        address.zoneData = [];
-        address.zoneData.addAll(response.zoneData);
-        autoNavigate(address, fromSignUp, route, canRoute);
-      } else {
-        Get.back();
-        showCustomSnackBar(response.message);
-      }
-    });
-  }
-
-  void autoNavigate(AddressModel address, bool fromSignUp, String route, bool canRoute) async {
-    if(!GetPlatform.isWeb) {
-      if (Get.find<LocationController>().getUserAddress() != null && Get.find<LocationController>().getUserAddress().zoneId != address.zoneId) {
-        FirebaseMessaging.instance.unsubscribeFromTopic('zone_${Get.find<LocationController>().getUserAddress().zoneId}_customer');
-        FirebaseMessaging.instance.subscribeToTopic('zone_${address.zoneId}_customer');
-      } else {
-        FirebaseMessaging.instance.subscribeToTopic('zone_${address.zoneId}_customer');
-      }
-    }
-    await Get.find<LocationController>().saveUserAddress(address);
-    if(Get.find<AuthController>().isLoggedIn()) {
-    //  await Get.find<WishListController>().getWishList();
-   //   Get.find<AuthController>().updateZone();
-    }
-   // HomeScreen.loadData(true);
- //   Get.find<OrderController>().clearPrevData();
-    if(fromSignUp) {
-   //   Get.offAllNamed(RouteHelper.getInterestRoute());
-    }else {
-      if(route != null && canRoute) {
-        Get.offAllNamed(route);
-      }else {
-      //  Get.offAllNamed(RouteHelper.getInitialRoute());
-      }
-    }
   }
 
   Future<Position> setLocation(String placeID, String address, GoogleMapController mapController) async {

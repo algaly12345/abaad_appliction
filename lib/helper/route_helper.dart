@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
+import 'package:abaad/view/base/not_found.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
 import 'package:abaad/view/screen/language/language_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:abaad/view/screen/map/map_screen.dart';
-import 'package:abaad/view/screen/old.dart';
 import 'package:abaad/view/screen/onboard/old/onboarding_screen.dart';
 import 'package:abaad/view/screen/onboard/on_boarding_page.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
@@ -91,7 +91,17 @@ class RouteHelper {
     )),
 
 
-    GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
+
+    GetPage(name: categories, page: () {
+      MapScreen _pickMapScreen = Get.arguments;
+      bool _fromAddress = Get.parameters['page'] == 'add-address';
+      return (_fromAddress && _pickMapScreen == null) ? NotFound() : _pickMapScreen != null ? _pickMapScreen
+          : MapScreen(mainCategory:ZoneModel(id: int.parse(Get.parameters['id'])) ,
+         fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: _fromAddress, route: Get.parameters['page'],
+        canRoute: Get.parameters['route'] == 'true',
+      );
+    }),
+   // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
   ];
 
 

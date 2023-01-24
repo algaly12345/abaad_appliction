@@ -14,7 +14,6 @@ class AddressModel {
   String house;
   String floor;
   List<ZoneData> zoneData;
-
   AddressModel(
       {this.id,
       this.addressType,

@@ -8,20 +8,41 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:image_stack/image_stack.dart';
 
-class RestaurantDetailsSheet extends StatelessWidget {
+class EstateDetailsSheet extends StatelessWidget {
   final Function(int index) callback;
-  RestaurantDetailsSheet({@required this.callback});
+  final void Function() onPressed;
+  EstateDetailsSheet({@required this.callback,   this.onPressed});
 
   @override
   Widget build(BuildContext context) {
+    List<String> images = <String>[
+      "https://images.unsplash.com/photo-1458071103673-6a6e4c4a3413?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
+      "https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80",
+      "https://images.unsplash.com/photo-1470406852800-b97e5d92e2aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
+      "https://images.unsplash.com/photo-1473700216830-7e08d47f858e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+    ];
 
-    return GetBuilder<EstateController>(builder: (restaurantController) {
+    List<Widget> widgets = [
+      ...images.map<Widget>((img) => Image.network(
+        img,
+        fit: BoxFit.cover,
+      ))
+    ];
+
+    List<ImageProvider> providers = [
+      ...images.map<ImageProvider>((img) => NetworkImage(
+        img,
+      ))
+    ];
+    return GetBuilder<EstateController>(builder: (estateController) {
       return GetBuilder<SplashController>(builder: (splashController) {
-        Estate restaurant = restaurantController.estateModel.estates[splashController.nearestRestaurantIndex];
+        Estate restaurant = estateController.estateModel.estates[splashController.nearestEstateIndex];
 
         return Stack(children: [
 
@@ -33,110 +54,245 @@ class RestaurantDetailsSheet extends StatelessWidget {
               // );
             },
             child: Container(
-              width: context.width, height: 310,
+              width: context.width,
               padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
-                borderRadius: ResponsiveHelper.isMobile(context) ? BorderRadius.vertical(top: Radius.circular(30))
-                    : BorderRadius.all(Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
+
               ),
               child: Stack(children: [
 
-                InkWell(
-                  onTap: () => Get.find<SplashController>().setNearestEstateIndex(-1),
-                  child: Icon(Icons.keyboard_arrow_down_rounded, size: 30),
-                ),
-                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
-                Stack(children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      // InkWell(
+                      //   onTap: () =>
+                      //       Get.find<SplashController>().setNearestEstateIndex(-1),
+                      //   child: Icon(Icons.keyboard_arrow_down_rounded, size: 30)
+                      // ),
+                      SizedBox(
+                        height: 36,
 
-                  ClipRRect(borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT), child: CustomImage(
-                    image: '',
-                    height: 180, width: context.width, fit: BoxFit.cover,
-                  )),
-
-                  Positioned(
-                    left: 10, bottom: 10,
-                    child: Container(
-                      height: 80, width: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Theme.of(context).cardColor, width: 2),
-                      ),
-                      child: ClipRRect(borderRadius: BorderRadius.circular(50),
-                        child: CustomImage(
-                          image: '',
-                          placeholder: Images.placeholder,
-                          height: 80, width: 80, fit: BoxFit.cover,
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                         decoration: BoxDecoration(
+                          border: Border.all(width: 2, color: Colors.orangeAccent),
+                          ),
+                          child: GestureDetector(
+                            onTap: onPressed,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(Images.offer_icon, height: 40, width: 40),
+                                    Text("يتضمن عروض خاص مقدمة لك",style: robotoBlack.copyWith(fontSize: 11)),
+                                  ],
+                                ),
+                                Center(
+                                  child: Row(
+                                     children: <Widget>[
+                                      ImageStack.providers(
+                                        providers: providers,
+                                        imageRadius: 45,
+                                        imageCount: 1,
+                                        imageBorderWidth: 1,
+                                        totalCount: 4,
+                                        backgroundColor: Colors.white,
+                                        imageBorderColor: Colors.cyan,
+                                        extraCountBorderColor: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                  SizedBox(
+                    height: 4,),
+                      Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4), //border corner radius
+                          boxShadow:[
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5), //color of shadow
+                              spreadRadius: 5, //spread radius
+                              blurRadius: 7, // blur radius
+                              offset: Offset(0, 2), // changes position of shadow
+                              //first paramerter of offset is left-right
+                              //second parameter is top to down
+                            ),
+                            //you can set more BoxShadow() here
+                          ],
+                        ),
+                        child: Row(
+                          children: <Widget>[
+
+                            Expanded(
+                              child: Column(
+                                children: <Widget>[
+
+                                  Expanded(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Flexible(
+                                          flex: 2,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                            BorderRadius.circular(3.0),
+                                            child: Image.network(
+                                                "https://cdn.pixabay.com/photo/2017/06/13/22/42/kitchen-2400367_960_720.jpg"),
+                                          ),
+                                        ),
+                                        SizedBox(width: 11.0),
+                                        Flexible(
+                                          flex: 3,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+                                             Text("34343"  ,style: robotoBlack.copyWith(fontSize: 11)),
+                                              const SizedBox(
+                                                height: 3.0,
+                                              ),
+                                               Text("قصر في حي الشعلة",
+                                                  style: robotoBlack.copyWith(fontSize: 11)),
+                                              const SizedBox(
+                                                height: 3.0,
+                                              ),
+                                               Row(
+                                                 children: [
+                                                   Text(" العنوان الوطني : ",
+                                                       style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
+                                                   Text("45",
+                                                       style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
+                                                 ],
+
+                                               ),
+                                              const SizedBox(
+                                                height: 7.0,
+                                              ),
+
+                                              Row(
+                                                // mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  //
+                                                  Expanded(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                      children: [
+                                                        Image.asset(Images.bed, width: 14.0, height: 14.0),
+
+                                                        Text(
+                                                          '2 غرفة نوم',
+                                                            style: robotoBlack.copyWith(fontSize: 11)
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  //
+                                                  Expanded(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                      children: [
+                                                        Image.asset(Images.bathroom, width: 14.0, height: 14.0),
+
+                                                        Text(
+                                                          '2 حمام',
+                                                            style: robotoBlack.copyWith(fontSize: 11)
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  //
+                                                  Expanded(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                      children: [
+                                                        Image.asset(Images.setroom, width: 14.0, height: 14.0),
+
+                                                        Text(
+                                                          '2 غرفة نوم',
+                                                          style: robotoBlack.copyWith(fontSize: 11),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),//
+                                                ],
+                                              ),
+                                              const Divider(),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Container(
+                                width: 40,
+                                margin: const EdgeInsets.only(top: 10),
+                                decoration: const BoxDecoration(
+                                    color: Colors.blue),
+                                child: const Text(
+                                  "للبيع",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,)
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ]),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-                Row(children: [
-
-                  Expanded(child: Text(restaurant.address, maxLines: 1, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault))),
-
-                  Icon(Icons.star, color: Theme.of(context).primaryColor, size: 18),
-                ]),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-                Row(children: [
-
-                  Icon(Icons.location_on_rounded, color: Theme.of(context).disabledColor, size: 20),
-                  Expanded(child: Text(
-                    '${restaurant.address != null ? restaurant.address : 'no_address_found'.tr}', maxLines: 2,
-                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                  )),
-
-                  Text('${(Geolocator.distanceBetween(
-                    double.parse(restaurant.latitude), double.parse(restaurant.longitude),
-                      26.451363,
-                      50.109046
-                    // double.parse(Get.find<LocationController>().getUserAddress().latitude),
-                    // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-                  )/1000).toStringAsFixed(1)} ${'km'.tr}', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
-                  SizedBox(width: Dimensions.PADDING_SIZE_LARGE),
-
-
-                ]),
+                )
 
               ]),
             ),
           ),
 
-          splashController.nearestRestaurantIndex != (restaurantController.estateModel.estates.length-1) ? Positioned(
-            top: 0, bottom: 0, left: 0,
+          splashController.nearestEstateIndex != (estateController.estateModel.estates.length-1) ? Positioned(
+            top: 30, bottom: 0, left: 0,
             child: InkWell(
               onTap: () {
-                  splashController.setNearestEstateIndex(splashController.nearestRestaurantIndex+1);
-                  callback(splashController.nearestRestaurantIndex);
+                splashController.setNearestEstateIndex(splashController.nearestEstateIndex+1);
+                callback(splashController.nearestEstateIndex);
               },
               child: Container(
-                height: 40, width: 40, alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Theme.of(context).cardColor.withOpacity(0.8),
-                ),
-                child: Icon(Icons.arrow_back_ios_rounded),
-              ),
-            ),
-          ) : SizedBox(),
-
-          splashController.nearestRestaurantIndex != 0 ? Positioned(
-            top: 0, bottom: 0, right: 0,
-            child: InkWell(
-              onTap: () {
-                splashController.setNearestEstateIndex(splashController.nearestRestaurantIndex-1);
-                callback(splashController.nearestRestaurantIndex);
-              },
-              child: Container(
-                height: 40, width: 40, alignment: Alignment.center,
+                height: 27, width: 27, alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle, color: Theme.of(context).cardColor.withOpacity(0.8),
                 ),
                 child: Icon(Icons.arrow_forward_ios_rounded),
+              ),
+            ),
+          ) : SizedBox(),
+          //arrow_back_ios_rounded
+          splashController.nearestEstateIndex != 0 ? Positioned(
+            top: 30, bottom: 0, right: 0,
+            child: InkWell(
+              onTap: () {
+                splashController.setNearestEstateIndex(splashController.nearestEstateIndex-1);
+                callback(splashController.nearestEstateIndex);
+              },
+              child: Container(
+                height: 27, width: 27, alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: Theme.of(context).cardColor.withOpacity(0.8),
+                ),
+                child: Icon(Icons.arrow_back_ios_rounded),
               ),
             ),
           ) : SizedBox(),
@@ -148,97 +304,4 @@ class RestaurantDetailsSheet extends StatelessWidget {
     });
   }
 
-  Widget myDetailsContainer1(Estate estate) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Container(
-              child: Text(estate.near,
-                style: TextStyle(
-                    color: Color(0xff6200ee),
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold),
-              )),
-        ),
-        SizedBox(height:5.0),
-        Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                    child: const Text(
-                      "4.1",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 18.0,
-                      ),
-                    )),
-                Container(
-                  child: Icon(
-                   Icons.add,
-                    color: Colors.amber,
-                    size: 15.0,
-                  ),
-                ),
-                Container(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.amber,
-                    size: 15.0,
-                  ),
-                ),
-                Container(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.amber,
-                    size: 15.0,
-                  ),
-                ),
-                Container(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.amber,
-                    size: 15.0,
-                  ),
-                ),
-                Container(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.amber,
-                    size: 15.0,
-                  ),
-                ),
-                Container(
-                    child: const Text(
-                      "(946)",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 18.0,
-                      ),
-                    )),
-              ],
-            )),
-        SizedBox(height:5.0),
-        Container(
-            child: Text(
-              "American \u00B7 \u0024\u0024 \u00B7 1.6 mi",
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 18.0,
-              ),
-            )),
-        SizedBox(height:5.0),
-        Container(
-            child: Text(
-              "Closed \u00B7 Opens 17:00 Thu",
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold),
-            )),
-      ],
-    );
-  }
 }

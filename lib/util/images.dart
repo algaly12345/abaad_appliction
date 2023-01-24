@@ -26,6 +26,7 @@ class Images {
   static const String messageText = 'assets/image/message-text.png';
   static const String menu = 'assets/image/menu.png';
   static const String notification = 'assets/image/notification-bing.png';
+  static const String offer_icon = 'assets/image/offer_icon.png';
 
 
 
