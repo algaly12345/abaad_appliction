@@ -42,7 +42,7 @@ class EstateDetailsSheet extends StatelessWidget {
     ];
     return GetBuilder<EstateController>(builder: (estateController) {
       return GetBuilder<SplashController>(builder: (splashController) {
-        Estate restaurant = estateController.estateModel.estates[splashController.nearestEstateIndex];
+        Estate estate = estateController.estateModel.estates[splashController.nearestEstateIndex];
 
         return Stack(children: [
 
@@ -112,7 +112,7 @@ class EstateDetailsSheet extends StatelessWidget {
                   SizedBox(
                     height: 4,),
                       Container(
-                        height: 100,
+                        height: 130,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4), //border corner radius
@@ -159,7 +159,7 @@ class EstateDetailsSheet extends StatelessWidget {
                                               const SizedBox(
                                                 height: 3.0,
                                               ),
-                                               Text("قصر في حي الشعلة",
+                                               Text("${estate.shortDescription}",
                                                   style: robotoBlack.copyWith(fontSize: 11)),
                                               const SizedBox(
                                                 height: 3.0,
@@ -239,10 +239,9 @@ class EstateDetailsSheet extends StatelessWidget {
                               child: Container(
                                 width: 40,
                                 margin: const EdgeInsets.only(top: 10),
-                                decoration: const BoxDecoration(
-                                    color: Colors.blue),
-                                child: const Text(
-                                  "للبيع",
+                                decoration:  BoxDecoration(
+                                    color: estate.forRent==1?Colors.blue:Colors.orange),
+                                child:  Text(estate.forRent==1?"للبيع":"للإجار",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,)
