@@ -8,7 +8,7 @@ class ZoneModel {
   String latitude;
   String longitude;
   String createdAt;
-  String territory_id;
+  int  territory_id;
   String updatedAt;
 
 

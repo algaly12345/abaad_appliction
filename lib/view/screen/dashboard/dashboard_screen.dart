@@ -1,10 +1,16 @@
 import 'dart:async';
 
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/user_controller.dart';
 
 import 'package:abaad/helper/responsive_helper.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
+import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/custom_image.dart';
+import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/chat/chat_screen.dart';
 
 import 'package:abaad/view/screen/dashboard/widget/bottom_nav_item.dart';
@@ -34,8 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Widget> _screens;
 
-  GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
-
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -64,9 +69,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       NetworkInfo.checkConnectivity(_scaffoldKey.currentContext);
     }*/
   }
-
   @override
   Widget build(BuildContext context) {
+    Get.find<UserController>().getUserInfo();
+    bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+
     return WillPopScope(
       onWillPop: () async {
         if (_pageIndex != 0) {
@@ -90,7 +97,94 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       },
       child: Scaffold(
-        key: _scaffoldKey,
+        key: _key,
+        appBar: WebMenuBar(ontop:()=>     _key.currentState.openDrawer(),),
+        drawer:  GetBuilder<UserController>(builder: (userController) {
+          return (_isLoggedIn && userController.userInfoModel == null) ? Center(child: CircularProgressIndicator()) :Drawer(
+                  child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:  ListView(
+                children: <Widget>[
+
+                  UserAccountsDrawerHeader(
+                    accountName:  Text(
+                      _isLoggedIn ? '${userController.userInfoModel.name}' : 'guest'.tr,
+                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge,color:  Colors.grey), ),
+
+                    accountEmail:   Text(
+                      _isLoggedIn ? '${userController.userInfoModel.phone}' : 'guest'.tr,
+                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.grey),
+                    ),
+                    onDetailsPressed: (){
+                      Get.toNamed(RouteHelper.getProfileRoute());
+                    },
+                    decoration:  const BoxDecoration(
+                      image:  DecorationImage(
+                        image: ExactAssetImage('assets/images/lake.jpeg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    currentAccountPicture:  ClipOval(child: CustomImage(
+                      image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'
+                          '/${(userController.userInfoModel != null && _isLoggedIn) ? userController.userInfoModel.image : ''}',
+                      height: 100, width: 100, fit: BoxFit.cover,
+                    )),
+                  ),
+                  listItem(1,Icons.manage_accounts_outlined, 'my_account'.tr, Colors.blueAccent,(){
+                    Get.toNamed(RouteHelper.getProfileRoute());
+                  }),
+                  listItem(1,Icons.language, 'language'.tr, Colors.green,(){
+                   Get.toNamed(RouteHelper.getLanguageRoute("menu"));
+                  }),
+                  Divider(height: 1),
+
+                  listItem(2,Icons.support_agent_outlined, 'help_support'.tr, Colors.orange,(){
+                   //Get.toNamed(RouteHelper.getSupportRoute(0));
+                  }),
+                  Divider(height: 1),
+
+                  listItem(3,Icons.policy, 'privacy_policy'.tr, Colors.pink,(){
+                  //  Get.toNamed(RouteHelper.getHtmlRoute("privacy-policy"));
+                  }),
+                  Divider(height: 1),
+
+                  listItem(4,Icons.info, 'about_us'.tr, Colors.deepPurple,(){
+                 //   Get.toNamed(RouteHelper.getHtmlRoute("about-us"));
+                  }),
+                  Divider(height: 1),
+
+                  listItem(5,Icons.list_alt, 'terms_conditions'.tr, Colors.grey,(){
+                  //      Get.toNamed(RouteHelper.getHtmlRoute("terms_conditions"));
+                  }),
+                  Divider(height: 1),
+
+                  listItem(6,Icons.account_balance_wallet_outlined, 'wallet'.tr, Colors.green,(){
+                  //  Get.toNamed(RouteHelper.getWalletRoute(true));
+                  }),
+
+                  Divider(height: 1),
+
+                  listItem(8,Icons.logout,  _isLoggedIn ? 'logout'.tr : 'sign_in'.tr, Colors.orange,(){
+
+
+                    // if(Get.find<AuthController>().isLoggedIn()) {
+                    //   Get.dialog(ConfirmationDialog(icon: Images.support, description: 'are_you_sure_to_logout'.tr, isLogOut: true, onYesPressed: () {
+                    //     Get.find<AuthController>().clearSharedData();
+                    //     Get.find<CartController>().clearCartList();
+                    //     Get.find<WishListController>().removeWishes();
+                    //     Get.offAllNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
+                    //   }), useSafeArea: false);
+                    // }else {
+                    //   Get.find<WishListController>().removeWishes();
+                    //   Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.main));
+                    // }
+                  }),
+                ],
+              ),
+            ),
+          );
+
+        }),
 
         floatingActionButton: Padding(
           padding: EdgeInsets.only(top: 20),
@@ -136,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
               child: Row(children: [
                 BottomNavItem(iconData: Images.home,name: "الرئسية",isSelected: _pageIndex == 0, onTap: () => _setPage(0)),
-                BottomNavItem(iconData: Images.menu, name:"قائمة",isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
+                BottomNavItem(iconData: Images.menu, name:"القائمة",isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
                 Expanded(child: SizedBox()),
                 BottomNavItem(iconData: Images.messageText,name: "المحادثة", isSelected: _pageIndex == 2, onTap: () => _setPage(2)),
                 BottomNavItem(iconData: Images.heart, name: "المفضلة",isSelected: _pageIndex == 3, onTap: () => _setPage(3),),
@@ -165,4 +259,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _pageIndex = pageIndex;
     });
   }
+}
+Widget listItem( int  index ,IconData icon, String label, Color color,onTop) {
+  return InkWell(
+    onTap: onTop,
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 4),
+        child: Container(
+
+
+
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: 34,
+                width: 34,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: color,
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12,),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }

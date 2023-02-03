@@ -17,10 +17,16 @@ class EstateRepo {
   }
 
 
-  Future<Response> getRestaurantProductList( int offset, int categoryID, String type) async {
+  Future<Response> getCategorisEstateList( int offset, int categoryID, String type) async {
     return await apiClient.getData(
       '${AppConstants.CATEGORY_ESTATEURI}/all?category_id=1&offset=$offset&limit=10&type=$type',
     );
   }
+
+
+  Future<Response> getEstateDetails(String estateID) async {
+    return await apiClient.getData('${AppConstants.ESTATE_DETAILS_URI}$estateID');
+  }
+
 
 }

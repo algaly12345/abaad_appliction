@@ -18,7 +18,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color)),
       centerTitle: true,
       leading: isBackButtonExist ? IconButton(
-        icon: Icon(Icons.arrow_back_ios),
+        icon: Center(
+          child: Container(
+            height: 25,
+            width: 25,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey, //                   <--- border color
+                width: 1.0,
+              ),
+            ),
+              child: Icon(Icons.arrow_back_ios)),
+        ),
         color: Theme.of(context).textTheme.bodyText1.color,
         onPressed: () => onBackPressed != null ? onBackPressed() : Navigator.pop(context),
       ) : SizedBox(),

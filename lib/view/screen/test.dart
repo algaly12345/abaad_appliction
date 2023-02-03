@@ -1,168 +1,489 @@
-import 'dart:async';
-import 'dart:collection';
-
-import 'package:abaad/controller/auth_controller.dart';
-import 'package:abaad/controller/estate_controller.dart';
-import 'package:abaad/controller/location_controller.dart';
-import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/data/model/response/address_model.dart';
-import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:abaad/data/model/response/zone_model.dart';
-import 'package:abaad/helper/responsive_helper.dart';
-import 'package:abaad/util/dimensions.dart';
-import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/custom_button.dart';
-import 'package:abaad/view/base/custom_image.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/web_menu_bar.dart';
-import 'package:abaad/view/screen/map/widget/location_search_dialog.dart';
-import 'package:abaad/view/screen/map/widget/permission_dialog.dart';
-import 'package:abaad/view/screen/map/widget/zone_sheet.dart';
-import 'package:custom_map_markers/custom_map_markers.dart';
-import 'package:flip_card/flip_card.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
-import 'package:abaad/util/images.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-class PickMapScreen extends StatefulWidget {
-
-  PickMapScreen();
-
-  @override
-  State<PickMapScreen> createState() => _PickMapScreenState();
-}
-
-class _PickMapScreenState extends State<PickMapScreen> {
-  GoogleMapController _mapController;
-  CameraPosition _cameraPosition;
-  LatLng _initialPosition;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // if(widget.fromAddAddress) {
-    //   Get.find<LocationController>().setPickData();
-    // }
-    _initialPosition = LatLng(
-      double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
-      double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
-      body: SafeArea(child: Center(child: SizedBox(
-        width: Dimensions.WEB_MAX_WIDTH,
-        child: GetBuilder<LocationController>(builder: (locationController) {
-          /*print('--------------${'${locationController.pickPlaceMark.name ?? ''} '
-              '${locationController.pickPlaceMark.locality ?? ''} '
-              '${locationController.pickPlaceMark.postalCode ?? ''} ${locationController.pickPlaceMark.country ?? ''}'}');*/
-
-          return Stack(children: [
-
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target:_initialPosition,
-                zoom: 16,
-              ),
-              minMaxZoomPreference: MinMaxZoomPreference(0, 16),
-              onMapCreated: (GoogleMapController mapController) {
-                _mapController = mapController;
-
-              },
-              zoomControlsEnabled: false,
-              onCameraMove: (CameraPosition cameraPosition) {
-                _cameraPosition = cameraPosition;
-              },
-              onCameraMoveStarted: () {
-                locationController.disableButton();
-              },
-              onCameraIdle: () {
-                Get.find<LocationController>().updatePosition(_cameraPosition, false);
-              },
-            ),
-
-            Center(child: !locationController.loading ? Image.asset(Images.pick_marker, height: 50, width: 50)
-                : CircularProgressIndicator()),
-
-            Positioned(
-              top: Dimensions.PADDING_SIZE_LARGE, left: Dimensions.PADDING_SIZE_SMALL, right: Dimensions.PADDING_SIZE_SMALL,
-              child: InkWell(
-                onTap: () => Get.dialog(LocationSearchDialog(mapController: _mapController)),
-                child: Container(
-                  height: 50,
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                  decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-                  child: Row(children: [
-                    Icon(Icons.location_on, size: 25, color: Theme.of(context).primaryColor),
-                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    Expanded(
-                      child: Text(
-                        locationController.pickAddress,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                    Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
-                  ]),
-                ),
-              ),
-            ),
-
-            Positioned(
-              bottom: 80, right: Dimensions.PADDING_SIZE_SMALL,
-              child: FloatingActionButton(
-                child: Icon(Icons.my_location, color: Theme.of(context).primaryColor),
-                mini: true, backgroundColor: Theme.of(context).cardColor,
-                onPressed: () => _checkPermission(() {
-                  Get.find<LocationController>().getCurrentLocation(false, mapController: _mapController);
-                }),
-              ),
-            ),
-
-            Positioned(
-              bottom: Dimensions.PADDING_SIZE_LARGE, left: Dimensions.PADDING_SIZE_SMALL, right: Dimensions.PADDING_SIZE_SMALL,
-              child: !locationController.isLoading ? CustomButton(
-                buttonText:  'service_not_available_in_this_area'.tr,
-                onPressed: (locationController.buttonDisabled || locationController.loading) ? null : () {
-                  if(locationController.pickPosition.latitude != 0 && locationController.pickAddress.isNotEmpty) {
-
-                  }else {
-                    showCustomSnackBar('pick_an_address'.tr);
-                  }
-                },
-              ) : Center(child: CircularProgressIndicator()),
-            ),
-
-          ]);
-        }),
-      ))),
-    );
-  }
-
-  void _checkPermission(Function onTap) async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if(permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-    if(permission == LocationPermission.denied) {
-      showCustomSnackBar('you_have_to_allow'.tr);
-    }else if(permission == LocationPermission.deniedForever) {
-      Get.dialog(PermissionDialog());
-    }else {
-      onTap();
-    }
-  }
-}
+// import 'package:flutter/material.dart';
+//
+// import 'package:flutter_slidable/flutter_slidable.dart';
+//
+// import 'package:flutter_todolist/appBars.dart';
+// import 'package:flutter_todolist/bottomNavigation.dart';
+// import 'package:flutter_todolist/fab.dart';
+// import 'package:flutter_todolist/util.dart';
+//
+// class Home extends StatefulWidget {
+//   Home({Key key}) : super(key: key);
+//
+//   _HomeState createState() => _HomeState();
+// }
+//
+// class _HomeState extends State<Home> {
+//   final bottomNavigationBarIndex = 0;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: fullAppbar(context),
+//       body: Container(
+//         width: MediaQuery.of(context).size.width,
+//         child: ListView(
+//           scrollDirection: Axis.vertical,
+//           children: <Widget>[
+//             Container(
+//               margin: EdgeInsets.only(top: 15, left: 20, bottom: 15),
+//               child: Text(
+//                 'Today',
+//                 style: TextStyle(
+//                     fontSize: 13,
+//                     fontWeight: FontWeight.w600,
+//                     color: CustomColors.TextSubHeader),
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked.png'),
+//                   Text(
+//                     '07.00 AM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Go jogging with Christin',
+//                       style: TextStyle(
+//                           color: CustomColors.TextGrey,
+//                           //fontWeight: FontWeight.w600,
+//                           decoration: TextDecoration.lineThrough),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.YellowIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Slidable(
+//               actionPane: SlidableDrawerActionPane(),
+//               actionExtentRatio: 0.25,
+//               child: Container(
+//                 margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//                 padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: <Widget>[
+//                     Image.asset('assets/images/checked-empty.png'),
+//                     Text(
+//                       '08.00 AM',
+//                       style: TextStyle(color: CustomColors.TextGrey),
+//                     ),
+//                     Container(
+//                       width: 180,
+//                       child: Text(
+//                         'Send project file',
+//                         style: TextStyle(
+//                             color: CustomColors.TextHeader,
+//                             fontWeight: FontWeight.w600),
+//                       ),
+//                     ),
+//                     Image.asset('assets/images/bell-small.png'),
+//                   ],
+//                 ),
+//                 decoration: BoxDecoration(
+//                   gradient: LinearGradient(
+//                     stops: [0.015, 0.015],
+//                     colors: [CustomColors.GreenIcon, Colors.white],
+//                   ),
+//                   borderRadius: BorderRadius.all(
+//                     Radius.circular(5.0),
+//                   ),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: CustomColors.GreyBorder,
+//                       blurRadius: 10.0,
+//                       spreadRadius: 5.0,
+//                       offset: Offset(0.0, 0.0),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               secondaryActions: <Widget>[
+//                 SlideAction(
+//                   child: Container(
+//                     padding: EdgeInsets.only(bottom: 10),
+//                     child: Container(
+//                       height: 35,
+//                       width: 35,
+//                       decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(50),
+//                           color: CustomColors.TrashRedBackground),
+//                       child: Image.asset('assets/images/trash.png'),
+//                     ),
+//                   ),
+//                   onTap: () => print('Delete'),
+//                 ),
+//               ],
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked-empty.png'),
+//                   Text(
+//                     '10.00 AM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Meeting with client',
+//                       style: TextStyle(
+//                           color: CustomColors.TextHeader,
+//                           fontWeight: FontWeight.w600),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small-yellow.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.PurpleIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked-empty.png'),
+//                   Text(
+//                     '13.00 PM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Email client',
+//                       style: TextStyle(
+//                           color: CustomColors.TextHeader,
+//                           fontWeight: FontWeight.w600),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.GreenIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.only(left: 20, bottom: 15),
+//               child: Text(
+//                 'Tomorrow',
+//                 style: TextStyle(
+//                     fontSize: 13,
+//                     fontWeight: FontWeight.w600,
+//                     color: CustomColors.TextSubHeader),
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked-empty.png'),
+//                   Text(
+//                     '07.00 AM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Morning yoga',
+//                       style: TextStyle(
+//                           color: CustomColors.TextHeader,
+//                           fontWeight: FontWeight.w600),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.YellowIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked-empty.png'),
+//                   Text(
+//                     '08.00 AM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Sending project file',
+//                       style: TextStyle(
+//                           color: CustomColors.TextHeader,
+//                           fontWeight: FontWeight.w600),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.GreenIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked-empty.png'),
+//                   Text(
+//                     '10.00 AM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Meeting with client',
+//                       style: TextStyle(
+//                           color: CustomColors.TextHeader,
+//                           fontWeight: FontWeight.w600),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small-yellow.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.PurpleIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked-empty.png'),
+//                   Text(
+//                     '13.00 PM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Email client',
+//                       style: TextStyle(
+//                           color: CustomColors.TextHeader,
+//                           fontWeight: FontWeight.w600),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.GreenIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked-empty.png'),
+//                   Text(
+//                     '13.00 PM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Meeting with client',
+//                       style: TextStyle(
+//                           color: CustomColors.TextHeader,
+//                           fontWeight: FontWeight.w600),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small-yellow.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.PurpleIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//               padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                 children: <Widget>[
+//                   Image.asset('assets/images/checked-empty.png'),
+//                   Text(
+//                     '13.00 PM',
+//                     style: TextStyle(color: CustomColors.TextGrey),
+//                   ),
+//                   Container(
+//                     width: 180,
+//                     child: Text(
+//                       'Email client',
+//                       style: TextStyle(
+//                           color: CustomColors.TextHeader,
+//                           fontWeight: FontWeight.w600),
+//                     ),
+//                   ),
+//                   Image.asset('assets/images/bell-small.png'),
+//                 ],
+//               ),
+//               decoration: BoxDecoration(
+//                 gradient: LinearGradient(
+//                   stops: [0.015, 0.015],
+//                   colors: [CustomColors.GreenIcon, Colors.white],
+//                 ),
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(5.0),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: CustomColors.GreyBorder,
+//                     blurRadius: 10.0,
+//                     spreadRadius: 5.0,
+//                     offset: Offset(0.0, 0.0),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             SizedBox(height: 15)
+//           ],
+//         ),
+//       ),
+//       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+//       floatingActionButton: customFab(context),
+//       bottomNavigationBar:
+//       BottomNavigationBarApp(context, bottomNavigationBarIndex),
+//     );
+//   }
+// }

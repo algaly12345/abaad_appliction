@@ -102,13 +102,13 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: GetBuilder<AuthController>(builder: (authController) {
 
                     return Column(children: [
-
-                      Image.asset(Images.logo, width: 100),
+                      const SizedBox(height: Dimensions.PADDING_SIZE_OVER_LARGE),
+                      Image.asset(Images.logo, width: 200),
                       // SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                       // Image.asset(Images.logo_name, width: 100),
-                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
 
-                      Text('sign_in'.tr.toUpperCase(), style: robotoBlack.copyWith(fontSize: 30)),
+
+                      // Text('sign_in'.tr.toUpperCase(), style: robotoBlack.copyWith(fontSize: 30)),
                       SizedBox(height: 50),
 
                       Container(
@@ -131,14 +131,14 @@ class _SignInScreenState extends State<SignInScreen> {
                               showDropDownButton: true,
                               padding: EdgeInsets.zero,
                               showFlagMain: true,
-                              flagWidth: 30,
+                              flagWidth: 25,
                               dialogBackgroundColor: Theme.of(context).cardColor,
                               textStyle: robotoRegular.copyWith(
                                 fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
                               ),
                             ),
                             Expanded(flex: 1, child: CustomTextField(
-                              hintText: 'phone'.tr,
+                              hintText: '500000000',
                               controller: _phoneController,
                               focusNode: _phoneFocus,
                               nextFocus: _passwordFocus,
@@ -229,13 +229,10 @@ class _SignInScreenState extends State<SignInScreen> {
             authController.clearUserNumberAndPassword();
           }
           String _token = status.message.substring(1, status.message.length);
-          if(Get.find<SplashController>().configModel.customerVerification && int.parse(status.message[0]) == 0) {
             List<int> _encoded = utf8.encode("1234567");
             String _data = base64Encode(_encoded);
             Get.toNamed(RouteHelper.getVerificationRoute(_numberWithCountryCode, _token, RouteHelper.signUp, _data));
-          }else {
-            Get.toNamed(RouteHelper.getAccessLocationRoute('sign-in'));
-          }
+
         }else {
           showCustomSnackBar(status.message);
         }

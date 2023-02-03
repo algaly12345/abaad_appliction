@@ -5,7 +5,8 @@ class AppConstants {
   static const String APP_NAME = 'Baad';
   static const double APP_VERSION = 1.0;
   static const String LOGIN_URI = '/api/v1/auth/login';
-  static const String BASE_URL = 'http://abaad.iaspl.net';
+  static const String BASE_URL = 'http://alharthi.iaspl.net';
+  // static const String BASE_URL = 'http://192.168.159.37/abbaad-dashboard';
   static const String REGISTER_URI = '/api/v1/auth/register';
   static const String THEME = 'theme';
   static const String TOKEN = 'abaad_token';
@@ -39,6 +40,11 @@ class AppConstants {
   static const String CATEGORIES = '/api/v1/categories';
   static const String CATEGORY_ESTATEURI = '/api/v1/estate/get-estate';
   static const String ZONE_ALL = '/api/v1/zones';
+  static const String UPDATE_PROFILE_URI = '/api/v1/customer/update-profile';
+  static const String CUSTOMER_INFO_URI = '/api/v1/customer/info';
+  static const String BANNER_URI = '/api/v1/banners';
+  static const String NOTIFICATION_URI = '/api/v1/customer/notifications';
+  static const String ESTATE_DETAILS_URI = '/api/v1/estate/details/';
 
 
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];

@@ -1,4 +1,5 @@
 import 'package:abaad/controller/category_controller.dart';
+import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
 import 'package:abaad/data/model/auto_complete_result.dart';
 import 'package:abaad/data/model/response/category_model.dart';
@@ -42,9 +43,7 @@ class EstateController extends GetxController implements GetxService {
   String get type => _type;
   String get searchType => _searchType;
   String get searchText => _searchText;
-  int get foodOffset => _foodOffset;
-  int get foodPageSize => _foodPageSize;
-  bool get foodPaginate => _foodPaginate;
+
 
   Future<void> getEstateList(int offset, bool reload) async {
 
@@ -71,21 +70,20 @@ class EstateController extends GetxController implements GetxService {
     }
   }
 
-  Future<void> getRestaurantProductList(int restaurantID, int offset, String type, bool notify) async {
+  Future<void> getCategoriesEstateList(int estateId, int offset, String type, bool notify) async {
 
     _foodOffset = offset;
     if(offset == 1 || _estateList == null) {
       _type = type;
-     // _foodOffsetList = [];
+
       _estateList = null;
-      _foodOffset = 1;
       if(notify) {
         update();
       }
     }
 
 
-    Response response = await estateRepo.getRestaurantProductList(
+    Response response = await estateRepo.getCategorisEstateList(
         1, offset, type);
       if (response.statusCode == 200) {
         if (offset == 1) {
@@ -93,8 +91,6 @@ class EstateController extends GetxController implements GetxService {
         }
         print("awad-------------------------------${response.body}");
         _estateList.addAll(EstateModel.fromJson(response.body).estates);
-        // _foodPageSize = ProductModel.fromJson(response.body).totalSize;
-        // _foodPaginate = false;
         update();
       } else {
         print("awad-------------------------------${response.body}");
@@ -146,19 +142,25 @@ class EstateController extends GetxController implements GetxService {
     update();
   }
 
-  final String key = 'AIzaSyDYQ4n3qgjC49HNL8zD-fp62SsNz5OnRjo';
-  final String types = 'geocode';
+  Future<Estate> getEstateDetails(Estate estate) async {
 
-  Future<List<AutoCompleteResult>> searchPlaces(String searchInput) async {
-    final String url =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchInput&types=$types&key=$key';
+    if(estate.shortDescription != null) {
+      _estate = estate;
+    }else {
+      _isLoading = true;
+      _estate = null;
+      Response response = await estateRepo.getEstateDetails(estate.id.toString());
+      if (response.statusCode == 200) {
+        _estate = Estate.fromJson(response.body);
+        print("-------------------------------------detailsapp${_estate.shortDescription}");
 
-    var response = await http.get(Uri.parse(url));
+      } else {
+        ApiChecker.checkApi(response);
+      }
 
-    var json = convert.jsonDecode(response.body);
-
-    var results = json['predictions'] as List;
-
-    return results.map((e) => AutoCompleteResult.fromJson(e)).toList();
+      _isLoading = false;
+      update();
+    }
+    return _estate;
   }
 }

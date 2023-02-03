@@ -62,41 +62,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
               width: context.width > 700 ? 700 : context.width,
               padding: context.width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
               decoration: context.width > 700 ? BoxDecoration(
-                color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+
                 boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], blurRadius: 5, spreadRadius: 1)],
               ) : null,
               child: GetBuilder<AuthController>(builder: (authController) {
 
                 return Column(children: [
 
+                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                  Image.asset(Images.logo, width: 140),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                  Image.asset(Images.logo, width: 100),
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                  Image.asset(Images.logo_name, width: 100),
                   const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
 
-                  Text('sign_up'.tr.toUpperCase(), style: robotoBlack.copyWith(fontSize: 20)),
                   SizedBox(height: 30),
 
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                      color: Theme.of(context).cardColor,
-                      boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 5)],
+
+
                     ),
                     child: Column(children: [
 
-                      CustomTextField(
-                        hintText: 'full_name'.tr,
-                        controller: _fullNameController,
-                        focusNode: _firstNameFocus,
-                        nextFocus: _emailFocus,
-                        inputType: TextInputType.name,
-                        capitalization: TextCapitalization.words,
-                        prefixIcon: Images.full_name,
-                        divider: true,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'full_name'.tr,
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                          ),
+                          CustomTextField(
+                            hintText: 'ali',
+                            controller: _fullNameController,
+                            focusNode: _firstNameFocus,
+                            nextFocus: _emailFocus,
+                            inputType: TextInputType.name,
+                            capitalization: TextCapitalization.words,
+                            prefixIcon: Images.full_name,
+                          ),
+                        ],
                       ),
-
                       // CustomTextField(
                       //   hintText: 'last_name'.tr,
                       //   controller: _lastNameController,
@@ -107,41 +112,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //   prefixIcon: Images.mail,
                       //   divider: true,
                       // ),
-
-                      CustomTextField(
-                        hintText: 'email'.tr,
-                        controller: _emailController,
-                        focusNode: _emailFocus,
-                        nextFocus: _phoneFocus,
-                        inputType: TextInputType.emailAddress,
-                        prefixIcon: Images.mail,
-                        divider: true,
-                      ),
-
-                      Row(children: [
-                        CodePickerWidget(
-                          onChanged: (CountryCode countryCode) {
-                            _countryDialCode = countryCode.dialCode;
-                          },
-                          initialSelection: CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).code,
-                          favorite: [CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).code],
-                          showDropDownButton: true,
-                          padding: EdgeInsets.zero,
-                          showFlagMain: true,
-                          dialogBackgroundColor: Theme.of(context).cardColor,
-                          textStyle: robotoRegular.copyWith(
-                            fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'email'.tr,
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
                           ),
-                        ),
-                        Expanded(child: CustomTextField(
-                          hintText: 'phone'.tr,
-                          controller: _phoneController,
-                          focusNode: _phoneFocus,
-                          nextFocus: _passwordFocus,
-                          inputType: TextInputType.phone,
-                          divider: false,
-                        )),
-                      ]),
+                          CustomTextField(
+                            hintText: 'ali4322@hostmail.com',
+                            controller: _emailController,
+                            focusNode: _emailFocus,
+                            nextFocus: _phoneFocus,
+                            inputType: TextInputType.emailAddress,
+                            prefixIcon: Images.mail,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'phone'.tr,
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                          ),
+                          SizedBox(height: 4),
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Container(
+                              color: Theme.of(context).cardColor,
+                              child: Row(children: [
+                                CodePickerWidget(
+                                  onChanged: (CountryCode countryCode) {
+                                    _countryDialCode = countryCode.dialCode;
+                                  },
+                                  initialSelection: CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).code,
+                                  favorite: [CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).code],
+                                  showDropDownButton: true,
+                                  padding: EdgeInsets.zero,
+                                  showFlagMain: true,
+                                  dialogBackgroundColor: Theme.of(context).cardColor,
+                                  textStyle: robotoRegular.copyWith(
+                                    fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
+                                  ),
+                                ),
+                                Expanded(child: CustomTextField(
+                                  hintText: '500000000',
+                                  controller: _phoneController,
+                                  focusNode: _phoneFocus,
+                                  nextFocus: _passwordFocus,
+                                  inputType: TextInputType.phone,
+                                )),
+                              ]),
+                            ),
+                          ),
+                        ],
+                      ),
                       Padding(padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE), child: Divider(height: 1)),
 
                       // CustomTextField(
@@ -168,31 +196,77 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //   onSubmit: (text) => (GetPlatform.isWeb && authController.acceptTerms) ? _register(authController, _countryDialCode) : null,
                       // ),
 
-                       CustomTextField(
-                        hintText: 'refer_code'.tr,
-                        controller: _referCodeController,
-                        focusNode: _referCodeFocus,
-                        inputAction: TextInputAction.done,
-                        inputType: TextInputType.text,
-                        capitalization: TextCapitalization.words,
-                        prefixIcon: Images.arabic,
-                        divider: false,
-                        prefixSize: 14,
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'refer_code'.tr,
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                          ),
+                          CustomTextField(
+                            hintText: 'refer_code'.tr,
+                            controller: _referCodeController,
+                            focusNode: _referCodeFocus,
+                            inputAction: TextInputAction.done,
+                            inputType: TextInputType.text,
+                            capitalization: TextCapitalization.words,
+                            prefixIcon: Images.arabic,
+                            divider: false,
+                            prefixSize: 14,
+                          ),
+                        ],
                       ),
 
                     ]),
                   ),
                   SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                      GetBuilder<AuthController>(builder: (authController) {
+               List<int> _zoneIndexList = [];
+               if(authController.zoneList != null) {
+              for(int index=0; index<authController.zoneList.length; index++) {
+                     _zoneIndexList.add(index);
+                    }
+                        }
+               return    Container(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(
+                      'zone'.tr,
+                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                    ),
+                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    authController.zoneList != null ? Container(
+                      padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
+                      ),
+                      child: DropdownButton<int>(
+                        value: authController.selectedZoneIndex,
+                        items: _zoneIndexList.map((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(authController.zoneList[value].name),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          authController.setZoneIndex(value);
+                        },
+                        isExpanded: true,
+                        underline: SizedBox(),
+                      ),
+                    ) : Center(child: CircularProgressIndicator()),
+                  ]));
+    }),
 
                   ConditionCheckBox(authController: authController),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                   !authController.isLoading ? Row(children: [
-                    Expanded(child: CustomButton(
-                      buttonText: 'sign_in'.tr,
-                      transparent: true,
-                      onPressed: () =>Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.signUp)),
-                    )),
+                    // Expanded(child: CustomButton(
+                    //   buttonText: 'sign_in'.tr,
+                    //   transparent: true,
+                    //   onPressed: () =>Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.signUp)),
+                    // )),
                     Expanded(child: CustomButton(
                       buttonText: 'sign_up'.tr,
                       onPressed: authController.acceptTerms ? () => _register(authController, _countryDialCode) : null,
@@ -253,7 +327,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }else {
       SignUpBody signUpBody = SignUpBody(
         fName: _fullName, email: _email, phone: _numberWithCountryCode, password: "1234567",
-        refCode: _referCode,
+        refCode: _referCode,zone_id:  authController.zoneList[authController.selectedZoneIndex].id
       );
       authController.registration(signUpBody).then((status) async {
         if (status.isSuccess) {

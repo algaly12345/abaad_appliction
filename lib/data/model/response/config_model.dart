@@ -9,8 +9,9 @@ class ConfigModel {
 
   String country;
   DefaultLocation defaultLocation;
-  // String appUrlAndroid;
+  String appUrlAndroid;
   String appUrlIos;
+//  String appUrlAndroid;
   bool customerVerification;
 
   double marketingCommission;
@@ -37,7 +38,7 @@ class ConfigModel {
         this.aboutUs,
         this.country,
         this.defaultLocation,
-        // this.appUrlAndroid,
+        this.appUrlAndroid,
         this.appUrlIos,
         this.customerVerification,
         this.appMinimumVersionAndroid,
@@ -61,7 +62,7 @@ class ConfigModel {
     aboutUs = json['about_us'];
     country = json['country'];
     defaultLocation = json['default_location'] != null ? DefaultLocation.fromJson(json['default_location']) : null;
-    // appUrlAndroid = json['app_url_android'];
+     appUrlAndroid = json['app_url_android'];
     appUrlIos = json['app_url_ios'];
     customerVerification = json['customer_verification'];
     demo = json['demo'];
@@ -96,8 +97,8 @@ class ConfigModel {
     if (this.defaultLocation != null) {
       data['default_location'] = this.defaultLocation.toJson();
     }
-    // data['app_url_android'] = this.appUrlAndroid;
-    // data['app_url_ios'] = this.appUrlIos;
+     data['app_url_android'] = this.appUrlAndroid;
+    data['app_url_ios'] = this.appUrlIos;
     data['customer_verification'] = this.customerVerification;
     data['demo'] = this.demo;
     data['maintenance_mode'] = this.maintenanceMode;
@@ -121,6 +122,7 @@ class BaseUrls {
   String agentImageUrl;
   String activitiesImageUrl;
   String notificationImageUrl;
+  String banners;
 
   BaseUrls(
       {  this.estateImageUrl,
@@ -129,6 +131,7 @@ class BaseUrls {
         this.reviewImageUrl,
         this.agentImageUrl,
         this.notificationImageUrl,
+        this.banners
       });
 
   BaseUrls.fromJson(Map<String, dynamic> json) {
@@ -139,6 +142,7 @@ class BaseUrls {
     agentImageUrl = json['agent_image_url'];
     activitiesImageUrl = json['activities_image_url'];
     notificationImageUrl = json['notification_image_url'];
+    banners= json["banners"];
 
   }
 
@@ -151,6 +155,7 @@ class BaseUrls {
     data['agent_image_url'] = this.agentImageUrl;
     data['activities_image_url'] = this.activitiesImageUrl;
     data['notification_image_url'] = this.notificationImageUrl;
+    data['banners'] = this.banners;
 
     return data;
   }

@@ -1,3 +1,4 @@
+import 'package:abaad/controller/banner_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/localization_controller.dart';
@@ -18,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hex_color/flutter_hex_color.dart';
 import 'package:get/get.dart';
 
+import 'widet/banner_view.dart';
+
 class HomeScreen extends StatefulWidget {
 
 
@@ -36,27 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-   // Get.find<EstateController>().getRestaurantDetails(Restaurant(id: widget.restaurant.id));
+    Get.find<BannerController>().getBannerList(true,1);
    // Get.find<EstateController>().getEstateList(1, false);
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
     } 
-    Get.find<EstateController>().getRestaurantProductList(1, 1, 'all', false);
-    scrollController?.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent
-
-          && !Get.find<EstateController>().foodPaginate) {
-        int pageSize = (Get.find<EstateController>().foodPageSize / 10).ceil();
-        if (Get.find<EstateController>().foodOffset < pageSize) {
-          Get.find<EstateController>().setFoodOffset(Get.find<EstateController>().foodOffset+1);
-          print('end of the page');
-          Get.find<EstateController>().showFoodBottomLoader();
-          Get.find<EstateController>().getRestaurantProductList(
-            1, Get.find<EstateController>().foodOffset, Get.find<EstateController>().type, false,
-          );
-        }
-      }
-    });
+    Get.find<EstateController>().getCategoriesEstateList(1, 1, 'all', false);
   }
 
 
@@ -65,14 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
 @override
 void dispose() {
   super.dispose();
-
   scrollController?.dispose();
 }
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
         backgroundColor: Theme.of(context).cardColor,
         body:   GetBuilder<EstateController>(builder: (restController) {
            return GetBuilder<CategoryController>(builder: (categoryController) {
@@ -80,31 +66,6 @@ void dispose() {
     child: ListView(
     padding: const EdgeInsets.symmetric(horizontal: 10),
     children: [
-      Row(
-        children: [
-          InkWell(
-            onTap: (){
-              // Push.to(context, const ProfileScreen())
-            },
-            child:  Image.asset(Images.menu, width: 30.0, height: 30.0),
-          ),
-          const Spacer(),
-          Column(
-            children: [
-              Text(
-                'موقعك',
-                style: robotoRegular.copyWith(color: Colors.grey),
-              ),
-              const Text(
-                'السعودية, جدة',
-              ),
-            ],
-          ),
-          const Spacer(),
-          Image.asset(Images.notification, width: 30.0, height: 30.0),
-        ],
-      ),
-    const SizedBox(height: 15),
      Row(
       children: [
         SafeArea(
@@ -122,7 +83,7 @@ void dispose() {
                       Row(
                         children: [
                           _textField(
-                              label: 'search',
+                              label: 'بحث',
                               prefixIcon: const Icon(Icons.search),
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.my_location,color: Colors.blue),
@@ -140,7 +101,7 @@ void dispose() {
                             padding: const EdgeInsets.all(7),
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(4),
                                 border: Border.all(
                                   width: 1,
                                   color: Colors.blue,
@@ -175,50 +136,9 @@ void dispose() {
 
       ],
     ),
-    const SizedBox(height: 12),
       Container(
-        height: 113.0,
-        decoration: BoxDecoration(
-          color: HexColor('#FCAA30'),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Positioned(
-              top: -17.0,
-              left: -20.0,
-              child: Image.asset(
-                Images.point_right_colors,
-                width: 70.0,
-                height: 70.0,
-              ),
-            ),
-            Positioned(
-              top: 3.0,
-              right: 20.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '15% تخفيض',
-                    style: robotoBold.copyWith(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                    ),
-                  ),
-                  Text(
-                    'عمارة فى التجمع الخامس من جدة فى الجهة الشرقية',
-                    style: robotoBold.copyWith(
-                      color: Colors.white,
-                      fontSize: 10.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        height: 150.0,
+        child:   BannerView(),
       ),
     const SizedBox(height: 17),
 

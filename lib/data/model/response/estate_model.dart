@@ -52,12 +52,13 @@ class Estate {
   String latitude;
   String longitude;
   int zoneId;
-  bool forRent;
-  bool forSell;
-  String territoryId;
-  String ageEstate;
-  String description;
-  String floors;
+  int forRent;
+  int forSell;
+  int territoryId;
+  int ageEstate;
+  String shortDescription;
+  String longDescription;
+  int floors;
   String near;
   String createdAt;
   String updatedAt;
@@ -88,7 +89,8 @@ class Estate {
   this.forSell,
   this.territoryId,
   this.ageEstate,
-  this.description,
+  this.shortDescription,
+    this.longDescription,
   this.floors,
   this.near,
   this.createdAt,
@@ -125,7 +127,8 @@ class Estate {
     forSell = json['for_sell'];
     territoryId = json['territory_id'];
     ageEstate = json['age_estate'];
-    description = json['description'];
+    shortDescription = json['short_description'];
+    longDescription=json['long_description'];
     floors = json['floors'];
     near = json['near'];
     createdAt = json['created_at'];
@@ -161,11 +164,12 @@ class Estate {
     data['for_sell'] = this.forSell;
     data['territory_id'] = this.territoryId;
     data['age_estate'] = this.ageEstate;
-    data['description'] = this.description;
+    data['short_description'] = this.shortDescription;
     data['floors'] = this.floors;
     data['near'] = this.near;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['long_description']=this.longDescription;
     return data;
   }
 }

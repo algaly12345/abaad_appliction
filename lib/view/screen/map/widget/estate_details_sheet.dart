@@ -48,10 +48,7 @@ class EstateDetailsSheet extends StatelessWidget {
 
           InkWell(
             onTap: () {
-              // Get.toNamed(
-              //   RouteHelper.getRestaurantRoute(restaurant.id),
-              //   arguments: RestaurantScreen(restaurant: restaurant),
-              // );
+              Get.offNamed(RouteHelper.getDetailsRoute(1));
             },
             child: Container(
               width: context.width,

@@ -27,6 +27,13 @@ class Images {
   static const String menu = 'assets/image/menu.png';
   static const String notification = 'assets/image/notification-bing.png';
   static const String offer_icon = 'assets/image/offer_icon.png';
+  static const String checked_empty = 'assets/image/checked-empty.png';
+  static const String checked_notifcaion = 'assets/image/checked-notifcaion.png';
+  static const String bell_small = 'assets/image/bell-small-yellow.png';
+  static const String setting_profile = 'assets/image/setting_profile.png';
+  static const String property_profile = 'assets/image/property_profile.png';
+  static const String maintenance='assets/image/maintenance.png';
+  static const String update='assets/image/maintenance.png';
 
 
 

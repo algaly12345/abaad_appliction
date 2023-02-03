@@ -221,9 +221,9 @@ class AuthController extends GetxController implements GetxService {
       _zoneList = [];
       response.body.forEach((zone) => _zoneList.add(ZoneModel.fromJson(zone)));
      // _zoneModel = ZoneModel.fromJson(response.body);
-      setLocation(LatLng(
-        double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
-        double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
+      setLocation(const LatLng(
+          26.451363,
+          50.109046
       ));
     } else {
       ApiChecker.checkApi(response);

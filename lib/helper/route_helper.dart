@@ -1,20 +1,28 @@
 
 import 'dart:convert';
 
+import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
+import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
+import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/view/base/not_found.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
+import 'package:abaad/view/screen/estate/estate_details.dart';
 import 'package:abaad/view/screen/language/language_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:abaad/view/screen/map/map_screen.dart';
+import 'package:abaad/view/screen/notification/notification_screen.dart';
 import 'package:abaad/view/screen/onboard/old/onboarding_screen.dart';
 import 'package:abaad/view/screen/onboard/on_boarding_page.dart';
+import 'package:abaad/view/screen/profile/profile_screen.dart';
+import 'package:abaad/view/screen/profile/update_profile_screen.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
 import 'package:abaad/view/screen/test.dart';
+import 'package:abaad/view/screen/update/update_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get.dart';
@@ -32,7 +40,10 @@ class RouteHelper {
   static const String interest = '/interest';
   static const String main = '/main';
   static const String profile = '/profile';
+  static const String updateProfile = '/update-profile';
   static const String categories = '/categories';
+  static const String notification = '/notification';
+  static const String estate = '/estate';
 
 
 
@@ -40,6 +51,8 @@ class RouteHelper {
   static String getProfileRoute() => '$profile';
   static String getInitialRoute() => '$initial';
   static String getCategoryRoute(int id ) => '$categories?id=$id';
+  static String getNotificationRoute() => '$notification';
+  static String getUpdateProfileRoute() => '$updateProfile';
   static String getSplashRoute(NotificationBody body) {
     String _data = 'null';
     if(body != null) {
@@ -51,11 +64,13 @@ class RouteHelper {
   static String getLanguageRoute(String page) => '$language?page=$page';
   static String getOnBoardingRoute() => '$onBoarding';
 
+
   static String getSignInRoute(String page) => '$signIn?page=$page';
   static String getSignUpRoute() => '$signUp';
   static String getVerificationRoute(String number, String token, String page, String pass) {
     return '$verification?page=$page&number=$number&token=$token&pass=$pass';
   }
+  static String getDetailsRoute(int id) => '$estate?id=$id';
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
 
@@ -90,8 +105,9 @@ class RouteHelper {
       fromSignUp: Get.parameters['page'] == signUp, fromHome: Get.parameters['page'] == 'home', route: null,pageIndex: 0,
     )),
 
-
-
+    GetPage(name: notification, page: () =>NotificationScreen()),
+    GetPage(name: profile, page: () => ProfileScreen()),
+    GetPage(name: updateProfile, page: () => UpdateProfileScreen()),
     GetPage(name: categories, page: () {
       MapScreen _pickMapScreen = Get.arguments;
       bool _fromAddress = Get.parameters['page'] == 'add-address';
@@ -100,6 +116,9 @@ class RouteHelper {
          fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: _fromAddress, route: Get.parameters['page'],
         canRoute: Get.parameters['route'] == 'true',
       );
+    }),
+    GetPage(name: estate, page: () {
+      return Get.arguments != null ? Get.arguments : EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])));
     }),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
   ];
@@ -110,15 +129,15 @@ class RouteHelper {
 
 
   static getRoute(Widget navigateTo) {
+    print("init-----------------------------${double}");
     int _minimumVersion = 0;
     if(GetPlatform.isAndroid) {
       _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionAndroid;
     }else if(GetPlatform.isIOS) {
       _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionIos;
     }
-    // return AppConstants.APP_VERSION < _minimumVersion ? UpdateScreen(isUpdate: true)
-    //     : Get.find<SplashController>().configModel.maintenanceMode ? UpdateScreen(isUpdate: false)
-    //     : Get.find<LocationController>().getUserAddress() != null ? navigateTo
-    //     : AccessLocationScreen(fromSignUp: false, fromHome: false, route: Get.currentRoute);
+    return AppConstants.APP_VERSION < _minimumVersion ? UpdateScreen(isUpdate: true)
+        : Get.find<SplashController>().configModel.maintenanceMode ? UpdateScreen(isUpdate: false)
+        : Get.find<LocationController>().getUserAddress() != null ;
   }
 }

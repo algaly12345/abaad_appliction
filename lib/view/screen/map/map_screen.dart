@@ -12,8 +12,10 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/base/discount_tag.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/map/widget/zone_sheet.dart';
+import 'package:abaad/view/screen/test.dart';
 import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
@@ -72,8 +74,8 @@ class _MapViewScreenState extends State<MapScreen> {
       Get.find<LocationController>().setPickData();
     }
     _initialPosition = LatLng(
-      double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
-      double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
+        26.451363,
+        50.109046
     );
   }
 
@@ -147,34 +149,8 @@ class _MapViewScreenState extends State<MapScreen> {
                                     topRight: Radius.circular(8.0),
                                   ),
                                   image: DecorationImage(
-                                      image: NetworkImage('https://pic.onlinewebfonts.com/svg/img_546302.png'),
+                                      image: NetworkImage('https://cdn.dribbble.com/users/234969/screenshots/5404808/medallion_burst_animation.gif'),
                                       fit: BoxFit.cover)),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(7.0),
-                              width: 175.0,
-                              child: Row(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Address: ',
-                                    style: TextStyle(
-                                        fontFamily: 'WorkSans',
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Container(
-                                      width: 105.0,
-                                      child: const Text(
-                                        'none given',
-                                        style: TextStyle(
-                                            fontFamily: 'WorkSans',
-                                            fontSize: 11.0,
-                                            fontWeight: FontWeight.w400),
-                                      ))
-                                ],
-                              ),
                             ),
                             Container(
                               padding:
@@ -182,24 +158,14 @@ class _MapViewScreenState extends State<MapScreen> {
                               width: 175.0,
                               child: Row(
                                 crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Contact: ',
-                                    style: TextStyle(
-                                        fontFamily: 'WorkSans',
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500),
+                                CrossAxisAlignment.center,
+                                children:  [
+                                  SizedBox(
+                                    width: 150,
+                                    child: Text(
+                                      "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 11),
+                                    ),
                                   ),
-                                  Container(
-                                      width: 105.0,
-                                      child: const Text(
-                                        'none given',
-                                        style: TextStyle(
-                                            fontFamily: 'WorkSans',
-                                            fontSize: 11.0,
-                                            fontWeight: FontWeight.w400),
-                                      ))
                                 ],
                               ),
                             ),
@@ -393,11 +359,11 @@ class _MapViewScreenState extends State<MapScreen> {
                             child: Row(
                               crossAxisAlignment:
                               CrossAxisAlignment.center,
-                              children: const [
+                              children:  [
                                 SizedBox(
                                   width: 150,
                                   child: Text(
-                                    "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",
+                                    "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 11),
                                   ),
                                 ),
                               ],
@@ -743,38 +709,48 @@ _buildReviewItem() {
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
                 width: 160.0,
-                child: const Text(
-                  'author_name',
-                  style: TextStyle(
-                      fontFamily: 'WorkSans',
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500),
+                child:  Text(
+                  'دهانات الجزيرة',
+                  style: robotoBlack.copyWith(fontSize: 11),
                 ),
               ),
               const SizedBox(height: 3.0),
-              const RatingStars(
-                value: 3* 1.0,
-                starCount: 5,
-                starSize: 7,
-                valueLabelColor: Color(0xff9b9b9b),
-                valueLabelTextStyle: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'WorkSans',
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                    fontSize: 9.0),
-                valueLabelRadius: 7,
-                maxValue: 5,
-                starSpacing: 2,
-                maxValueVisibility: false,
-                valueLabelVisibility: true,
-                animationDuration: Duration(milliseconds: 1000),
-                valueLabelPadding:
-                EdgeInsets.symmetric(vertical: 1, horizontal: 4),
-                valueLabelMargin: EdgeInsets.only(right: 4),
-                starOffColor: Color(0xffe7e8ea),
-                starColor: Colors.yellow,
-              )
+          SizedBox(
+            height: 16,
+             width: 44,
+            child: CustomPaint(
+              painter: PriceTagPaint(),
+              child: Center(
+                child: Text(
+                  "20%",
+                  style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
+                ),
+              ),
+            ),
+          )
+              // const RatingStars(
+              //   value: 3* 1.0,
+              //   starCount: 5,
+              //   starSize: 7,
+              //   valueLabelColor: Color(0xff9b9b9b),
+              //   valueLabelTextStyle: TextStyle(
+              //       color: Colors.white,
+              //       fontFamily: 'WorkSans',
+              //       fontWeight: FontWeight.w400,
+              //       fontStyle: FontStyle.normal,
+              //       fontSize: 9.0),
+              //   valueLabelRadius: 7,
+              //   maxValue: 5,
+              //   starSpacing: 2,
+              //   maxValueVisibility: false,
+              //   valueLabelVisibility: true,
+              //   animationDuration: Duration(milliseconds: 1000),
+              //   valueLabelPadding:
+              //   EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+              //   valueLabelMargin: EdgeInsets.only(right: 4),
+              //   starOffColor: Color(0xffe7e8ea),
+              //   starColor: Colors.yellow,
+              // )
             ])
           ],
         ),
