@@ -8,6 +8,7 @@ import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/view/base/not_found.dart';
+import 'package:abaad/view/screen/access_location_screen.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
@@ -111,14 +112,14 @@ class RouteHelper {
     GetPage(name: categories, page: () {
       MapScreen _pickMapScreen = Get.arguments;
       bool _fromAddress = Get.parameters['page'] == 'add-address';
-      return (_fromAddress && _pickMapScreen == null) ? NotFound() : _pickMapScreen != null ? _pickMapScreen
-          : MapScreen(mainCategory:ZoneModel(id: int.parse(Get.parameters['id'])) ,
+      return (_fromAddress && _pickMapScreen == null) ? NotFound() : _pickMapScreen ?? MapScreen(mainCategory:ZoneModel(id: int.parse(Get.parameters['id'])) ,
          fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: _fromAddress, route: Get.parameters['page'],
         canRoute: Get.parameters['route'] == 'true',
       );
     }),
+
     GetPage(name: estate, page: () {
-      return Get.arguments != null ? Get.arguments : EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])));
+      return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])));
     }),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
   ];
@@ -127,17 +128,15 @@ class RouteHelper {
 
   static String getUpdateRoute(bool isUpdate) => '$update?update=${isUpdate.toString()}';
 
-
   static getRoute(Widget navigateTo) {
-    print("init-----------------------------${double}");
     int _minimumVersion = 0;
     if(GetPlatform.isAndroid) {
       _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionAndroid;
     }else if(GetPlatform.isIOS) {
       _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionIos;
     }
-    return AppConstants.APP_VERSION < _minimumVersion ? UpdateScreen(isUpdate: true)
-        : Get.find<SplashController>().configModel.maintenanceMode ? UpdateScreen(isUpdate: false)
-        : Get.find<LocationController>().getUserAddress() != null ;
+    // return AppConstants.APP_VERSION < _minimumVersion ? UpdateScreen(isUpdate: true)
+    //     : Get.find<SplashController>().configModel.maintenanceMode ? UpdateScreen(isUpdate: false));
+
   }
 }

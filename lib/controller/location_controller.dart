@@ -12,6 +12,7 @@ import 'package:abaad/data/model/response/response_model.dart';
 import 'package:abaad/data/model/response/zone_response_model.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -373,7 +374,30 @@ class LocationController extends GetxController implements GetxService {
       }
     }
   }
+  void autoNavigate(AddressModel address, bool fromSignUp, String route, bool canRoute) async {
+    if(!GetPlatform.isWeb) {
+      if (Get.find<LocationController>().getUserAddress() != null && Get.find<LocationController>().getUserAddress().zoneId != address.zoneId) {
+        FirebaseMessaging.instance.unsubscribeFromTopic('zone_${Get.find<LocationController>().getUserAddress().zoneId}_customer');
+        FirebaseMessaging.instance.subscribeToTopic('zone_${address.zoneId}_customer');
+      } else {
+        FirebaseMessaging.instance.subscribeToTopic('zone_${address.zoneId}_customer');
+      }
+    }
+    await Get.find<LocationController>().saveUserAddress(address);
+    if(Get.find<AuthController>().isLoggedIn()) {
+      Get.find<AuthController>().updateZone();
+    }
+    // HomeScreen.loadData(true);
+    if(fromSignUp) {
 
+    }else {
+      if(route != null && canRoute) {
+        Get.offAllNamed(route);
+      }else {
+        Get.offAllNamed(RouteHelper.getInitialRoute());
+      }
+    }
+  }
   bool _fits(LatLngBounds fitBounds, LatLngBounds screenBounds) {
     final bool northEastLatitudeCheck = screenBounds.northeast.latitude >= fitBounds.northeast.latitude;
     final bool northEastLongitudeCheck = screenBounds.northeast.longitude >= fitBounds.northeast.longitude;

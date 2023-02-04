@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class UpdateScreen extends StatelessWidget {
-  final bool isUpdate;
+   bool isUpdate;
   UpdateScreen({@required this.isUpdate});
 
   @override
