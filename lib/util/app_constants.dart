@@ -5,8 +5,8 @@ class AppConstants {
   static const String APP_NAME = 'Baad';
   static const double APP_VERSION = 1.0;
   static const String LOGIN_URI = '/api/v1/auth/login';
-  static const String BASE_URL = 'http://alharthi.iaspl.net';
-  // static const String BASE_URL = 'http://192.168.159.37/abbaad-dashboard';
+ // static const String BASE_URL = 'http://alharthi.iaspl.net';
+  static const String BASE_URL = 'http://192.168.159.37/abbaad-dashboard';
   static const String REGISTER_URI = '/api/v1/auth/register';
   static const String THEME = 'theme';
   static const String TOKEN = 'abaad_token';

@@ -56,7 +56,6 @@ class _SplashScreenState extends State<SplashScreen> {
         || Get.find<LocationController>().getUserAddress().zoneData == null)) {
       Get.find<AuthController>().clearSharedAddress();
     }
-    // Get.find<CartController>().getCartData();
     _route();
 
   }
@@ -82,21 +81,21 @@ class _SplashScreenState extends State<SplashScreen> {
             Get.offNamed(RouteHelper.getUpdateRoute(AppConstants.APP_VERSION < _minimumVersion));
           }else {
             if(widget.body != null) {
-              // if (widget.body.notificationType == NotificationType.order) {
-              // //  Get.offNamed(RouteHelper.getOrderDetailsRoute(widget.body.orderId));
-              // }else if(widget.body.notificationType == NotificationType.general){
-              // //  Get.offNamed(RouteHelper.getNotificationRoute());
-              // }else {
-              //  // Get.offNamed(RouteHelper.getChatRoute(notificationBody: widget.body, conversationID: widget.body.conversationId));
-              // }
+              if (widget.body.notificationType == NotificationType.order) {
+              //  Get.offNamed(RouteHelper.getOrderDetailsRoute(widget.body.orderId));
+              }else if(widget.body.notificationType == NotificationType.general){
+                Get.offNamed(RouteHelper.getNotificationRoute());
+              }else {
+           //     Get.offNamed(RouteHelper.getChatRoute(notificationBody: widget.body, conversationID: widget.body.conversationId));
+              }
             }else {
               if (Get.find<AuthController>().isLoggedIn()) {
                 Get.find<AuthController>().updateToken();
-                // await Get.find<WishListController>().getWishList();
-
-                Get.offNamed(RouteHelper.getAccessLocationRoute('verification'));
-
-
+                if (Get.find<LocationController>().getUserAddress() != null) {
+                  Get.offNamed(RouteHelper.getInitialRoute());
+                } else {
+                  Get.offNamed(RouteHelper.getAccessLocationRoute('splash'));
+                }
               } else {
                 if (Get.find<SplashController>().showIntro()) {
                   if(AppConstants.languages.length > 1) {
@@ -105,9 +104,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     Get.offNamed(RouteHelper.getOnBoardingRoute());
                   }
                 } else {
-                  Get.to(DashboardScreen(pageIndex: 0));
-                  Get.offNamed(RouteHelper.getInitialRoute());
-                 Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
+                  Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
                 }
               }
             }

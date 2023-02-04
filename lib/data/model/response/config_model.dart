@@ -72,8 +72,7 @@ class ConfigModel {
     termsConditions =json["terms_conditions"];
     appMinimumVersionAndroid = json['app_minimum_version_android'];
     appMinimumVersionIos = json['app_minimum_version_ios'];
-    marketingCommission = json['app_minimum_version_ios'];
-    appMinimumVersionIos = json['app_minimum_version_ios'];
+
     phoneVerification = json['phone_verification'];
     marketingCommission =json['marketing_commission'];
 

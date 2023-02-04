@@ -22,7 +22,6 @@ import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'helper/get_di.dart' as di;
 
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
@@ -77,7 +76,6 @@ class MyApp extends StatelessWidget {
       if (isSuccess) {
         if (Get.find<AuthController>().isLoggedIn()) {
           Get.find<AuthController>().updateToken();
-
         }
       }
     });
@@ -91,14 +89,13 @@ class MyApp extends StatelessWidget {
           || Get.find<LocationController>().getUserAddress().zoneData == null)) {
         Get.find<AuthController>().clearSharedAddress();
       }
-
       _route();
     }
 
     return GetBuilder<ThemeController>(builder: (themeController) {
       return GetBuilder<LocalizationController>(builder: (localizeController) {
         return GetBuilder<SplashController>(builder: (splashController) {
-          return  GetMaterialApp(
+          return (GetPlatform.isWeb && splashController.configModel == null) ? SizedBox() : GetMaterialApp(
             title: AppConstants.APP_NAME,
             debugShowCheckedModeBanner: false,
             navigatorKey: Get.key,
@@ -109,7 +106,7 @@ class MyApp extends StatelessWidget {
             locale: localizeController.locale,
             translations: Messages(languages: languages),
             fallbackLocale: Locale(AppConstants.languages[0].languageCode, AppConstants.languages[0].countryCode),
-            initialRoute: GetPlatform.isWeb ? RouteHelper.getAccessLocationRoute('verification') : RouteHelper.getSplashRoute(body),
+            initialRoute: GetPlatform.isWeb ? RouteHelper.getInitialRoute() : RouteHelper.getSplashRoute(body),
             getPages: RouteHelper.routes,
             defaultTransition: Transition.topLevel,
             transitionDuration: Duration(milliseconds: 500),
