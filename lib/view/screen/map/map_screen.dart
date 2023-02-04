@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
+import 'package:abaad/controller/localization_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
@@ -10,6 +12,7 @@ import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/cached_img.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/discount_tag.dart';
@@ -19,6 +22,7 @@ import 'package:abaad/view/screen/test.dart';
 import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hex_color/flutter_hex_color.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -63,6 +67,7 @@ class _MapViewScreenState extends State<MapScreen> {
   Set<Polygon> _polygon = HashSet<Polygon>();
   bool cardTapped = false;
   LatLng _initialPosition;
+  final bool _ltr = Get.find<LocalizationController>().isLtr;
 
 
   @override
@@ -72,6 +77,9 @@ class _MapViewScreenState extends State<MapScreen> {
     cardTapped = false;
     if(widget.fromAddAddress) {
       Get.find<LocationController>().setPickData();
+    }
+    if(Get.find<CategoryController>().categoryList == null) {
+      Get.find<CategoryController>().getCategoryList(true);
     }
     _initialPosition = LatLng(
         26.451363,
@@ -226,19 +234,19 @@ class _MapViewScreenState extends State<MapScreen> {
                                     onTap: () => Get.dialog(LocationSearchDialog(mapController: _controller)),
                                     child: Container(
                                       height: 43,
-                                      padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                                       decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
                                       width: width-130,
                                       child:  Row(children: [
                                         Icon(Icons.location_on, size: 25, color: Theme.of(context).primaryColor),
-                                        SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                        const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                         Expanded(
                                           child: Text(
                                             locationController.pickAddress,
                                             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                                         Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
                                       ]),
                                     ),
@@ -278,6 +286,44 @@ class _MapViewScreenState extends State<MapScreen> {
                                   ),
                                 ],
                               ),
+                              GetBuilder<CategoryController>(builder: (categoryController) {
+                                return   (categoryController.categoryList != null ) ?
+
+                                SizedBox(
+
+                                  height: 30,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: categoryController.categoryList.length,
+                                      padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+                                      physics: BouncingScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return  Column(
+                                          children: [
+
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 26,
+                                                    child: Text(categoryController.categoryList[index].name),
+                                                  color: Colors.white,
+                                                ),
+
+                                                CachedImage(
+                                                  imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rubio_Circle.png",
+                                                  width: 30.0,
+                                                  height: 30.0,
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        );
+
+                                      }),
+                                ):Container();
+
+                              })
+
                             ],
                           ),
                         ),
@@ -285,6 +331,7 @@ class _MapViewScreenState extends State<MapScreen> {
                     ),
                   ),
                 ),
+
                 GetBuilder<SplashController>(builder: (splashController) {
                   return splashController.nearestEstateIndex != -1 ? Positioned(
                     bottom: 0,
@@ -479,6 +526,42 @@ class _MapViewScreenState extends State<MapScreen> {
                                 ),
                               ],
                             ),
+                            GetBuilder<CategoryController>(builder: (categoryController) {
+                              return   (categoryController.categoryList != null ) ?
+
+                              SizedBox(
+height: 30,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: categoryController.categoryList.length,
+                                    padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+                                    physics: BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return  Column(
+                                        children: [
+
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: 26,
+                                                child: Text(categoryController.categoryList[index].name),
+                                                color: Colors.white,
+                                              ),
+
+                                              CachedImage(
+                                                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rubio_Circle.png",
+                                                width: 30.0,
+                                                height: 30.0,
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      );
+
+                                    }),
+                              ):Container();
+
+                            })
                           ],
                         ),
                       ),
@@ -770,4 +853,27 @@ _buildReviewItem() {
       Divider(color: Colors.grey.shade600, height: 1.0)
     ],
   );
+}
+
+
+class SliverDelegate extends SliverPersistentHeaderDelegate {
+  Widget child;
+
+  SliverDelegate({@required this.child});
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return child;
+  }
+
+  @override
+  double get maxExtent => 50;
+
+  @override
+  double get minExtent => 50;
+
+  @override
+  bool shouldRebuild(SliverDelegate oldDelegate) {
+    return oldDelegate.maxExtent != 50 || oldDelegate.minExtent != 50 || child != oldDelegate.child;
+  }
 }

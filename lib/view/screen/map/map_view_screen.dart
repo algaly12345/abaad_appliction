@@ -285,47 +285,6 @@ class _MapViewScreenState extends State<MapViewScreen> {
     }
   }
 
-  void _setMarkers(List<Estate> restaurants) async {
-    List<LatLng> _latLngs = [];
-    _customMarkers = [];
-    _customMarkers.add(MarkerData(
-      marker: const Marker(markerId: MarkerId('id-0'), position: LatLng(
-        // double.parse(Get.find<LocationController>().getUserAddress().latitude),
-        // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-          26.451363,
-          50.109046
-      )),
-    ));
-    int _index = 0;
-    for (int index = 0; index < restaurants.length; index++) {
-      _index++;
-      LatLng _latLng = LatLng(double.parse(restaurants[index].latitude),
-          double.parse(restaurants[index].longitude));
-      _latLngs.add(_latLng);
-
-      _customMarkers.add(MarkerData(
-        marker: Marker(
-            markerId: MarkerId('id-$_index'), position: _latLng, onTap: () {
-          Get.find<SplashController>().setNearestEstateIndex(index);
-        }),
-        child: Image.asset(Images.estate_default, height: 32, width: 20),
-      ));
-    }
-    // if(!ResponsiveHelper.isWeb() && _controller != null) {
-    //   Get.find<LocationController>().zoomToFit(_controller, _latLngs, padding: 0);
-    // }
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (_reload == 0) {
-      setState(() {});
-      _reload = 1;
-    }
-
-    await Future.delayed(const Duration(seconds: 3));
-    if (_reload == 1) {
-      setState(() {});
-      _reload = 2;
-    }
-  }
 }
 
 
