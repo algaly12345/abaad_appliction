@@ -128,7 +128,6 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 Image.asset(Images.logo, width: 150),
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                Image.asset(Images.logo_name, width: 220),
                 /*SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
               Text(AppConstants.APP_NAME, style: robotoMedium.copyWith(fontSize: 25)),*/
               ],

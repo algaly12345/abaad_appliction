@@ -11,4 +11,8 @@ class ZoneRepo {
     return await apiClient.getData(AppConstants.ZONE_ALL);
   }
 
+  Future<Response> getLandService() async {
+    return await apiClient.getData('${AppConstants.LAND_SERVICE_URL}');
+  }
+
 }

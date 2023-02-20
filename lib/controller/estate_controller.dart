@@ -5,21 +5,24 @@ import 'package:abaad/data/model/auto_complete_result.dart';
 import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/repository/estate_repo.dart';
+import 'package:abaad/helper/route_helper.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EstateController extends GetxController implements GetxService {
   final EstateRepo estateRepo;
   EstateController({@required this.estateRepo});
-
+  var currentStep =0.obs;
   EstateModel _estateModel;
   List<Estate> _estateList;
   Estate _estate;
   int _categoryIndex = 0;
+  int _categoryPostion = 0;
   List<CategoryModel> _categoryList;
   bool _isLoading = false;
   String _estateType = 'all';
@@ -30,8 +33,16 @@ class EstateController extends GetxController implements GetxService {
   List<int> _foodOffsetList = [];
   int _foodPageSize;
   bool _foodPaginate = false;
+  XFile _pickedLogo;
+  XFile _pickedCover;
+  List<Property> _categoryRestList;
 
 
+  List<String> _tagList = [];
+
+  List<String> options = ["ممرات مكيفة", "التحكم بالستائر", "التحكم باإنارة", "اطلالة بحرية", "الدخول الزكي","التحكم بالتكيف"];
+  Rx<List<String>> selectedOptionList = Rx<List<String>>([]);
+  var selectedOption = ''.obs;
 
   EstateModel get estateModel => _estateModel;
   List<Estate> get estateList => _estateList;
@@ -43,6 +54,12 @@ class EstateController extends GetxController implements GetxService {
   String get type => _type;
   String get searchType => _searchType;
   String get searchText => _searchText;
+  XFile get pickedLogo => _pickedLogo;
+  XFile get pickedCover => _pickedCover;
+  List<Property> get categoryRestList => _categoryRestList;
+  List<String> get tagList => _tagList;
+  int get categoryPostion => _categoryPostion;
+
 
 
   Future<void> getEstateList(int offset, bool reload) async {
@@ -120,6 +137,8 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
+
+
   void showBottomLoader() {
     _isLoading = true;
     update();
@@ -131,6 +150,21 @@ class EstateController extends GetxController implements GetxService {
     update();
   }
 
+  void setCategoryPostion(int index) {
+    _categoryPostion = index;
+    update();
+  }
+
+
+  int getCategoryIndex() {
+  return  _categoryIndex;
+
+  }
+
+  int getCategoryPostion() {
+    return  _categoryPostion;
+
+  }
 
   void setFoodOffset(int offset) {
     _foodOffset = offset;
@@ -163,4 +197,59 @@ class EstateController extends GetxController implements GetxService {
     }
     return _estate;
   }
+
+
+  void pickImage(bool isLogo, bool isRemove) async {
+    if(isRemove) {
+      _pickedLogo = null;
+      _pickedCover = null;
+    }else {
+      if (isLogo) {
+        _pickedLogo = await ImagePicker().pickImage(source: ImageSource.gallery);
+      } else {
+        _pickedCover = await ImagePicker().pickImage(source: ImageSource.gallery);
+      }
+      update();
+    }
+  }
+
+  Future<void> registerRestaurant(Estate restaurantBody) async {
+    _isLoading = true;
+    update();
+    Response response = await estateRepo.createEstate(restaurantBody, _pickedLogo, _pickedCover);
+    if(response.statusCode == 200) {
+      int _restaurantId = response.body['restaurant_id'];
+      Get.offAllNamed(RouteHelper.getBusinessPlanRoute(_restaurantId));
+    }else {
+      ApiChecker.checkApi(response);
+    }
+    _isLoading = false;
+    update();
+  }
+
+
+
+
+
+
+  @override
+  void onInit() {
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+  }
+
+  @override
+  void onClose() {}
+
+
 }
+
+
+
+
+
+

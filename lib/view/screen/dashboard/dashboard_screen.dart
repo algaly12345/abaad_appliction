@@ -12,14 +12,15 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/chat/chat_screen.dart';
-
 import 'package:abaad/view/screen/dashboard/widget/bottom_nav_item.dart';
 import 'package:abaad/view/screen/favourite/favourite_screen.dart';
 import 'package:abaad/view/screen/draw.dart';
 import 'package:abaad/view/screen/home/home_screen.dart';
-import 'package:abaad/view/screen/map/map_view_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../old.dart';
 
 class DashboardScreen extends StatefulWidget {
   final bool fromSignUp;
@@ -50,8 +51,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pageController = PageController(initialPage: widget.pageIndex);
 
     _screens = [
+
        MapViewScreen(),
-      // Test(),
       HomeScreen(),
       ChatScreen(),
       FavouriteScreen(),
@@ -194,7 +195,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: FloatingActionButton(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              onPressed: () {},
+              onPressed: () {
+                Get.toNamed(RouteHelper.getAddEstateRoute());
+              },
               child: Container(
                 height: 70,
                 width: 70,

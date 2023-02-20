@@ -83,31 +83,37 @@ class UserInfoModel {
 
 class Userinfo {
   int id;
-  String ideintity;
-  String license;
+  String identity;
+  String advertiserNo;
+  String membershipType;
+  String identityType;
   String image;
   String commercialRegisterionNo;
   int userId;
-  Null createdAt;
-  Null updatedAt;
+  String createdAt;
+  String  updatedAt;
 
   Userinfo(
       {this.id,
-        this.ideintity,
-        this.license,
+        this.identity,
         this.image,
         this.commercialRegisterionNo,
         this.userId,
+        this.advertiserNo,
+        this.membershipType,
+        this.identityType,
         this.createdAt,
         this.updatedAt});
 
   Userinfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    ideintity = json['ideintity'];
-    license = json['license'];
+    identity = json['identity'];
     image = json['image'];
     commercialRegisterionNo = json['commercial_registerion_no'];
     userId = json['user_id'];
+    advertiserNo = json['advertiser_no'];
+    membershipType = json['membership_type'];
+    identityType = json['identity_type'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -115,11 +121,13 @@ class Userinfo {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['ideintity'] = this.ideintity;
-    data['license'] = this.license;
+    data['identity'] = this.identity;
     data['image'] = this.image;
     data['commercial_registerion_no'] = this.commercialRegisterionNo;
     data['user_id'] = this.userId;
+    data['advertiser_no'] = this.advertiserNo;
+    data['membership_type'] = this.membershipType;
+    data['identity_type'] = this.identityType;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;

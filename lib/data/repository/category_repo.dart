@@ -16,4 +16,9 @@ class CategoryRepo {
     return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}limit=10&offset=$offset&type=$type');
   }
 
+
+  Future<Response> getProperties(int categoryID) async {
+    return await apiClient.getData('${AppConstants.PROPERTIES_URI}?category_id=$categoryID');
+  }
+
 }

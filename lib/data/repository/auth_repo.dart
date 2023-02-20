@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/data/api/api_client.dart';
+import 'package:abaad/data/model/body/business_plan_body.dart';
 import 'package:abaad/data/model/body/signup_body.dart';
+import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -163,6 +165,20 @@ class AuthRepo {
     return await apiClient.postData(AppConstants.VERIFY_PHONE_URI, {"phone": phone, "otp": otp});
   }
 
+
+
+  Future<Response> registerAgent(Userinfo agnetBody) async {
+    return apiClient.postData(AppConstants.REGISTER_AS_AGENT, agnetBody.toJson());
+  }
+
+
+  Future<Response> getPackageList() async {
+    return await apiClient.getData(AppConstants.RESTAURANT_PACKAGES_URI);
+  }
+
+  Future<Response> setUpBusinessPlan(BusinessPlanBody businessPlanBody) async {
+    return await apiClient.postData(AppConstants.BUSINESS_PLAN_URI, businessPlanBody.toJson());
+  }
 
 
 }

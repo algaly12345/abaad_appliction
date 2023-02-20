@@ -20,16 +20,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: isBackButtonExist ? IconButton(
         icon: Center(
           child: Container(
-            height: 25,
-            width: 25,
+            height: 27,
+            width: 27,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.grey, //                   <--- border color
-                width: 1.0,
-              ),
+                border: Border.all(
+                  color: Theme.of(context).primaryColor,
+                  width: 1,
+                ),
+              borderRadius: BorderRadius.circular(2),
             ),
-              child: Icon(Icons.arrow_back_ios)),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 4,left: 4),
+                child: Icon(Icons.arrow_back_ios,size: 22),
+              )),
         ),
         color: Theme.of(context).textTheme.bodyText1.color,
         onPressed: () => onBackPressed != null ? onBackPressed() : Navigator.pop(context),

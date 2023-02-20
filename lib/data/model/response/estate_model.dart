@@ -33,7 +33,7 @@ class EstateModel {
 class Estate {
   int id;
   String address;
-  String property;
+  List<Property>  property;
   String space;
   int categoryId;
   int price;
@@ -45,7 +45,7 @@ class Estate {
   String networkType;
   int height;
   int width;
-  String serviceOffers;
+  List<ServiceOffers> serviceOffers;
   String qr;
   List<EstateImages> images;
   String arPath;
@@ -99,7 +99,12 @@ class Estate {
   Estate.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     address = json['address'];
-    property = json['property'];
+    if (json['property'] != null) {
+      property = <Property>[];
+      json['property'].forEach((v) {
+        property.add(new Property.fromJson(v));
+      });
+    }
     space = json['space'];
     categoryId = json['category_id'];
     price = json['price'];
@@ -111,7 +116,12 @@ class Estate {
     networkType = json['network_type'];
     height = json['height'];
     width = json['width'];
-    serviceOffers = json['service_offers'];
+    if (json['service_offers'] != null) {
+      serviceOffers = <ServiceOffers>[];
+      json['service_offers'].forEach((v) {
+        serviceOffers.add(new ServiceOffers.fromJson(v));
+      });
+    }
     qr = json['qr'];
     if (json['images'] != null) {
       images = <EstateImages>[];
@@ -139,7 +149,9 @@ class Estate {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['address'] = this.address;
-    data['property'] = this.property;
+    if (this.property != null) {
+      data['property'] = this.property.map((v) => v.toJson()).toList();
+    }
     data['space'] = this.space;
     data['category_id'] = this.categoryId;
     data['price'] = this.price;
@@ -151,7 +163,10 @@ class Estate {
     data['network_type'] = this.networkType;
     data['height'] = this.height;
     data['width'] = this.width;
-    data['service_offers'] = this.serviceOffers;
+    if (this.serviceOffers != null) {
+      data['service_offers'] =
+          this.serviceOffers.map((v) => v.toJson()).toList();
+    }
     data['qr'] = this.qr;
     if (this.images != null) {
       data['images'] = this.images.map((v) => v.toJson()).toList();
@@ -199,6 +214,55 @@ class EstateImages {
     data['estate_id'] = this.estateId;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+
+class ServiceOffers {
+  String offerId;
+  String offerName;
+
+  ServiceOffers({this.offerId, this.offerName});
+
+  ServiceOffers.fromJson(Map<String, dynamic> json) {
+    offerId = json['offer_id'];
+    offerName = json['offer_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['offer_id'] = this.offerId;
+    data['offer_name'] = this.offerName;
+    return data;
+  }
+
+
+
+}
+
+
+class Property {
+  int id;
+  String name;
+  String number;
+  int category_id;
+
+  Property({this.id, this.name, this.number,this.category_id});
+
+  Property.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    number = json['number'];
+    category_id = json['category_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['number'] = this.number;
+    data['category_id'] = this.category_id;
     return data;
   }
 }

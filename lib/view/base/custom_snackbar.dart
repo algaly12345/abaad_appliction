@@ -9,7 +9,7 @@ void showCustomSnackBar(String message, {bool isError = true}) {
       dismissDirection: DismissDirection.horizontal,
       margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
       duration: Duration(seconds: 3),
-      backgroundColor: isError ? Colors.red : Colors.green,
+      backgroundColor: isError ? Color(0xff9f8503): Colors.green,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
       content: Text(message, style: robotoMedium.copyWith(color: Colors.white)),

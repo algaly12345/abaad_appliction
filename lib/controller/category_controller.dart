@@ -12,6 +12,7 @@ class CategoryController extends GetxController implements GetxService {
   List<CategoryModel> _categoryList;
   List<CategoryModel> _subCategoryList;
   List<Estate> _categoryRestList;
+  List<Property> _propertiesRestList;
   List<Estate> _searchEstList = [];
   List<bool> _interestSelectedList;
   bool _isLoading = false;
@@ -35,6 +36,7 @@ class CategoryController extends GetxController implements GetxService {
   String get type => _type;
   bool get isRestaurant => _isEstates;
   String get searchText => _searchText;
+  List<Property> get proRestListp => _propertiesRestList;
   int get offset => _offset;
 
 
@@ -90,6 +92,33 @@ class CategoryController extends GetxController implements GetxService {
 
 
 
+  void getPropertiesList(int categoryID) async {
+
+    Response response = await categoryRepo.getProperties(categoryID);
+    if (response.statusCode == 200) {
+
+      // _propertiesRestList.add(Property.fromJson(response.body));
+      // print("musa abdalll ${response.body}");
+      // _isLoading = false;
+
+
+      _propertiesRestList = [];
+      _interestSelectedList = [];
+      response.body.forEach((category) {
+        _propertiesRestList.add(Property.fromJson(category));
+        _interestSelectedList.add(false);
+        print("omeromeromer");
+      });
+
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+
+
+
   void showBottomLoader() {
     _isLoading = true;
     update();
@@ -104,5 +133,8 @@ class CategoryController extends GetxController implements GetxService {
     _isEstates = isRestaurant;
     update();
   }
+
+
+
 
 }

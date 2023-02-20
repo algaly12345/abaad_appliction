@@ -1,11 +1,17 @@
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
+import 'package:abaad/data/model/body/business_plan_body.dart';
 import 'package:abaad/data/model/body/signup_body.dart';
+import 'package:abaad/data/model/response/package_model.dart';
 import 'package:abaad/data/model/response/response_model.dart';
+import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/data/model/response/zone_response_model.dart';
 import 'package:abaad/data/repository/auth_repo.dart';
+import 'package:abaad/helper/route_helper.dart';
+import 'package:abaad/util/images.dart';
+import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 
 import 'package:flutter/material.dart';
@@ -32,10 +38,20 @@ class AuthController extends GetxController implements GetxService {
   List<int> _zoneIds;
   XFile _pickedImage;
   List<XFile> _pickedIdentities = [];
-  List<String> _identityTypeList = ['passport', 'driving_license', 'nid'];
+  final List<String> _identityTypeList = ['هوية وطنية', 'سجل تجاري', 'هوية وطنية '];
   int _identityTypeIndex = 0;
-  List<String> _dmTypeList = ['freelancer', 'salary_based'];
+  final List<String> _dmTypeList = ['مكتب عقاري', 'شركة'];
+  bool isFirstTime = true;
   int _dmTypeIndex = 0;
+
+  List<String> subscriptionImages = [Images.subscription1, Images.subscription2, Images.subscription3];
+  PackageModel _packageModel;
+  int _activeSubscriptionIndex = 0;
+  String _businessPlanStatus = 'business';
+  String _secondStep= 'second_step';
+  int _paymentIndex = 0;
+  // int _restaurantId;
+  int _businessIndex = 0;
 
   bool get isLoading => _isLoading;
   bool get notification => _notification;
@@ -52,8 +68,42 @@ class AuthController extends GetxController implements GetxService {
   int get identityTypeIndex => _identityTypeIndex;
   List<String> get dmTypeList => _dmTypeList;
   int get dmTypeIndex => _dmTypeIndex;
+  int get businessIndex => _businessIndex;
+  String get businessPlanStatus => _businessPlanStatus;
+  String get secondStep => _secondStep;
+  int get activeSubscriptionIndex => _activeSubscriptionIndex;
 //  ZoneModel get zoneModel => _zoneModel;
 
+  PackageModel get packageModel => _packageModel;
+  int get paymentIndex => _paymentIndex;
+
+
+  void resetBusiness(){
+    _businessIndex = Get.find<SplashController>().configModel.businessPlan.commission == 0 ? 1 : 0;
+    _activeSubscriptionIndex = 0;
+    _businessPlanStatus = 'business';
+    _secondStep = 'second_step';
+    isFirstTime = true;
+    _paymentIndex = Get.find<SplashController>().configModel.freeTrialPeriodStatus == 0 ? 1 : 0;
+  }
+
+  void setPaymentIndex(int index){
+    _paymentIndex = index;
+    update();
+  }
+
+  void setBusiness(int business){
+    _activeSubscriptionIndex = 0;
+    _businessIndex = business;
+    update();
+  }
+  void showBackPressedDialogue(String title){
+    Get.dialog(ConfirmationDialog(icon: Images.support,
+      title: title,
+      description: 'are_you_sure_to_go_back'.tr, isLogOut: true,
+      onYesPressed: () => Get.offAllNamed(RouteHelper.getInitialRoute()),
+    ), useSafeArea: false);
+  }
   Future<ResponseModel> registration(SignUpBody signUpBody) async {
     _isLoading = true;
     update();
@@ -128,6 +178,10 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
+  void selectSubscriptionCard(int index){
+    _activeSubscriptionIndex = index;
+    update();
+  }
   String _verificationCode = '';
 
   String get verificationCode => _verificationCode;
@@ -353,6 +407,91 @@ class AuthController extends GetxController implements GetxService {
     _isLoading = false;
     update();
     return responseModel;
+  }
+
+
+
+  Future<void> registerAgent(Userinfo agentBody) async {
+    _isLoading = true;
+    update();
+
+    Response response = await authRepo.registerAgent(agentBody);
+    if (response.statusCode == 200) {
+      Get.offAllNamed(RouteHelper.getProfileRoute());
+      showCustomSnackBar('registration_successful'.tr, isError: false);
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    _isLoading = false;
+    update();
+  }
+
+  Future<void> getPackageList() async {
+    Response response = await authRepo.getPackageList();
+    if (response.statusCode == 200) {
+      _packageModel = null;
+      _packageModel = PackageModel.fromJson(response.body);
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+
+  Future<void> submitBusinessPlan({@required int restaurantId})async {
+    String _businessPlan;
+    if(businessIndex == 0){
+      _businessPlan = 'commission';
+      setUpBusinessPlan(BusinessPlanBody(businessPlan: _businessPlan, restaurantId: restaurantId.toString()));
+
+    }else{
+      _businessPlanStatus = 'payment';
+      if(!isFirstTime) {
+        if (_businessPlanStatus == 'payment' && _packageModel.packages.length != 0) {
+
+          _businessPlan = 'subscription';
+          int _packageId = _packageModel.packages[_activeSubscriptionIndex].id;
+          String _payment = _paymentIndex == 0 ? 'free_trial' : 'paying_now';
+          setUpBusinessPlan(BusinessPlanBody(businessPlan: _businessPlan,
+              packageId: _packageId.toString(),
+              restaurantId: restaurantId.toString(),
+              payment: _payment),
+          );
+
+        } else if(_packageModel.packages.isEmpty && _packageModel.packages.length == 0){
+          showCustomSnackBar('no_package_found'.tr);
+        } else {
+          showCustomSnackBar('please Select Any Process');
+        }
+      }else{
+        isFirstTime = false;
+      }
+    }
+
+    update();
+  }
+
+  Future<ResponseModel> setUpBusinessPlan(BusinessPlanBody businessPlanBody) async {
+    _isLoading = true;
+    update();
+    Response response = await authRepo.setUpBusinessPlan(businessPlanBody);
+    ResponseModel responseModel;
+    if (response.statusCode == 200) {
+      _businessPlanStatus = 'complete';
+      responseModel = ResponseModel(true, response.body.toString());
+      Future.delayed(Duration(seconds: 2),()=> Get.offAllNamed(RouteHelper.getInitialRoute()));
+    } else {
+      responseModel = ResponseModel(false, response.statusText);
+    }
+    _isLoading = false;
+    update();
+    return responseModel;
+  }
+
+
+  void setBusinessStatus(String status){
+    _businessPlanStatus = status;
+    update();
   }
 
 }

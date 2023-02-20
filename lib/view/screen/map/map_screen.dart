@@ -17,6 +17,7 @@ import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/discount_tag.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
+import 'package:abaad/view/screen/map/widget/estate_by_category.dart';
 import 'package:abaad/view/screen/map/widget/zone_sheet.dart';
 import 'package:abaad/view/screen/test.dart';
 import 'package:custom_map_markers/custom_map_markers.dart';
@@ -68,7 +69,14 @@ class _MapViewScreenState extends State<MapScreen> {
   bool cardTapped = false;
   LatLng _initialPosition;
   final bool _ltr = Get.find<LocalizationController>().isLtr;
-
+  MapType _currentMapType = MapType.normal;
+  void _onMapTypeButtonPressed() {
+    setState(() {
+      _currentMapType = _currentMapType == MapType.normal
+          ? MapType.satellite
+          : MapType.normal;
+    });
+  }
 
   @override
   void initState() {
@@ -286,35 +294,56 @@ class _MapViewScreenState extends State<MapScreen> {
                                   ),
                                 ],
                               ),
+                              const SizedBox(
+                                height: 5,),
                               GetBuilder<CategoryController>(builder: (categoryController) {
                                 return   (categoryController.categoryList != null ) ?
-
                                 SizedBox(
-
-                                  height: 30,
+                                  height: 35,
                                   child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: categoryController.categoryList.length,
                                       padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
                                       physics: BouncingScrollPhysics(),
                                       itemBuilder: (context, index) {
+                                        String _baseUrl = Get.find<SplashController>().configModel.baseUrls.categoryImageUrl;
                                         return  Column(
                                           children: [
 
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  height: 26,
-                                                    child: Text(categoryController.categoryList[index].name),
-                                                  color: Colors.white,
-                                                ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 5,left: 5),
+                                              child: InkWell(
+                                                onTap: () => restController.setCategoryIndex(index),
+                                                child: Container(
+                                                  height: 35,
+                                                  padding: const EdgeInsets.only(
+                                                      left: 4.0, right: 4.0),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color:index == restController.categoryIndex
+                                                            ? Theme.of(context).primaryColor:Colors.white
+                                                    ),
+                                                    borderRadius: BorderRadius.circular(2.0),
+                                                    color: Colors.white,
 
-                                                CachedImage(
-                                                  imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rubio_Circle.png",
-                                                  width: 30.0,
-                                                  height: 30.0,
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        height: 26,
+                                                        color: Colors.white,
+                                                        child: Text(categoryController.categoryList[index].name,style:  index == restController.categoryIndex
+                                                            ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).primaryColor)
+                                                            : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).disabledColor),),
+                                                      ),
+                                                      SizedBox(width: 5),
+
+                                                      CustomImage( image: '$_baseUrl/${categoryController.categoryList[index].image}',height: 25,width: 25,  colors:index == restController.categoryIndex
+                                                          ? Theme.of(context).primaryColor:Colors.black12),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ],
+                                              ),
                                             )
                                           ],
                                         );
@@ -363,8 +392,9 @@ class _MapViewScreenState extends State<MapScreen> {
             myLocationEnabled: false,
             compassEnabled: false,
             zoomControlsEnabled: true,
+              mapType: _currentMapType,
             onTap: (position) => Get.find<SplashController>().setNearestEstateIndex(-1),
-            minMaxZoomPreference: MinMaxZoomPreference(0, 16),
+            minMaxZoomPreference: MinMaxZoomPreference(0, 40),
             onMapCreated: (GoogleMapController controller) {
             _controller = controller;
             if(restController.estateModel != null ) {
@@ -526,34 +556,66 @@ class _MapViewScreenState extends State<MapScreen> {
                                 ),
                               ],
                             ),
+            const SizedBox(
+            height: 5,),
                             GetBuilder<CategoryController>(builder: (categoryController) {
                               return   (categoryController.categoryList != null ) ?
 
                               SizedBox(
-height: 30,
+                                height: 35,
                                 child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     itemCount: categoryController.categoryList.length,
                                     padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
                                     physics: BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
+                                      String _baseUrl = Get.find<SplashController>().configModel.baseUrls.categoryImageUrl;
                                       return  Column(
                                         children: [
 
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: 26,
-                                                child: Text(categoryController.categoryList[index].name),
-                                                color: Colors.white,
-                                              ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 5,left: 5),
+                                            child: InkWell(
+                                              onTap: () {
+                                      restController.setCategoryIndex(index);
+                                      showModalBottomSheet<int>(
+                                        backgroundColor: Colors.transparent,
+                                        context: context,
+                                        builder: (context) {
+                                          return BottomSheetWithSnackBar();
+                                        },
+                                      );
+                                      },
+                                              child: Container(
+                                                height: 35,
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0, right: 4.0),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color:index == restController.categoryIndex
+                                                          ? Theme.of(context).primaryColor:Colors.white
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(2.0),
+                                                  color: Colors.white,
 
-                                              CachedImage(
-                                                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rubio_Circle.png",
-                                                width: 30.0,
-                                                height: 30.0,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 26,
+                                                      color: Colors.white,
+                                                      child: Text(categoryController.categoryList[index].name,style:  index == restController.categoryIndex
+                                                          ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).primaryColor)
+                                                          : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).disabledColor),),
+                                                    ),
+                                                    SizedBox(width: 5),
+
+                                                    CustomImage( image: '$_baseUrl/${categoryController.categoryList[index].image}',height: 25,width: 25,  colors:index == restController.categoryIndex
+                                      ? Theme.of(context).primaryColor:Colors.black12),
+                                                  ],
+                                                ),
                                               ),
-                                            ],
+                                            ),
                                           )
                                         ],
                                       );
@@ -594,15 +656,13 @@ height: 30,
                         child: FloatingActionButton(
                           backgroundColor: Colors.white,
                           heroTag: 'recenterr',
-                          onPressed: () {
-
-                          },
+                          onPressed:_onMapTypeButtonPressed,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                               side: const BorderSide(color: Color(0xFFECEDF1))),
-                          child: const Icon(
+                          child:  Icon(
                             Icons.layers_outlined,
-                            color: Colors.grey,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
                       ),
@@ -673,6 +733,7 @@ height: 30,
       onTap();
     }
   }
+
   void _setMarkers(List<Estate> estate) async {
     List<LatLng> _latLngs = [];
     _customMarkers = [];
@@ -693,16 +754,54 @@ height: 30,
       _latLngs.add(_latLng);
 
       _customMarkers.add(MarkerData(
-        marker: Marker(
-            markerId: MarkerId('id-$_index'), position: _latLng, onTap: () {
 
+        marker: Marker(
+
+            markerId: MarkerId('id-$_index'), position: _latLng, onTap: () {
 
           Get.find<SplashController>().setNearestEstateIndex(index);
           setState(() {
             cardTapped = false;
           });
         }),
-        child: Image.asset(Images.estate_default, height: 32, width: 20),
+        child: Column(
+          children: [
+            Container(
+              width: 42,
+              height: 13,
+              padding:   const EdgeInsets.only(right: 1,left: 1),
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: Theme.of(context).secondaryHeaderColor
+                ),
+                borderRadius: BorderRadius.circular(2.0),
+                color: Colors.white,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      '${estate[index].price}',
+                      style:robotoBlack.copyWith(fontSize: 7)
+                  ),
+                  Image.asset(estate[index].serviceOffers.length==0?Images.vt:Images.vt_offer, height: 13, width: 13),
+                ],
+
+              ),
+            ),
+
+            Stack(
+              children: [
+                Image.asset(Images.location_marker, height: 35, width: 35,color:estate[index].serviceOffers.length==0?Theme.of(context).primaryColor:Colors.orange),
+                Positioned(top: 3, left: 0, right: 0, child: Center(
+                  child: ClipOval(child: CustomImage(image: "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Front-Of-Smaller-House-AdobeStock-118866140%20copy.jpeg", placeholder: Images.placeholder, height: 18, width: 18, fit: BoxFit.cover)),
+                )),
+              ],
+            ),
+          ],
+        )
+
+
       ));
     }
     // if(!ResponsiveHelper.isWeb() && _controller != null) {

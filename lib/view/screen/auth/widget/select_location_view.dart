@@ -8,6 +8,7 @@ import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
+import 'package:abaad/view/screen/map/widget/location_search_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -31,6 +32,7 @@ class _SelectLocationViewState extends State<SelectLocationView> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(builder: (authController) {
+
       List<int> _zoneIndexList = [];
       if(authController.zoneList != null && authController.zoneIds != null) {
         for(int index=0; index<authController.zoneList.length; index++) {
@@ -53,17 +55,17 @@ class _SelectLocationViewState extends State<SelectLocationView> {
             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
             InkWell(
-              // onTap: () async {
-              //   var _p = await Get.dialog(LocationSearchDialog(mapController: widget.fromView ? _mapController : _screenMapController));
-              //   Position _position = _p;
-              //   if(_position != null) {
-              //     _cameraPosition = CameraPosition(target: LatLng(_position.latitude, _position.longitude), zoom: 16);
-              //     if(!widget.fromView) {
-              //       widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
-              //       authController.setLocation(_cameraPosition.target);
-              //     }
-              //   }
-              // },
+              onTap: () async {
+                var _p = await Get.dialog(LocationSearchDialog(mapController: widget.fromView ? _mapController : _screenMapController));
+                Position _position = _p;
+                if(_position != null) {
+                  _cameraPosition = CameraPosition(target: LatLng(_position.latitude, _position.longitude), zoom: 16);
+                  if(!widget.fromView) {
+                    widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+                    authController.setLocation(_cameraPosition.target);
+                  }
+                }
+              },
               child: Container(
                 height: 50,
                 padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
@@ -103,13 +105,14 @@ class _SelectLocationViewState extends State<SelectLocationView> {
                         double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
                       ), zoom: 16,
                     ),
-                    minMaxZoomPreference: MinMaxZoomPreference(0, 16),
+                    minMaxZoomPreference: MinMaxZoomPreference(0, 20    ),
                     zoomControlsEnabled: true,
                     compassEnabled: false,
                     indoorViewEnabled: true,
                     mapToolbarEnabled: false,
                     myLocationEnabled: false,
                     zoomGesturesEnabled: true,
+                    mapType: MapType.satellite,
                     polygons: _polygons,
                     onCameraIdle: () {
                       authController.setLocation(_cameraPosition.target);
@@ -146,23 +149,23 @@ class _SelectLocationViewState extends State<SelectLocationView> {
             ) : SizedBox(),
             SizedBox(height: authController.zoneList.length > 0 ? Dimensions.PADDING_SIZE_SMALL : 0),
             authController.zoneList.length > 0 ? Row(children: [
-              Expanded(child: CustomTextField(
-                hintText: 'latitude'.tr,
-                controller: TextEditingController(
-                  text: authController.restaurantLocation != null ? authController.restaurantLocation.latitude.toString() : '',
-                ),
-                isEnabled: false,
-                showTitle: true,
-              )),
-              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-              Expanded(child: CustomTextField(
-                hintText: 'longitude'.tr,
-                controller: TextEditingController(
-                  text: authController.restaurantLocation != null ? authController.restaurantLocation.longitude.toString() : '',
-                ),
-                isEnabled: false,
-                showTitle: true,
-              )),
+              // Expanded(child: CustomTextField(
+              //   hintText: 'latitude'.tr,
+              //   controller: TextEditingController(
+              //     text: authController.restaurantLocation != null ? authController.restaurantLocation.latitude.toString() : '',
+              //   ),
+              //   isEnabled: false,
+              //   showTitle: true,
+              // )),
+              // SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+              // Expanded(child: CustomTextField(
+              //   hintText: 'longitude'.tr,
+              //   controller: TextEditingController(
+              //     text: authController.restaurantLocation != null ? authController.restaurantLocation.longitude.toString() : '',
+              //   ),
+              //   isEnabled: false,
+              //   showTitle: true,
+              // )),
             ]) : SizedBox(),
             SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 

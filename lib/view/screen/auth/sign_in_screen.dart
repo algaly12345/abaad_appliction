@@ -111,56 +111,60 @@ class _SignInScreenState extends State<SignInScreen> {
                       // Text('sign_in'.tr.toUpperCase(), style: robotoBlack.copyWith(fontSize: 30)),
                       SizedBox(height: 50),
 
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                          color: Theme.of(context).cardColor,
-                          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 5)],
-                        ),
-                        child: Column(children: [
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                            color: Theme.of(context).cardColor,
+                            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 5)],
+                          ),
+                          child: Column(children: [
 
-                          Row(children: [
-                            CodePickerWidget(
-                              onChanged: (CountryCode countryCode) {
-                                _countryDialCode = countryCode.dialCode;
-                              },
-                              initialSelection: _countryDialCode != null ? Get.find<AuthController>().getUserCountryCode().isNotEmpty ? Get.find<AuthController>().getUserCountryCode()
-                                  : CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).code : Get.find<LocalizationController>().locale.countryCode,
-                              favorite: [Get.find<AuthController>().getUserCountryCode().isNotEmpty ? Get.find<AuthController>().getUserCountryCode()
-                                  : CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).code],
-                              showDropDownButton: true,
-                              padding: EdgeInsets.zero,
-                              showFlagMain: true,
-                              flagWidth: 25,
-                              dialogBackgroundColor: Theme.of(context).cardColor,
-                              textStyle: robotoRegular.copyWith(
-                                fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
+                            Row(children: [
+                              CodePickerWidget(
+                                onChanged: (CountryCode countryCode) {
+                                  _countryDialCode = countryCode.dialCode;
+                                },
+                                initialSelection: _countryDialCode != null ? Get.find<AuthController>().getUserCountryCode().isNotEmpty ? Get.find<AuthController>().getUserCountryCode()
+                                    : CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).code : Get.find<LocalizationController>().locale.countryCode,
+                                favorite: [Get.find<AuthController>().getUserCountryCode().isNotEmpty ? Get.find<AuthController>().getUserCountryCode()
+                                    : CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).code],
+                                showDropDownButton: true,
+                                padding: EdgeInsets.zero,
+                                showFlagMain: true,
+                                flagWidth: 25,
+                                dialogBackgroundColor: Theme.of(context).cardColor,
+                                textStyle: robotoRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color,
+                                ),
                               ),
-                            ),
-                            Expanded(flex: 1, child: CustomTextField(
-                              hintText: '500000000',
-                              controller: _phoneController,
-                              focusNode: _phoneFocus,
-                              nextFocus: _passwordFocus,
-                              inputType: TextInputType.phone,
-                              divider: false,
-                            )),
+                              Expanded(flex: 1, child: CustomTextField(
+                                hintText: '500000000',
+                                elevation: false,
+                                controller: _phoneController,
+                                focusNode: _phoneFocus,
+                                nextFocus: _passwordFocus,
+                                inputType: TextInputType.phone,
+                                divider: false,
+                              )),
+                            ]),
+                            Padding(padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE), child: Divider(height: 1)),
+
+                            // CustomTextField(
+                            //   hintText: 'password'.tr,
+                            //   controller: _passwordController,
+                            //   focusNode: _passwordFocus,
+                            //   inputAction: TextInputAction.done,
+                            //   inputType: TextInputType.visiblePassword,
+                            //   prefixIcon: Images.lock,
+                            //   isPassword: true,
+                            //   onSubmit: (text) => (GetPlatform.isWeb && authController.acceptTerms)
+                            //       ? _login(authController, _countryDialCode) : null,
+                            // ),
+
                           ]),
-                          Padding(padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE), child: Divider(height: 1)),
-
-                          // CustomTextField(
-                          //   hintText: 'password'.tr,
-                          //   controller: _passwordController,
-                          //   focusNode: _passwordFocus,
-                          //   inputAction: TextInputAction.done,
-                          //   inputType: TextInputType.visiblePassword,
-                          //   prefixIcon: Images.lock,
-                          //   isPassword: true,
-                          //   onSubmit: (text) => (GetPlatform.isWeb && authController.acceptTerms)
-                          //       ? _login(authController, _countryDialCode) : null,
-                          // ),
-
-                        ]),
+                        ),
                       ),
                       SizedBox(height: 10),
 

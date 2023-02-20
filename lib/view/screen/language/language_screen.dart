@@ -33,9 +33,8 @@ class ChooseLanguageScreen extends StatelessWidget {
                     width: Dimensions.WEB_MAX_WIDTH,
                     child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-                      Center(child: Image.asset(Images.logo, width: 100)),
+                      Center(child: Image.asset(Images.logo, width: 140)),
                       SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      Center(child: Image.asset(Images.logo_name, width: 100)),
 
                       //Center(child: Text(AppConstants.APP_NAME, style: robotoMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE))),
                       SizedBox(height: 30),
@@ -49,7 +48,7 @@ class ChooseLanguageScreen extends StatelessWidget {
                       GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: ResponsiveHelper.isDesktop(context) ? 4 : ResponsiveHelper.isTab(context) ? 3 : 2,
-                          childAspectRatio: (1/1),
+                          childAspectRatio: (1/0.4),
                         ),
                         itemCount: localizationController.languages.length,
                         physics: NeverScrollableScrollPhysics(),

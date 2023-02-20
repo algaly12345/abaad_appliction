@@ -9,9 +9,13 @@ import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/view/base/not_found.dart';
 import 'package:abaad/view/screen/access_location_screen.dart';
+import 'package:abaad/view/screen/auth/agent_registration_screen.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
+import 'package:abaad/view/screen/estate/add_estate_screen.dart';
+import 'package:abaad/view/screen/estate/add_estate_screen_tow.dart';
+import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
 import 'package:abaad/view/screen/estate/estate_details.dart';
 import 'package:abaad/view/screen/language/language_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
@@ -45,6 +49,10 @@ class RouteHelper {
   static const String categories = '/categories';
   static const String notification = '/notification';
   static const String estate = '/estate';
+  static const String addEstate = '/add-estate';
+  static const String addEstateTow = '/add-estate-tow';
+  static const String agent = '/agent';
+  static const String businessPlan = '/business-plan';
 
 
 
@@ -74,7 +82,10 @@ class RouteHelper {
   static String getDetailsRoute(int id) => '$estate?id=$id';
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
-
+  static String getAddEstateRoute() => '$addEstate';
+  static String getAddEstateRouteTow() => '$addEstateTow';
+  static String getAgentRegister() => '$agent';
+  static String getBusinessPlanRoute(int restaurantId) => '$businessPlan?id=$restaurantId';
 
   static List<GetPage> routes = [
     // GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
@@ -89,6 +100,10 @@ class RouteHelper {
     GetPage(name: language, page: () => ChooseLanguageScreen(fromMenu: Get.parameters['page'] == 'menu')),
 
     GetPage(name: onBoarding, page: () => OnboardingScreen()),
+    GetPage(name: addEstate, page: () => AddEstateScreen()),
+    GetPage(name: addEstateTow, page: () => AddEstateScreenTow()),
+
+    GetPage(name: agent, page: () => AgentRegistrationScreen()),
 
     GetPage(name: signIn, page: () => SignInScreen(
       exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding
@@ -107,6 +122,7 @@ class RouteHelper {
     )),
 
     GetPage(name: notification, page: () =>NotificationScreen()),
+    GetPage(name: update, page: () => UpdateScreen(isUpdate: Get.parameters['update'] == 'true')),
     GetPage(name: profile, page: () => ProfileScreen()),
     GetPage(name: updateProfile, page: () => UpdateProfileScreen()),
     GetPage(name: categories, page: () {
@@ -121,6 +137,7 @@ class RouteHelper {
     GetPage(name: estate, page: () {
       return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])));
     }),
+    GetPage(name: businessPlan, page: () => BusinessPlanScreen(restaurantId: int.parse(Get.parameters['id']))),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
   ];
 

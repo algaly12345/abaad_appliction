@@ -1,3 +1,4 @@
+import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -27,8 +28,8 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 180.0,
-      height: 60.0,
+      width: 145.0,
+      height: 53.0,
       child: MaterialButton(
         visualDensity: VisualDensity.compact,
         shape: RoundedRectangleBorder(
@@ -55,11 +56,11 @@ class AppButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   trailingWidget ?? const SizedBox(),
-                  const SizedBox(width: 10.0),
+                  const SizedBox(width: 17.0),
                   Text(
                     label,
                     textAlign: TextAlign.center,
-                    style: robotoMedium.copyWith(fontSize: 16.0),
+                    style:robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
                   ),
                 ],
               ),

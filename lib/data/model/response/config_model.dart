@@ -24,6 +24,10 @@ class ConfigModel {
   bool demo;
   bool maintenanceMode;
   bool phoneVerification;
+  int freeTrialPeriodStatus;
+  int freeTrialPeriodDay;
+  BusinessPlan businessPlan;
+  double adminCommission;
 
 
 
@@ -49,6 +53,10 @@ class ConfigModel {
         this.maintenanceMode,
         this.agentRegistration,
         this.phoneVerification,
+        this.freeTrialPeriodStatus,
+        this.freeTrialPeriodDay,
+        this.businessPlan,
+        this.adminCommission,
       });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -76,6 +84,10 @@ class ConfigModel {
     phoneVerification = json['phone_verification'];
     marketingCommission =json['marketing_commission'];
 
+    freeTrialPeriodStatus = json['free_trial_period_status'];
+    freeTrialPeriodDay = json['free_trial_period_data'];
+    businessPlan = json['business_plan'] != null ? BusinessPlan.fromJson(json['business_plan']) : null;
+    adminCommission = json['admin_commission'].toDouble();
 
   }
 
@@ -109,6 +121,7 @@ class ConfigModel {
     data['phone_verification'] = this.phoneVerification;
     data['marketing_commission'] = this.marketingCommission;
 
+
     return data;
   }
 }
@@ -137,7 +150,7 @@ class BaseUrls {
     estateImageUrl = json['estate_image_url'];
     customerImageUrl = json['category_image_url'];
     customerImageUrl = json['customer_image_url'];
-    categoryImageUrl = json['review_image_url'];
+    categoryImageUrl = json['category_image_url'];
     agentImageUrl = json['agent_image_url'];
     activitiesImageUrl = json['activities_image_url'];
     notificationImageUrl = json['notification_image_url'];
@@ -194,6 +207,26 @@ class SocialLogin {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['login_medium'] = this.loginMedium;
     data['status'] = this.status;
+    return data;
+  }
+}
+
+
+class BusinessPlan {
+  int commission;
+  int subscription;
+
+  BusinessPlan({this.commission, this.subscription});
+
+  BusinessPlan.fromJson(Map<String, dynamic> json) {
+    commission = json['commission'];
+    subscription = json['subscription'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['commission'] = this.commission;
+    data['subscription'] = this.subscription;
     return data;
   }
 }

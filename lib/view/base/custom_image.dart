@@ -8,16 +8,18 @@ class CustomImage extends StatelessWidget {
   final double height;
   final double width;
   final BoxFit fit;
+  final Color colors;
   final String placeholder;
-  CustomImage({@required this.image, this.height, this.width, this.fit = BoxFit.cover, this.placeholder = Images.mail});
+  CustomImage({@required this.image, this.height, this.width, this.fit = BoxFit.cover, this.placeholder = Images.mail,this.colors});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).cardColor,
       child: CachedNetworkImage(
+        color: colors,
         imageUrl: image, height: height, width: width, fit: fit,
-        placeholder: (context, url) => Image.asset(Images.mail, height: height, width: width, fit: fit),
+        placeholder: (context, url) => Image.asset(Images.placeholder, height: height, width: width, fit: fit),
         errorWidget: (context, url, error) => Image.asset(placeholder, height: height, width: width, fit: fit),
       ),
     );

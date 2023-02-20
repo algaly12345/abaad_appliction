@@ -2,7 +2,7 @@ class CategoryModel {
   int id;
   String name;
   String slug;
-  String position;
+  int  position;
   String statusHome;
   String image;
   String createdAt;
@@ -39,6 +39,62 @@ class CategoryModel {
     data['image'] = this.image;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+class Variation {
+  String name;
+  String type;
+  String min;
+  String max;
+  String required;
+  List<VariationOption> variationValues;
+
+  Variation({this.name, this.type, this.min, this.max, this.required, this.variationValues});
+
+  Variation.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    type = json['type'];
+    min = json['min'].toString();
+    max = json['max'].toString();
+    required = json['required'];
+    if (json['values'] != null) {
+      variationValues = [];
+      json['values'].forEach((v) {
+        variationValues.add(new VariationOption.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['type'] = this.type;
+    data['min'] = this.min;
+    data['max'] = this.max;
+    data['required'] = this.required;
+    if (this.variationValues != null) {
+      data['values'] = this.variationValues.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class VariationOption {
+  String level;
+  String optionPrice;
+
+  VariationOption({this.level, this.optionPrice});
+
+  VariationOption.fromJson(Map<String, dynamic> json) {
+    level = json['label'];
+    optionPrice = json['optionPrice'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['label'] = this.level;
+    data['optionPrice'] = this.optionPrice;
     return data;
   }
 }

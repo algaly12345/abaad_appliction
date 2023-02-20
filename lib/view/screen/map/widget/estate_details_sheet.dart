@@ -45,7 +45,7 @@ class EstateDetailsSheet extends StatelessWidget {
 
           InkWell(
             onTap: () {
-              Get.offNamed(RouteHelper.getDetailsRoute(1));
+              Get.toNamed(RouteHelper.getDetailsRoute(1));
             },
             child: Container(
               width: context.width,
@@ -109,7 +109,7 @@ class EstateDetailsSheet extends StatelessWidget {
                   SizedBox(
                     height: 4,),
                       Container(
-                        height: 130,
+                        height: 140,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(4), //border corner radius
@@ -135,29 +135,37 @@ class EstateDetailsSheet extends StatelessWidget {
                                   Expanded(
                                     child: Row(
                                       children: <Widget>[
+                                        
                                         Flexible(
-                                          flex: 2,
+                                          flex: 4,
                                           child: ClipRRect(
                                             borderRadius:
                                             BorderRadius.circular(3.0),
                                             child: Image.network(
-                                                "https://cdn.pixabay.com/photo/2017/06/13/22/42/kitchen-2400367_960_720.jpg"),
+                                                "https://cdn.pixabay.com/photo/2017/06/13/22/42/kitchen-2400367_960_720.jpg",fit:BoxFit.fill ,height: 133,
+                                            ),
                                           ),
                                         ),
                                         SizedBox(width: 11.0),
                                         Flexible(
-                                          flex: 3,
+                                          flex: 5,
                                           child: Column(
                                             crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: <Widget>[
-                                             Text("34343"  ,style: robotoBlack.copyWith(fontSize: 11)),
+                                             Row(
+                                               children: [
+                                                 Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                                                 SizedBox(width: 11.0),
+                                                 Text(" ${estate.price}"  ,style: robotoBlack.copyWith(fontSize: 11)),
+                                               ],
+                                             ),
                                               const SizedBox(
                                                 height: 3.0,
                                               ),
                                                Text("${estate.shortDescription}",
-                                                  style: robotoBlack.copyWith(fontSize: 11)),
+                                                  style: robotoBlack.copyWith(fontSize: 12)),
                                               const SizedBox(
                                                 height: 3.0,
                                               ),

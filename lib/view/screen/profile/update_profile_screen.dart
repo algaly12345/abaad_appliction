@@ -59,7 +59,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           _firstNameController.text = userController.userInfoModel.name ?? '';
           _phoneController.text = userController.userInfoModel.phone ?? '';
           _emailController.text = userController.userInfoModel.email ?? '';
-          _userTypeController.text = userController.userInfoModel.userType ?? '';
+          _userTypeController.text = userController.userInfoModel.agent.membershipType ?? '';
         }
 
         return _isLoggedIn ? userController.userInfoModel != null ? ProfileBgUpdateWidget(

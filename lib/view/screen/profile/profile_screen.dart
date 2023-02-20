@@ -49,17 +49,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backButton: true,
           circularImage: Row(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 2, color: Theme.of(context).cardColor),
-                  shape: BoxShape.circle,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: Theme.of(context).primaryColor),
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.topRight,
+                  child: ClipOval(child: CustomImage(
+                    image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'
+                        '/${(userController.userInfoModel != null && _isLoggedIn) ? userController.userInfoModel.image : ''}',
+                    height: 100, width: 100, fit: BoxFit.cover,
+                  )),
                 ),
-                alignment: Alignment.topRight,
-                child: ClipOval(child: CustomImage(
-                  image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'
-                      '/${(userController.userInfoModel != null && _isLoggedIn) ? userController.userInfoModel.image : ''}',
-                  height: 100, width: 100, fit: BoxFit.cover,
-                )),
               ),
 
               Container(
@@ -72,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     Text(
-                      _isLoggedIn ? '${userController.userInfoModel.name}' : 'guest'.tr,
+                      _isLoggedIn ? '${userController.userInfoModel.userinfo.membershipType}' : 'guest'.tr,
                       style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),
                     ),
                   ],
@@ -117,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
               ProfileButton(icon: Icons.supervised_user_circle_outlined, title: 'membership_modification'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                Get.find<ThemeController>().toggleTheme();
+                Get.toNamed(RouteHelper.getAgentRegister());
               }),
 
 

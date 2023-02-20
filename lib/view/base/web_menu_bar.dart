@@ -18,22 +18,22 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
     return Center(child: Container(
       width: Dimensions.WEB_MAX_WIDTH,
       color: Theme.of(context).cardColor,
-      padding: EdgeInsets.only(top: 42 ,right: 7,left: 7),
+      padding: EdgeInsets.only(top: 38 ,right: 7,left: 7,),
       child:   Row(
         children: [
           InkWell(
             onTap:ontop,
-            child:  Image.asset(Images.menu, width: 30.0, height: 33.0),
+            child:  Image.asset(Images.menu, width: 37.0, height: 37.0),
           ),
           const Spacer(),
           Center(
             child:  Column(
               children: [
                 Text(
-                    'موقعك',style: robotoBlack.copyWith(fontSize: 11)
+                    'موقعك',style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)
                 ),
                 Text(
-                  ' المنطقة الشرقية - الدمام ',style: robotoBlack.copyWith(fontSize: 12)
+                  ' المنطقة الشرقية - الدمام ',style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)
           ),
               ],
             ),
@@ -42,7 +42,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
           InkWell(
             child: GetBuilder<NotificationController>(builder: (notificationController) {
               return Stack(children: [
-                Icon(Icons.notifications_active_outlined, size: 30, color: Theme.of(context).textTheme.bodyText1.color),
+                Icon(Icons.notifications_active_outlined, size: 37, color: Theme.of(context).textTheme.bodyText1.color),
                 notificationController.hasNotification ? Positioned(top: 0, right: 0, child: Container(
                   height: 10, width: 10, decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor, shape: BoxShape.circle,

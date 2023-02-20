@@ -5,9 +5,10 @@ class AppConstants {
   static const String APP_NAME = 'Baad';
   static const double APP_VERSION = 1.0;
   static const String LOGIN_URI = '/api/v1/auth/login';
-static const String BASE_URL = 'http://alharthi.iaspl.net';
-  //static const String BASE_URL = 'http://192.168.159.37/abbaad-dashboard';
-  static const String REGISTER_URI = '/api/v1/auth/register';
+//static const String BASE_URL = 'http://alharthi.iaspl.net';
+  static const String LAND_SERVICE_URL = 'https://geoportal-st.gasgi.gov.sa/hosting/rest/services/Hosted/MOT_Layer04_View/FeatureServer/0/query?where=1%3D1&outFields=&outSR=4326&f=json';
+  static const String BASE_URL = 'http://192.168.153.37/abbaad-dashboard';
+   static const String REGISTER_URI = '/api/v1/auth/register';
   static const String THEME = 'theme';
   static const String TOKEN = 'abaad_token';
   static const String COUNTRY_CODE = 'country_code';
@@ -45,6 +46,12 @@ static const String BASE_URL = 'http://alharthi.iaspl.net';
   static const String BANNER_URI = '/api/v1/banners';
   static const String NOTIFICATION_URI = '/api/v1/customer/notifications';
   static const String ESTATE_DETAILS_URI = '/api/v1/estate/details/';
+  static const String REGISTER_AS_AGENT = '/api/v1/customer/complete-agent';
+  static const String RESTAURANT_PACKAGES_URI = '/api/v1/estate/package-view';
+  static const String PROPERTIES_URI = '/api/v1/estate/get-properties';
+  static const String BUSINESS_PLAN_URI = '/api/v1/auth/vendor/business_plan';
+  static const String empty_box = 'assets/image/empty_box.png';
+  static const String CREATE_ESATE_URI="";
 
 
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];

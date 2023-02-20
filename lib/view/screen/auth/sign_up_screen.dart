@@ -92,13 +92,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
                           ),
                           CustomTextField(
-                            hintText: 'ali',
+                            hintText: 'ali'.tr,
                             controller: _fullNameController,
                             focusNode: _firstNameFocus,
                             nextFocus: _emailFocus,
                             inputType: TextInputType.name,
                             capitalization: TextCapitalization.words,
                             prefixIcon: Images.full_name,
+
                           ),
                         ],
                       ),
@@ -121,7 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
                           ),
                           CustomTextField(
-                            hintText: 'ali4322@hostmail.com',
+                            hintText: 'ali4322@hostmail.com(إختياري)',
                             controller: _emailController,
                             focusNode: _emailFocus,
                             nextFocus: _phoneFocus,
@@ -164,6 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   focusNode: _phoneFocus,
                                   nextFocus: _passwordFocus,
                                   inputType: TextInputType.phone,
+                                  elevation: false,
                                 )),
                               ]),
                             ),
