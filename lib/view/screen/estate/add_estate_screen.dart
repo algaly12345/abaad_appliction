@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
+import 'package:abaad/data/model/body/estate_body.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/package_model.dart';
 import 'package:abaad/helper/color_coverter.dart';
@@ -18,6 +21,8 @@ import 'package:abaad/view/base/custom_dialog.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
+import 'package:abaad/view/base/data_view.dart';
+import 'package:abaad/view/base/header_widget.dart';
 import 'package:abaad/view/base/my_text_field.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/stepper.dart';
@@ -26,6 +31,8 @@ import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
 import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
 import 'package:abaad/view/screen/estate/business_plan/widgets/subscription_card.dart';
 import 'package:abaad/view/screen/estate/business_plan/widgets/success_widget.dart';
+import 'package:abaad/view/screen/estate/widgets/estate_bg_widget.dart';
+import 'package:abaad/view/screen/estate/widgets/menu_option.dart';
 import 'package:abaad/view/screen/estate/widgets/redio.dart';
 import 'package:abaad/view/screen/profile/widget/profile_bg_widget_update.dart';
 import 'package:abaad/view/screen/profile/widget/profile_card.dart';
@@ -49,6 +56,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   int stepLength = 5;
   bool complete;
   bool _isLoggedIn;
+  String type_properties;
+  String network_type;
 
 
   next() {
@@ -88,20 +97,21 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
   final FocusNode _priceFocus = FocusNode();
 
-  final FocusNode _addressFocus = FocusNode();
+  final FocusNode _shorDesFocus = FocusNode();
 
   final FocusNode _vatFocus = FocusNode();
 
   final FocusNode _minTimeFocus = FocusNode();
   List<RadioModel> netWorkType = <RadioModel>[];
 
-  var isSelected1 = [false, true];
   var isSelected2 = [false, true];
+  bool negotiation;
 
 
-  int _value = 0;
+  int _typeProperties = 0;
   int _djectivePresenter=0;
   final List<String> _roomList = [
+    "0",
     "1",
     "2",
     "3",
@@ -113,6 +123,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   ];
 
   final List<String> _bathroomsList = [
+    "0",
     "1",
     "2",
     "3",
@@ -123,10 +134,14 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     "8",
   ];
 
-   String valueChoose;
+
+
+  String valueChoose;
   String _ageValue;
   int _selectedRoomIndex = 0;
   int _selectedBathroomsIndex = 0;
+  List<String> _interests = [];
+  String interests;
   _onSelected(int index) {
     setState(() => _selectedRoomIndex = index);
   }
@@ -142,6 +157,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
 
+
   @override
   void initState() {
     super.initState();
@@ -150,6 +166,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     if (Get
         .find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
+      Get.find<CategoryController>().getFacilitiesList(true);
       Get.find<CategoryController>().getPropertiesList(1);
       netWorkType.add( RadioModel(false, Images.stc ,'stc 4G'));
       netWorkType.add( RadioModel(false, Images.mobily, 'mobiliy 4G'));
@@ -176,17 +193,25 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
     return Scaffold(
-      appBar: CustomAppBar(title: 'add_ads'.tr),
+
+
       body: SingleChildScrollView(
         child:
       GetBuilder<AuthController>(builder: (authController) {
               return GetBuilder<EstateController>(builder: (restController) {
                 return GetBuilder<CategoryController>(
                builder: (categoryController) {
-       return   Column(
+       return GetBuilder<UserController>(builder: (userController) {
+           if(userController.userInfoModel != null && _phoneController.text.isEmpty) {
+             _firstNameController.text = userController.userInfoModel.name ?? '';
+             _phoneController.text = userController.userInfoModel.phone ?? '';
+         //    _userTypeController.text = userController.userInfoModel.userType ?? '';
+           }
+    return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            NumberStepper(
+            currentStep != 5? const SizedBox(height: 30):Container(),
+           currentStep == 5?Container():   NumberStepper(
               totalSteps: stepLength,
               width: MediaQuery.of(context).size.width,
               curStep: currentStep,
@@ -195,10 +220,10 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
               inactiveColor: Color(0xffbababa),
               lineWidth: 3.5,
             ),
-            SizedBox(
-              height: 30,
-            ),
+
             Container(
+
+
               child: currentStep <= stepLength
                   ? currentStep==1?
               Container(
@@ -219,12 +244,12 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           Expanded( // Place `Expanded` inside `Row`
                             child: InkWell(
                               onTap: () {
-                                setState(() => _value = 0);
+                                setState(() => _typeProperties = 0);
                               },
                               child: Container(
                                 height: 39,
                                 decoration: BoxDecoration(
-                                    color: _value == 0 ? Theme
+                                    color: _typeProperties == 0 ? Theme
                                         .of(context)
                                         .secondaryHeaderColor : Colors
                                         .transparent,
@@ -235,7 +260,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                                 child: Center(child: Text('for_rent'.tr,
                                   style: robotoBlack.copyWith(fontSize: 16,
-                                      color: _value == 0
+                                      color: _typeProperties == 0
                                           ? Colors.white
                                           : Colors.blue),)),
 
@@ -247,11 +272,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
                             child: InkWell(
                               onTap: () {
-                                setState(() => _value = 1);
+                                setState(() => _typeProperties = 1);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    color: _value == 1 ? Theme
+                                    color: _typeProperties == 1 ? Theme
                                         .of(context)
                                         .secondaryHeaderColor : Colors
                                         .transparent,
@@ -263,7 +288,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                 // color: _value == 1 ? Colors.grey : Colors.transparent,
                                 child: Center(child: Text('for_sell'.tr,
                                   style: robotoBlack.copyWith(fontSize: 16,
-                                      color: _value == 1
+                                      color: _typeProperties == 1
                                           ? Colors.white
                                           : Colors.blue),)),
 
@@ -315,6 +340,9 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                                   .setCategoryIndex(categoryController.categoryList[index].id);
                                               restController
                                                   .setCategoryPostion(categoryController.categoryList[index].position);
+                                              setState(() {
+                                                type_properties=categoryController.categoryList[index].name;
+                                              });
 
                                     },
                                             child: Container(
@@ -410,7 +438,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           hintText: 'price'.tr,
                           controller: _priceController,
                           focusNode: _priceFocus,
-                          nextFocus: _addressFocus,
+                          nextFocus: _shorDesFocus,
                           inputType: TextInputType.number,
                           showBorder: true,
                           capitalization: TextCapitalization.words,
@@ -447,8 +475,10 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                             buttonIndex++) {
                               if (buttonIndex == index) {
                                 isSelected2[buttonIndex] = true;
+                                negotiation=true;
                               } else {
                                 isSelected2[buttonIndex] = false;
+                                negotiation=false;
                               }
                             }
                           });
@@ -505,16 +535,16 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       physics: BouncingScrollPhysics(),
-                      itemCount: authController.pickedIdentities.length + 1,
+                      itemCount:restController .pickedIdentities.length + 1,
                       itemBuilder: (context, index) {
                         XFile _file = index ==
-                            authController.pickedIdentities.length
+                            restController.pickedIdentities.length
                             ? null
-                            : authController.pickedIdentities[index];
-                        if (index == authController.pickedIdentities.length) {
+                            : restController.pickedIdentities[index];
+                        if (index == restController.pickedIdentities.length) {
                           return InkWell(
                             onTap: () =>
-                                authController.pickDmImage(false, false),
+                                restController.pickDmImage(false, false),
                             child: Container(
                               height: 299,
                               width: 200,
@@ -570,7 +600,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                               right: 0, top: 0,
                               child: InkWell(
                                 onTap: () =>
-                                    authController.removeIdentityImage(index),
+                                    restController.removeIdentityImage(index),
                                 child: Padding(
                                   padding: EdgeInsets.all(
                                       Dimensions.PADDING_SIZE_SMALL),
@@ -595,7 +625,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   MyTextField(
                     hintText: 'enter_shot_description'.tr,
                     controller: _shortDescController,
-                    focusNode: _addressFocus,
+                    focusNode: _shorDesFocus,
                     nextFocus: _longDescFocus ,
                     inputType: TextInputType.text,
                     capitalization: TextCapitalization.sentences,
@@ -611,8 +641,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                   MyTextField(
                     hintText: 'enter_long_desc'.tr,
-                    controller: _shortDescController,
-                    focusNode: _addressFocus,
+                    controller: _longDescController,
+                    focusNode: _longDescFocus,
                     nextFocus: _vatFocus,
                     maxLines: 4,
                     inputType: TextInputType.text,
@@ -699,7 +729,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                               children: [
 
 
-                                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+
                                 SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                 Text(
                                   "number_rooms".tr,
@@ -716,11 +746,10 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                       // ignore: missing_return
                                       itemCount:  _roomList.length, itemBuilder: (context, index) {
 
-                                    if(restController.getCategoryIndex()==1){
                                       return   InkWell(
                                         onTap: (){
                                           _onSelected(index);
-                                          showCustomSnackBar("${ restController.getCategoryIndex()}");
+
                                         },
                                         child: Container(
                                           width: 50,
@@ -736,7 +765,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                           ),
                                         ),
                                       );
-                                    }
+
                                   }),
                                 ),
 
@@ -757,11 +786,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                       // ignore: missing_return
                                       itemCount:  _bathroomsList.length, itemBuilder: (context, index) {
 
-                                    if(restController.getCategoryIndex()==1){
+
                                       return   InkWell(
                                         onTap: (){
                                           _onSelectedBathrooms(index);
-                                          showCustomSnackBar("${ restController.getCategoryIndex()}");
+
                                         },
                                         child: Container(
                                           width: 50,
@@ -777,12 +806,74 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                           ),
                                         ),
                                       );
-                                    }
+
                                   }),
                                 ),
 
                                 SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                Column(
+                                  children: [
+                                    ExpansionTile(
+                                      title: Text("إضافة مرافق"), //add icon//children padding
+                                      children: [
+                                     Center(
+                                       child: Container(
+                                         height: 240,
+                                         child:GridView.builder(
+                                           physics: BouncingScrollPhysics(),
+                                           itemCount: categoryController.facilitiesList.length,
+                                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                             crossAxisCount: 3 ,
+                                             childAspectRatio: (1/0.50),
+                                           ),
+                                           itemBuilder: (context, index) {
+                                             return InkWell(
+                                               onTap: () => categoryController.addInterestSelection(index),
+                                               child: Container(
+                                                 margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                 padding: EdgeInsets.symmetric(
+                                                   vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                                 ),
+                                                 decoration: BoxDecoration(
+                                                   color: categoryController.interestSelectedList[index] ? Theme.of(context).primaryColor
+                                                       : Theme.of(context).cardColor,
+                                                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                                   boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                                 ),
+                                                 alignment: Alignment.center,
+                                                 child:   Row(
 
+                                                   children: [
+                                                     CustomImage(
+                                                       image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                                                           '/${categoryController.facilitiesList[index].image}',
+                                                       height: 30, width: 30,
+                                                     ),
+                                                     SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                     Flexible(child: Text(
+                                                       categoryController.facilitiesList[index].name,
+                                                       style: robotoMedium.copyWith(
+                                                         fontSize: Dimensions.fontSizeLarge,
+                                                         color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
+                                                             : Theme.of(context).textTheme.bodyText1.color,
+                                                       ),
+                                                       maxLines: 2, overflow: TextOverflow.ellipsis,
+                                                     )),
+                                                   ],
+                                                 ),
+                                               ),
+                                             );
+                                           },
+                                         ),
+                                       ),
+                                     ),
+
+
+                                      ],
+                                    ),
+
+                                  ],
+                                ),
                                 Column(
                                   children: [
                                     DropDownMultiSelect(
@@ -828,6 +919,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                             setState(() {
                                               netWorkType.forEach((element) => element.isSelected = false);
                                               netWorkType[index].isSelected = true;
+                                              network_type=netWorkType[index].text;
                                             });
                                           },
                                           child: new RadioItem(netWorkType[index]),
@@ -929,19 +1021,23 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   )):currentStep==3?
               Container(
                 padding: EdgeInsets.only(right: 10 ,left: 10),
-                child:  GetBuilder<UserController>(builder: (userController) {
-                if(userController.userInfoModel != null && _phoneController.text.isEmpty) {
-                  _firstNameController.text = userController.userInfoModel.name ?? '';
-                  _phoneController.text = userController.userInfoModel.phone ?? '';
-              //    _userTypeController.text = userController.userInfoModel.userType ?? '';
-                }
-                return _isLoggedIn ? userController.userInfoModel != null ?     Container(
+                child:
+
+                Container(
                   child: Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-                    Text(
-                      'advertiser_name'.tr,
-                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                    ),
+                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                    Row(children: [
+
+                      Text(
+                        'advertiser_name'.tr,
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                      ),
+                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      Text('(${'non_changeable'.tr})', style: robotoRegular.copyWith(
+                        fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).errorColor,
+                      )),
+                    ]),
                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                     MyTextField(
                       hintText: 'full_name'.tr,
@@ -950,6 +1046,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       nextFocus: _phoneFocus,
                       inputType: TextInputType.name,
                       showBorder: true,
+                      isEnabled: false,
                       capitalization: TextCapitalization.words,
                     ),
 
@@ -958,41 +1055,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                     SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-                    Row(children: [
-                      Text(
-                        'membership_type'.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                      ),
-                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                      Text('(${'non_changeable'.tr})', style: robotoRegular.copyWith(
-                        fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).errorColor,
-                      )),
-                    ]),
 
 
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    MyTextField(
-                      hintText: 'membership_type'.tr,
-                      controller: _userTypeController,
-                      inputType: TextInputType.phone,
-                      showBorder: true,
-                      isEnabled: false,
-                    ),
-
-
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-
-                    Row(children: [
-                      Text(
-                        'phone'.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                      ),
-                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                      Text('(${'non_changeable'.tr})', style: robotoRegular.copyWith(
-                        fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).errorColor,
-                      )),
-                    ]),
 
 
                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -1002,7 +1066,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       focusNode: _phoneFocus,
                       inputType: TextInputType.phone,
                       showBorder: true,
-                      isEnabled: false,
+                      isEnabled: true,
                     ),
 
 
@@ -1102,181 +1166,251 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                   ]))),
-                ): Center(child: CircularProgressIndicator()) : NotLoggedInScreen();
-              }),):currentStep==4?
+                )
+
+
+
+              ):currentStep==4?
               Container(
+                padding: EdgeInsets.only(right: 10 ,left: 10),
+                child:   Container(
+                    child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
+                      child: Column(children: [
+                        Column(children: [
+
+
+                          Column(children: [
+
+                            Center(child: Text('choose_your_business_plan'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault))),
+                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                              child: Row(children: [
+                                Get.find<SplashController>().configModel.businessPlan.commission != 0 ? Expanded(
+                                  child: baseCardWidget(authController, context, title: 'commission'.tr,
+                                      index: 0, onTap: ()=> authController.setBusiness(0)),
+                                ) : SizedBox(),
+                                SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+
+                                Get.find<SplashController>().configModel.businessPlan.subscription != 0 ? Expanded(
+                                  child: baseCardWidget(authController, context, title: 'subscription_base'.tr,
+                                      index: 1, onTap: ()=> authController.setBusiness(1)),
+                                ) : SizedBox(),
+                              ]),
+                            ),
+                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+
+                            authController.businessIndex == 0 ? Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                              child: Text(
+                                "${'يتم اخذ عمولة من تطبيق'.tr}  ${Get.find<SplashController>().configModel.businessName} ${'من سعر العقار  من خلال تسويق عقارك وهي'.tr} ${Get.find<SplashController>().configModel.adminCommission}% ",
+                                style: robotoRegular, textAlign: TextAlign.start, textScaleFactor: 1.1,
+                              ),
+                            ) : Container(
+                              child: Column(children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                                  child: Text(
+                                    'subscription_package'.tr,
+                                    style: robotoRegular, textAlign: TextAlign.start,
+                                  ),
+                                ),
+
+                                authController.packageModel != null ? SizedBox(
+                                  height: ResponsiveHelper.isDesktop(context) ? 700 : 600,
+                                  child: (authController.packageModel.packages.isNotEmpty && authController.packageModel.packages.length != 0) ? Swiper(
+
+                                    itemCount: authController.packageModel.packages.length,
+                                    itemWidth: ResponsiveHelper.isDesktop(context) ? 400 : context.width * 0.8,
+                                    itemHeight: 600.0,
+                                    layout: SwiperLayout.STACK,
+                                    onIndexChanged: (index){
+                                      authController.selectSubscriptionCard(index);
+                                    },
+                                    itemBuilder: (BuildContext context, int index){
+                                      Packages _package = authController.packageModel.packages[index];
+
+                                      Color _color = ColorConverter.stringToColor(_package.color);
+
+                                      return GetBuilder<AuthController>(
+                                          builder: (authController) {
+
+                                            return Stack(clipBehavior: Clip.none, children: [
+
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context).cardColor,
+                                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_EXTRA_LARGE),
+                                                  boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 10)],
+                                                ),
+                                                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                margin: EdgeInsets.only(top: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                child: SubscriptionCard(index: index, authController: authController, package: _package, color: _color),
+                                              ),
+
+                                              authController.activeSubscriptionIndex == index ? Positioned(
+                                                top: 5, right: -10,
+                                                child: Container(
+                                                  height: 40, width: 40,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(50),
+                                                    color: _color, border: Border.all(color: Theme.of(context).cardColor, width: 2),
+                                                  ),
+                                                  child: Icon(Icons.check, color: Theme.of(context).cardColor),
+                                                ),
+                                              ) : SizedBox(),
+
+                                            ]);
+                                          }
+                                      );
+                                    },
+                                  ) : Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(Images.empty_box, height: 150),
+                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        Text('no_package_available'.tr),
+                                      ]),
+                                  ),
+                                ) : CircularProgressIndicator(),
+
+                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                              ]),
+                            ),
+                          ])
+                        ]),
+
+
+
+
+                        // SizedBox(
+                        //   width: Dimensions.WEB_MAX_WIDTH,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_SMALL),
+                        //     child: Row(children: [
+                        //       (authController.businessPlanStatus == 'payment') ? Expanded(
+                        //         child: InkWell(
+                        //           onTap: () {
+                        //             if(authController.businessPlanStatus != 'payment'){
+                        //               authController.showBackPressedDialogue('your_business_plan_not_setup_yet'.tr);
+                        //             }else{
+                        //               authController.setBusinessStatus('business');
+                        //               if(authController.isFirstTime == false){
+                        //                 authController.isFirstTime = true;
+                        //               }
+                        //             }
+                        //           },
+                        //           child: Padding(
+                        //             padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
+                        //             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        //               Icon(Icons.keyboard_double_arrow_left),
+                        //               SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        //
+                        //               Text("back".tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),),
+                        //             ]),
+                        //           ),
+                        //         ),
+                        //       ) : SizedBox(),
+                        //       SizedBox(width: (authController.businessPlanStatus == 'payment') ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
+                        //
+                        //       authController.businessIndex == 0 || (authController.businessIndex == 1 && authController.packageModel.packages.length != 0) ? Expanded(child: CustomButton(
+                        //         buttonText: 'next'.tr,
+                        //         onPressed: () => authController.submitBusinessPlan(restaurantId: 1),
+                        //       )) : SizedBox(),
+                        //     ]),
+                        //   ),
+                        // )
+                      ]),
+                    ))
+
+              ):currentStep==5?
+              Container(
+
                   child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
                     child: Column(children: [
-                      Column(children: [
+                      Container(
+                        height: 200,
+                        child: HeaderWidget(200, true), //let's create a common header widget
+                      ),
 
-
-                        authController.businessPlanStatus != 'payment' ? Column(children: [
-
-                          Center(child: Text('choose_your_business_plan'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault))),
-                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-                            child: Row(children: [
-                              Get.find<SplashController>().configModel.businessPlan.commission != 0 ? Expanded(
-                                child: baseCardWidget(authController, context, title: 'commission'.tr,
-                                    index: 0, onTap: ()=> authController.setBusiness(0)),
-                              ) : SizedBox(),
-                              SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
-
-                              Get.find<SplashController>().configModel.businessPlan.subscription != 0 ? Expanded(
-                                child: baseCardWidget(authController, context, title: 'subscription_base',
-                                    index: 1, onTap: ()=> authController.setBusiness(1)),
-                              ) : SizedBox(),
-                            ]),
-                          ),
-                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-
-                          authController.businessIndex == 0 ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-                            child: Text(
-                              "${'يتم اخذ عمولة من تطبيق'.tr}  ${Get.find<SplashController>().configModel.businessName} ${'من سعر العقار  من خلال تسويق عقارك وهي'.tr} ${Get.find<SplashController>().configModel.adminCommission}% ",
-                              style: robotoRegular, textAlign: TextAlign.start, textScaleFactor: 1.1,
-                            ),
-                          ) : Container(
-                            child: Column(children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-                                child: Text(
-                                  'subscription_package'.tr,
-                                  style: robotoRegular, textAlign: TextAlign.start,
-                                ),
-                              ),
-
-                              authController.packageModel != null ? SizedBox(
-                                height: ResponsiveHelper.isDesktop(context) ? 700 : 600,
-                                child: (authController.packageModel.packages.isNotEmpty && authController.packageModel.packages.length != 0) ? Swiper(
-
-                                  itemCount: authController.packageModel.packages.length,
-                                  itemWidth: ResponsiveHelper.isDesktop(context) ? 400 : context.width * 0.8,
-                                  itemHeight: 600.0,
-                                  layout: SwiperLayout.STACK,
-                                  onIndexChanged: (index){
-                                    authController.selectSubscriptionCard(index);
-                                  },
-                                  itemBuilder: (BuildContext context, int index){
-                                    Packages _package = authController.packageModel.packages[index];
-
-                                    Color _color = ColorConverter.stringToColor(_package.color);
-
-                                    return GetBuilder<AuthController>(
-                                        builder: (authController) {
-
-                                          return Stack(clipBehavior: Clip.none, children: [
-
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context).cardColor,
-                                                borderRadius: BorderRadius.circular(Dimensions.RADIUS_EXTRA_LARGE),
-                                                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 10)],
-                                              ),
-                                              padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                              margin: EdgeInsets.only(top: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                              child: SubscriptionCard(index: index, authController: authController, package: _package, color: _color),
-                                            ),
-
-                                            authController.activeSubscriptionIndex == index ? Positioned(
-                                              top: 5, right: -10,
-                                              child: Container(
-                                                height: 40, width: 40,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(50),
-                                                  color: _color, border: Border.all(color: Theme.of(context).cardColor, width: 2),
-                                                ),
-                                                child: Icon(Icons.check, color: Theme.of(context).cardColor),
-                                              ),
-                                            ) : SizedBox(),
-
-                                          ]);
-                                        }
-                                    );
-                                  },
-                                ) : Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(Images.empty_box, height: 150),
-                                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                      Text('no_package_available'.tr),
-                                    ]),
-                                ),
-                              ) : CircularProgressIndicator(),
-
-                              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                            ]),
-                          ),
-                        ]) : Padding(
-                          padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
-                          child: Column(children: [
-
-                            Get.find<SplashController>().configModel.freeTrialPeriodStatus == 1
-                                ? paymentCart(
-                                title: '${'continue_with'.tr} ${Get.find<SplashController>().configModel.freeTrialPeriodDay} ${'days_free_trial'.tr}',
-                                index: 0,
-                                onTap: (){
-                                  authController.setPaymentIndex(0);
-                                }) : SizedBox(),
-
-                            SizedBox(height: Dimensions.PADDING_SIZE_OVER_LARGE),
-
-                            paymentCart(title: 'pay_manually'.tr, index: 1, onTap: ()=> authController.setPaymentIndex(1)),
-                          ]),
+                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10,left: 10),
+                        child: DataView(title: 'ad_typ'.tr,value: _typeProperties==0?"for_rent".tr:"for_sell".tr,
                         ),
-                      ]),
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      type_properties!=null?  Padding(
+                        padding: const EdgeInsets.only(right: 10,left: 10),
+                        child: DataView(title: 'type_property'.tr,value: type_properties,
+                        ),
+                      ):Container(),
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10,left: 10),
+                        child: authController.zoneList != null ? SelectLocationView(
+                            fromView: true) : Center(
+                            child: CircularProgressIndicator()),
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10,left: 10),
+                        child: DataView(title: 'price'.tr,value: _priceController.text.toString(),
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10,left: 10),
+                        child: DataView(title: 'space'.tr,value: _spaceController.text.toString(),
+                        ),
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10,left: 10),
+                        child: DataView(title: 'shot_description'.tr,value: _shortDescController.text.toString(),
+                        ),
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      restController.getCategoryPostion()==1?Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10,left: 10),
+                            child: DataView(title: 'number_rooms'.tr,value: _selectedRoomIndex.toString(),
+                            ),
+                          ),
+                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10,left: 10),
+                            child: DataView(title: 'number_toilets'.tr,value:_selectedBathroomsIndex.toString(),
+                            ),
+                          ),
+                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                          network_type!=null?  Padding(
+                            padding: const EdgeInsets.only(right: 10,left: 10),
+                            child: DataView(title: 'network_type'.tr,value:network_type,
+                            ),
+                          ):Container(),
+                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
 
 
+                        ],
+                      ):Container()
 
-                      // SizedBox(
-                      //   width: Dimensions.WEB_MAX_WIDTH,
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_SMALL),
-                      //     child: Row(children: [
-                      //       (authController.businessPlanStatus == 'payment') ? Expanded(
-                      //         child: InkWell(
-                      //           onTap: () {
-                      //             if(authController.businessPlanStatus != 'payment'){
-                      //               authController.showBackPressedDialogue('your_business_plan_not_setup_yet'.tr);
-                      //             }else{
-                      //               authController.setBusinessStatus('business');
-                      //               if(authController.isFirstTime == false){
-                      //                 authController.isFirstTime = true;
-                      //               }
-                      //             }
-                      //           },
-                      //           child: Padding(
-                      //             padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
-                      //             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      //               Icon(Icons.keyboard_double_arrow_left),
-                      //               SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                      //
-                      //               Text("back".tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),),
-                      //             ]),
-                      //           ),
-                      //         ),
-                      //       ) : SizedBox(),
-                      //       SizedBox(width: (authController.businessPlanStatus == 'payment') ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
-                      //
-                      //       authController.businessIndex == 0 || (authController.businessIndex == 1 && authController.packageModel.packages.length != 0) ? Expanded(child: CustomButton(
-                      //         buttonText: 'next'.tr,
-                      //         onPressed: () => authController.submitBusinessPlan(restaurantId: 1),
-                      //       )) : SizedBox(),
-                      //     ]),
-                      //   ),
-                      // )
                     ]),
-                  )):Container()
-                  : Text(
-                "Completed!",
-                style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.blue,
-                ),
+                  )
+              ):Container()
+                  : Column(
+                children: [
+                  ProfileBgWidget(),
+                ],
               ),
+
+
             ),
                Container(
                  alignment: Alignment.bottomCenter,
@@ -1300,12 +1434,19 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     child: CustomButton(
                       onPressed: () {
 
+                        String _price;
+                        String _shortDesc;
+                        String _space;
+                        String _authorized;
+                        _authorized=_authorizedController.text.trim();
+                        _price = _priceController.text.trim();
+                        _shortDesc = _shortDescController.text.trim();
+                        _space = _spaceController.text.trim();
+                        String property = '{"room": "44", "bathroom": 30}';
                         if(currentStep==1) {
-                          // Get.toNamed(RouteHelper.getAddEstateRouteTow());
-                          String _price = _priceController.text.trim();
-                          String _shortDesc = _shortDescController.text.trim();
-                          String _space = _spaceController.text.trim();
+
                           if (restController.categoryIndex == 0) {
+
                             showCustomSnackBar('select_category'.tr);
                           } else if (_price.isEmpty) {
                             showCustomSnackBar('enter_price'.tr);
@@ -1318,36 +1459,83 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                           else {
                             next();
-                            restController.registerRestaurant(
-                                Estate(
-                                address: "address",
-                                space: "space",
-                                categoryId: 1,
-                                price: 22,
-                                plannedNumber: "343434"));
                           }
                         }
                         else if(currentStep==2){
-                         if (authController.pickedCover == null) {
-                             next();
+                         if (authController.pickedCover == null&& restController.getCategoryPostion()==5) {
+                             // next();
                           showCustomSnackBar('select_plan_photo'.tr);
-                        }
-                    //   showCustomSnackBar("${controllers}");
-                       //   next();
+
+                        }else if(restController.getCategoryPostion()==1&&_ageValue==null){
+
+                           showCustomSnackBar('اختر عمر العقار'.tr);
+         // List<String> _interests = [];
+         // for(int index=0; index<categoryController.categoryList.length; index++) {
+         //   if (categoryController.interestSelectedList[index]) {
+         //     _interests.add(categoryController.facilitiesList[index].name);
+         //   }
+         //
+         // }
+                         }
+                         else{
+
+                           next();
+                         }
+
 
                         }
                         else if(currentStep==3){
-                          next();
+
+                          if(_djectivePresenter==0&&_authorized.isEmpty){
+                            showCustomSnackBar('ادخل رقم التفويض');
+                          }else{
+                            next();
+                          }
+
+
                         }
                         else if(currentStep==4){
-                          authController.submitBusinessPlan(restaurantId: 1);
+                     //  authController.submitBusinessPlan(estateId: 1);
+
+                          next();
                          // next();
+                        }
+                        else if(currentStep==5){
+                          restController.registerRestaurant(
+                              EstateBody(
+                                  forRent:"${_typeProperties}" ,
+                                  address: "address",
+                                  space: _space,
+                                  longDescription: _longDescController.text,
+                                  shortDescription: _shortDesc,
+                                  categoryId:restController.getCategoryIndex().toString(),
+                                  ageEstate: _ageValue,
+                                  arPath: "3434",
+                                  districts: "sdfds",
+                                  floors: "4545",
+                                  forSell:"${_typeProperties}" ,
+                                  latitude: "latitude",
+                                  longitude: "longitude",
+                                  near: "near",
+                                  networkType: network_type ?? "no",
+                                  ownershipType: _djectivePresenter==1?"مالك":'مفوض',
+                                  property: "${jsonDecode(property)}",
+                                  serviceOffers: "serviceOffers",
+                                  territoryId: "1",
+                                  zoneId: "1",
+                                  nationalAddress: "234234",
+                                  user_id: userController.userInfoModel.id.toString(),
+
+                                  price: _priceController.text,
+                                priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ));
+                         // authController.submitBusinessPlan(restaurantId: 1);
+                         //  next();
                         }
 
 
                       },
                       buttonText:
-                      currentStep == stepLength ? 'Finish' : 'next'.tr,
+                      currentStep == stepLength ? 'confirm'.tr : 'next'.tr,
 
                     ),
                   )
@@ -1360,6 +1548,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
        );
+       });
     });
     });
     }),

@@ -16,6 +16,7 @@ import 'package:abaad/view/screen/dashboard/widget/bottom_nav_item.dart';
 import 'package:abaad/view/screen/favourite/favourite_screen.dart';
 import 'package:abaad/view/screen/draw.dart';
 import 'package:abaad/view/screen/home/home_screen.dart';
+import 'package:abaad/view/screen/map/map_view_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

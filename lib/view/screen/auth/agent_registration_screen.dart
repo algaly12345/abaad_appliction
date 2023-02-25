@@ -35,7 +35,6 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
   void initState() {
     super.initState();
 
-    Get.find<AuthController>().pickDmImage(false, true);
     Get.find<AuthController>().setIdentityTypeIndex(Get
         .find<AuthController>()
         .identityTypeList[0], false);

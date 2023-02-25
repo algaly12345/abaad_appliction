@@ -1,6 +1,7 @@
 import 'package:abaad/data/api/api_checker.dart';
 import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/data/model/response/facilities_model.dart';
 import 'package:abaad/data/repository/category_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ class CategoryController extends GetxController implements GetxService {
   CategoryController({@required this.categoryRepo});
 
   List<CategoryModel> _categoryList;
+  List<FacilitiesModel> _facilitiesList;
   List<CategoryModel> _subCategoryList;
   List<Estate> _categoryRestList;
   List<Property> _propertiesRestList;
@@ -26,6 +28,7 @@ class CategoryController extends GetxController implements GetxService {
 
 
   List<CategoryModel> get categoryList => _categoryList;
+  List<FacilitiesModel> get facilitiesList => _facilitiesList;
   List<Estate> get categoryRestList => _categoryRestList;
   List<Estate> get searchEstList => _searchEstList;
   List<bool> get interestSelectedList => _interestSelectedList;
@@ -47,9 +50,31 @@ class CategoryController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
 
         _categoryList = [];
-        _interestSelectedList = [];
+        // _interestSelectedList = [];
         response.body.forEach((category) {
           _categoryList.add(CategoryModel.fromJson(category));
+          // _interestSelectedList.add(false);
+          print("omeromeromer");
+        });
+      } else {
+        ApiChecker.checkApi(response);
+      }
+      update();
+    }
+  }
+
+
+
+  Future<void> getFacilitiesList(bool reload) async {
+
+    if(_facilitiesList == null || reload) {
+      Response response = await categoryRepo.getFacilities();
+      if (response.statusCode == 200) {
+
+        _facilitiesList = [];
+        _interestSelectedList = [];
+        response.body.forEach((category) {
+          _facilitiesList.add(FacilitiesModel.fromJson(category));
           _interestSelectedList.add(false);
           print("omeromeromer");
         });
@@ -103,10 +128,10 @@ class CategoryController extends GetxController implements GetxService {
 
 
       _propertiesRestList = [];
-      _interestSelectedList = [];
+      // _interestSelectedList = [];
       response.body.forEach((category) {
         _propertiesRestList.add(Property.fromJson(category));
-        _interestSelectedList.add(false);
+        // _interestSelectedList.add(false);
         print("omeromeromer");
       });
 

@@ -1,7 +1,9 @@
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
+import 'package:abaad/data/api/api_client.dart';
 import 'package:abaad/data/model/auto_complete_result.dart';
+import 'package:abaad/data/model/body/estate_body.dart';
 import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/repository/estate_repo.dart';
@@ -36,6 +38,9 @@ class EstateController extends GetxController implements GetxService {
   XFile _pickedLogo;
   XFile _pickedCover;
   List<Property> _categoryRestList;
+  XFile _pickedImage;
+  List<XFile> _pickedIdentities = [];
+  int _currentIndex = 0;
 
 
   List<String> _tagList = [];
@@ -59,6 +64,10 @@ class EstateController extends GetxController implements GetxService {
   List<Property> get categoryRestList => _categoryRestList;
   List<String> get tagList => _tagList;
   int get categoryPostion => _categoryPostion;
+  XFile get pickedImage => _pickedImage;
+  List<XFile> get pickedIdentities => _pickedIdentities;
+  int get currentIndex => _currentIndex;
+
 
 
 
@@ -176,7 +185,7 @@ class EstateController extends GetxController implements GetxService {
     update();
   }
 
-  Future<Estate> getEstateDetails(Estate estate) async {
+  Future<EstateModel> getEstateDetails(Estate estate) async {
 
     if(estate.shortDescription != null) {
       _estate = estate;
@@ -185,17 +194,19 @@ class EstateController extends GetxController implements GetxService {
       _estate = null;
       Response response = await estateRepo.getEstateDetails(estate.id.toString());
       if (response.statusCode == 200) {
+        print("-------------------------------------detailsapp${response.body}");
         _estate = Estate.fromJson(response.body);
-        print("-------------------------------------detailsapp${_estate.shortDescription}");
+
 
       } else {
         ApiChecker.checkApi(response);
+
       }
 
       _isLoading = false;
       update();
     }
-    return _estate;
+    return _estateModel;
   }
 
 
@@ -213,15 +224,47 @@ class EstateController extends GetxController implements GetxService {
     }
   }
 
-  Future<void> registerRestaurant(Estate restaurantBody) async {
+  void pickDmImage(bool isLogo, bool isRemove) async {
+    if(isRemove) {
+      _pickedImage = null;
+      _pickedIdentities = [];
+    }else {
+      if (isLogo) {
+        _pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+      } else {
+        XFile _xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+        if(_xFile != null) {
+          _pickedIdentities.add(_xFile);
+        }
+      }
+      update();
+    }
+  }
+
+  void removeIdentityImage(int index) {
+    _pickedIdentities.removeAt(index);
+    update();
+  }
+
+
+
+
+  Future<void> registerRestaurant(EstateBody restaurantBody) async {
     _isLoading = true;
     update();
-    Response response = await estateRepo.createEstate(restaurantBody, _pickedLogo, _pickedCover);
+    // List<MultipartBody> _multiParts = [];
+    // _multiParts.add(MultipartBody('image', _pickedImage));
+    // for(XFile file in _pickedIdentities) {
+    //   _multiParts.add(MultipartBody('identity_image[]', file));
+    // }
+    Response response = await estateRepo.createEstate(restaurantBody, _pickedCover);
+
     if(response.statusCode == 200) {
       int _restaurantId = response.body['restaurant_id'];
-      Get.offAllNamed(RouteHelper.getBusinessPlanRoute(_restaurantId));
+      Get.offAllNamed(RouteHelper.getSuccess());
     }else {
       ApiChecker.checkApi(response);
+      print("---------------------------------------------------${response.body}");
     }
     _isLoading = false;
     update();
@@ -244,7 +287,12 @@ class EstateController extends GetxController implements GetxService {
 
   @override
   void onClose() {}
-
+  void setCurrentIndex(int index, bool notify) {
+    _currentIndex = index;
+    if(notify) {
+      update();
+    }
+  }
 
 }
 

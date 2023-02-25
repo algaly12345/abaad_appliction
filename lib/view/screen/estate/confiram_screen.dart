@@ -163,63 +163,63 @@ class _AddEstateScreenState extends State<AddEstateScreenTow> {
                style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
              ),
              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-             SizedBox(
-               height: 120,
-               child: ListView.builder(
-                 scrollDirection: Axis.horizontal,
-                 physics: BouncingScrollPhysics(),
-                 itemCount: authController.pickedIdentities.length+1,
-                 itemBuilder: (context, index) {
-                   XFile _file = index == authController.pickedIdentities.length ? null : authController.pickedIdentities[index];
-                   if(index == authController.pickedIdentities.length) {
-                     return InkWell(
-                       onTap: () => authController.pickDmImage(false, false),
-                       child: Container(
-                         height: 299, width: 200, alignment: Alignment.center, decoration: BoxDecoration(
-                         borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                         border: Border.all(color: Theme.of(context).primaryColor, width: 2),
-                       ),
-                         child: Container(
-                           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
-                           decoration: BoxDecoration(
-                             border: Border.all(width: 2, color: Theme.of(context).primaryColor),
-                             shape: BoxShape.circle,
-                           ),
-                           child: Icon(Icons.camera_alt, color: Theme.of(context).primaryColor),
-                         ),
-                       ),
-                     );
-                   }
-                   return Container(
-                     margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
-                     decoration: BoxDecoration(
-                       border: Border.all(color: Theme.of(context).primaryColor, width: 2),
-                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                     ),
-                     child: Stack(children: [
-                       ClipRRect(
-                         borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                         child: GetPlatform.isWeb ? Image.network(
-                           _file.path, width: 150, height: 120, fit: BoxFit.cover,
-                         ) : Image.file(
-                           File(_file.path), width: 150, height: 120, fit: BoxFit.cover,
-                         ),
-                       ),
-                       Positioned(
-                         right: 0, top: 0,
-                         child: InkWell(
-                           onTap: () => authController.removeIdentityImage(index),
-                           child: Padding(
-                             padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                             child: Icon(Icons.delete_forever, color: Colors.red),
-                           ),
-                         ),
-                       ),
-                     ]),
-                   );
-                 },
-               ),
-             ),
+             // SizedBox(
+             //   height: 120,
+             //   child: ListView.builder(
+             //     scrollDirection: Axis.horizontal,
+             //     physics: BouncingScrollPhysics(),
+             //     itemCount: authController.pickedIdentities.length+1,
+             //     itemBuilder: (context, index) {
+             //       XFile _file = index == authController.pickedIdentities.length ? null : authController.pickedIdentities[index];
+             //       if(index == authController.pickedIdentities.length) {
+             //         return InkWell(
+             //           onTap: () => authController.pickDmImage(false, false),
+             //           child: Container(
+             //             height: 299, width: 200, alignment: Alignment.center, decoration: BoxDecoration(
+             //             borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+             //             border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+             //           ),
+             //             child: Container(
+             //               padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+             //               decoration: BoxDecoration(
+             //                 border: Border.all(width: 2, color: Theme.of(context).primaryColor),
+             //                 shape: BoxShape.circle,
+             //               ),
+             //               child: Icon(Icons.camera_alt, color: Theme.of(context).primaryColor),
+             //             ),
+             //           ),
+             //         );
+             //       }
+             //       return Container(
+             //         margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+             //         decoration: BoxDecoration(
+             //           border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+             //           borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+             //         ),
+             //         child: Stack(children: [
+             //           ClipRRect(
+             //             borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+             //             child: GetPlatform.isWeb ? Image.network(
+             //               _file.path, width: 150, height: 120, fit: BoxFit.cover,
+             //             ) : Image.file(
+             //               File(_file.path), width: 150, height: 120, fit: BoxFit.cover,
+             //             ),
+             //           ),
+             //           Positioned(
+             //             right: 0, top: 0,
+             //             child: InkWell(
+             //               onTap: () => authController.removeIdentityImage(index),
+             //               child: Padding(
+             //                 padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+             //                 child: Icon(Icons.delete_forever, color: Colors.red),
+             //               ),
+             //             ),
+             //           ),
+             //         ]),
+             //       );
+             //     },
+             //   ),
+             // ),
 
             CustomTextField(
               hintText: 'وصف مختصر',

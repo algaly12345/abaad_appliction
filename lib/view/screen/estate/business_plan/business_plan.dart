@@ -17,8 +17,8 @@ import 'package:get/get.dart';
 
 import 'widgets/subscription_card.dart';
 class BusinessPlanScreen extends StatefulWidget {
-  final int restaurantId;
-  const  BusinessPlanScreen({Key key, @required this.restaurantId}) : super(key: key);
+  final int estateId;
+  const  BusinessPlanScreen({Key key, @required this.estateId}) : super(key: key);
 
   @override
   State<BusinessPlanScreen> createState() => _BusinessPlanScreenState();
@@ -221,7 +221,7 @@ class _BusinessPlanScreenState extends State<BusinessPlanScreen> {
 
                       authController.businessIndex == 0 || (authController.businessIndex == 1 && authController.packageModel.packages.length != 0) ? Expanded(child: CustomButton(
                         buttonText: 'next'.tr,
-                        onPressed: () => authController.submitBusinessPlan(restaurantId: widget.restaurantId),
+                        onPressed: () => authController.submitBusinessPlan(estateId: widget.estateId),
                       )) : SizedBox(),
                     ]),
                   ),

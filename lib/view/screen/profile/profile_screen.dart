@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     Text(
-                      _isLoggedIn ? '${userController.userInfoModel.userinfo.membershipType}' : 'guest'.tr,
+                      _isLoggedIn&& userController.userInfoModel.userinfo.membershipType==null? '${userController.userInfoModel.userinfo.membershipType}' : 'guest'.tr,
                       style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),
                     ),
                   ],

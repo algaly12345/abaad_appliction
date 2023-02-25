@@ -7,6 +7,7 @@ import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/util/app_constants.dart';
+import 'package:abaad/view/base/custom_dialog_box.dart';
 import 'package:abaad/view/base/not_found.dart';
 import 'package:abaad/view/screen/access_location_screen.dart';
 import 'package:abaad/view/screen/auth/agent_registration_screen.dart';
@@ -14,7 +15,7 @@ import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
 import 'package:abaad/view/screen/estate/add_estate_screen.dart';
-import 'package:abaad/view/screen/estate/add_estate_screen_tow.dart';
+import 'package:abaad/view/screen/estate/confiram_screen.dart';
 import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
 import 'package:abaad/view/screen/estate/estate_details.dart';
 import 'package:abaad/view/screen/language/language_screen.dart';
@@ -53,6 +54,7 @@ class RouteHelper {
   static const String addEstateTow = '/add-estate-tow';
   static const String agent = '/agent';
   static const String businessPlan = '/business-plan';
+  static const String success = '/success';
 
 
 
@@ -62,6 +64,8 @@ class RouteHelper {
   static String getCategoryRoute(int id ) => '$categories?id=$id';
   static String getNotificationRoute() => '$notification';
   static String getUpdateProfileRoute() => '$updateProfile';
+
+  static String getSuccess() => '$success';
   static String getSplashRoute(NotificationBody body) {
     String _data = 'null';
     if(body != null) {
@@ -104,6 +108,7 @@ class RouteHelper {
     GetPage(name: addEstateTow, page: () => AddEstateScreenTow()),
 
     GetPage(name: agent, page: () => AgentRegistrationScreen()),
+    GetPage(name: success, page: () => ScreenSuccess()),
 
     GetPage(name: signIn, page: () => SignInScreen(
       exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding
@@ -137,7 +142,7 @@ class RouteHelper {
     GetPage(name: estate, page: () {
       return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])));
     }),
-    GetPage(name: businessPlan, page: () => BusinessPlanScreen(restaurantId: int.parse(Get.parameters['id']))),
+    GetPage(name: businessPlan, page: () => BusinessPlanScreen(estateId: int.parse(Get.parameters['id']))),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
   ];
 

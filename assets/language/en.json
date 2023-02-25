@@ -81,7 +81,7 @@
   "choose_your_business_plan": "Choose Your marketing Plan",
   "subscription_package": "Subscribe to one of the packages",
   "days": "days",
-  "subscription_based": "subscription based",
+  "subscription_base": "subscription based",
   "commission": "commission ",
   "no_internet_connection": "no internet connection",
   "retry": "retry",
@@ -89,5 +89,6 @@
   "shot_description": "short description",
   "long_description": "long description",
   "enter_long_desc": "enter long description",
-  "enter_shot_description": "enter shot description"
+  "enter_shot_description": "enter shot description",
+  "discount": "discount"
 }

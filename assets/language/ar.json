@@ -79,12 +79,13 @@
   "choose_your_business_plan": "اختر خطة التسويق",
   "subscription_package": "الإشتراك في احد الباقات",
   "days": "يوم",
-  "subscription_based": "الإشتراك في باقة",
+  "subscription_base": "الإشتراك في باقة",
   "commission": "على أساس العمولة ",
   "no_internet_connection": "لا يوجد اتصال بالإنترنت",
   "enter_the_area": "ادخل المساحة (بالمتر مربع)",
   "shot_description": "وصف المختصر",
   "enter_shot_description": "ادخل الوصف المختصر",
   "long_description": "التفاصيل",
-  "enter_long_desc": "ادخل تفاصيل العقار"
+  "enter_long_desc": "ادخل تفاصيل العقار",
+  "discount": "خصم"
 }

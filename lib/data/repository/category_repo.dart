@@ -21,4 +21,8 @@ class CategoryRepo {
     return await apiClient.getData('${AppConstants.PROPERTIES_URI}?category_id=$categoryID');
   }
 
+  Future<Response> getFacilities() async {
+    return await apiClient.getData(AppConstants.FACILITIES);
+  }
+
 }

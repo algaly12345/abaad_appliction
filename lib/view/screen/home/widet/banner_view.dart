@@ -13,7 +13,9 @@ class BannerView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return GetBuilder<BannerController>(builder: (bannerController) {
-      return (bannerController.bannerImageList != null && bannerController.bannerImageList.length == 0) ? SizedBox() : Container(
+      return (bannerController.bannerImageList != null && bannerController.bannerImageList.length == 0) ?
+      SizedBox() :
+      Container(
         width: MediaQuery.of(context).size.width,
         height: GetPlatform.isDesktop ? 500 : MediaQuery.of(context).size.width * 0.4,
         padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),

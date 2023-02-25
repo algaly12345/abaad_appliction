@@ -51,6 +51,7 @@ class Images {
   static const String mobily = 'assets/image/mobily.png';
   static const String zain = 'assets/image/zain.png';
   static const String no_internet='assets/image/no_internet.png';
+  static const String success = 'assets/image/success.png';
 
 
 

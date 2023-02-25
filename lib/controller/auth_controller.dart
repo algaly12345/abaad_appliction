@@ -37,7 +37,7 @@ class AuthController extends GetxController implements GetxService {
   LatLng _restaurantLocation;
   List<int> _zoneIds;
   XFile _pickedImage;
-  List<XFile> _pickedIdentities = [];
+
   final List<String> _identityTypeList = ['هوية وطنية', 'سجل تجاري', 'هوية وطنية '];
   int _identityTypeIndex = 0;
   final List<String> _dmTypeList = ['مكتب عقاري', 'شركة'];
@@ -63,7 +63,7 @@ class AuthController extends GetxController implements GetxService {
   LatLng get restaurantLocation => _restaurantLocation;
   List<int> get zoneIds => _zoneIds;
   XFile get pickedImage => _pickedImage;
-  List<XFile> get pickedIdentities => _pickedIdentities;
+
   List<String> get identityTypeList => _identityTypeList;
   int get identityTypeIndex => _identityTypeIndex;
   List<String> get dmTypeList => _dmTypeList;
@@ -73,7 +73,6 @@ class AuthController extends GetxController implements GetxService {
   String get secondStep => _secondStep;
   int get activeSubscriptionIndex => _activeSubscriptionIndex;
 //  ZoneModel get zoneModel => _zoneModel;
-
   PackageModel get packageModel => _packageModel;
   int get paymentIndex => _paymentIndex;
 
@@ -269,19 +268,16 @@ class AuthController extends GetxController implements GetxService {
     _selectedZoneIndex = 0;
     _restaurantLocation = null;
     _zoneIds = null;
-
     Response response = await authRepo.getZoneList();
     if (response.statusCode == 200) {
       _zoneList = [];
       response.body.forEach((zone) => _zoneList.add(ZoneModel.fromJson(zone)));
-     // _zoneModel = ZoneModel.fromJson(response.body);
-      setLocation(const LatLng(
-          26.451363,
-          50.109046
+      setLocation(LatLng(
+        double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
+        double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
       ));
     } else {
       ApiChecker.checkApi(response);
-      print("zone_list${response.hasError}");
     }
     update();
   }
@@ -312,8 +308,6 @@ class AuthController extends GetxController implements GetxService {
   }
 
 
-
-
   void setIdentityTypeIndex(String identityType, bool notify) {
     int _index = 0;
     for(int index=0; index<_identityTypeList.length; index++) {
@@ -333,28 +327,6 @@ class AuthController extends GetxController implements GetxService {
     if(notify) {
       update();
     }
-  }
-
-  void pickDmImage(bool isLogo, bool isRemove) async {
-    if(isRemove) {
-      _pickedImage = null;
-      _pickedIdentities = [];
-    }else {
-      if (isLogo) {
-        _pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-      } else {
-        XFile _xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-        if(_xFile != null) {
-          _pickedIdentities.add(_xFile);
-        }
-      }
-      update();
-    }
-  }
-
-  void removeIdentityImage(int index) {
-    _pickedIdentities.removeAt(index);
-    update();
   }
 
 
@@ -438,11 +410,12 @@ class AuthController extends GetxController implements GetxService {
   }
 
 
-  Future<void> submitBusinessPlan({@required int restaurantId})async {
+  Future<void> submitBusinessPlan({@required int estateId})async {
     String _businessPlan;
+    print("ahmed ahemd$businessIndex");
     if(businessIndex == 0){
       _businessPlan = 'commission';
-      setUpBusinessPlan(BusinessPlanBody(businessPlan: _businessPlan, restaurantId: restaurantId.toString()));
+      setUpBusinessPlan(BusinessPlanBody(businessPlan: _businessPlan, estateId: estateId.toString()));
 
     }else{
       _businessPlanStatus = 'payment';
@@ -454,7 +427,7 @@ class AuthController extends GetxController implements GetxService {
           String _payment = _paymentIndex == 0 ? 'free_trial' : 'paying_now';
           setUpBusinessPlan(BusinessPlanBody(businessPlan: _businessPlan,
               packageId: _packageId.toString(),
-              restaurantId: restaurantId.toString(),
+              estateId: estateId.toString(),
               payment: _payment),
           );
 
