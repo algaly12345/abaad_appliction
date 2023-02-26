@@ -74,10 +74,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                     ),
 
-                    Text(
-                      _isLoggedIn&& userController.userInfoModel.userinfo.membershipType==null? '${userController.userInfoModel.userinfo.membershipType}' : 'guest'.tr,
-                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),
-                    ),
+                    // Text(
+                    //   _isLoggedIn&& userController.userInfoModel.userinfo.membershipType==null? '${userController.userInfoModel.userinfo.membershipType}' : 'guest'.tr,
+                    //   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),
+                    // ),
                   ],
                 ),
               ),

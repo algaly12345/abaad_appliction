@@ -5,6 +5,7 @@ import 'package:abaad/controller/theme_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
+import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
@@ -52,22 +53,31 @@ class _EstateDetailsState extends State<EstateDetails> {
 
             return (estateController.estate != null && estateController.estate.shortDescription != null) ?
             Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 EstateView(
                     fromView: true,estate:estateController.estate ) ,
 
 
-                Container(margin: EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-            color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300],
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4),
+                  padding:  EdgeInsets.only(right: 5,left: 5),
+                  decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+            boxShadow: const [
+            BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0.0, 0.2), //(x,y)
+            blurRadius: 6.0,
             ),
+            ], ),
                   child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("${estateController.estate.shortDescription}",
-                              style: robotoBlack.copyWith(fontSize: 12)),
+                              style: robotoBlack.copyWith(fontSize: 14)),
                           Align(
                             alignment: Alignment.topLeft,
                             child: Container(
@@ -83,10 +93,81 @@ class _EstateDetailsState extends State<EstateDetails> {
                             ),
                           ),
                         ],
-                      )
+                      ),
+                      Text("${estateController.estate.longDescription}",
+                          style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
                     ],
                   ),
                 ),
+
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4),
+                  padding:  EdgeInsets.only(right: 5,left: 5),
+                  decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0.0, 0.2), //(x,y)
+                        blurRadius: 6.0,
+                      ),
+                    ], ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("${estateController.estate.shortDescription}",
+                              style: robotoBlack.copyWith(fontSize: 14)),
+
+                        ],
+                      ),
+                      SizedBox(height: 10)
+,                      Divider(height: 1,),
+                      estateController.estate.property!=null?       Center(
+                        child: Container(
+                          height: 35,
+                          child:ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            itemCount:   estateController.estate.property.length,
+                              scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                           return    Container(
+                             decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                               boxShadow: const [
+                                 BoxShadow(
+                                   color: Colors.grey,
+                                   offset: Offset(0.0, 0.2), //(x,y)
+                                   blurRadius: 6.0,
+                                 ),
+                               ], ),
+                             padding: const EdgeInsets.only(right: 30,left: 30),
+                             child: Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Image.asset(Images.bathroom, width: 14.0, height: 14.0),
+                                      const SizedBox(
+                                        width: 7.0,
+                                      ),
+                                      Text(
+                                          estateController.estate.property[index].name,
+                                          style: robotoBlack.copyWith(fontSize: 11)
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                           );
+
+                            },
+                          ),
+                        ),
+                      ):Container(),
+                      Divider(height: 1,),
+                    ],
+                  ),
+                ),
+
               ],
             )
                 : const Center(child: CircularProgressIndicator());

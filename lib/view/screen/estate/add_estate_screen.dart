@@ -163,10 +163,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     super.initState();
 
     Get.find<AuthController>().getZoneList();
+    Get.find<CategoryController>().getFacilitiesList(true);
     if (Get
         .find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
-      Get.find<CategoryController>().getFacilitiesList(true);
+
       Get.find<CategoryController>().getPropertiesList(1);
       netWorkType.add( RadioModel(false, Images.stc ,'stc 4G'));
       netWorkType.add( RadioModel(false, Images.mobily, 'mobiliy 4G'));
@@ -661,11 +662,13 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
               Container(
                   padding: const EdgeInsets.only(right: 7.0,left: 7.0),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             restController.getCategoryPostion()==5?      Container(
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
                                     'إرفاق المخطط',
@@ -726,6 +729,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                             ):Container(),
                             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
                             restController.getCategoryPostion()==1?    Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
 
 
@@ -811,7 +815,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                 ),
 
                                 SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                Column(
+                                categoryController.facilitiesList.length!=null?    Column(
                                   children: [
                                     ExpansionTile(
                                       title: Text("إضافة مرافق"), //add icon//children padding
@@ -873,8 +877,9 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                     ),
 
                                   ],
-                                ),
+                                ):Container(),
                                 Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     DropDownMultiSelect(
 
