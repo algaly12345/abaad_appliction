@@ -52,8 +52,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pageController = PageController(initialPage: widget.pageIndex);
 
     _screens = [
-
-       MapViewScreen(),
+     // SearchMap(),
+        MapViewScreen(),
       HomeScreen(),
       ChatScreen(),
       FavouriteScreen(),

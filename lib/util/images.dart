@@ -52,6 +52,10 @@ class Images {
   static const String zain = 'assets/image/zain.png';
   static const String no_internet='assets/image/no_internet.png';
   static const String success = 'assets/image/success.png';
+  static  const String kitchen='assets/image/kitchen.png';
+  static const String age_estate='assets/image/age_estate.png';
+  static const String estate_type = 'assets/image/estate_type.png';
+  static  const String space='assets/image/space.png';
 
 
 

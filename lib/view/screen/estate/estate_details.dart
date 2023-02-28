@@ -7,6 +7,7 @@ import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/map_details_view.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
 
@@ -117,7 +118,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("${estateController.estate.shortDescription}",
+                          Text("تحتوي علي ",
                               style: robotoBlack.copyWith(fontSize: 14)),
 
                         ],
@@ -127,43 +128,244 @@ class _EstateDetailsState extends State<EstateDetails> {
                       estateController.estate.property!=null?       Center(
                         child: Container(
                           height: 35,
+
                           child:ListView.builder(
                             physics: BouncingScrollPhysics(),
                             itemCount:   estateController.estate.property.length,
                               scrollDirection: Axis.horizontal,
+                            // ignore: missing_return
                             itemBuilder: (context, index) {
-                           return    Container(
-                             decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                               boxShadow: const [
-                                 BoxShadow(
-                                   color: Colors.grey,
-                                   offset: Offset(0.0, 0.2), //(x,y)
-                                   blurRadius: 6.0,
-                                 ),
-                               ], ),
-                             padding: const EdgeInsets.only(right: 30,left: 30),
-                             child: Expanded(
+                              if(estateController.estate.property[index].name=="حمام" ) {
+                                return Container(
+                                  decoration: BoxDecoration(color: Theme
+                                      .of(context)
+                                      .cardColor,
+                                    borderRadius: BorderRadius.circular(
+                                        Dimensions.RADIUS_SMALL),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.0, 0.2), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],),
+                                  margin: EdgeInsets.all(5.0),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Image.asset(Images.bathroom, width: 14.0, height: 14.0),
-                                      const SizedBox(
-                                        width: 7.0,
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 40.0,
+                                        width: 40.0,
+
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          child: Image.asset(
+                                              Images.bathroom, height: 24,
+                                              color: Theme.of(context).primaryColor,
+                                              width: 24),
+                                        ),
                                       ),
-                                      Text(
-                                          estateController.estate.property[index].name,
-                                          style: robotoBlack.copyWith(fontSize: 11)
-                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 10.0),
+                                        child: Text(" ${ estateController.estate
+                                            .property[index]
+                                            .number} عدد الحمامات"),
+                                      )
                                     ],
                                   ),
-                                ),
-                           );
+                                );
+                              }else if(estateController.estate.property[index].name=="مطلبخ"){
+                                return Container(
+                                  decoration: BoxDecoration(color: Theme
+                                      .of(context)
+                                      .cardColor,
+                                    borderRadius: BorderRadius.circular(
+                                        Dimensions.RADIUS_SMALL),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.0, 0.2), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],),
+                                  margin: EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 50.0,
+                                        width: 50.0,
+
+                                        child: Container(
+                                          padding: EdgeInsets.all(3),
+                                          child: Image.asset(
+                                              Images.kitchen, height: 24,
+                                              color: Theme.of(context).primaryColor,
+                                              width: 24),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 10.0),
+                                        child: Text(" ${ estateController.estate
+                                            .property[index]
+                                            .number} عدد المطابخ"),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }else if(estateController.estate.property[index].name=="غرف نوم"){
+                                return Container(
+                                  decoration: BoxDecoration(color: Theme
+                                      .of(context)
+                                      .cardColor,
+                                    borderRadius: BorderRadius.circular(
+                                        Dimensions.RADIUS_SMALL),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.0, 0.2), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],),
+                                  margin: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 40.0,
+                                        width: 40.0,
+
+                                        child: Container(
+                                          padding: const EdgeInsets.all(6),
+                                          child: Image.asset(
+                                              Images.bed, height: 24,
+                                              color: Theme.of(context).primaryColor,
+                                              width: 24),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 10.0),
+                                        child: Text(" ${ estateController.estate
+                                            .property[index]
+                                            .number} عدد غرف النوم"),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+
+
+
+                           //   Container(
+                           //
+                           //   padding: const EdgeInsets.only(right: 4,left: 4),
+                           //   child: ElevatedButton(
+                           //     onPressed: () {},
+                           //     child: Text( estateController.estate.property[index].name),
+                           //     style: ButtonStyle(
+                           //       overlayColor: MaterialStateProperty.resolveWith<Color>(
+                           //             (Set<MaterialState> states) {
+                           //           if (states.contains(MaterialState.pressed)) {
+                           //             return Colors.red.withOpacity(0.8);
+                           //           }
+                           //           return Colors.transparent;
+                           //         },
+                           //       ),
+                           //     ),
+                           //   ),
+                           // );
 
                             },
                           ),
                         ),
                       ):Container(),
                       Divider(height: 1,),
+
+                      MapDetailsView(
+                          fromView: true),
+                      Text("معلومات اخرى",
+                          style: robotoBlack.copyWith(fontSize: 14)),
+
+                      Container   (
+                        padding: EdgeInsets.all(20),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).primaryColor,
+                                      spreadRadius: 1,
+                                      blurRadius: 2,
+                                      offset: Offset(0, 0.5), // changes position of shadow
+                                    ),
+
+                                  ],
+
+                                ),
+
+                                child: Column(children: <Widget>[
+                                Image.asset(Images.estate_type,height: 70,width: 70,),
+                                  Text('نوع العقار'),
+                                  Text('Front Camera'),
+                                ]),
+                              ),
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).primaryColor,
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 0.5), // changes position of shadow
+                          ),
+
+                        ],
+
+                      ),
+
+                      child: Column(children: <Widget>[
+                      Image.asset(Images.space,height: 70,width: 70,),
+                        Text('المساحة'),
+                        Text('Front Camera'),
+                      ]),
+                    ),
+                      Container(
+                      padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+            BoxShadow(
+            color: Theme.of(context).primaryColor,
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 0.5), // changes position of shadow
+            ),
+
+            ],
+
+            ),
+
+            child: Column(children: <Widget>[
+            Image.asset(Images.age_estate,height: 70,width: 70,),
+            Text('عمر العقار'),
+              Text(estateController.estate.ageEstate),
+            ]),
+            ),
+                            ]
+                        ),
+                      )
                     ],
                   ),
                 ),

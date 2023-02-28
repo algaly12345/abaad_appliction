@@ -103,8 +103,8 @@ child: Container(
                                           borderRadius:
                                           BorderRadius.circular(3.0),
                                           child:  GetBuilder<SplashController>(builder: (splashController) {
-                                            String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
-                                            print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
+                                          String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+                                         //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
                                             return CustomImage(
                                               image: '$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}',
                                               fit: BoxFit.cover,

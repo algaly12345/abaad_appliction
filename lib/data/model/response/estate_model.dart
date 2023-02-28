@@ -55,7 +55,7 @@ class Estate {
   int forRent;
   int forSell;
   int territoryId;
-  int ageEstate;
+  String  ageEstate;
   String shortDescription;
   String longDescription;
   int floors;
