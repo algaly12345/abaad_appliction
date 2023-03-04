@@ -17,7 +17,7 @@
   "password": "Password",
   "terms_conditions": "Terms & Conditions",
   "i_agree_with": "I agree with",
-  "my_account":"my my_account",
+  "my_account":"my account",
   "language": "language",
   "help_support": "support",
   "privacy_policy": "privacy policy",
@@ -90,5 +90,10 @@
   "long_description": "long description",
   "enter_long_desc": "enter long description",
   "enter_shot_description": "enter shot description",
-  "discount": "discount"
+  "discount": "discount",
+  "are_you_sure_to_logout": "Are you sure want to logout?",
+  "yes": "Yes",
+  "no": "No",
+  "logout": "logout",
+  "notification_is_empty": "notification is empty"
 }

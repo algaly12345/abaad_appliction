@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/chat_controller.dart';
+import 'package:abaad/controller/notification_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/helper/route_helper.dart';
+import 'package:abaad/helper/user_type.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -11,52 +14,53 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
+
 import '../util/app_constants.dart';
 
 class NotificationHelper {
 
   static Future<void> initialize(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
     var androidInitialize = new AndroidInitializationSettings('notification_icon');
-    // var iOSInitialize = new IOSInitializationSettings();
-    // var initializationsSettings = new InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-    // flutterLocalNotificationsPlugin.initialize(initializationsSettings, onSelectNotification: (String payload) async {
-    //   try{
-    //     NotificationBody _payload;
-    //     if(payload != null && payload.isNotEmpty) {
-    //       _payload = NotificationBody.fromJson(jsonDecode(payload));
-    //       if(_payload.notificationType == NotificationType.order) {
-    //      //   Get.toNamed(RouteHelper.getOrderDetailsRoute(int.parse(_payload.orderId.toString())));
-    //       } else if(_payload.notificationType == NotificationType.general) {
-    //        // Get.toNamed(RouteHelper.getNotificationRoute());
-    //       } else{
-    //       //  Get.toNamed(RouteHelper.getChatRoute(notificationBody: _payload, conversationID: _payload.conversationId));
-    //       }
-    //     }
-    //   }catch (e) {}
-    //   return;
-    // });
+    var iOSInitialize = new IOSInitializationSettings();
+    var initializationsSettings = new InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
+    flutterLocalNotificationsPlugin.initialize(initializationsSettings, onSelectNotification: (String payload) async {
+      try{
+        NotificationBody _payload;
+        if(payload != null && payload.isNotEmpty) {
+          _payload = NotificationBody.fromJson(jsonDecode(payload));
+          if(_payload.notificationType == NotificationType.order) {
+          //  Get.toNamed(RouteHelper.getOrderDetailsRoute(int.parse(_payload.orderId.toString())));
+          } else if(_payload.notificationType == NotificationType.general) {
+            Get.toNamed(RouteHelper.getNotificationRoute());
+          } else{
+            Get.toNamed(RouteHelper.getChatRoute(notificationBody: _payload, conversationID: _payload.conversationId));
+          }
+        }
+      }catch (e) {}
+      return;
+    });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("onMessage: ${message.notification.title}/${message.notification.body}/${message.data}");
-      if(message.data['type'] == 'message') {
-        // if(Get.find<AuthController>().isLoggedIn()) {
-        //   Get.find<ChatController>().getConversationList(1);
-        //   if(Get.find<ChatController>().messageModel.conversation.id.toString() == message.data['conversation_id'].toString()) {
-        //     Get.find<ChatController>().getMessages(
-        //       1, NotificationBody(
-        //         notificationType: NotificationType.message, adminId: message.data['sender_type'] == UserType.admin.name ? 0 : null,
-        //         restaurantId: message.data['sender_type'] == UserType.vendor.name ? 0 : null,
-        //         deliverymanId: message.data['sender_type'] == UserType.delivery_man.name ? 0 : null,
-        //       ),
-        //       null, int.parse(message.data['conversation_id'].toString()),
-        //     );
-        //   }else {
-        //     NotificationHelper.showNotification(message, flutterLocalNotificationsPlugin, false);
-        //   }
-        // }
-      }else if(message.data['type'] == 'message') {
+      if(message.data['type'] == 'message' && Get.currentRoute.startsWith(RouteHelper.messages)) {
         if(Get.find<AuthController>().isLoggedIn()) {
-      //    Get.find<ChatController>().getConversationList(1);
+          Get.find<ChatController>().getConversationList(1);
+          if(Get.find<ChatController>().messageModel.conversation.id.toString() == message.data['conversation_id'].toString()) {
+            Get.find<ChatController>().getMessages(
+              1, NotificationBody(
+              notificationType: NotificationType.message, adminId: message.data['sender_type'] == UserType.admin.name ? 0 : null,
+              // restaurantId: message.data['sender_type'] == UserType.vendor.name ? 0 : null,
+              // deliverymanId: message.data['sender_type'] == UserType.delivery_man.name ? 0 : null,
+            ),
+              null, int.parse(message.data['conversation_id'].toString()),
+            );
+          }else {
+            NotificationHelper.showNotification(message, flutterLocalNotificationsPlugin, false);
+          }
+        }
+      }else if(message.data['type'] == 'message' && Get.currentRoute.startsWith(RouteHelper.conversation)) {
+        if(Get.find<AuthController>().isLoggedIn()) {
+          Get.find<ChatController>().getConversationList(1);
         }
         NotificationHelper.showNotification(message, flutterLocalNotificationsPlugin, false);
       }else {
@@ -64,7 +68,7 @@ class NotificationHelper {
         if(Get.find<AuthController>().isLoggedIn()) {
           // Get.find<OrderController>().getRunningOrders(1);
           // Get.find<OrderController>().getHistoryOrders(1);
-          // Get.find<NotificationController>().getNotificationList(true);
+          Get.find<NotificationController>().getNotificationList(true);
           // if(message.data['type'] == 'message' && message.data['message'] != null && message.data['message'].isNotEmpty) {
           //   if(Get.currentRoute.contains(RouteHelper.conversation)) {
           //     Get.find<ChatController>().reloadConversationWithNotification(m.Message.fromJson(message.data['message']).conversationId);
@@ -82,12 +86,11 @@ class NotificationHelper {
           NotificationBody _notificationBody = convertNotification(message.data);
           if(_notificationBody.notificationType == NotificationType.order) {
             print('order call-------------');
-
-            // Get.toNamed(RouteHelper.getOrderDetailsRoute(int.parse(message.data['order_id'])));
+       //     Get.toNamed(RouteHelper.getOrderDetailsRoute(int.parse(message.data['order_id'])));
           } else if(_notificationBody.notificationType == NotificationType.general) {
-            // Get.toNamed(RouteHelper.getNotificationRoute());
+            Get.toNamed(RouteHelper.getNotificationRoute());
           } else{
-            // Get.toNamed(RouteHelper.getChatRoute(notificationBody: _notificationBody, conversationID: _notificationBody.conversationId));
+            Get.toNamed(RouteHelper.getChatRoute(notificationBody: _notificationBody, conversationID: _notificationBody.conversationId));
           }
         }
       }catch (e) {}
@@ -195,9 +198,9 @@ class NotificationHelper {
     }else {
       return NotificationBody(
         notificationType: NotificationType.message,
-        estate_id: data['sender_type'] == 'estate_id' ? 0 : null,
+        deliverymanId: data['sender_type'] == 'delivery_man' ? 0 : null,
         adminId: data['sender_type'] == 'admin' ? 0 : null,
-        provider_id: data['sender_type'] == 'provider_id' ? 0 : null,
+        restaurantId: data['sender_type'] == 'vendor' ? 0 : null,
         conversationId: int.parse(data['conversation_id'].toString()),
       );
     }

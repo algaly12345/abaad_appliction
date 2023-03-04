@@ -1,5 +1,6 @@
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
+import 'package:abaad/data/model/response/conversation_model.dart';
 import 'package:abaad/data/model/response/response_model.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/data/repository/user_repo.dart';
@@ -15,10 +16,12 @@ class UserController extends GetxController implements GetxService {
   UserController({@required this.userRepo});
 
   UserInfoModel _userInfoModel;
+  UserInfoModel _agentInfoModel;
   XFile _pickedFile;
   bool _isLoading = false;
 
   UserInfoModel get userInfoModel => _userInfoModel;
+  UserInfoModel get agentInfoModel => _agentInfoModel;
   XFile get pickedFile => _pickedFile;
   bool get isLoading => _isLoading;
 
@@ -29,6 +32,27 @@ class UserController extends GetxController implements GetxService {
     print("user respone =====================>${response.body}");
     if (response.statusCode == 200) {
       _userInfoModel = UserInfoModel.fromJson(response.body);
+      _responseModel = ResponseModel(true, 'successful');
+    } else {
+      _responseModel = ResponseModel(false, response.statusText);
+      ApiChecker.checkApi(response);
+    }
+    update();
+    return _responseModel;
+  }
+
+
+
+
+
+  Future<ResponseModel> getUserInfoByID(int id) async {
+    print("mohammed  =====================>");
+    _pickedFile = null;
+    ResponseModel _responseModel;
+    Response response = await userRepo.getUserInfoById(id);
+    print("mohammed  =====================>${response.body}");
+    if (response.statusCode == 200) {
+      _agentInfoModel = UserInfoModel.fromJson(response.body);
       _responseModel = ResponseModel(true, 'successful');
     } else {
       _responseModel = ResponseModel(false, response.statusText);
@@ -102,6 +126,11 @@ class UserController extends GetxController implements GetxService {
       Get.back();
       ApiChecker.checkApi(response);
     }
+  }
+
+
+  void updateUserWithNewData(Userinfo user) {
+    _userInfoModel.userinfo = user;
   }
 
 }

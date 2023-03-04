@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
@@ -29,6 +30,7 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
   final FocusNode _identityNumberNode = FocusNode();
   String _documentTypeValue;
   String _membershipType;
+  bool _isLoggedIn;
 
 
   @override
@@ -42,6 +44,14 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
         .find<AuthController>()
         .dmTypeList[0], false);
     Get.find<AuthController>().getZoneList();
+
+    _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+
+    if(_isLoggedIn && Get.find<UserController>().userInfoModel == null) {
+      Get.find<UserController>().getUserInfo();
+    }
+
+
   }
 
   @override
@@ -49,7 +59,9 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: 'complete_the_data'.tr),
       body: GetBuilder<AuthController>(builder: (authController) {
-        return Column(children: [
+    return  GetBuilder<UserController>(builder: (userController) {
+    return (_isLoggedIn && userController.userInfoModel == null) ? Center(child: CircularProgressIndicator()) :
+    userController.userInfoModel.userType=="agent" ? Column(children: [
 
           Expanded(child: SingleChildScrollView(
             padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
@@ -214,7 +226,8 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
             onPressed: () => _addAgent(authController),
           ) : Center(child: CircularProgressIndicator()),
 
-        ]);
+        ]):Center(child: Text("تواصل مع الدعم الفني"),);
+      });
       }),
     );
   }
@@ -231,7 +244,8 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
     } else if(_advertiser.length < 6) {
        showCustomSnackBar('رقم المعلن اقل من 6 ارقام'.tr);
     } else {
-      authController.registerAgent(Userinfo(membershipType: _membershipType,
+       showCustomSnackBar("---------------$_membershipType");
+      authController.registerAgent(Userinfo(membershipType: _membershipType==null?"فرد":_membershipType,
           commercialRegisterionNo: _identityNumber,
           identityType: _documentTypeValue,
           identity: _advertiser,advertiserNo: _advertiser));

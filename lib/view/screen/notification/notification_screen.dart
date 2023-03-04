@@ -148,7 +148,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ))),
           )),
-        ) : NoDataScreen(text: 'no_notification_found'.tr) : Center(child: CircularProgressIndicator());
+        ) : NoDataScreen(text: 'no_notification_found'.tr,isCart: true) : Center(child: CircularProgressIndicator());
       }) : NotLoggedInScreen(),
     );
   }

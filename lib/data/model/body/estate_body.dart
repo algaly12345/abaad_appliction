@@ -22,7 +22,11 @@ class EstateBody {
   String near;
   String priceNegotiation;
   String nationalAddress;
+  String facilities;
   String user_id;
+  String adNumber;
+  String advertiserNo;
+
 
   EstateBody(
       {
@@ -49,7 +53,10 @@ class EstateBody {
         this.near,
         this.priceNegotiation,
         this.nationalAddress,
-        this.user_id
+        this.facilities,
+        this.user_id,
+        this.adNumber,
+        this.advertiserNo,
         });
 
   EstateBody.fromJson(Map<String, dynamic> json) {
@@ -80,6 +87,10 @@ class EstateBody {
     priceNegotiation=json['price_negotiation'];
     nationalAddress=json['national_address'];
     user_id=json['user_id'];
+    facilities=json['facilities'];
+    advertiserNo = json['advertiser_no'];
+    adNumber = json['ad_number'];
+
 
   }
 
@@ -110,7 +121,10 @@ class EstateBody {
     data['near'] = this.near;
     data['long_description']=this.longDescription;
     data['national_address']=this.nationalAddress;
+    data['facilities']=this.facilities;
     data['user_id']=this.user_id;
+    data['advertiser_no'] = this.advertiserNo;
+    data['ad_number'] = this.adNumber;
     return data;
   }
 }

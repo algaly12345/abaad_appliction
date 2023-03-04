@@ -1,22 +1,32 @@
+import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/localization_controller.dart';
+import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/theme_controller.dart';
+import 'package:abaad/controller/user_controller.dart';
+import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/custom_button.dart';
+import 'package:abaad/view/base/custom_dialog.dart';
+import 'package:abaad/view/base/custom_image.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/map_details_view.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
+import 'package:clipboard/clipboard.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
 import 'widgets/estate_view.dart';
-import 'widgets/service _provider_view.dart';
 class EstateDetails extends StatefulWidget {
 final Estate estate;
 EstateDetails({@required this.estate});
@@ -28,6 +38,7 @@ EstateDetails({@required this.estate});
 class _EstateDetailsState extends State<EstateDetails> {
   final ScrollController scrollController = ScrollController();
   final bool _ltr = Get.find<LocalizationController>().isLtr;
+  bool _isLoggedIn;
   @override
   void initState() {
     super.initState();
@@ -36,14 +47,19 @@ class _EstateDetailsState extends State<EstateDetails> {
       Get.find<CategoryController>().getCategoryList(true);
     }
     Get.find<EstateController>().getCategoriesEstateList(1, 1, 'all', false);
+    _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
+    Get.find<UserController>().getUserInfoByID(10);
   }
   @override
   Widget build(BuildContext context) {
+    bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
     return  Scaffold(
       body: SingleChildScrollView(
         child: GetBuilder<EstateController>(builder: (estateController) {
-          return GetBuilder<CategoryController>(builder: (categoryController) {
+          return  GetBuilder<UserController>(builder: (userController) {
+            return (_isLoggedIn && userController.agentInfoModel == null) ? Center(child: CircularProgressIndicator()) :
+            GetBuilder<CategoryController>(builder: (categoryController) {
 
             Estate _estate;
 
@@ -284,13 +300,63 @@ class _EstateDetailsState extends State<EstateDetails> {
                       ):Container(),
                       Divider(height: 1,),
 
+
                       MapDetailsView(
                           fromView: true),
+                      Container(
+                        height: 200,
+                        child: GridView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: estateController.estate.facilities.length,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3 ,
+                            childAspectRatio: (1/0.50),
+                          ),
+                          itemBuilder: (context, index) {
+                            return InkWell(
+
+                              child: Container(
+                                margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                  boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                ),
+                                alignment: Alignment.center,
+                                child:   Row(
+
+                                  children: [
+                                    CustomImage(
+                                      image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                                          '/${ estateController.estate.facilities[index].image}',
+                                      height: 30, width: 30,
+                                    ),
+                                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                    Flexible(child: Text(
+                                      estateController.estate.facilities[index].name,
+                                      style: robotoMedium.copyWith(
+                                        fontSize: Dimensions.fontSizeLarge,
+                                        color: Theme.of(context).textTheme.bodyText1.color,
+                                      ),
+                                      maxLines: 2, overflow: TextOverflow.ellipsis,
+                                    )),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      Divider(height: 1,),
                       Text("معلومات اخرى",
                           style: robotoBlack.copyWith(fontSize: 14)),
 
                       Container   (
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(10),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
@@ -314,11 +380,11 @@ class _EstateDetailsState extends State<EstateDetails> {
                                 child: Column(children: <Widget>[
                                 Image.asset(Images.estate_type,height: 70,width: 70,),
                                   Text('نوع العقار'),
-                                  Text('Front Camera'),
+                                  Text('سكني'),
                                 ]),
                               ),
                     Container(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
@@ -337,11 +403,11 @@ class _EstateDetailsState extends State<EstateDetails> {
                       child: Column(children: <Widget>[
                       Image.asset(Images.space,height: 70,width: 70,),
                         Text('المساحة'),
-                        Text('Front Camera'),
+                        Text(estateController.estate.space),
                       ]),
                     ),
                       Container(
-                      padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10.0),
@@ -365,7 +431,168 @@ class _EstateDetailsState extends State<EstateDetails> {
             ),
                             ]
                         ),
-                      )
+                      ),
+                      SizedBox(height: 10),
+                      Divider(height: 1,),
+                      SizedBox(height: 6),
+                      Container(
+                        padding: EdgeInsets.only(right: 20,left: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children:  <Widget>[
+                              Text('رقم الإعلان'),
+                              SizedBox(width: 20),
+                              Text(estateController.estate.adNumber.toString()),
+
+                              IconButton(onPressed:(){
+                                FlutterClipboard.copy(estateController.estate.adNumber.toString()).then(( value ) {
+                                  showCustomSnackBar('تم النسخ'.tr, isError: false);
+                                });
+                              }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,)),
+                            ]),
+                      ),
+
+                      SizedBox(height: 6),
+                      Divider(height: 1,),
+
+
+
+                      SizedBox(height: 7),
+                      Divider(height: 1,),
+                      SizedBox(height: 6),
+                      Container(
+                        padding: EdgeInsets.only(right: 20,left: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children:  <Widget>[
+                              Text('الرمز الوطني المختصر'),
+
+                              Text('546854166'),
+                              IconButton(onPressed:(){
+                                FlutterClipboard.copy(estateController.estate.nationalAddress).then(( value ) {
+                                  showCustomSnackBar('تم النسخ'.tr, isError: false);
+                                });
+                              }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,)),
+                            ]),
+                      ),
+
+                      SizedBox(height: 6),
+                      Divider(height: 1,),
+                      SizedBox(height: 6),
+                      Container(
+                        margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
+                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], spreadRadius: 1, blurRadius: 5)],
+                        ),
+                        child: Row(children: [
+
+                          ClipOval(child: CustomImage(
+                            image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'
+                                '/${(userController.agentInfoModel != null && _isLoggedIn) ? userController.agentInfoModel.image : ''}',
+                            height: 100, width: 100, fit: BoxFit.cover,
+                          )),
+                          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+
+                          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+
+                            Text(userController.agentInfoModel.name, style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
+                            Row(children: [
+
+                              Container(
+                                height: 25, width: 70, alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                ),
+                                child: Center(
+                                  child: Text(estateController.estate.ownershipType, style: robotoBold.copyWith(
+                                    color: Theme.of(context).cardColor,
+                                    fontSize: Dimensions.fontSizeLarge,
+                                  )),
+                                ),
+                              ),
+                              Expanded(child: SizedBox()),
+
+
+
+
+                            ]),
+                            SizedBox(height: 4),
+                           Row(
+                             children: [
+                               Text(
+                                 "رقم المعلن",
+                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                               ),
+                               SizedBox(width: 20),
+                               Text(
+                                 userController.agentInfoModel.agent.advertiserNo??"",
+                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                               ),
+                             ],
+                           ),
+                            Row(
+                              children: [
+                                Text(
+                                  "تاريخ النشر",
+                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                ),
+                                SizedBox(width: 20),
+                                Text(
+                                estateController.estate.createdAt ?? "",
+                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
+                                ),
+                              ],
+                            ),
+                          ])),
+
+                        ]),
+                      ),
+                      !userController.isLoading ? CustomButton(
+                        onPressed: () async{
+                          await Get.toNamed(RouteHelper.getChatRoute(
+                            notificationBody: NotificationBody(orderId: estateController.estate.id, restaurantId: estateController.estate.userId),
+                            user: Userinfo(id: userController.agentInfoModel.id, name: userController.agentInfoModel.name,  image: userController.agentInfoModel.image),
+                          ));
+                        },
+                        buttonText: 'توصل مع المعلن',
+                      ) : Center(child: CircularProgressIndicator()),
+
                     ],
                   ),
                 ),
@@ -374,6 +601,7 @@ class _EstateDetailsState extends State<EstateDetails> {
             )
                 : const Center(child: CircularProgressIndicator());
           });
+        });
         }),
       ),
     );

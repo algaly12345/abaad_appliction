@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
+import 'package:abaad/data/model/response/conversation_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/view/base/custom_dialog_box.dart';
@@ -14,6 +16,8 @@ import 'package:abaad/view/screen/auth/agent_registration_screen.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
+import 'package:abaad/view/screen/chat/chat_screen.dart';
+import 'package:abaad/view/screen/chat/conversation_screen.dart';
 import 'package:abaad/view/screen/estate/add_estate_screen.dart';
 import 'package:abaad/view/screen/estate/confiram_screen.dart';
 import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
@@ -55,6 +59,8 @@ class RouteHelper {
   static const String agent = '/agent';
   static const String businessPlan = '/business-plan';
   static const String success = '/success';
+  static const String messages = '/messages';
+  static const String conversation = '/conversation';
 
 
 
@@ -64,6 +70,7 @@ class RouteHelper {
   static String getCategoryRoute(int id ) => '$categories?id=$id';
   static String getNotificationRoute() => '$notification';
   static String getUpdateProfileRoute() => '$updateProfile';
+  static String getConversationRoute() => '$conversation';
 
   static String getSuccess() => '$success';
   static String getSplashRoute(NotificationBody body) {
@@ -91,6 +98,19 @@ class RouteHelper {
   static String getAgentRegister() => '$agent';
   static String getBusinessPlanRoute(int restaurantId) => '$businessPlan?id=$restaurantId';
 
+
+  static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index}) {
+    String _notificationBody = 'null';
+    if(notificationBody != null) {
+      _notificationBody = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));
+    }
+    String _user = 'null';
+    if(user != null) {
+      _user = base64Encode(utf8.encode(jsonEncode(user.toJson())));
+    }
+    return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index';
+  }
+
   static List<GetPage> routes = [
     // GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
     GetPage(name: splash, page: () {
@@ -102,7 +122,6 @@ class RouteHelper {
       return SplashScreen(body: _data);
     }),
     GetPage(name: language, page: () => ChooseLanguageScreen(fromMenu: Get.parameters['page'] == 'menu')),
-
     GetPage(name: onBoarding, page: () => OnboardingScreen()),
     GetPage(name: addEstate, page: () => AddEstateScreen()),
     GetPage(name: addEstateTow, page: () => AddEstateScreenTow()),
@@ -130,6 +149,7 @@ class RouteHelper {
     GetPage(name: update, page: () => UpdateScreen(isUpdate: Get.parameters['update'] == 'true')),
     GetPage(name: profile, page: () => ProfileScreen()),
     GetPage(name: updateProfile, page: () => UpdateProfileScreen()),
+    GetPage(name: conversation, page: () => ConversationScreen()),
     GetPage(name: categories, page: () {
       MapScreen _pickMapScreen = Get.arguments;
       bool _fromAddress = Get.parameters['page'] == 'add-address';
@@ -138,7 +158,20 @@ class RouteHelper {
         canRoute: Get.parameters['route'] == 'true',
       );
     }),
-
+    GetPage(name: messages, page: () {
+      NotificationBody _notificationBody;
+      if(Get.parameters['notification'] != 'null') {
+        _notificationBody = NotificationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['notification'].replaceAll(' ', '+')))));
+      }
+      Userinfo _user;
+      if(Get.parameters['user'] != 'null') {
+        _user = Userinfo.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['user'].replaceAll(' ', '+')))));
+      }
+      return ChatScreen(
+        notificationBody: _notificationBody, user: _user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']) : null,
+        conversationID: (Get.parameters['conversation_id'] != null && Get.parameters['conversation_id'] != 'null') ? int.parse(Get.parameters['conversation_id']) : null,
+      );
+    }),
     GetPage(name: estate, page: () {
       return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])));
     }),

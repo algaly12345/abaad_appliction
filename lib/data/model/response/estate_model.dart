@@ -36,7 +36,7 @@ class Estate {
   List<Property>  property;
   String space;
   int categoryId;
-  double price;
+  String   price;
   String ownershipType;
   String planned;
   int view;
@@ -61,8 +61,16 @@ class Estate {
   int floors;
   String near;
   String priceNegotiation;
+
   String createdAt;
   String updatedAt;
+  List<Facilities> facilities;
+  int adNumber;
+  int advertiserNo;
+  String nationalAddress;
+  int userId;
+
+
 
   Estate(
   {this.id,
@@ -95,6 +103,11 @@ class Estate {
   this.floors,
   this.near,
     this.priceNegotiation,
+    this.facilities,
+    this.adNumber,
+    this.advertiserNo,
+    this.nationalAddress,
+    this.userId,
   this.createdAt,
   this.updatedAt});
 
@@ -141,6 +154,16 @@ class Estate {
     priceNegotiation=json['price_negotiation'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    advertiserNo = json['advertiser_no'];
+    adNumber = json['ad_number'];
+    nationalAddress=json['national_address'];
+    userId=json['user_id'];
+    if (json['facilities'] != null) {
+      facilities = <Facilities>[];
+      json['facilities'].forEach((v) {
+        facilities.add( Facilities.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -180,8 +203,16 @@ class Estate {
     data['floors'] = this.floors;
     data['near'] = this.near;
     data['created_at'] = this.createdAt;
+    data['advertiser_no'] = this.advertiserNo;
+    data['ad_number'] = this.adNumber;
     data['updated_at'] = this.updatedAt;
-    data['long_description']=this.longDescription;
+    data['national_address']=this.nationalAddress;
+    data['user_id']=this.userId;
+
+    if (this.facilities != null) {
+      data['facilities'] = this.facilities.map((v) => v.toJson()).toList();
+    }
+
     return data;
   }
 }
@@ -272,6 +303,25 @@ class Property {
     data['name'] = this.name;
     data['number'] = this.number;
     data['category_id'] = this.category_id;
+    return data;
+  }
+}
+
+class Facilities {
+  String name;
+  String image;
+
+  Facilities({this.name, this.image});
+
+  Facilities.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['image'] = this.image;
     return data;
   }
 }

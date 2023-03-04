@@ -9,8 +9,8 @@ class NotificationBody {
   NotificationType notificationType;
   int orderId;
   int adminId;
-  int estate_id;
-  int provider_id;
+  int deliverymanId;
+  int restaurantId;
   String type;
   int conversationId;
 
@@ -18,8 +18,8 @@ class NotificationBody {
     this.notificationType,
     this.orderId,
     this.adminId,
-    this.estate_id,
-    this.provider_id,
+    this.deliverymanId,
+    this.restaurantId,
     this.type,
     this.conversationId,
   });
@@ -28,8 +28,8 @@ class NotificationBody {
     notificationType = convertToEnum(json['order_notification']);
     orderId = json['order_id'];
     adminId = json['admin_id'];
-    estate_id = json['deliveryman_id'];
-    provider_id = json['restaurant_id'];
+    deliverymanId = json['deliveryman_id'];
+    restaurantId = json['restaurant_id'];
     type = json['type'];
     conversationId = json['conversation_id'];
   }
@@ -39,8 +39,8 @@ class NotificationBody {
     data['order_notification'] = this.notificationType.toString();
     data['order_id'] = this.orderId;
     data['admin_id'] = this.adminId;
-    data['estate_id'] = this.estate_id;
-    data['provider_id'] = this.provider_id;
+    data['deliveryman_id'] = this.deliverymanId;
+    data['restaurant_id'] = this.restaurantId;
     data['type'] = this.type;
     data['conversation_id'] = this.conversationId;
     return data;

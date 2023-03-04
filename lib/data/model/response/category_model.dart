@@ -2,7 +2,7 @@ class CategoryModel {
   int id;
   String name;
   String slug;
-  int  position;
+  String   position;
   String statusHome;
   String image;
   String createdAt;

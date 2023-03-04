@@ -767,7 +767,7 @@ class _MapViewScreenState extends State<MapScreen> {
         child: Column(
           children: [
             Container(
-              width: 42,
+              width: 45,
               height: 13,
               padding:   const EdgeInsets.only(right: 1,left: 1),
               decoration: BoxDecoration(
@@ -784,7 +784,7 @@ class _MapViewScreenState extends State<MapScreen> {
                       '${estate[index].price}',
                       style:robotoBlack.copyWith(fontSize: 7)
                   ),
-                  Image.asset(estate[index].serviceOffers.length==0?Images.vt:Images.vt_offer, height: 13, width: 13),
+                  Image.asset(estate[index].serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
                 ],
 
               ),

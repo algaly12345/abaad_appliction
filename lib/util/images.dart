@@ -56,6 +56,9 @@ class Images {
   static const String age_estate='assets/image/age_estate.png';
   static const String estate_type = 'assets/image/estate_type.png';
   static  const String space='assets/image/space.png';
+  static  const String image='assets/image/image.png';
+  static const String send = 'assets/image/send.png';
+  static const String notif_not_found='assets/image/notifaions.png';
 
 
 

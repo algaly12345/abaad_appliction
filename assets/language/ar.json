@@ -87,5 +87,10 @@
   "enter_shot_description": "ادخل الوصف المختصر",
   "long_description": "التفاصيل",
   "enter_long_desc": "ادخل تفاصيل العقار",
-  "discount": "خصم"
+  "discount": "خصم",
+  "are_you_sure_to_logout": "هل تريد تسجيل الخروج؟",
+  "yes": "نعم",
+  "no": "لا",
+  "logout": "تسجيل خروج",
+  "notification_is_empty": "لاتوجد إشعارات"
 }

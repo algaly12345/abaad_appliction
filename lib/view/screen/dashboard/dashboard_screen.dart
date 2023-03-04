@@ -9,9 +9,11 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/chat/chat_screen.dart';
+import 'package:abaad/view/screen/chat/conversation_screen.dart';
 import 'package:abaad/view/screen/dashboard/widget/bottom_nav_item.dart';
 import 'package:abaad/view/screen/favourite/favourite_screen.dart';
 import 'package:abaad/view/screen/draw.dart';
@@ -55,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
      // SearchMap(),
         MapViewScreen(),
       HomeScreen(),
-      ChatScreen(),
+      ConversationScreen(),
       FavouriteScreen(),
 
 
@@ -169,17 +171,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   listItem(8,Icons.logout,  _isLoggedIn ? 'logout'.tr : 'sign_in'.tr, Colors.orange,(){
 
 
-                    // if(Get.find<AuthController>().isLoggedIn()) {
-                    //   Get.dialog(ConfirmationDialog(icon: Images.support, description: 'are_you_sure_to_logout'.tr, isLogOut: true, onYesPressed: () {
-                    //     Get.find<AuthController>().clearSharedData();
-                    //     Get.find<CartController>().clearCartList();
-                    //     Get.find<WishListController>().removeWishes();
-                    //     Get.offAllNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
-                    //   }), useSafeArea: false);
-                    // }else {
-                    //   Get.find<WishListController>().removeWishes();
-                    //   Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.main));
-                    // }
+                    if(Get.find<AuthController>().isLoggedIn()) {
+                      Get.dialog(ConfirmationDialog(icon: Images.support, description: 'are_you_sure_to_logout'.tr, isLogOut: true, onYesPressed: () {
+                        Get.find<AuthController>().clearSharedData();
+                        // Get.find<WishListController>().removeWishes();
+                        Get.offAllNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
+                      }), useSafeArea: false);
+                    }else {
+                   //   Get.find<WishListController>().removeWishes();
+                      Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.main));
+                    }
                   }),
                 ],
               ),

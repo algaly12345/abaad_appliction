@@ -14,6 +14,13 @@ class UserRepo {
     return await apiClient.getData(AppConstants.CUSTOMER_INFO_URI);
   }
 
+
+  Future<Response> getUserInfoById(int user_id) async {
+    return await apiClient.getData( '${AppConstants.AGENT_INFO}?user_id=$user_id');
+
+  }
+
+
   Future<Response> updateProfile(UserInfoModel userInfoModel, XFile data, String token) async {
     Map<String, String> _body = Map();
     _body.addAll(<String, String>{

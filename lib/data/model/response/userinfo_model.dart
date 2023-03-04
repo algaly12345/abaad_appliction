@@ -90,11 +90,15 @@ class Userinfo {
   String image;
   String commercialRegisterionNo;
   int userId;
+  String name;
+  String phone;
   String createdAt;
   String  updatedAt;
 
   Userinfo(
       {this.id,
+        this.name,
+        this.phone,
         this.identity,
         this.image,
         this.commercialRegisterionNo,
@@ -107,6 +111,8 @@ class Userinfo {
 
   Userinfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    name= json['name'];
+    phone= json['phone'];
     identity = json['identity'];
     image = json['image'];
     commercialRegisterionNo = json['commercial_registerion_no'];
@@ -125,6 +131,8 @@ class Userinfo {
     data['image'] = this.image;
     data['commercial_registerion_no'] = this.commercialRegisterionNo;
     data['user_id'] = this.userId;
+    data['name']=this.name;
+    data['phone']=this.phone;
     data['advertiser_no'] = this.advertiserNo;
     data['membership_type'] = this.membershipType;
     data['identity_type'] = this.identityType;

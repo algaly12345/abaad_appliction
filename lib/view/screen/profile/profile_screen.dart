@@ -45,7 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar:  CustomAppBar(title: 'profile'.tr),
       backgroundColor: Theme.of(context).cardColor,
       body: GetBuilder<UserController>(builder: (userController) {
-        return (_isLoggedIn && userController.userInfoModel == null) ? Center(child: CircularProgressIndicator()) : ProfileBgWidget(
+        return (_isLoggedIn && userController.userInfoModel == null) ? Center(child: CircularProgressIndicator()) :
+        ProfileBgWidget(
           backButton: true,
           circularImage: Row(
             children: [

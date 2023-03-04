@@ -50,7 +50,8 @@ class EstateRepo {
       "short_description":estate.shortDescription,
       "ownership_type":estate.ownershipType,
       "user_id":estate.user_id,
-      'price_negotiation':estate.priceNegotiation
+      'price_negotiation':estate.priceNegotiation,
+      "facilities":estate.facilities
 
 
     });

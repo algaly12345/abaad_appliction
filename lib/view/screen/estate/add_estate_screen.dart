@@ -340,7 +340,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                               restController
                                                   .setCategoryIndex(categoryController.categoryList[index].id);
                                               restController
-                                                  .setCategoryPostion(categoryController.categoryList[index].position);
+                                                  .setCategoryPostion(int.parse(categoryController.categoryList[index].position));
                                               setState(() {
                                                 type_properties=categoryController.categoryList[index].name;
                                               });
@@ -1494,6 +1494,16 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           if(_djectivePresenter==0&&_authorized.isEmpty){
                             showCustomSnackBar('ادخل رقم التفويض');
                           }else{
+                            List<Map<String, dynamic >> _interests = [];
+                            for(int index=0; index<categoryController.facilitiesList.length; index++) {
+                              if(categoryController.interestSelectedList[index]) {
+
+                                _interests.add ({'"' + "name" + '"':'"' + categoryController.facilitiesList[index].name + '"','"' + "image" + '"':'"' + categoryController.facilitiesList[index].image + '"'});
+                              }
+                            }
+
+
+
                             next();
                           }
 
@@ -1506,6 +1516,18 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                          // next();
                         }
                         else if(currentStep==5){
+                          List<Map<String, dynamic >> _interests = [];
+                          for(int index=0; index<categoryController.facilitiesList.length; index++) {
+                            if(categoryController.interestSelectedList[index]) {
+
+                              _interests.add ({'"' + "name" + '"':'"' + categoryController.facilitiesList[index].name + '"','"' + "image" + '"':'"' + categoryController.facilitiesList[index].image + '"'});
+                            }
+                          }
+
+
+
+
+
                           restController.registerRestaurant(
                               EstateBody(
                                   forRent:"${_typeProperties}" ,
@@ -1526,6 +1548,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   ownershipType: _djectivePresenter==1?"مالك":'مفوض',
                                   property: "${jsonDecode(property)}",
                                   serviceOffers: "serviceOffers",
+                                  facilities: "${_interests}",
                                   territoryId: "1",
                                   zoneId: "1",
                                   nationalAddress: "234234",
