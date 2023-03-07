@@ -146,25 +146,7 @@ class _SelectLocationViewState extends State<SelectLocationView> {
               ),
             ) : SizedBox(),
             SizedBox(height: authController.zoneList.length > 0 ? Dimensions.PADDING_SIZE_SMALL : 0),
-            authController.zoneList.length > 0 ? Row(children: [
-              Expanded(child: CustomTextField(
-                hintText: 'latitude'.tr,
-                controller: TextEditingController(
-                  text: authController.restaurantLocation != null ? authController.restaurantLocation.latitude.toString() : '',
-                ),
-                isEnabled: false,
-                showTitle: true,
-              )),
-              SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-              Expanded(child: CustomTextField(
-                hintText: 'longitude'.tr,
-                controller: TextEditingController(
-                  text: authController.restaurantLocation != null ? authController.restaurantLocation.longitude.toString() : '',
-                ),
-                isEnabled: false,
-                showTitle: true,
-              )),
-            ]) : SizedBox(),
+
             SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
             authController.zoneIds != null ? Container(

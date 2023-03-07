@@ -33,6 +33,7 @@ import 'package:abaad/view/screen/profile/update_profile_screen.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
 import 'package:abaad/view/screen/test.dart';
 import 'package:abaad/view/screen/update/update_screen.dart';
+import 'package:abaad/view/screen/wallet/wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get.dart';
@@ -61,6 +62,7 @@ class RouteHelper {
   static const String success = '/success';
   static const String messages = '/messages';
   static const String conversation = '/conversation';
+  static const String wallet = '/wallet';
 
 
 
@@ -70,7 +72,8 @@ class RouteHelper {
   static String getCategoryRoute(int id ) => '$categories?id=$id';
   static String getNotificationRoute() => '$notification';
   static String getUpdateProfileRoute() => '$updateProfile';
-  static String getConversationRoute() => '$conversation';
+  static String getConversationRoute(int id) => '$conversation';
+  static String getWalletRoute(bool fromWallet) => '$wallet?page=${fromWallet ? 'wallet' : 'loyalty_points'}';
 
   static String getSuccess() => '$success';
   static String getSplashRoute(NotificationBody body) {
@@ -99,7 +102,7 @@ class RouteHelper {
   static String getBusinessPlanRoute(int restaurantId) => '$businessPlan?id=$restaurantId';
 
 
-  static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index}) {
+  static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id}) {
     String _notificationBody = 'null';
     if(notificationBody != null) {
       _notificationBody = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));
@@ -108,7 +111,7 @@ class RouteHelper {
     if(user != null) {
       _user = base64Encode(utf8.encode(jsonEncode(user.toJson())));
     }
-    return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index';
+    return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index&estate_id=$estate_id';
   }
 
   static List<GetPage> routes = [
@@ -128,6 +131,7 @@ class RouteHelper {
 
     GetPage(name: agent, page: () => AgentRegistrationScreen()),
     GetPage(name: success, page: () => ScreenSuccess()),
+    GetPage(name: wallet, page: () => WalletScreen(fromWallet: Get.parameters['page'] == 'wallet')),
 
     GetPage(name: signIn, page: () => SignInScreen(
       exitFromApp: Get.parameters['page'] == signUp || Get.parameters['page'] == splash || Get.parameters['page'] == onBoarding
@@ -168,9 +172,10 @@ class RouteHelper {
         _user = Userinfo.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['user'].replaceAll(' ', '+')))));
       }
       return ChatScreen(
-        notificationBody: _notificationBody, user: _user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']) : null,
+        notificationBody: _notificationBody,
+        user: _user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']) : null,
         conversationID: (Get.parameters['conversation_id'] != null && Get.parameters['conversation_id'] != 'null') ? int.parse(Get.parameters['conversation_id']) : null,
-      );
+        estate_id:  Get.parameters['estate_id'] != 'null' ?Get.parameters['estate_id'] : null);
     }),
     GetPage(name: estate, page: () {
       return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])));

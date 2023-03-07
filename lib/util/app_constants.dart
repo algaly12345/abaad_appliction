@@ -58,6 +58,12 @@ class AppConstants {
   static const String SEARCH_CONVERSATION_LIST_URI = '/api/v1/customer/message/search-list';
   static const String MESSAGE_LIST_URI = '/api/v1/message/details';
   static const String SEND_MESSAGE_URI = '/api/v1/message/send';
+  static const String WISH_LIST_GET_URI = '/api/v1/wish-list';
+  static const String ADD_WISH_LIST_URI = '/api/v1/wish-list/add?';
+  static const String REMOVE_WISH_LIST_URI = '/api/v1/wish-list/remove';
+  static const String WALLET_TRANSACTION_URL = '/api/v1/customer/wallet/transactions';
+  static const String LOYALTY_TRANSACTION_URL = '/api/v1/customer/loyalty-point/transactions';
+  static const String LOYALTY_POINT_TRANSFER_URL = '/api/v1/customer/loyalty-point/point-transfer';
 
 
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];

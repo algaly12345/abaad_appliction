@@ -14,6 +14,8 @@ class UserInfoModel {
   Userinfo userinfo;
   int estateCount;
   String image;
+  String   walletBalance;
+  int loyaltyPoint;
   Userinfo agent;
 
   UserInfoModel(
@@ -32,7 +34,9 @@ class UserInfoModel {
         this.userinfo,
         this.estateCount,
         this.image,
-        this.agent});
+        this.agent,
+        this.walletBalance,
+        this.loyaltyPoint});
 
   UserInfoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -53,6 +57,8 @@ class UserInfoModel {
         : null;
     estateCount = json['estate_count'];
     agent = json['agent'] != null ? new Userinfo.fromJson(json['agent']) : null;
+    walletBalance = json['wallet_balance'];
+    loyaltyPoint = json['loyalty_point'];
   }
 
   Map<String, dynamic> toJson() {
@@ -70,6 +76,9 @@ class UserInfoModel {
     data['created_at'] = this.createdAt;
     data['image'] = this.image;
     data['updated_at'] = this.updatedAt;
+    data['wallet_balance'] = this.walletBalance;
+    data['loyalty_point'] = this.loyaltyPoint;
+
     if (this.userinfo != null) {
       data['userinfo'] = this.userinfo.toJson();
     }

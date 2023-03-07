@@ -5,6 +5,7 @@ import 'package:abaad/controller/localization_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/theme_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
+import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
@@ -42,14 +43,25 @@ class _EstateDetailsState extends State<EstateDetails> {
   @override
   void initState() {
     super.initState();
-    Get.find<EstateController>().getEstateDetails(Estate(id: 6));
-    if(Get.find<CategoryController>().categoryList == null) {
-      Get.find<CategoryController>().getCategoryList(true);
-    }
-    Get.find<EstateController>().getCategoriesEstateList(1, 1, 'all', false);
-    _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
-    Get.find<UserController>().getUserInfoByID(10);
+
+
+
+    if(Get.find<AuthController>().isLoggedIn()) {
+      if(Get.find<CategoryController>().categoryList == null) {
+        Get.find<CategoryController>().getCategoryList(true);
+      }
+      Get.find<EstateController>().getCategoriesEstateList(1, 1, 'all', false);
+      Get.find<EstateController>().getEstateDetails(Estate(id: widget.estate.id));
+      print("mohammed-------------${widget.estate.userId}");
+       Get.find<WishListController>().getWishList();
+
+
+    }
+
+
+    Get.find<UserController>().getUserInfoByID(widget.estate.id);
+
   }
   @override
   Widget build(BuildContext context) {
@@ -58,7 +70,8 @@ class _EstateDetailsState extends State<EstateDetails> {
       body: SingleChildScrollView(
         child: GetBuilder<EstateController>(builder: (estateController) {
           return  GetBuilder<UserController>(builder: (userController) {
-            return (_isLoggedIn && userController.agentInfoModel == null) ? Center(child: CircularProgressIndicator()) :
+
+            return (Get.find<AuthController>().isLoggedIn()  && userController.agentInfoModel == null) ? Center(child: CircularProgressIndicator()) :
             GetBuilder<CategoryController>(builder: (categoryController) {
 
             Estate _estate;
@@ -68,12 +81,10 @@ class _EstateDetailsState extends State<EstateDetails> {
             }
             estateController.setCategoryList();
 
-            return (estateController.estate != null && estateController.estate.shortDescription != null) ?
+            return (estateController.estate != null) ?
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                EstateView(
-                    fromView: true,estate:estateController.estate ) ,
+              children: [EstateView(fromView: true,estate:estateController.estate,EstateId: widget.estate.id ) ,
 
 
                 Container(
@@ -141,7 +152,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                       ),
                       SizedBox(height: 10)
 ,                      Divider(height: 1,),
-                      estateController.estate.property!=null?       Center(
+              (Get.find<AuthController>().isLoggedIn()  && estateController.estate.property != null)  != null ?Center(
                         child: Container(
                           height: 35,
 
@@ -151,127 +162,129 @@ class _EstateDetailsState extends State<EstateDetails> {
                               scrollDirection: Axis.horizontal,
                             // ignore: missing_return
                             itemBuilder: (context, index) {
-                              if(estateController.estate.property[index].name=="حمام" ) {
-                                return Container(
-                                  decoration: BoxDecoration(color: Theme
-                                      .of(context)
-                                      .cardColor,
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.RADIUS_SMALL),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 0.2), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],),
-                                  margin: EdgeInsets.all(5.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 40.0,
-                                        width: 40.0,
+                              return estateController.estate.property[index].name==null?Container():Text(estateController.estate.property[index].name);
+             //                  return  estateController.estate.property[index].name=="حمام"? Container(
+             //                      decoration: BoxDecoration(color: Theme
+             //                          .of(context)
+             //                          .cardColor,
+             //                        borderRadius: BorderRadius.circular(
+             //                            Dimensions.RADIUS_SMALL),
+             //                        boxShadow: const [
+             //                          BoxShadow(
+             //                            color: Colors.grey,
+             //                            offset: Offset(0.0, 0.2), //(x,y)
+             //                            blurRadius: 6.0,
+             //                          ),
+             //                        ],),
+             //                      margin: EdgeInsets.all(5.0),
+             //                      child: Row(
+             //                        mainAxisAlignment: MainAxisAlignment
+             //                            .spaceBetween,
+             //                        children: <Widget>[
+             //                          SizedBox(
+             //                            height: 40.0,
+             //                            width: 40.0,
+             //
+             //                            child: Container(
+             //                              padding: const EdgeInsets.all(4),
+             //                              child: Image.asset(
+             //                                  Images.bathroom, height: 24,
+             //                                  color: Theme.of(context).primaryColor,
+             //                                  width: 24),
+             //                            ),
+             //                          ),
+             //                          Container(
+             //                            margin: const EdgeInsets.only(left: 10.0),
+             //                            child: Text(" ${estateController.estate.property[index].number ?? ""} عدد الحمامات"),
+             //                          )
+             //                        ],
+             //                      ),
+             //                    ): estateController.estate.property[index].name=="مطلبخ"?Container(
+             //   decoration: BoxDecoration(color: Theme
+             //       .of(context)
+             //       .cardColor,
+             //     borderRadius: BorderRadius.circular(
+             //         Dimensions.RADIUS_SMALL),
+             //     boxShadow: const [
+             //       BoxShadow(
+             //         color: Colors.grey,
+             //         offset: Offset(0.0, 0.2), //(x,y)
+             //         blurRadius: 6.0,
+             //       ),
+             //     ],),
+             //   margin: EdgeInsets.all(5.0),
+             //   child: Row(
+             //     mainAxisAlignment: MainAxisAlignment
+             //         .spaceBetween,
+             //     children: <Widget>[
+             //       Container(
+             //         height: 50.0,
+             //         width: 50.0,
+             //
+             //         child: Container(
+             //           padding: EdgeInsets.all(3),
+             //           child: Image.asset(
+             //               Images.kitchen, height: 24,
+             //               color: Theme.of(context).primaryColor,
+             //               width: 24),
+             //         ),
+             //       ),
+             //       Container(
+             //         margin: EdgeInsets.only(left: 10.0),
+             //         child: Text(" ${  estateController.estate.property[index].number ?? ""} عدد المطابخ"),
+             //       )
+             //     ],
+             //   ),
+             // ):estateController.estate.property[index].name=="غرف نوم"?Container(decoration: BoxDecoration(color: Theme
+             //       .of(context)
+             //       .cardColor,
+             //     borderRadius: BorderRadius.circular(
+             //         Dimensions.RADIUS_SMALL),
+             //     boxShadow: const [
+             //       BoxShadow(
+             //         color: Colors.grey,
+             //         offset: Offset(0.0, 0.2), //(x,y)
+             //         blurRadius: 6.0,
+             //       ),
+             //     ],), margin: const EdgeInsets.all(5.0), child: Row(
+             //     mainAxisAlignment: MainAxisAlignment
+             //         .spaceBetween,
+             //     children: <Widget>[
+             //       Container(
+             //         height: 40.0,
+             //         width: 40.0,
+             //
+             //         child: Container(
+             //           padding: const EdgeInsets.all(6),
+             //           child: Image.asset(
+             //               Images.bed, height: 24,
+             //               color: Theme.of(context).primaryColor,
+             //               width: 24),
+             //         ),
+             //       ),
+             //       Container(
+             //         margin: const EdgeInsets.only(left: 10.0),
+             //         child: Text(" ${ estateController.estate
+             //             .property[index]
+             //             .number} عدد غرف النوم"),
+             //       )
+             //     ],
+             //   ),):Container();
+             //
+             //
 
-                                        child: Container(
-                                          padding: const EdgeInsets.all(4),
-                                          child: Image.asset(
-                                              Images.bathroom, height: 24,
-                                              color: Theme.of(context).primaryColor,
-                                              width: 24),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 10.0),
-                                        child: Text(" ${ estateController.estate
-                                            .property[index]
-                                            .number} عدد الحمامات"),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }else if(estateController.estate.property[index].name=="مطلبخ"){
-                                return Container(
-                                  decoration: BoxDecoration(color: Theme
-                                      .of(context)
-                                      .cardColor,
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.RADIUS_SMALL),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 0.2), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],),
-                                  margin: EdgeInsets.all(5.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        height: 50.0,
-                                        width: 50.0,
 
-                                        child: Container(
-                                          padding: EdgeInsets.all(3),
-                                          child: Image.asset(
-                                              Images.kitchen, height: 24,
-                                              color: Theme.of(context).primaryColor,
-                                              width: 24),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 10.0),
-                                        child: Text(" ${ estateController.estate
-                                            .property[index]
-                                            .number} عدد المطابخ"),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }else if(estateController.estate.property[index].name=="غرف نوم"){
-                                return Container(
-                                  decoration: BoxDecoration(color: Theme
-                                      .of(context)
-                                      .cardColor,
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.RADIUS_SMALL),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 0.2), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],),
-                                  margin: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        height: 40.0,
-                                        width: 40.0,
 
-                                        child: Container(
-                                          padding: const EdgeInsets.all(6),
-                                          child: Image.asset(
-                                              Images.bed, height: 24,
-                                              color: Theme.of(context).primaryColor,
-                                              width: 24),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 10.0),
-                                        child: Text(" ${ estateController.estate
-                                            .property[index]
-                                            .number} عدد غرف النوم"),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -301,9 +314,9 @@ class _EstateDetailsState extends State<EstateDetails> {
                       Divider(height: 1,),
 
 
-                      MapDetailsView(
-                          fromView: true),
-                      Container(
+                      // const MapDetailsView(
+                      //     fromView: true),
+                      estateController.estate.facilities.isNotEmpty?    Container(
                         height: 200,
                         child: GridView.builder(
                           physics: BouncingScrollPhysics(),
@@ -349,7 +362,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                             );
                           },
                         ),
-                      ),
+                      ):Container(),
 
                       Divider(height: 1,),
                       Text("معلومات اخرى",
@@ -560,10 +573,10 @@ class _EstateDetailsState extends State<EstateDetails> {
                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                                ),
                                SizedBox(width: 20),
-                               Text(
-                                 userController.agentInfoModel.agent.advertiserNo??"",
-                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                               ),
+                               // Text(
+                               //   userController.agentInfoModel.agent.advertiserNo==null?"":userController.agentInfoModel.agent.advertiserNo,
+                               //   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                               // ),
                              ],
                            ),
                             Row(
@@ -587,10 +600,11 @@ class _EstateDetailsState extends State<EstateDetails> {
                         onPressed: () async{
                           await Get.toNamed(RouteHelper.getChatRoute(
                             notificationBody: NotificationBody(orderId: estateController.estate.id, restaurantId: estateController.estate.userId),
-                            user: Userinfo(id: userController.agentInfoModel.id, name: userController.agentInfoModel.name,  image: userController.agentInfoModel.image),
+                            user: Userinfo(id:  estateController.estate.userId, name: userController.agentInfoModel.name,  image: userController.agentInfoModel.image,),estate_id: widget.estate.id
+
                           ));
                         },
-                        buttonText: 'توصل مع المعلن',
+                        buttonText: '${widget.estate.id}',
                       ) : Center(child: CircularProgressIndicator()),
 
                     ],
@@ -599,7 +613,7 @@ class _EstateDetailsState extends State<EstateDetails> {
 
               ],
             )
-                : const Center(child: CircularProgressIndicator());
+                : const SizedBox();
           });
         });
         }),

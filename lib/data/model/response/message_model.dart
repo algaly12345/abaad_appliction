@@ -8,14 +8,16 @@ class MessageModel {
   bool status;
   Conversation conversation;
   List<Message> messages;
+  String estate_id;
 
-  MessageModel({this.totalSize, this.limit, this.offset, this.status, this.conversation, this.messages});
+  MessageModel({this.totalSize, this.limit, this.offset, this.status, this.conversation, this.messages,this.estate_id});
 
   MessageModel.fromJson(Map<String, dynamic> json) {
     totalSize = json['total_size'];
     limit = json['limit'];
     offset = json['offset'];
     status = json['status'];
+    estate_id = json['estate_id'];
     conversation = json['conversation'] != null ? Conversation.fromJson(json['conversation']) : null;
     if (json['messages'] != null) {
       messages = <Message>[];
@@ -31,6 +33,7 @@ class MessageModel {
     data['limit'] = this.limit;
     data['offset'] = this.offset;
     data['status'] = this.status;
+    data['estate_id']=this.estate_id;
     if (this.conversation != null) {
       data['conversation'] = this.conversation.toJson();
     }

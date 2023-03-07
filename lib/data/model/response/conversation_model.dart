@@ -47,6 +47,7 @@ class Conversation {
   String lastMessageTime;
   String createdAt;
   String updatedAt;
+  String estate_id;
   Userinfo sender;
   Userinfo receiver;
   Message lastMessage;
@@ -65,6 +66,7 @@ class Conversation {
         this.sender,
         this.receiver,
         this.lastMessage,
+        this.estate_id
       });
 
   Conversation.fromJson(Map<String, dynamic> json) {
@@ -76,6 +78,7 @@ class Conversation {
     unreadMessageCount = json['unread_message_count'];
     lastMessageId = json['last_message_id'];
     lastMessageTime = json['last_message_time'];
+    estate_id = json['estate_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     sender = json['sender'] != null ? new Userinfo.fromJson(json['sender']) : null;
@@ -95,6 +98,7 @@ class Conversation {
     data['last_message_time'] = this.lastMessageTime;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['estate'] = this.estate_id;
     if (this.sender != null) {
       data['sender'] = this.sender.toJson();
     }

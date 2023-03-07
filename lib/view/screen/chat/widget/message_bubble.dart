@@ -114,7 +114,7 @@ class MessageBubble extends StatelessWidget {
 
           Text(
             '${profileController.userInfoModel != null ? profileController.userInfoModel.name ?? '' : ''} '
-                '${profileController.userInfoModel != null ? profileController.userInfoModel.name ?? '' : ''}',
+        ,
             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
           ),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),

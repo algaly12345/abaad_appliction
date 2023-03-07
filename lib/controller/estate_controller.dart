@@ -81,7 +81,7 @@ class EstateController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       if (offset == 1) {
         _estateModel = EstateModel.fromJson(response.body);
-        print("estate response ...............${_estateModel.totalSize}");
+        print("estate response ...............${response.body}");
       }else {
         _estateModel.totalSize = EstateModel.fromJson(response.body).totalSize;
         _estateModel.offset = EstateModel.fromJson(response.body).offset;

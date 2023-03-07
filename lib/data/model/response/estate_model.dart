@@ -69,6 +69,7 @@ class Estate {
   int advertiserNo;
   String nationalAddress;
   int userId;
+  int estate_id;
 
 
 
@@ -109,7 +110,9 @@ class Estate {
     this.nationalAddress,
     this.userId,
   this.createdAt,
-  this.updatedAt});
+  this.updatedAt,
+  this.estate_id
+  });
 
   Estate.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -130,6 +133,7 @@ class Estate {
     districts = json['districts'];
     networkType = json['network_type'];
     height = json['height'];
+    estate_id=json['estate_id'];
     width = json['width'];
     if (json['service_offers'] != null) {
       serviceOffers = <ServiceOffers>[];
@@ -157,6 +161,7 @@ class Estate {
     advertiserNo = json['advertiser_no'];
     adNumber = json['ad_number'];
     nationalAddress=json['national_address'];
+
     userId=json['user_id'];
     if (json['facilities'] != null) {
       facilities = <Facilities>[];
@@ -208,6 +213,7 @@ class Estate {
     data['updated_at'] = this.updatedAt;
     data['national_address']=this.nationalAddress;
     data['user_id']=this.userId;
+    data['estate_id']=this.estate_id;
 
     if (this.facilities != null) {
       data['facilities'] = this.facilities.map((v) => v.toJson()).toList();

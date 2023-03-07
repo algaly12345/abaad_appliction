@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/app_constants.dart';
@@ -91,6 +92,7 @@ class _SplashScreenState extends State<SplashScreen> {
             }else {
               if (Get.find<AuthController>().isLoggedIn()) {
                 Get.find<AuthController>().updateToken();
+                await Get.find<WishListController>().getWishList();
                 if (Get.find<LocationController>().getUserAddress() != null) {
                   Get.offNamed(RouteHelper.getInitialRoute());
                 } else {

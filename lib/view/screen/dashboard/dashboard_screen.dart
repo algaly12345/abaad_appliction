@@ -163,7 +163,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Divider(height: 1),
 
                   listItem(6,Icons.account_balance_wallet_outlined, 'wallet'.tr, Colors.green,(){
-                  //  Get.toNamed(RouteHelper.getWalletRoute(true));
+                   Get.toNamed(RouteHelper.getWalletRoute(true));
                   }),
 
                   Divider(height: 1),

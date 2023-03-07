@@ -7,6 +7,7 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/estate_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_stack/image_stack.dart';
@@ -45,7 +46,7 @@ class EstateDetailsSheet extends StatelessWidget {
 
           InkWell(
             onTap: () {
-              Get.toNamed(RouteHelper.getDetailsRoute(1));
+              Get.toNamed(RouteHelper.getDetailsRoute(estate.id));
             },
             child: Container(
               width: context.width,
@@ -108,154 +109,9 @@ class EstateDetailsSheet extends StatelessWidget {
                       ),
                   SizedBox(
                     height: 4,),
-                      Container(
-                        height: 140,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4), //border corner radius
-                          boxShadow:[
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5), //color of shadow
-                              spreadRadius: 5, //spread radius
-                              blurRadius: 7, // blur radius
-                              offset: Offset(0, 2), // changes position of shadow
-                              //first paramerter of offset is left-right
-                              //second parameter is top to down
-                            ),
-                            //you can set more BoxShadow() here
-                          ],
-                        ),
-                        child: Row(
-                          children: <Widget>[
-
-                            Expanded(
-                              child: Column(
-                                children: <Widget>[
-
-                                  Expanded(
-                                    child: Row(
-                                      children: <Widget>[
-                                        
-                                        Flexible(
-                                          flex: 4,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                            BorderRadius.circular(3.0),
-                                            child: Image.network(
-                                                "https://cdn.pixabay.com/photo/2017/06/13/22/42/kitchen-2400367_960_720.jpg",fit:BoxFit.fill ,height: 133,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 11.0),
-                                        Flexible(
-                                          flex: 5,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: <Widget>[
-                                             Row(
-                                               children: [
-                                                 Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
-                                                 SizedBox(width: 11.0),
-                                                 Text(" ${estate.price}"  ,style: robotoBlack.copyWith(fontSize: 11)),
-                                               ],
-                                             ),
-                                              const SizedBox(
-                                                height: 3.0,
-                                              ),
-                                               Text("${estate.shortDescription}",
-                                                  style: robotoBlack.copyWith(fontSize: 12)),
-                                              const SizedBox(
-                                                height: 3.0,
-                                              ),
-                                               Row(
-                                                 children: [
-                                                   Text(" العنوان الوطني : ",
-                                                       style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
-                                                   Text("45",
-                                                       style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
-                                                 ],
-
-                                               ),
-                                              const SizedBox(
-                                                height: 7.0,
-                                              ),
-
-                                              Row(
-                                                // mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  //
-                                                  Expanded(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      children: [
-                                                        Image.asset(Images.bed, width: 14.0, height: 14.0),
-
-                                                        Text(
-                                                          '2 غرفة نوم',
-                                                            style: robotoBlack.copyWith(fontSize: 11)
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  //
-                                                  Expanded(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      children: [
-                                                        Image.asset(Images.bathroom, width: 14.0, height: 14.0),
-
-                                                        Text(
-                                                          '2 حمام',
-                                                            style: robotoBlack.copyWith(fontSize: 11)
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  //
-                                                  Expanded(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      children: [
-                                                        Image.asset(Images.setroom, width: 14.0, height: 14.0),
-
-                                                        Text(
-                                                          '2 غرفة نوم',
-                                                          style: robotoBlack.copyWith(fontSize: 11),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),//
-                                                ],
-                                              ),
-                                              const Divider(),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                width: 40,
-                                margin: const EdgeInsets.only(top: 10),
-                                decoration:  BoxDecoration(
-                                    color: estate.forRent==1?Colors.blue:Colors.orange),
-                                child:  Text(estate.forRent==1?"للبيع":"للإجار",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Colors.white,)
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
+                      EstateItem(estate: estate,onPressed: (){
+                        Get.toNamed(RouteHelper.getDetailsRoute(estate.id));
+                      },fav: false),
                     ],
                   ),
                 )

@@ -24,9 +24,9 @@ class ChatRepo {
         : userType == UserType.vendor ? 'vendor_id' : 'delivery_man_id'}=${conversationID ?? userID}&offset=$offset&limit=10');
   }
 
-  Future<Response> sendMessage(String message, List<MultipartBody> images, int userID, UserType userType, int conversationID) async {
+  Future<Response> sendMessage(String message, List<MultipartBody> images, int userID, UserType userType, int conversationID,String  estate_id) async {
     Map<String, String> _fields = Map();
-    _fields.addAll({'message': message, 'receiver_type': userType.name, 'offset': '1', 'limit': '10'});
+    _fields.addAll({'message': message, 'receiver_type': "vendor",'estate_id':"$estate_id", 'offset': '1', 'limit': '10'});
     if(conversationID != null) {
       _fields.addAll({'conversation_id': conversationID.toString()});
     }else {

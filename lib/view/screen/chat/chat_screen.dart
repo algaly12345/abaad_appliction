@@ -27,7 +27,8 @@ class ChatScreen extends StatefulWidget {
      user;
   final int conversationID;
   final int index;
-  const ChatScreen({@required this.notificationBody, @required this.user, this.conversationID, this.index});
+  final String  estate_id;
+  const ChatScreen({@required this.notificationBody, @required this.user, this.conversationID, this.index,this.estate_id});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -52,6 +53,8 @@ class _ChatScreenState extends State<ChatScreen> {
         Get.find<UserController>().getUserInfo();
       }
     }
+
+    print("----------------------------estate${widget.estate_id}");
 
   }
 
@@ -136,7 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ) : Center(child: Text('no_message_found'.tr)) : Center(child: CircularProgressIndicator()));
                 }),
 
-                (chatController.messageModel != null && (chatController.messageModel.status || chatController.messageModel.messages.length <= 0)) ? Container(
+                (chatController.messageModel != null) ? Container(
                   color: Theme.of(context).cardColor,
                   child: Column(children: [
 
@@ -236,11 +239,11 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: SizedBox(height: 25, width: 25, child: CircularProgressIndicator()),
                         ) : InkWell(
                           onTap: () async {
-                            print("is acitve");
+
                             if(chatController.isSendButtonActive) {
                               await chatController.sendMessage(
                                 message: _inputMessageController.text, notificationBody: widget.notificationBody,
-                                conversationID: widget.conversationID, index: widget.index,
+                                conversationID: widget.conversationID, index: widget.index,estate_id: widget.estate_id
                               );
                               _inputMessageController.clear();
                             }else {

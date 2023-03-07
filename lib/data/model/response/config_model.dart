@@ -28,6 +28,11 @@ class ConfigModel {
   int freeTrialPeriodDay;
   BusinessPlan businessPlan;
   double adminCommission;
+  String currencySymbolDirection;
+  int loyaltyPointExchangeRate;
+  int minimumPointToTransfer;
+  String currencySymbol;
+  int digitAfterDecimalPoint;
 
 
 
@@ -57,6 +62,11 @@ class ConfigModel {
         this.freeTrialPeriodDay,
         this.businessPlan,
         this.adminCommission,
+        this.currencySymbolDirection,
+        this.loyaltyPointExchangeRate,
+        this.minimumPointToTransfer,
+        this.currencySymbol,
+        this.digitAfterDecimalPoint,
       });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -88,6 +98,11 @@ class ConfigModel {
     freeTrialPeriodDay = json['free_trial_period_data'];
     businessPlan = json['business_plan'] != null ? BusinessPlan.fromJson(json['business_plan']) : null;
     adminCommission = json['admin_commission'].toDouble();
+    currencySymbolDirection = json['currency_symbol_direction'];
+    loyaltyPointExchangeRate = json['loyalty_point_exchange_rate'];
+    minimumPointToTransfer = json['minimum_point_to_transfer'];
+    currencySymbol = json['currency_symbol'];
+    digitAfterDecimalPoint = json['digit_after_decimal_point'];
 
   }
 
@@ -120,6 +135,11 @@ class ConfigModel {
     data['agent_registration'] = this.agentRegistration;
     data['phone_verification'] = this.phoneVerification;
     data['marketing_commission'] = this.marketingCommission;
+    data['currency_symbol_direction'] = this.currencySymbolDirection;
+    data['loyalty_point_exchange_rate'] = this.loyaltyPointExchangeRate;
+    data['minimum_point_to_transfer'] = this.minimumPointToTransfer;
+    data['currency_symbol'] = this.currencySymbol;
+    data['digit_after_decimal_point'] = this.digitAfterDecimalPoint;
 
 
     return data;

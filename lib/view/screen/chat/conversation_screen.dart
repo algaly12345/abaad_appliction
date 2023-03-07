@@ -59,7 +59,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () => Get.toNamed(RouteHelper.getChatRoute(notificationBody: NotificationBody(
             notificationType: NotificationType.message, adminId: 0,
-          ))),
+          ),estate_id: 3)),
         ) : null,
         body: Padding(
           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
@@ -153,6 +153,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 ),
                                 conversationID: _conversation.conversations[index].id,
                                 index: index,
+                                estate_id: 3
                               ));
                             }else {
                               showCustomSnackBar('${_type.tr} ${'not_found'.tr}');

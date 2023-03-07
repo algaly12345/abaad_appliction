@@ -12,9 +12,9 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 
 
 class EstateImageView extends StatefulWidget {
-  final Estate productModel;
+  final int  estate_id;
   final bool fromView;
-  EstateImageView({@required this.productModel,this.fromView});
+   EstateImageView({@required this.estate_id,this.fromView});
 
   @override
   State<EstateImageView> createState() => _EstateImageViewState();
@@ -28,7 +28,7 @@ class _EstateImageViewState extends State<EstateImageView> {
     // TODO: implement initState
     super.initState();
 
-    Get.find<EstateController>().getEstateDetails(Estate(id: 6));
+    Get.find<EstateController>().getEstateDetails(Estate(id:6));
 
   }
   @override
@@ -109,7 +109,7 @@ class _EstateImageViewState extends State<EstateImageView> {
         ],
       ) : Shimmer(
         duration: Duration(seconds: 2),
-        enabled: widget.productModel.images == null,
+        enabled: estateController.estate.images == null,
         child: Container(margin: EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
           color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300],

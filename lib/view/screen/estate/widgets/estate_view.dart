@@ -3,11 +3,13 @@ import 'dart:collection';
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
 import 'package:abaad/view/screen/estate/widgets/button_view.dart';
 import 'package:abaad/view/screen/estate/widgets/estate_image_view.dart';
@@ -20,9 +22,10 @@ import 'package:get/get.dart';
 class EstateView extends StatefulWidget {
   final bool fromView;
  final  Estate estate;
+ final EstateId;
 
 
-  const EstateView({@required this.fromView,this.estate});
+  const EstateView({@required this.fromView,this.estate,this.EstateId});
 
   @override
   State<EstateView> createState() => _EstateViewState();
@@ -30,13 +33,14 @@ class EstateView extends StatefulWidget {
 
 class _EstateViewState extends State<EstateView> {
 
-  Estate estate;
+
 
   List<RadioModel> sampleData = new List<RadioModel>();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     sampleData.add( RadioModel(false, 'صور', Images.vt));
     sampleData.add( RadioModel(false, 'تجوال 3D', Images.vt));
     sampleData.add( RadioModel(false, 'منظور الشارع',Images.vt));
@@ -135,18 +139,48 @@ class _EstateViewState extends State<EstateView> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                           child: Stack(clipBehavior: Clip.none, children: [
-                               EstateImageView(productModel: widget.estate,fromView: widget.fromView,),
+                               EstateImageView(estate_id: widget.estate.id,fromView: widget.fromView,),
                             widget.fromView ? Positioned(
                               top: 10, right: 0,
                               child: InkWell(
                                 onTap: () {
-                                  Get.to(EstateView(fromView: false,estate: estate,));
+                                  Get.to(EstateView(fromView: false,estate: widget.estate,));
                                 },
-                                child: Container(
-                                  width: 30, height: 30,
-                                  margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
-                                  child: Icon(Icons.fullscreen, color: Theme.of(context).primaryColor, size: 20),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 30, height: 30,
+                                      margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
+                                      child: Icon(Icons.fullscreen, color: Theme.of(context).primaryColor, size: 20),
+                                    ),
+
+                                    SizedBox(height: 10,),
+
+                                    Container(
+                                      width: 30, height: 30,
+                                      margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
+                                      child:      GetBuilder<WishListController>(builder: (wishController) {
+                                        bool _isWished =  wishController.wishRestList.contains(widget.EstateId);
+                                        return InkWell(
+                                          onTap: () {
+                                            if(Get.find<AuthController>().isLoggedIn()) {
+                                              wishController.wishRestIdList.contains(widget.estate.id) ? wishController.removeFromWishList(widget.estate.id)
+                                                  : wishController.addToWishList(widget.estate, null);
+                                            }else {
+                                              showCustomSnackBar('you_are_not_logged_in'.tr);
+                                            }
+                                          },
+                                            child: Icon(
+                                              wishController.wishRestIdList.contains(widget.estate.id) ? Icons.favorite : Icons.favorite_border,
+                                              color: wishController.wishRestIdList.contains(widget.estate.id) ? Theme.of(context).primaryColor
+                                                  : Theme.of(context).disabledColor,
+                                            ),
+                                        );
+                                      }),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ) : SizedBox(),
@@ -155,6 +189,9 @@ class _EstateViewState extends State<EstateView> {
                           ]),
                         ),
                       ) ,
+
+
+
                     ],
                   ),
                 ),

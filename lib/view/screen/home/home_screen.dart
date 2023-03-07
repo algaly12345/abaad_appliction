@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     Get.find<BannerController>().getBannerList(true,1);
-   // Get.find<EstateController>().getEstateList(1, false);
+   Get.find<EstateController>().getEstateList(1, false);
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
     } 
@@ -150,26 +150,31 @@ void dispose() {
                              padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
                              physics: BouncingScrollPhysics(),
                              itemBuilder: (context, index) {
-                               return     Padding(
-                                 padding:  EdgeInsets.all(8.0),
-                                 child: Column(
-                                   children: [
-                                     Container(
-                                       padding:  EdgeInsets.all(10.0),
-                                       decoration: BoxDecoration(
-                                         color: HexColor('#B7DFFB'),
-                                         shape: BoxShape.circle,
+                               return     InkWell(
+                                 onTap: (){
+                                   print("estate_id --------------------${restController.estate.id}");
+                                 },
+                                 child: Padding(
+                                   padding:  EdgeInsets.all(8.0),
+                                   child: Column(
+                                     children: [
+                                       Container(
+                                         padding:  EdgeInsets.all(10.0),
+                                         decoration: BoxDecoration(
+                                           color: HexColor('#B7DFFB'),
+                                           shape: BoxShape.circle,
+                                         ),
+                                         child: const CachedImage(
+                                           imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rubio_Circle.png",
+                                           width: 30.0,
+                                           height: 30.0,
+                                         ),
                                        ),
-                                       child: const CachedImage(
-                                         imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rubio_Circle.png",
-                                         width: 30.0,
-                                         height: 30.0,
-                                       ),
-                                     ),
-                                     SizedBox(height: 6),
-                                     Text(categoryController.categoryList[index].name)
-                                     //   Txt(data: category.name, style: robotoMedium),
-                                   ],
+                                       SizedBox(height: 6),
+                                       Text(categoryController.categoryList[index].name)
+                                       //   Txt(data: category.name, style: robotoMedium),
+                                     ],
+                                   ),
                                  ),
                                );
                              }),

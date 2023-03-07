@@ -238,7 +238,7 @@ class ChatController extends GetxController implements GetxService {
   }
 
   Future<Response> sendMessage({@required String message, @required NotificationBody notificationBody,
-    @required int conversationID, @required int index}) async {
+    @required int conversationID, @required int index,@required String  estate_id}) async {
     print("omeromeromer");
     Response _response;
     _isLoading = true;
@@ -250,11 +250,11 @@ class ChatController extends GetxController implements GetxService {
     });
 
     if(notificationBody == null || notificationBody.adminId != null) {
-      _response = await chatRepo.sendMessage(message, _myImages, 0, UserType.admin, null);
+      _response = await chatRepo.sendMessage(message, _myImages, 0, UserType.admin, null,estate_id);
     } else if(notificationBody.restaurantId != null) {
-      _response = await chatRepo.sendMessage(message, _myImages, notificationBody.restaurantId, UserType.vendor, conversationID);
+      _response = await chatRepo.sendMessage(message, _myImages, notificationBody.restaurantId, null, conversationID,estate_id);
     } else if(notificationBody.deliverymanId != null) {
-      _response = await chatRepo.sendMessage(message, _myImages, notificationBody.deliverymanId, UserType.delivery_man, conversationID);
+      _response = await chatRepo.sendMessage(message, _myImages, notificationBody.restaurantId, UserType.vendor, conversationID,estate_id);
     }
     if (_response.statusCode == 200) {
       _chatImage = [];

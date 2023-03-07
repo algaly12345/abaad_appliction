@@ -27,10 +27,9 @@ class _ServiceProivderViewState extends State<ServiceProivderView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    Get.find<EstateController>().getEstateDetails(Estate(id: 6));
+    Get.find<EstateController>().getEstateDetails(Estate(id: widget.productModel.id));
 
   }
   @override

@@ -46,11 +46,13 @@ class MapScreen extends StatefulWidget {
   MapScreen({Key key,@required this.mainCategory,@required this.fromSignUp, @required this.fromAddAddress, @required this.canRoute,
     @required this.route, this.googleMapController,}) : super(key: key);
   static Future<void> loadData(bool reload) async {
+
     Get.find<AuthController>().getZoneList();
     if(Get.find<EstateController>().estateModel == null) {
       Get.find<EstateController>().getEstateList(1, false);
     }
-    Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
+    Get.find<EstateController>().getEstateList(1, false);
+ //   Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
   }
 
   @override

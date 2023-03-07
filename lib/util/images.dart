@@ -59,6 +59,8 @@ class Images {
   static  const String image='assets/image/image.png';
   static const String send = 'assets/image/send.png';
   static const String notif_not_found='assets/image/notifaions.png';
+  static const String wallet = 'assets/image/wallet.png';
+  static const String loyal = 'assets/image/loyal.png';
 
 
 
