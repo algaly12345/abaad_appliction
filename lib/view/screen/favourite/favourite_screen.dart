@@ -42,7 +42,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProv
             itemBuilder: (context, index) {
               return  GetBuilder<WishListController>(builder: (wishController) {
                 return  EstateItem(estate: wishController.wishRestList[index],onPressed: (){
-                  Get.toNamed(RouteHelper.getDetailsRoute( wishController.wishRestList[index].estate_id));
+                  Get.toNamed(RouteHelper.getDetailsRoute( wishController.wishRestList[index].estate_id,wishController.wishRestList[index].userId));
                 },fav: true,);
               });
             },

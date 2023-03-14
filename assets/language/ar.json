@@ -92,5 +92,9 @@
   "yes": "نعم",
   "no": "لا",
   "logout": "تسجيل خروج",
-  "notification_is_empty": "لاتوجد إشعارات"
+  "notification_is_empty": "لاتوجد إشعارات",
+  "wallet_amount": "مبلغ المحفظة",
+  "point_to_wallet": "عملية مشاركة",
+  "order_place": "عملية سحب",
+  "transaction_history": "المعاملات"
 }

@@ -23,6 +23,7 @@ import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
 import 'package:abaad/view/base/data_view.dart';
 import 'package:abaad/view/base/header_widget.dart';
+import 'package:abaad/view/base/map_details_view.dart';
 import 'package:abaad/view/base/my_text_field.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/stepper.dart';
@@ -31,6 +32,7 @@ import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
 import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
 import 'package:abaad/view/screen/estate/business_plan/widgets/subscription_card.dart';
 import 'package:abaad/view/screen/estate/business_plan/widgets/success_widget.dart';
+import 'package:abaad/view/screen/estate/widgets/confiram_location_view.dart';
 import 'package:abaad/view/screen/estate/widgets/estate_bg_widget.dart';
 import 'package:abaad/view/screen/estate/widgets/menu_option.dart';
 import 'package:abaad/view/screen/estate/widgets/redio.dart';
@@ -38,6 +40,7 @@ import 'package:abaad/view/screen/profile/widget/profile_bg_widget_update.dart';
 import 'package:abaad/view/screen/profile/widget/profile_card.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 
@@ -110,6 +113,17 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
   int _typeProperties = 0;
   int _djectivePresenter=0;
+  final List<String> _loungeList=[
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+  ];
   final List<String> _roomList = [
     "0",
     "1",
@@ -121,7 +135,6 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     "7",
     "8",
   ];
-
   final List<String> _bathroomsList = [
     "0",
     "1",
@@ -133,15 +146,14 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     "7",
     "8",
   ];
-
-
-
   String valueChoose;
   String _ageValue;
   int _selectedRoomIndex = 0;
   int _selectedBathroomsIndex = 0;
+  int _selectedLounge;
   List<String> _interests = [];
   String interests;
+  bool add=true;
   _onSelected(int index) {
     setState(() => _selectedRoomIndex = index);
   }
@@ -151,12 +163,30 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     setState(() => _selectedBathroomsIndex = index);
   }
 
+  _onSelectedlounge(int index) {
+    setState(() => _selectedLounge = index);
+  }
+
 
   int fieldCount = 0;
   int nextIndex = 0;
 
 
 
+  String district;
+  String city;
+
+  Future<void> getAddressFromLatLang(double lat, double log) async {
+    print("omeromer");
+    List<Placemark> placemark =
+    await placemarkFromCoordinates(lat, log);
+    Placemark place = placemark[0];
+    String  _address= 'Address : ${place.locality},${place.country}';
+    district=place.subLocality;
+    city=place.locality;
+    showCustomSnackBar("message${place.subLocality}");
+    print("adress-------------------------------------${place.locality},${place.country}");
+  }
 
   @override
   void initState() {
@@ -164,6 +194,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
     Get.find<AuthController>().getZoneList();
     Get.find<CategoryController>().getFacilitiesList(true);
+    Get.find<CategoryController>().getAdvantages(true);
     if (Get
         .find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
@@ -315,7 +346,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           builder: (categoryController) {
                             return (categoryController.categoryList != null) ?
                             SizedBox(
-                              height: 38,
+                              height: 40,
                               child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: categoryController.categoryList
@@ -347,7 +378,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                                     },
                                             child: Container(
-                                              height: 38,
+                                              height: 40,
                                               padding: const EdgeInsets.only(
                                                   left: 4.0, right: 4.0),
                                               decoration: BoxDecoration(
@@ -379,7 +410,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                                               .categoryIndex
                                                           ? robotoBlack
                                                           .copyWith(
-                                                          fontSize: 14)
+                                                          fontSize: 17)
                                                           : robotoRegular
                                                           .copyWith(
                                                           fontSize: Dimensions
@@ -662,7 +693,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
               Container(
                   padding: const EdgeInsets.only(right: 7.0,left: 7.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -729,7 +760,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                             ):Container(),
                             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
                             restController.getCategoryPostion()==1?    Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
 
@@ -814,6 +845,48 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   }),
                                 ),
 
+
+
+                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                Text(
+                                  "عدد الصالات",
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Container(
+
+                                  height: 50,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      // ignore: missing_return
+                                      itemCount:  _loungeList.length, itemBuilder: (context, index) {
+
+
+                                    return   InkWell(
+                                      onTap: (){
+                                        _onSelectedlounge(index);
+
+                                      },
+                                      child: Container(
+                                        width: 50,
+                                        child: Card(
+                                          color: _selectedLounge != null && _selectedLounge == index
+                                              ? Theme
+                                              .of(context)
+                                              .primaryColor
+                                              : Colors.grey,
+                                          child: Container(
+                                            child: Center(child: Text("${_loungeList[index]==10?"9+":_loungeList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+
+                                  }),
+                                ),
+
                                 SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                 categoryController.facilitiesList.length!=null?    Column(
                                   children: [
@@ -881,24 +954,65 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    DropDownMultiSelect(
 
-                                      options: restController.options,
+                                    categoryController.advanList.length!=null?    Column(
+                                      children: [
+                                        ExpansionTile(
+                                          title:Text("other_advantages".tr), //add icon//children padding
+                                          children: [
+                                            Center(
+                                              child: Container(
+                                                height: 240,
+                                                child:GridView.builder(
+                                                  physics: BouncingScrollPhysics(),
+                                                  itemCount: categoryController.advanList.length,
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 3 ,
+                                                    childAspectRatio: (1/0.50),
+                                                  ),
+                                                  itemBuilder: (context, index) {
+                                                    return InkWell(
+                                                      onTap: () => categoryController.addAdvantSelection(index),
+                                                      child: Container(
+                                                        margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                        padding: EdgeInsets.symmetric(
+                                                          vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          color: categoryController.advanSelectedList[index] ? Theme.of(context).primaryColor
+                                                              : Theme.of(context).cardColor,
+                                                          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                                          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                                        ),
+                                                        alignment: Alignment.center,
+                                                        child:   Row(
 
-                                      whenEmpty: 'other_advantages'.tr,
-                                      onChanged: (value) {
-                                        restController.selectedOptionList.value = value;
-                                        restController.selectedOption.value = "";
-                                        restController.selectedOptionList.value.forEach((element) {
-                                          restController.selectedOption.value =
-                                              restController.selectedOption.value + " " + element;
-                                        });
-                                      },
-                                      selectedValues: restController.selectedOptionList.value,
-                                    ),
+                                                          children: [
+                                                            Flexible(child: Text(
+                                                              categoryController.advanList[index].name,
+                                                              style: robotoMedium.copyWith(
+                                                                fontSize: Dimensions.fontSizeLarge,
+                                                                color: categoryController.advanSelectedList[index] ? Theme.of(context).cardColor
+                                                                    : Theme.of(context).textTheme.bodyText1.color,
+                                                              ),
+                                                              maxLines: 2, overflow: TextOverflow.ellipsis,
+                                                            )),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
 
-                                    Obx(() => Text(restController.selectedOption.value,style: robotoRegular.copyWith(
-                                        fontSize: Dimensions.fontSizeSmall)))
+
+                                          ],
+                                        ),
+
+                                      ],
+                                    ):Container(),
+
                                   ],
                                 ),
                                 Text(
@@ -1352,11 +1466,10 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                         ),
                       ):Container(),
                       SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10,left: 10),
-                        child: authController.zoneList != null ? SelectLocationView(
-                            fromView: true) : Center(
-                            child: CircularProgressIndicator()),
+                       Padding(
+                        padding: EdgeInsets.only(right: 10,left: 10),
+                        child: ConfirmMapView(
+                            fromView: true,lat: authController.estateLocation.latitude, lot: authController.estateLocation.longitude,add: add),
                       ),
                       SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
@@ -1447,7 +1560,12 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                         _price = _priceController.text.trim();
                         _shortDesc = _shortDescController.text.trim();
                         _space = _spaceController.text.trim();
-                        String property = '{"room": "44", "bathroom": 30}';
+                     //   print("----------------------lat${authController.estateLocation}");
+                   //    showCustomSnackBar("----------------------lat${authController.estateLocation.longitude}");
+
+                   //     String property = '{"room": "44", "bathroom": 30}';
+                        String  property ='[{"name":"حمام", "number":"${_selectedBathroomsIndex}"},{"name":"مطلبخ", "number":"${_selectedBathroomsIndex}"},{"name":"صلات", "number":"${_selectedLounge}"}]';
+
                         if(currentStep==1) {
 
                           if (restController.categoryIndex == 0) {
@@ -1483,7 +1601,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
          // }
                          }
                          else{
-
+                           getAddressFromLatLang(authController.estateLocation.latitude,authController.estateLocation.longitude);
                            next();
                          }
 
@@ -1510,6 +1628,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                         }
                         else if(currentStep==4){
+
                      //  authController.submitBusinessPlan(estateId: 1);
 
                           next();
@@ -1525,34 +1644,45 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           }
 
 
+                          List<Map<String, dynamic >> _advan= [];
+                          for(int index=0; index<categoryController.advanList.length; index++) {
+                            if(categoryController.advanSelectedList[index]) {
+
+                              _advan.add ({'"' + "name" + '"':'"' + categoryController.advanList[index].name + '"'});
+                            }
+                          }
 
 
+
+showCustomSnackBar("${_advan}");
 
                           restController.registerRestaurant(
                               EstateBody(
                                   forRent:"${_typeProperties}" ,
-                                  address: "address",
+                                  address: "${district} -${city}",
                                   space: _space,
                                   longDescription: _longDescController.text,
                                   shortDescription: _shortDesc,
                                   categoryId:restController.getCategoryIndex().toString(),
                                   ageEstate: _ageValue,
                                   arPath: "3434",
-                                  districts: "sdfds",
+                                  districts: district,
                                   floors: "4545",
                                   forSell:"${_typeProperties}" ,
-                                  latitude: "latitude",
-                                  longitude: "longitude",
+                                  latitude: authController.estateLocation.latitude.toString(),
+                                  longitude: authController.estateLocation.longitude.toString(),
                                   near: "near",
                                   networkType: network_type ?? "no",
                                   ownershipType: _djectivePresenter==1?"مالك":'مفوض',
-                                  property: "${jsonDecode(property)}",
+                                  property: property,
                                   serviceOffers: "serviceOffers",
                                   facilities: "${_interests}",
                                   territoryId: "1",
                                   zoneId: "1",
                                   nationalAddress: "234234",
                                   user_id: userController.userInfoModel.id.toString(),
+                                  city: city,
+                                  otherAdvantages: "${_advan}",
 
                                   price: _priceController.text,
                                 priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ));
@@ -1586,7 +1716,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
     );
+
+
+
   }
+
   Widget paymentCart({@required String title, @required int index, @required Function onTap}){
     return GetBuilder<AuthController>(
         builder: (authController) {

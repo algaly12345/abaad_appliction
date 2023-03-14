@@ -35,6 +35,7 @@ class AuthController extends GetxController implements GetxService {
   List<ZoneModel> _zoneList;
   int _selectedZoneIndex = 0;
   LatLng _restaurantLocation;
+  LatLng _estateLocation;
   List<int> _zoneIds;
   XFile _pickedImage;
 
@@ -61,6 +62,7 @@ class AuthController extends GetxController implements GetxService {
   List<ZoneModel> get zoneList => _zoneList;
   int get selectedZoneIndex => _selectedZoneIndex;
   LatLng get restaurantLocation => _restaurantLocation;
+  LatLng get estateLocation => _estateLocation;
   List<int> get zoneIds => _zoneIds;
   XFile get pickedImage => _pickedImage;
 
@@ -261,7 +263,6 @@ class AuthController extends GetxController implements GetxService {
       update();
     }
   }
-
   Future<void> getZoneList() async {
     _pickedLogo = null;
     _pickedCover = null;
@@ -288,9 +289,11 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void setLocation(LatLng location) async {
+ _estateLocation=location;
     ZoneResponseModel _response = await Get.find<LocationController>().getZone(
       location.latitude.toString(), location.longitude.toString(), false,
     );
+    _restaurantLocation = location;
     if(_response != null && _response.isSuccess && _response.zoneIds.length > 0) {
       _restaurantLocation = location;
       _zoneIds = _response.zoneIds;
@@ -306,6 +309,7 @@ class AuthController extends GetxController implements GetxService {
     }
     update();
   }
+
 
 
   void setIdentityTypeIndex(String identityType, bool notify) {

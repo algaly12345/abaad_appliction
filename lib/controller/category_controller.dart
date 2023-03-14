@@ -12,11 +12,14 @@ class CategoryController extends GetxController implements GetxService {
 
   List<CategoryModel> _categoryList;
   List<FacilitiesModel> _facilitiesList;
+  List<OtherAdvantages> _advanList;
   List<CategoryModel> _subCategoryList;
   List<Estate> _categoryRestList;
   List<Property> _propertiesRestList;
   List<Estate> _searchEstList = [];
   List<bool> _interestSelectedList;
+  List<bool> _advanSelectedList;
+
   bool _isLoading = false;
   int _pageSize;
   int _estPageSize;
@@ -29,9 +32,11 @@ class CategoryController extends GetxController implements GetxService {
 
   List<CategoryModel> get categoryList => _categoryList;
   List<FacilitiesModel> get facilitiesList => _facilitiesList;
+  List<OtherAdvantages> get advanList => _advanList;
   List<Estate> get categoryRestList => _categoryRestList;
   List<Estate> get searchEstList => _searchEstList;
   List<bool> get interestSelectedList => _interestSelectedList;
+  List<bool> get advanSelectedList => _advanSelectedList;
   bool get isLoading => _isLoading;
   int get pageSize => _pageSize;
   int get esttPageSize => _estPageSize;
@@ -85,7 +90,25 @@ class CategoryController extends GetxController implements GetxService {
     }
   }
 
+  Future<void> getAdvantages(bool reload) async {
 
+    if(_advanList == null || reload) {
+      Response response = await categoryRepo.getAdvantages();
+      if (response.statusCode == 200) {
+
+        _advanList = [];
+        _advanSelectedList = [];
+        response.body.forEach((category) {
+          _advanList.add(OtherAdvantages.fromJson(category));
+          _advanSelectedList.add(false);
+          print("omeromeromer");
+        });
+      } else {
+        ApiChecker.checkApi(response);
+      }
+      update();
+    }
+  }
 
 
 
@@ -151,6 +174,12 @@ class CategoryController extends GetxController implements GetxService {
 
   void addInterestSelection(int index) {
     _interestSelectedList[index] = !_interestSelectedList[index];
+    update();
+  }
+
+
+  void addAdvantSelection(int index) {
+    _advanSelectedList[index] = !_advanSelectedList[index];
     update();
   }
 

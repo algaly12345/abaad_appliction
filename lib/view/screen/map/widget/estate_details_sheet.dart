@@ -46,7 +46,7 @@ class EstateDetailsSheet extends StatelessWidget {
 
           InkWell(
             onTap: () {
-              Get.toNamed(RouteHelper.getDetailsRoute(estate.id));
+              Get.toNamed(RouteHelper.getDetailsRoute(estate.id,estate.userId));
             },
             child: Container(
               width: context.width,
@@ -67,7 +67,7 @@ class EstateDetailsSheet extends StatelessWidget {
                       //       Get.find<SplashController>().setNearestEstateIndex(-1),
                       //   child: Icon(Icons.keyboard_arrow_down_rounded, size: 30)
                       // ),
-                      SizedBox(
+                      estate.serviceOffers.length>0? SizedBox(
                         height: 36,
 
                         child: Container(
@@ -106,11 +106,10 @@ class EstateDetailsSheet extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ),
-                  SizedBox(
-                    height: 4,),
+                      ):Container(),
+
                       EstateItem(estate: estate,onPressed: (){
-                        Get.toNamed(RouteHelper.getDetailsRoute(estate.id));
+                        Get.toNamed(RouteHelper.getDetailsRoute(estate.id,estate.userId));
                       },fav: false),
                     ],
                   ),

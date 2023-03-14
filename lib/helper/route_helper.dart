@@ -6,6 +6,7 @@ import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/data/model/response/conversation_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/data/model/response/land_service.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/util/app_constants.dart';
@@ -22,6 +23,7 @@ import 'package:abaad/view/screen/estate/add_estate_screen.dart';
 import 'package:abaad/view/screen/estate/confiram_screen.dart';
 import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
 import 'package:abaad/view/screen/estate/estate_details.dart';
+import 'package:abaad/view/screen/estate/widgets/feature_item_view.dart';
 import 'package:abaad/view/screen/language/language_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:abaad/view/screen/map/map_screen.dart';
@@ -63,6 +65,7 @@ class RouteHelper {
   static const String messages = '/messages';
   static const String conversation = '/conversation';
   static const String wallet = '/wallet';
+  static const String feature = '/feature';
 
 
 
@@ -93,7 +96,8 @@ class RouteHelper {
   static String getVerificationRoute(String number, String token, String page, String pass) {
     return '$verification?page=$page&number=$number&token=$token&pass=$pass';
   }
-  static String getDetailsRoute(int id) => '$estate?id=$id';
+  static String getDetailsRoute(int id,int user_id) => '$estate?id=$id&user_id=$user_id';
+  static String getFeatureRoute(int id,String  feature_id) => '$feature?id=$id&feature_id=$feature_id';
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
   static String getAddEstateRoute() => '$addEstate';
@@ -178,7 +182,11 @@ class RouteHelper {
         estate_id:  Get.parameters['estate_id'] != 'null' ?Get.parameters['estate_id'] : null);
     }),
     GetPage(name: estate, page: () {
-      return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])));
+      return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])),user_id:int.parse(Get.parameters['user_id']) ,);
+    }),
+
+    GetPage(name: feature, page: () {
+      return Get.arguments ?? FeatureScreen(estate: Estate(id: int.parse(Get.parameters['id'])),featureId:Get.parameters['feature_id'] );
     }),
     GetPage(name: businessPlan, page: () => BusinessPlanScreen(estateId: int.parse(Get.parameters['id']))),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),

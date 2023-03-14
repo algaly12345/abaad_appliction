@@ -71,6 +71,7 @@ class EstateItem extends StatelessWidget {
               ],
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
 
                 Expanded(
@@ -82,7 +83,7 @@ class EstateItem extends StatelessWidget {
 
                           Container(
                             padding: const EdgeInsets.all(3.0),
-                            child:   Center(child: EstateImageView(estate_id: estate.estate_id,fromView: false)),
+                            child:   Center(child: EstateImageView(estate_id:fav? estate.estate_id:estate.id,fromView: false)),
                             width: 130,
                             height: 140,
                           ),
@@ -104,7 +105,7 @@ class EstateItem extends StatelessWidget {
                                 const SizedBox(
                                   height: 3.0,
                                 ),
-                                Text("${estate.shortDescription}",
+                                Text("${estate.title}",
                                     style: robotoBlack.copyWith(fontSize: 12)),
                                 const SizedBox(
                                   height: 3.0,
@@ -121,54 +122,169 @@ class EstateItem extends StatelessWidget {
                                 const SizedBox(
                                   height: 7.0,
                                 ),
+estate.category!="5"?     estate.property  != null ?Center(
+  child: Container(
+    height: 35,
 
-                                Row(
-                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    //
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Image.asset(Images.bed, width: 14.0, height: 14.0),
+    child:ListView.builder(
+      physics: BouncingScrollPhysics(),
+      itemCount:  estate.property.length,
+      scrollDirection: Axis.horizontal,
+      // ignore: missing_return
+      itemBuilder: (context, index) {
 
-                                          Text(
-                                              '2 غرفة نوم',
-                                              style: robotoBlack.copyWith(fontSize: 11)
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    //
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Image.asset(Images.bathroom, width: 14.0, height: 14.0),
+        return  estate.property[index].name=="حمام"? Container(
+          decoration: BoxDecoration(color: Theme
+              .of(context)
+              .cardColor,
+            borderRadius: BorderRadius.circular(
+                Dimensions.RADIUS_SMALL),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0.0, 0.2), //(x,y)
+                blurRadius: 6.0,
+              ),
+            ],),
+          margin: EdgeInsets.only(top: 5,bottom: 5,right: 2,left: 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceBetween,
+            children: <Widget>[
+              SizedBox(
+                height: 22.0,
+                width: 22.0,
 
-                                          Text(
-                                              '2 حمام',
-                                              style: robotoBlack.copyWith(fontSize: 11)
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    //
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Image.asset(Images.setroom, width: 14.0, height: 14.0),
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Image.asset(
+                      Images.bathroom, height: 15,
+                      color: Theme.of(context).primaryColor,
+                      width: 15),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 7.0),
+                child: Text(" ${estate.property[index].number ?? ""}حمام",style: robotoBlack.copyWith(fontSize: 9,)),
+              )
+            ],
+          ),
+        ): estate.property[index].name=="مطلبخ"?Container(
+          decoration: BoxDecoration(color: Theme
+              .of(context)
+              .cardColor,
+            borderRadius: BorderRadius.circular(
+                Dimensions.RADIUS_SMALL),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0.0, 0.2), //(x,y)
+                blurRadius: 6.0,
+              ),
+            ],),
+          margin: EdgeInsets.only(top: 5,bottom: 5,right: 2,left: 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceBetween,
+            children: <Widget>[
+              Container(
+                height: 22.0,
+                width: 22.0,
 
-                                          Text(
-                                            '2 غرفة نوم',
-                                            style: robotoBlack.copyWith(fontSize: 11),
-                                          ),
-                                        ],
-                                      ),
-                                    ),//
-                                  ],
-                                ),
+                child: Container(
+                  padding: EdgeInsets.all(3),
+                  child: Image.asset(
+                      Images.kitchen, height: 20,
+                      color: Theme.of(context).primaryColor,
+                      width: 20),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 10.0),
+                child: Text(" ${ estate.property[index].number ?? ""}مطبخ",style: robotoBlack.copyWith(fontSize: 9,)),
+              )
+            ],
+          ),
+        ):estate.property[index].name=="غرف نوم"?Container(decoration: BoxDecoration(color: Theme
+            .of(context)
+            .cardColor,
+          borderRadius: BorderRadius.circular(
+              Dimensions.RADIUS_SMALL),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0.0, 0.2), //(x,y)
+              blurRadius: 6.0,
+            ),
+          ],), margin: const EdgeInsets.all(5.0), child: Row(
+          mainAxisAlignment: MainAxisAlignment
+              .spaceBetween,
+          children: <Widget>[
+            Container(
+              height: 25.0,
+              width: 25.0,
+
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                child: Image.asset(
+                    Images.bed, height: 22,
+                    color: Theme.of(context).primaryColor,
+                    width: 22),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 7.0),
+              child: Text(" ${ estate
+                  .property[index]
+                  .number} غرف النوم",style: robotoBlack.copyWith(fontSize: 9,)),
+            )
+          ],
+        ),):estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
+            .of(context)
+            .cardColor,
+          borderRadius: BorderRadius.circular(
+              Dimensions.RADIUS_SMALL),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0.0, 0.2), //(x,y)
+              blurRadius: 6.0,
+            ),
+          ],),   margin: EdgeInsets.only(top: 5,bottom: 5,right: 2,left: 2), child: Row(
+          mainAxisAlignment: MainAxisAlignment
+              .spaceBetween,
+          children: <Widget>[
+            Container(
+              height: 25.0,
+              width: 25.0,
+
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                child: Image.asset(
+                    Images.bed, height: 20,
+                    color: Theme.of(context).primaryColor,
+                    width: 20),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 10.0),
+              child: estate
+                  .property[index]
+                  .number!=0?Text("${estate
+                  .property[index]
+                  .number}الصالات",style: robotoBlack.copyWith(fontSize: 9,)):Text("الصالات 0",style: robotoBlack.copyWith(fontSize: 9,)),
+            )
+          ],
+        ),):Container();
+
+
+
+
+      },
+    ),
+  ),
+):Container():        Text("${estate.shortDescription}",
+    style: robotoBlack.copyWith(fontSize: 12)),
                                 const Divider(),
                               ],
                             ),
@@ -178,11 +294,13 @@ class EstateItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.topLeft,
+
+                Container(
+
+
                   child: Column(
                     children: [
-                    fav?  Container(
+                      fav?  Container(
                         width: 30, height: 30,
                         margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
@@ -221,30 +339,6 @@ class EstateItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Container(
-                //   width: 30, height: 30,
-                //   margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
-                //   decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
-                //   child:     GetBuilder<WishListController>(builder: (wishController) {
-                //     bool _isWished = wishController.wishRestIdList.contains(estate.estate_id);
-                //     return InkWell(
-                //       onTap: () {
-                //         if(Get.find<AuthController>().isLoggedIn()) {
-                //           _isWished ? wishController.removeFromWishList(estate.estate_id) : wishController.addToWishList(estate, true);
-                //         }else {
-                //           showCustomSnackBar('you_are_not_logged_in'.tr);
-                //         }
-                //       },
-                //       child: Padding(
-                //         padding: EdgeInsets.symmetric(vertical:  Dimensions.PADDING_SIZE_SMALL ),
-                //         child: Icon(
-                //           _isWished ? Icons.favorite : Icons.favorite_border,  size:25,
-                //           color: _isWished ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
-                //         ),
-                //       ),
-                //     );
-                //   }),
-                // ),
               ],
             ),
           ),

@@ -105,7 +105,7 @@ child: Container(
                                           String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
                                          //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
                                             return CustomImage(
-                                              image: '$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}',
+                                              image: '$_baseUrl/${estateController.estate.serviceOffers[index].image}',
                                               fit: BoxFit.cover,
                                             );
                                           },
@@ -121,9 +121,9 @@ child: Container(
                                           children: <Widget>[
                                             Row(
                                               children: [
-                                                estateController.estate.serviceOffers[index].discountOrPrice=="price"?Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)):Text("discount".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                                                estateController.estate.serviceOffers[index].discount=="price"?Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)):Text("discount".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
                                                 SizedBox(width: 11.0),
-                                                estateController.estate.serviceOffers[index].discountOrPrice!="price"?  SizedBox(
+                                                estateController.estate.serviceOffers[index].discount!="price"?  SizedBox(
                                                   height: 16,
                                                   width: 44,
                                                   child: CustomPaint(
@@ -141,7 +141,7 @@ child: Container(
                                             const SizedBox(
                                               height: 3.0,
                                             ),
-                                            Text("${estateController.estate.serviceOffers[index].offerName}",
+                                            Text("${estateController.estate.serviceOffers[index].title}",
                                                 style: robotoBlack.copyWith(fontSize: 12)),
                                             const SizedBox(
                                               height: 3.0,
@@ -213,7 +213,7 @@ child: Container(
             color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300],
           )),
         ),
-      ) : const Center(child: CircularProgressIndicator());
+      ) :  Center(child:Container());
     });
   }
 }

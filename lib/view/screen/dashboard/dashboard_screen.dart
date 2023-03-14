@@ -19,11 +19,11 @@ import 'package:abaad/view/screen/favourite/favourite_screen.dart';
 import 'package:abaad/view/screen/draw.dart';
 import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:abaad/view/screen/map/map_view_screen.dart';
+import 'package:abaad/view/screen/old.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../old.dart';
 
 class DashboardScreen extends StatefulWidget {
   final bool fromSignUp;
@@ -54,8 +54,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pageController = PageController(initialPage: widget.pageIndex);
 
     _screens = [
-     // SearchMap(),
-        MapViewScreen(),
+ //    LocationPage(),
+      MapViewScreen(),
       HomeScreen(),
       ConversationScreen(),
       FavouriteScreen(),
@@ -123,10 +123,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Get.toNamed(RouteHelper.getProfileRoute());
                     },
                     decoration:  const BoxDecoration(
-                      image:  DecorationImage(
-                        image: ExactAssetImage('assets/images/lake.jpeg'),
-                        fit: BoxFit.cover,
-                      ),
+                      color: Colors.white
+
+                      // image:  DecorationImage(
+                      //   image: ExactAssetImage(Images.placeholder),
+                      //   fit: BoxFit.cover,
+                      // ),
                     ),
                     currentAccountPicture:  ClipOval(child: CustomImage(
                       image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'

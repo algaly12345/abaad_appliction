@@ -47,7 +47,7 @@ class Conversation {
   String lastMessageTime;
   String createdAt;
   String updatedAt;
-  String estate_id;
+  int estate_id;
   Userinfo sender;
   Userinfo receiver;
   Message lastMessage;

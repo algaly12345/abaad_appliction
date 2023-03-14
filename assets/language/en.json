@@ -95,5 +95,9 @@
   "yes": "Yes",
   "no": "No",
   "logout": "logout",
-  "notification_is_empty": "notification is empty"
+  "notification_is_empty": "notification is empty",
+  "wallet_amount": "wallet amount",
+  "point_to_wallet": "share estate",
+  "order_place": "debit operation",
+  "transaction_history": "transaction_history"
 }

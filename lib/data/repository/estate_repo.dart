@@ -32,7 +32,7 @@ class EstateRepo {
   }
 
 
-  Future<Response> createEstate(EstateBody estate,XFile cover) async {
+  Future<Response> createEstate(EstateBody estate,List<MultipartBody> multiParts) async {
     Map<String, String> _body = Map();
     _body.addAll(<String, String>{
       'address': estate.address,
@@ -51,42 +51,14 @@ class EstateRepo {
       "ownership_type":estate.ownershipType,
       "user_id":estate.user_id,
       'price_negotiation':estate.priceNegotiation,
-      "facilities":estate.facilities
+      "facilities":estate.facilities,
+      "city":estate.city,
+      "other_advantages":estate.otherAdvantages
 
 
     });
 
-
-    // address = json['address'];
-    // property = json['property'];
-    //
-    // space = json['space'];
-    // categoryId = json['category_id'];
-    // price = json['price'];
-    // ownershipType = json['ownership_type'];
-    // districts = json['districts'];
-    // networkType = json['network_type'];
-    // serviceOffers = json['service_offers'];
-    //
-    //
-    // arPath = json['ar_path'];
-    // latitude = json['latitude'];
-    // longitude = json['longitude'];
-    // zoneId = json['zone_id'];
-    // forRent = json['for_rent'];
-    // forSell = json['for_sell'];
-    // territoryId = json['territory_id'];
-    // ageEstate = json['age_estate'];
-    // shortDescription = json['short_description'];
-    // longDescription=json['long_description'];
-    // floors = json['floors'];
-    // near = json['near'];
-    // priceNegotiation=json['price_negotiation'];
-    return apiClient.postMultipartData(
-
-
-      AppConstants.CREATE_ESATE_URI, _body, [ MultipartBody('cover_photo', cover)],
-    );
+    return apiClient.postMultipartData(AppConstants.CREATE_ESATE_URI, _body,multiParts);
   }
 
 

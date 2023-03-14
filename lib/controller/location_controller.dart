@@ -316,7 +316,7 @@ class LocationController extends GetxController implements GetxService {
     if(response.statusCode == 200 && response.body['status'] == 'OK') {
       _address = response.body['results'][0]['formatted_address'].toString();
     }else {
-      showCustomSnackBar(response.body['error_message'] ?? response.bodyString);
+      showCustomSnackBar(response.body ['error_message'] ?? response.bodyString);
     }
     return _address;
   }
@@ -424,5 +424,8 @@ class LocationController extends GetxController implements GetxService {
     }
     return LatLngBounds(southwest: LatLng(s, w), northeast: LatLng(n, e));
   }
+
+
+
 
 }

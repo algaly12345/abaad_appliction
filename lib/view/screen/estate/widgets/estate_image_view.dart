@@ -14,6 +14,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 class EstateImageView extends StatefulWidget {
   final int  estate_id;
   final bool fromView;
+
    EstateImageView({@required this.estate_id,this.fromView});
 
   @override
@@ -27,8 +28,9 @@ class _EstateImageViewState extends State<EstateImageView> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("--------------estate_id${widget.estate_id}");
 
-    Get.find<EstateController>().getEstateDetails(Estate(id:6));
+    Get.find<EstateController>().getEstateDetails(Estate(id:widget.estate_id));
 
   }
   @override
@@ -44,8 +46,9 @@ class _EstateImageViewState extends State<EstateImageView> {
       child: (estateController.estate != null && estateController.estate.images != null)  != null ? Stack(
 
         children: [
-          Expanded(
-            child: CarouselSlider.builder(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:CarouselSlider.builder(
 
               options: CarouselOptions(
                 viewportFraction: 1,
@@ -61,7 +64,7 @@ class _EstateImageViewState extends State<EstateImageView> {
               itemBuilder: (context, index, _) {
                 String _baseUrl = Get.find<SplashController>().configModel.baseUrls.estateImageUrl;
                 print("---------------anner----------${_baseUrl}");
-                return InkWell(
+                return GestureDetector(
                   onTap: (){
 
 

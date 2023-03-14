@@ -33,6 +33,7 @@ class EstateModel {
 class Estate {
   int id;
   String address;
+  String title ;
   List<Property>  property;
   String space;
   int categoryId;
@@ -70,6 +71,9 @@ class Estate {
   String nationalAddress;
   int userId;
   int estate_id;
+  String city;
+  String category;
+  List<OtherAdvantages> otherAdvantages;
 
 
 
@@ -111,7 +115,11 @@ class Estate {
     this.userId,
   this.createdAt,
   this.updatedAt,
-  this.estate_id
+  this.estate_id,
+    this.city,
+    this.title,
+    this.category,
+    this.otherAdvantages
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -161,14 +169,27 @@ class Estate {
     advertiserNo = json['advertiser_no'];
     adNumber = json['ad_number'];
     nationalAddress=json['national_address'];
+    city=json["city"];
+    title=json["title"];
+    category=json["category"];
 
     userId=json['user_id'];
     if (json['facilities'] != null) {
       facilities = <Facilities>[];
       json['facilities'].forEach((v) {
-        facilities.add( Facilities.fromJson(v));
+        facilities.add(Facilities.fromJson(v));
+      });
+
+    }
+
+    if (json['other_advantages'] != null) {
+      otherAdvantages = <OtherAdvantages>[];
+      json['other_advantages'].forEach((v) {
+        otherAdvantages.add(new OtherAdvantages.fromJson(v));
       });
     }
+
+
   }
 
   Map<String, dynamic> toJson() {
@@ -187,6 +208,7 @@ class Estate {
     data['view'] = this.view;
     data['status'] = this.status;
     data['districts'] = this.districts;
+    data["city"]=this.city;
     data['network_type'] = this.networkType;
     data['height'] = this.height;
     data['width'] = this.width;
@@ -214,11 +236,18 @@ class Estate {
     data['national_address']=this.nationalAddress;
     data['user_id']=this.userId;
     data['estate_id']=this.estate_id;
+    data['title']=this.title;
+    data['category']=this.category;
 
     if (this.facilities != null) {
       data['facilities'] = this.facilities.map((v) => v.toJson()).toList();
     }
 
+
+    if (this.otherAdvantages != null) {
+      data['other_advantages'] =
+          this.otherAdvantages.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -254,37 +283,89 @@ class EstateImages {
 
 
 class ServiceOffers {
-  String offerId;
-  String offerName;
-  String imageCover;
-  String servicePrice;
-  String discount;
-  String discountOrPrice;
+  int id;
+  String title;
+  String expiryDate;
+  int servicePrice;
+  String description;
+  int discount;
+  String sendedAt;
+  int serviceTypeId;
+  String offerType;
+  String createdAt;
+  String updatedAt;
+  Pivot pivot;
+  String image;
 
-  ServiceOffers({this.offerId, this.offerName,this.imageCover,this.servicePrice,this.discount,this.discountOrPrice});
+  ServiceOffers(
+      {this.id,
+        this.title,
+        this.expiryDate,
+        this.servicePrice,
+        this.description,
+        this.discount,
+        this.sendedAt,
+        this.serviceTypeId,
+        this.offerType,
+        this.createdAt,
+        this.updatedAt,
+        this.pivot,
+      this.image});
 
   ServiceOffers.fromJson(Map<String, dynamic> json) {
-    offerId = json['offer_id'];
-    offerName = json['offer_name'];
-    imageCover=json['image_cover'];
-    servicePrice=json['service_price'];
-    discount=json['discount'];
-    discountOrPrice=json["discount_or_price"];
+    id = json['id'];
+    title = json['title'];
+    expiryDate = json['expiry_date'];
+    servicePrice = json['service_price'];
+    description = json['description'];
+    discount = json['discount'];
+    sendedAt = json['sended_at'];
+    serviceTypeId = json['service_type_id'];
+    offerType = json['offer_type'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    image = json['image'];
+    pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['offer_id'] = this.offerId;
-    data['offer_name'] = this.offerName;
-    data['image_cover']= this.imageCover;
-    data['service_price']=this.servicePrice;
-    data['discount']=this.discount;
-    data["discount_or_price"]=this.discountOrPrice;
+    data['id'] = this.id;
+    data['title'] = this.title;
+    data['expiry_date'] = this.expiryDate;
+    data['service_price'] = this.servicePrice;
+    data['description'] = this.description;
+    data['discount'] = this.discount;
+    data['sended_at'] = this.sendedAt;
+    data['service_type_id'] = this.serviceTypeId;
+    data['offer_type'] = this.offerType;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['image'] = this.image;
+    if (this.pivot != null) {
+      data['pivot'] = this.pivot.toJson();
+    }
     return data;
   }
+}
 
+class Pivot {
+  int estateId;
+  int offerId;
 
+  Pivot({this.estateId, this.offerId});
 
+  Pivot.fromJson(Map<String, dynamic> json) {
+    estateId = json['estate_id'];
+    offerId = json['offer_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['estate_id'] = this.estateId;
+    data['offer_id'] = this.offerId;
+    return data;
+  }
 }
 
 
@@ -330,4 +411,27 @@ class Facilities {
     data['image'] = this.image;
     return data;
   }
+
+
+}
+
+
+class OtherAdvantages {
+  String name;
+
+
+  OtherAdvantages({this.name});
+
+  OtherAdvantages.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    return data;
+  }
+
+
 }

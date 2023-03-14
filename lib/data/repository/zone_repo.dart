@@ -15,4 +15,18 @@ class ZoneRepo {
     return await apiClient.getData('${AppConstants.LAND_SERVICE_URL}');
   }
 
+
+  Future<Response> getRegionList() async {
+    return await apiClient.getData(AppConstants.REGIONS);
+  }
+
+  Future<Response> getDistrictList(int parentID) async {
+    return await apiClient.getData('${AppConstants.DISTRICT_BY_CITY}$parentID');
+  }
+
+  Future<Response> getCitiesList(int parentID) async {
+    return await apiClient.getData('${AppConstants.CITIES_BY_REGIONS}$parentID');
+  }
+
+
 }

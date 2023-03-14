@@ -1,6 +1,8 @@
+import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/notification_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
@@ -19,7 +21,8 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
       width: Dimensions.WEB_MAX_WIDTH,
       color: Theme.of(context).cardColor,
       padding: EdgeInsets.only(top: 38 ,right: 7,left: 7,),
-      child:   Row(
+      child:     GetBuilder<UserController>(builder: (estateController) {
+      return Row(
         children: [
           InkWell(
             onTap:ontop,
@@ -33,7 +36,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                     'موقعك',style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)
                 ),
                 Text(
-                  ' المنطقة الشرقية - الدمام ',style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)
+                  '${estateController.address  }',style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)
           ),
               ],
             ),
@@ -54,7 +57,8 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
             onTap: () => Get.toNamed(RouteHelper.getNotificationRoute()),
           ),
         ],
-      ),
+      );
+      })
     ));
   }
   @override

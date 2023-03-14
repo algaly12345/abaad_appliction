@@ -67,7 +67,7 @@ class WishListController extends GetxController implements GetxService {
         }catch(e){}
         _wishRestList.add(_restaurant);
         _wishRestIdList.add(_restaurant.estate_id);
-        print("omeromeromeromeomromer${restaurant.body}");
+      //  print("omeromeromeromeomromer${restaurant.body}");
       });
     } else {
       ApiChecker.checkApi(response);

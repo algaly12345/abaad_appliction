@@ -194,7 +194,21 @@ class _MapViewScreenState extends State<MapViewScreen> {
       LatLng _latLng = LatLng(double.parse(zone[index].latitude),
           double.parse(zone[index].longitude));
       _latLngs.add(_latLng);
-
+      // _polygon.add(
+      //     Polygon(
+      //       // given polygonId
+      //       polygonId: PolygonId('id-$_index'),
+      //       // initialize the list of points to display polygon
+      //       points: zone[index].coordinates.coordinates,
+      //       // given color to polygon
+      //       fillColor: Colors.green.withOpacity(0.3),
+      //       // given border color to polygon
+      //       strokeColor: Colors.green,
+      //       geodesic: true,
+      //       // given width of border
+      //       strokeWidth: 4,
+      //     )
+      // );
       _customMarkersZone.add(MarkerData(
         marker: Marker(markerId: MarkerId('id-$_index'),
             position: _latLng,
@@ -312,6 +326,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
     if (_reload == 1) {
       _reload = 2;
     }
+
   }
 
 }

@@ -106,10 +106,10 @@ class _WalletScreenState extends State<WalletScreen> {
                                       Text('wallet_amount'.tr,style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).cardColor)),
                                       SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-                                      // Text(
-                                      //   PriceConverter.convertPrice(double.parse(userController.userInfoModel.walletBalance)),
-                                      //   style: robotoBold.copyWith(fontSize: Dimensions.fontSizeOverLarge, color: Theme.of(context).cardColor),
-                                      // ),
+                                      Text(
+                                        PriceConverter.convertPrice(userController.userInfoModel.walletBalance),
+                                        style: robotoBold.copyWith(fontSize: Dimensions.fontSizeOverLarge, color: Theme.of(context).cardColor),
+                                      ),
                                     ])
                                       : Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.end, children: [
 

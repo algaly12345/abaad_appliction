@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
@@ -76,9 +77,8 @@ class _ScreenSuccessState extends State<ScreenSuccess> {
           height: 45,
           margin: EdgeInsets.symmetric(horizontal: 40),
           child: CustomButton(
-            onPressed: () async {
-
-
+            onPressed: () {
+              Get.offAllNamed(RouteHelper.getProfileRoute());
             },
             buttonText: 'ok'.tr,
           ),

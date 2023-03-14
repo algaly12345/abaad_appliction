@@ -7,7 +7,7 @@ class AppConstants {
   static const String LOGIN_URI = '/api/v1/auth/login';
 //static const String BASE_URL = 'http://alharthi.iaspl.net';
   static const String LAND_SERVICE_URL = 'https://geoportal-st.gasgi.gov.sa/hosting/rest/services/Hosted/MOT_Layer04_View/FeatureServer/0/query?where=1%3D1&outFields=&outSR=4326&f=json';
-  static const String BASE_URL = 'http://192.168.179.37/abbaad-dashboard';
+  static const String BASE_URL = 'http://192.168.124.37/abbaad-dashboard';
    static const String REGISTER_URI = '/api/v1/auth/register';
   static const String THEME = 'theme';
   static const String TOKEN = 'abaad_token';
@@ -61,9 +61,13 @@ class AppConstants {
   static const String WISH_LIST_GET_URI = '/api/v1/wish-list';
   static const String ADD_WISH_LIST_URI = '/api/v1/wish-list/add?';
   static const String REMOVE_WISH_LIST_URI = '/api/v1/wish-list/remove';
-  static const String WALLET_TRANSACTION_URL = '/api/v1/customer/wallet/transactions';
-  static const String LOYALTY_TRANSACTION_URL = '/api/v1/customer/loyalty-point/transactions';
+  static const String WALLET_TRANSACTION_URL = '/api/v1/wallet/transactions';
+  static const String LOYALTY_TRANSACTION_URL = '/api/v1/loyalty-point/transactions';
   static const String LOYALTY_POINT_TRANSFER_URL = '/api/v1/customer/loyalty-point/point-transfer';
+  static const String ADVANTAGES="/api/v1/estate/get-advantages";
+  static const String REGIONS = '/api/v1/zones/get-regions';
+  static const String DISTRICT_BY_CITY = '/api/v1/zones/get-districts-by-cities/';
+  static const String CITIES_BY_REGIONS = '/zones/get-cities-by-regions/';
 
 
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];

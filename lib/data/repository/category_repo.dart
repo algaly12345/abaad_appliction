@@ -25,4 +25,10 @@ class CategoryRepo {
     return await apiClient.getData(AppConstants.FACILITIES);
   }
 
+
+
+  Future<Response> getAdvantages() async {
+    return await apiClient.getData(AppConstants.ADVANTAGES);
+  }
+
 }

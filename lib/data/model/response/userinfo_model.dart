@@ -14,7 +14,7 @@ class UserInfoModel {
   Userinfo userinfo;
   int estateCount;
   String image;
-  String   walletBalance;
+  double walletBalance;
   int loyaltyPoint;
   Userinfo agent;
 
@@ -57,7 +57,7 @@ class UserInfoModel {
         : null;
     estateCount = json['estate_count'];
     agent = json['agent'] != null ? new Userinfo.fromJson(json['agent']) : null;
-    walletBalance = json['wallet_balance'];
+    walletBalance = json['wallet_balance'].toDouble();
     loyaltyPoint = json['loyalty_point'];
   }
 

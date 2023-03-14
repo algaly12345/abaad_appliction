@@ -5,6 +5,7 @@ import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
@@ -41,10 +42,10 @@ class _EstateViewState extends State<EstateView> {
     // TODO: implement initState
     super.initState();
 
-    sampleData.add( RadioModel(false, 'صور', Images.vt));
-    sampleData.add( RadioModel(false, 'تجوال 3D', Images.vt));
-    sampleData.add( RadioModel(false, 'منظور الشارع',Images.vt));
-    sampleData.add( RadioModel(false, 'المخطط', Images.vt));
+    sampleData.add( RadioModel(false, 'صور', Images.estate_images));
+    sampleData.add( RadioModel(false, 'تجوال افتراضي', Images.vt));
+    sampleData.add( RadioModel(false, 'عرض الشارع',Images.street_view));
+    sampleData.add( RadioModel(false, 'المخطط', Images.planed));
   }
 
   @override
@@ -210,6 +211,8 @@ class _EstateViewState extends State<EstateView> {
                         setState(() {
                           sampleData.forEach((element) => element.isSelected = false);
                           sampleData[index].isSelected = true;
+
+                          Get.toNamed(RouteHelper.getFeatureRoute(widget.estate.id,sampleData[index].buttonText));
                         });
                       },
                       child:RadioItem(sampleData[index]),
@@ -218,7 +221,7 @@ class _EstateViewState extends State<EstateView> {
                 ),
               ),
 
-              ServiceProivderView(productModel: widget.estate,fromView: widget.fromView),
+              widget.estate.serviceOffers.length >0?  ServiceProivderView(productModel: widget.estate,fromView: widget.fromView):Container(),
 
 
 

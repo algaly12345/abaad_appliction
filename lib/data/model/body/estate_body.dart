@@ -26,6 +26,8 @@ class EstateBody {
   String user_id;
   String adNumber;
   String advertiserNo;
+  String city;
+  String otherAdvantages;
 
 
   EstateBody(
@@ -57,6 +59,8 @@ class EstateBody {
         this.user_id,
         this.adNumber,
         this.advertiserNo,
+        this.city,
+        this.otherAdvantages
         });
 
   EstateBody.fromJson(Map<String, dynamic> json) {
@@ -90,6 +94,8 @@ class EstateBody {
     facilities=json['facilities'];
     advertiserNo = json['advertiser_no'];
     adNumber = json['ad_number'];
+    city=json["city"];
+    otherAdvantages=json["other_advantages"];
 
 
   }
@@ -125,6 +131,8 @@ class EstateBody {
     data['user_id']=this.user_id;
     data['advertiser_no'] = this.advertiserNo;
     data['ad_number'] = this.adNumber;
+    data['city']=this.city;
+    data["other_advantages"]=this.otherAdvantages;
     return data;
   }
 }

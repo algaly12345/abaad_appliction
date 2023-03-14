@@ -65,10 +65,11 @@ class _MapDetailsViewState extends State<MapDetailsView> {
                 borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                 child: Stack(clipBehavior: Clip.none, children: [
                   GoogleMap(
-                    initialCameraPosition: const CameraPosition(
+                    initialCameraPosition:  CameraPosition(
                       target: LatLng(
-                        26.437814,
-                        50.100299,
+                     double.parse(  estateController.estate.latitude),
+                        double.parse(  estateController.estate.longitude)
+
                       ), zoom: 16,
                     ),
          markers: <Marker>{

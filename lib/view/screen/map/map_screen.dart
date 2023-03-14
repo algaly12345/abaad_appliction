@@ -16,6 +16,7 @@ import 'package:abaad/view/base/cached_img.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/discount_tag.dart';
+import 'package:abaad/view/screen/fillter/fillter_estate_sheet.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/map/widget/estate_by_category.dart';
 import 'package:abaad/view/screen/map/widget/zone_sheet.dart';
@@ -228,135 +229,133 @@ class _MapViewScreenState extends State<MapScreen> {
                 SafeArea(
                   child: Align(
                     alignment: Alignment.topCenter,
-                    child: Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 7.0),
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 10.0, right: 7.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
+                    child:Padding(
+                      padding: const EdgeInsets.only(top: 7.0),
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10.0, right: 7.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
 
-                            children: <Widget>[
-                              Row(
-                                children: [
+                          children: <Widget>[
+                            Row(
+                              children: [
 
-                                  InkWell(
-                                    onTap: () => Get.dialog(LocationSearchDialog(mapController: _controller)),
-                                    child: Container(
-                                      height: 43,
-                                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                      decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-                                      width: width-130,
-                                      child:  Row(children: [
-                                        Icon(Icons.location_on, size: 25, color: Theme.of(context).primaryColor),
-                                        const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                        Expanded(
-                                          child: Text(
-                                            locationController.pickAddress,
-                                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis,
-                                          ),
+                                InkWell(
+                                  onTap: () => Get.dialog(LocationSearchDialog(mapController: _controller)),
+                                  child: Container(
+                                    height: 43,
+                                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                    decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
+                                    width: width-130,
+                                    child:  Row(children: [
+                                      Icon(Icons.location_on, size: 25, color: Theme.of(context).primaryColor),
+                                      const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                      Expanded(
+                                        child: Text(
+                                          locationController.pickAddress,
+                                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis,
                                         ),
-                                        const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                                        Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
-                                      ]),
-                                    ),
+                                      ),
+                                      const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                      Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
+                                    ]),
                                   ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 4.0, right: 4.0),
-                                    padding: const EdgeInsets.all(7),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.blue,
-                                        )),
-
-
-                                    child: const Icon(Icons.qr_code, size: 25,
-                                      color: Colors.blue,),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(7),
-                                    margin: const EdgeInsets.only(
-                                        left: 4.0, right: 4.0),
-                                    decoration: BoxDecoration(
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 4.0, right: 4.0),
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                        width: 1,
                                         color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.white,
-                                        )),
+                                      )),
 
 
-                                    child: const Icon(
-                                      Icons.filter_list_alt, size: 25,
-                                      color: Colors.white,),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,),
-                              GetBuilder<CategoryController>(builder: (categoryController) {
-                                return   (categoryController.categoryList != null ) ?
-                                SizedBox(
-                                  height: 35,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: categoryController.categoryList.length,
-                                      padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-                                      physics: BouncingScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        String _baseUrl = Get.find<SplashController>().configModel.baseUrls.categoryImageUrl;
-                                        return  Column(
-                                          children: [
+                                  child: const Icon(Icons.qr_code, size: 25,
+                                    color: Colors.blue,),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(7),
+                                  margin: const EdgeInsets.only(
+                                      left: 4.0, right: 4.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.white,
+                                      )),
 
-                                            Padding(
-                                              padding: const EdgeInsets.only(right: 5,left: 5),
-                                              child: InkWell(
-                                                onTap: () => restController.setCategoryIndex(index),
-                                                child: Container(
-                                                  height: 35,
-                                                  padding: const EdgeInsets.only(
-                                                      left: 4.0, right: 4.0),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color:index == restController.categoryIndex
-                                                            ? Theme.of(context).primaryColor:Colors.white
+
+                                  child: const Icon(
+                                    Icons.filter_list_alt, size: 25,
+                                    color: Colors.white,),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,),
+                            GetBuilder<CategoryController>(builder: (categoryController) {
+                              return   (categoryController.categoryList != null ) ?
+                              SizedBox(
+                                height: 35,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: categoryController.categoryList.length,
+                                    padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+                                    physics: BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      String _baseUrl = Get.find<SplashController>().configModel.baseUrls.categoryImageUrl;
+                                      return  Column(
+                                        children: [
+
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 5,left: 5),
+                                            child: InkWell(
+                                              onTap: () => restController.setCategoryIndex(index),
+                                              child: Container(
+                                                height: 35,
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0, right: 4.0),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color:index == restController.categoryIndex
+                                                          ? Theme.of(context).primaryColor:Colors.white
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(2.0),
+                                                  color: Colors.white,
+
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 26,
+                                                      color: Colors.white,
+                                                      child: Text(categoryController.categoryList[index].name,style:  index == restController.categoryIndex
+                                                          ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).primaryColor)
+                                                          : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).disabledColor),),
                                                     ),
-                                                    borderRadius: BorderRadius.circular(2.0),
-                                                    color: Colors.white,
+                                                    SizedBox(width: 5),
 
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                        height: 26,
-                                                        color: Colors.white,
-                                                        child: Text(categoryController.categoryList[index].name,style:  index == restController.categoryIndex
-                                                            ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).primaryColor)
-                                                            : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).disabledColor),),
-                                                      ),
-                                                      SizedBox(width: 5),
-
-                                                      CustomImage( image: '$_baseUrl/${categoryController.categoryList[index].image}',height: 25,width: 25,  colors:index == restController.categoryIndex
-                                                          ? Theme.of(context).primaryColor:Colors.black12),
-                                                    ],
-                                                  ),
+                                                    CustomImage( image: '$_baseUrl/${categoryController.categoryList[index].image}',height: 25,width: 25,  colors:index == restController.categoryIndex
+                                                        ? Theme.of(context).primaryColor:Colors.black12),
+                                                  ],
                                                 ),
                                               ),
-                                            )
-                                          ],
-                                        );
+                                            ),
+                                          )
+                                        ],
+                                      );
 
-                                      }),
-                                ):Container();
+                                    }),
+                              ):Container();
 
-                              })
+                            })
 
-                            ],
-                          ),
+                          ],
                         ),
                       ),
                     ),
@@ -382,7 +381,8 @@ class _MapViewScreenState extends State<MapScreen> {
 
               ]);
             }
-            return Stack(children: [
+            return
+              Stack(children: [
             GoogleMap(
             initialCameraPosition: const CameraPosition(zoom: 12, target: LatLng(
               // double.parse(Get.find<LocationController>().getUserAddress().latitude),
@@ -490,56 +490,61 @@ class _MapViewScreenState extends State<MapScreen> {
               SafeArea(
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 7.0),
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10.0, right: 7.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 7.0),
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10.0, right: 7.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
 
-                          children: <Widget>[
-                            Row(
-                              children: [
+                        children: <Widget>[
+                          Row(
+                            children: [
 
-                                InkWell(
-                                  onTap: () => Get.dialog(LocationSearchDialog(mapController: _controller)),
-                                  child: Container(
-                                    height: 43,
-                                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                    decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-                                    width: width-130,
-                                    child:  Row(children: [
-                                      Icon(Icons.location_on, size: 25, color: Theme.of(context).primaryColor),
-                                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      Expanded(
+                              InkWell(
+                                onTap: () => Get.dialog(LocationSearchDialog(mapController: _controller)),
+                                child: Container(
+                                  height: 43,
+                                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                  decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
+                                  width: width-130,
+                                  child:  Row(children: [
+                                    Icon(Icons.location_on, size: 25, color: Theme.of(context).primaryColor),
+                                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                    Container(
+                                      child: Expanded(
                                         child: Text(
-                                      locationController.pickAddress,
+                                          locationController.pickAddress,
                                           style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                                      Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
-                                    ]),
-                                  ),
+                                    ),
+                                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                    Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
+                                  ]),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 4.0, right: 4.0),
-                                  padding: const EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.blue,
-                                      )),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 4.0, right: 4.0),
+                                padding: const EdgeInsets.all(7),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Colors.blue,
+                                    )),
 
 
-                                  child: const Icon(Icons.qr_code, size: 25,
-                                    color: Colors.blue,),
-                                ),
-                                Container(
+                                child: const Icon(Icons.qr_code, size: 25,
+                                  color: Colors.blue,),
+                              ),
+                              GestureDetector(
+                                onTap: (){
+                                  Get.dialog(FiltersScreen());
+                                },
+                                child: Container(
                                   padding: const EdgeInsets.all(7),
                                   margin: const EdgeInsets.only(
                                       left: 4.0, right: 4.0),
@@ -556,78 +561,78 @@ class _MapViewScreenState extends State<MapScreen> {
                                     Icons.filter_list_alt, size: 25,
                                     color: Colors.white,),
                                 ),
-                              ],
-                            ),
-            const SizedBox(
-            height: 5,),
-                            GetBuilder<CategoryController>(builder: (categoryController) {
-                              return   (categoryController.categoryList != null ) ?
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,),
+                          GetBuilder<CategoryController>(builder: (categoryController) {
+                            return   (categoryController.categoryList != null ) ?
 
-                              SizedBox(
-                                height: 35,
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: categoryController.categoryList.length,
-                                    padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-                                    physics: BouncingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      String _baseUrl = Get.find<SplashController>().configModel.baseUrls.categoryImageUrl;
-                                      return  Column(
-                                        children: [
+                            SizedBox(
+                              height: 35,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: categoryController.categoryList.length,
+                                  padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+                                  physics: BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    String _baseUrl = Get.find<SplashController>().configModel.baseUrls.categoryImageUrl;
+                                    return  Column(
+                                      children: [
 
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 5,left: 5),
-                                            child: InkWell(
-                                              onTap: () {
-                                      restController.setCategoryIndex(index);
-                                      showModalBottomSheet<int>(
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (context) {
-                                          return BottomSheetWithSnackBar();
-                                        },
-                                      );
-                                      },
-                                              child: Container(
-                                                height: 35,
-                                                padding: const EdgeInsets.only(
-                                                    left: 4.0, right: 4.0),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:index == restController.categoryIndex
-                                                          ? Theme.of(context).primaryColor:Colors.white
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 5,left: 5),
+                                          child: InkWell(
+                                            onTap: () {
+                                              restController.setCategoryIndex(index);
+                                              showModalBottomSheet<int>(
+                                                backgroundColor: Colors.transparent,
+                                                context: context,
+                                                builder: (context) {
+                                                  return BottomSheetWithSnackBar();
+                                                },
+                                              );
+                                            },
+                                            child: Container(
+                                              height: 35,
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0, right: 4.0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color:index == restController.categoryIndex
+                                                        ? Theme.of(context).primaryColor:Colors.white
+                                                ),
+                                                borderRadius: BorderRadius.circular(2.0),
+                                                color: Colors.white,
+
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    height: 26,
+                                                    color: Colors.white,
+                                                    child: Text(categoryController.categoryList[index].name,style:  index == restController.categoryIndex
+                                                        ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).primaryColor)
+                                                        : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).disabledColor),),
                                                   ),
-                                                  borderRadius: BorderRadius.circular(2.0),
-                                                  color: Colors.white,
+                                                  SizedBox(width: 5),
 
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      height: 26,
-                                                      color: Colors.white,
-                                                      child: Text(categoryController.categoryList[index].name,style:  index == restController.categoryIndex
-                                                          ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).primaryColor)
-                                                          : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).disabledColor),),
-                                                    ),
-                                                    SizedBox(width: 5),
-
-                                                    CustomImage( image: '$_baseUrl/${categoryController.categoryList[index].image}',height: 25,width: 25,  colors:index == restController.categoryIndex
-                                      ? Theme.of(context).primaryColor:Colors.black12),
-                                                  ],
-                                                ),
+                                                  CustomImage( image: '$_baseUrl/${categoryController.categoryList[index].image}',height: 25,width: 25,  colors:index == restController.categoryIndex
+                                                      ? Theme.of(context).primaryColor:Colors.black12),
+                                                ],
                                               ),
                                             ),
-                                          )
-                                        ],
-                                      );
+                                          ),
+                                        )
+                                      ],
+                                    );
 
-                                    }),
-                              ):Container();
+                                  }),
+                            ):Container();
 
-                            })
-                          ],
-                        ),
+                          })
+                        ],
                       ),
                     ),
                   ),
@@ -786,7 +791,7 @@ class _MapViewScreenState extends State<MapScreen> {
                       '${estate[index].price}',
                       style:robotoBlack.copyWith(fontSize: 7)
                   ),
-                  Image.asset(estate[index].serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
+            //      Image.asset(estate[index].serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
                 ],
 
               ),
@@ -806,9 +811,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
       ));
     }
-    // if(!ResponsiveHelper.isWeb() && _controller != null) {
-    //   Get.find<LocationController>().zoomToFit(_controller, _latLngs, padding: 0);
-    // }
+
     await Future.delayed(const Duration(milliseconds: 500));
     if (_reload == 0) {
       setState(() {});
@@ -822,55 +825,6 @@ class _MapViewScreenState extends State<MapScreen> {
     }
   }
 
-  Widget _textField({
-    TextEditingController controller,
-    FocusNode focusNode,
-    String label,
-    String hint,
-    double width,
-    Icon prefixIcon,
-    suffixIcon,
-    Function(String) locationCallback,
-  }) {
-    return Container(
-      width: width * 0.7,
-      height: 44,
-      child: TextField(
-        onChanged: (value) {
-          locationCallback(value);
-        },
-        controller: controller,
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(3.0),
-            ),
-            borderSide: BorderSide(
-              color: Colors.blue,
-              width: 2,
-            ),
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
-            ),
-            borderSide: BorderSide(
-              color: Colors.blue,
-              width: 2,
-            ),
-          ),
-          contentPadding: const EdgeInsets.all(15),
-          hintText: hint,
-        ),
-      ),
-    );
-  }
 }
 
 _buildReviewItem() {

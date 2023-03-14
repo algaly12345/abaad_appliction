@@ -10,6 +10,8 @@ import 'package:abaad/data/repository/estate_repo.dart';
 import 'package:abaad/helper/route_helper.dart';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -18,8 +20,10 @@ import 'package:image_picker/image_picker.dart';
 
 class EstateController extends GetxController implements GetxService {
   final EstateRepo estateRepo;
+
   EstateController({@required this.estateRepo});
-  var currentStep =0.obs;
+
+  var currentStep = 0.obs;
   EstateModel _estateModel;
   List<Estate> _estateList;
   Estate _estate;
@@ -41,39 +45,64 @@ class EstateController extends GetxController implements GetxService {
   XFile _pickedImage;
   List<XFile> _pickedIdentities = [];
   int _currentIndex = 0;
-
+  String _address;
 
   List<String> _tagList = [];
-
-  List<String> options = ["ممرات مكيفة", "التحكم بالستائر", "التحكم باإنارة", "اطلالة بحرية", "الدخول الزكي","التحكم بالتكيف"];
+  List<String> options = [
+    "ممرات مكيفة",
+    "التحكم بالستائر",
+    "التحكم باإنارة",
+    "اطلالة بحرية",
+    "الدخول الزكي",
+    "التحكم بالتكيف"
+  ];
   Rx<List<String>> selectedOptionList = Rx<List<String>>([]);
   var selectedOption = ''.obs;
+  List<bool> _advantagesSelectedList;
 
   EstateModel get estateModel => _estateModel;
+
   List<Estate> get estateList => _estateList;
+
   Estate get estate => _estate;
+
   int get categoryIndex => _categoryIndex;
+
   List<CategoryModel> get categoryList => _categoryList;
+
   bool get isLoading => _isLoading;
+
   String get estateType => _estateType;
+
   String get type => _type;
+
   String get searchType => _searchType;
+
   String get searchText => _searchText;
+
   XFile get pickedLogo => _pickedLogo;
+
   XFile get pickedCover => _pickedCover;
+
   List<Property> get categoryRestList => _categoryRestList;
+
   List<String> get tagList => _tagList;
+
   int get categoryPostion => _categoryPostion;
+
   XFile get pickedImage => _pickedImage;
+
   List<XFile> get pickedIdentities => _pickedIdentities;
+
   int get currentIndex => _currentIndex;
 
+  String get address => _address;
 
+  List<bool> get advantagesSelectedList => _advantagesSelectedList;
 
 
   Future<void> getEstateList(int offset, bool reload) async {
-
-    if(reload) {
+    if (reload) {
       _estateModel = null;
       update();
     }
@@ -82,28 +111,31 @@ class EstateController extends GetxController implements GetxService {
       if (offset == 1) {
         _estateModel = EstateModel.fromJson(response.body);
         print("estate response ...............${response.body}");
-      }else {
-        _estateModel.totalSize = EstateModel.fromJson(response.body).totalSize;
-        _estateModel.offset = EstateModel.fromJson(response.body).offset;
-        _estateModel.estates.addAll(EstateModel.fromJson(response.body).estates);
-
+      } else {
+        _estateModel.totalSize = EstateModel
+            .fromJson(response.body)
+            .totalSize;
+        _estateModel.offset = EstateModel
+            .fromJson(response.body)
+            .offset;
+        _estateModel.estates.addAll(EstateModel
+            .fromJson(response.body)
+            .estates);
       }
       update();
     } else {
       ApiChecker.checkApi(response);
-
-
     }
   }
 
-  Future<void> getCategoriesEstateList(int estateId, int offset, String type, bool notify) async {
-
+  Future<void> getCategoriesEstateList(int estateId, int offset, String type,
+      bool notify) async {
     _foodOffset = offset;
-    if(offset == 1 || _estateList == null) {
+    if (offset == 1 || _estateList == null) {
       _type = type;
 
       _estateList = null;
-      if(notify) {
+      if (notify) {
         update();
       }
     }
@@ -111,17 +143,19 @@ class EstateController extends GetxController implements GetxService {
 
     Response response = await estateRepo.getCategorisEstateList(
         1, offset, type);
-      if (response.statusCode == 200) {
-        if (offset == 1) {
-          _estateList = [];
-        }
-        print("awad-------------------------------${response.body}");
-        _estateList.addAll(EstateModel.fromJson(response.body).estates);
-        update();
-      } else {
-        print("awad-------------------------------${response.body}");
-        ApiChecker.checkApi(response);
+    if (response.statusCode == 200) {
+      if (offset == 1) {
+        _estateList = [];
       }
+      print("awad-------------------------------${response.body}");
+      _estateList.addAll(EstateModel
+          .fromJson(response.body)
+          .estates);
+      update();
+    } else {
+      print("awad-------------------------------${response.body}");
+      ApiChecker.checkApi(response);
+    }
   }
 
   void setRestaurantType(String type) {
@@ -131,21 +165,23 @@ class EstateController extends GetxController implements GetxService {
 
 
   void setCategoryList() {
-
-    if(Get.find<CategoryController>().categoryList != null ) {
+    if (Get
+        .find<CategoryController>()
+        .categoryList != null) {
       _categoryList = [];
       _categoryList.add(CategoryModel());
 
-      Get.find<CategoryController>().categoryList.forEach((category) {
+      Get
+          .find<CategoryController>()
+          .categoryList
+          .forEach((category) {
         // if(_restaurant.categoryIds.contains(category.id)) {
-          _categoryList.add(category);
-          print("list_cate${category.name}");
+        _categoryList.add(category);
+        print("list_cate${category.name}");
         // }
       });
     }
   }
-
-
 
 
   void showBottomLoader() {
@@ -166,13 +202,11 @@ class EstateController extends GetxController implements GetxService {
 
 
   int getCategoryIndex() {
-  return  _categoryIndex;
-
+    return _categoryIndex;
   }
 
   int getCategoryPostion() {
-    return  _categoryPostion;
-
+    return _categoryPostion;
   }
 
   void setFoodOffset(int offset) {
@@ -186,21 +220,19 @@ class EstateController extends GetxController implements GetxService {
   }
 
   Future<EstateModel> getEstateDetails(Estate estate) async {
-
-    if(estate.shortDescription != null) {
+    if (estate.shortDescription != null) {
       _estate = estate;
-    }else {
+    } else {
       _isLoading = true;
       _estate = null;
-      Response response = await estateRepo.getEstateDetails(estate.id.toString());
+      Response response = await estateRepo.getEstateDetails(
+          estate.id.toString());
       if (response.statusCode == 200) {
-        print("-------------------------------------detailsapp${response.body}");
+        print(
+            "-------------------------------------detailsapp${response.body}");
         _estate = Estate.fromJson(response.body);
-
-
       } else {
         ApiChecker.checkApi(response);
-
       }
 
       _isLoading = false;
@@ -211,29 +243,33 @@ class EstateController extends GetxController implements GetxService {
 
 
   void pickImage(bool isLogo, bool isRemove) async {
-    if(isRemove) {
+    if (isRemove) {
       _pickedLogo = null;
       _pickedCover = null;
-    }else {
+    } else {
       if (isLogo) {
-        _pickedLogo = await ImagePicker().pickImage(source: ImageSource.gallery);
+        _pickedLogo =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
       } else {
-        _pickedCover = await ImagePicker().pickImage(source: ImageSource.gallery);
+        _pickedCover =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
       }
       update();
     }
   }
 
   void pickDmImage(bool isLogo, bool isRemove) async {
-    if(isRemove) {
+    if (isRemove) {
       _pickedImage = null;
       _pickedIdentities = [];
-    }else {
+    } else {
       if (isLogo) {
-        _pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+        _pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
       } else {
-        XFile _xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-        if(_xFile != null) {
+        XFile _xFile = await ImagePicker().pickImage(
+            source: ImageSource.gallery);
+        if (_xFile != null) {
           _pickedIdentities.add(_xFile);
         }
       }
@@ -247,32 +283,28 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
-
-
   Future<void> registerRestaurant(EstateBody restaurantBody) async {
     _isLoading = true;
     update();
-    // List<MultipartBody> _multiParts = [];
-    // _multiParts.add(MultipartBody('image', _pickedImage));
-    // for(XFile file in _pickedIdentities) {
-    //   _multiParts.add(MultipartBody('identity_image[]', file));
-    // }
-    Response response = await estateRepo.createEstate(restaurantBody, _pickedCover);
+    List<MultipartBody> _multiParts = [];
+    _multiParts.add(MultipartBody('image', _pickedImage));
+    for (XFile file in _pickedIdentities) {
+      _multiParts.add(MultipartBody('identity_image[]', file));
+    }
+    Response response = await estateRepo.createEstate(
+        restaurantBody, _multiParts);
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       int _restaurantId = response.body['restaurant_id'];
       Get.offAllNamed(RouteHelper.getSuccess());
-    }else {
+    } else {
       ApiChecker.checkApi(response);
-      print("---------------------------------------------------${response.body}");
+      print("---------------------------------------------------${response
+          .body}");
     }
     _isLoading = false;
     update();
   }
-
-
-
-
 
 
   @override
@@ -287,17 +319,19 @@ class EstateController extends GetxController implements GetxService {
 
   @override
   void onClose() {}
+
   void setCurrentIndex(int index, bool notify) {
     _currentIndex = index;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
 
+
+  void addInterestSelection(int index) {
+    _advantagesSelectedList[index] = !_advantagesSelectedList[index];
+    update();
+  }
+
+
 }
-
-
-
-
-
-
