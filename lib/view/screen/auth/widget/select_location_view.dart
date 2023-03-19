@@ -17,9 +17,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:geocoder/geocoder.dart';
-import 'package:flutter/services.dart';
 
 class SelectLocationView extends StatefulWidget {
   final bool fromView;
@@ -53,12 +50,10 @@ class _SelectLocationViewState extends State<SelectLocationView> {
     List<Placemark> placemark =
     await placemarkFromCoordinates(lat, log);
     Placemark place = placemark[0];
-    final coordinates = new Coordinates(
-        myLocation.latitude, myLocation.longitude);
-    var addresses = await Geocoder.local.findAddressesFromCoordinates(
-        coordinates);
-    var first = addresses.first;
-    print(' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    String  _address= 'Address : ${place.locality},${place.country}';
+
+    showCustomSnackBar("message${place.subLocality}");
+    print("adress-------------------------------------${place.locality},${place.country}");
   }
   @override
   Widget build(BuildContext context) {

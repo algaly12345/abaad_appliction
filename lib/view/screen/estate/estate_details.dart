@@ -54,7 +54,7 @@ class _EstateDetailsState extends State<EstateDetails> {
       if(Get.find<CategoryController>().categoryList == null) {
         Get.find<CategoryController>().getCategoryList(true);
       }
-      Get.find<EstateController>().getCategoriesEstateList(1, 1, 'all', false);
+      Get.find<EstateController>().getCategoriesEstateList(6, 1, 'all', false);
       Get.find<EstateController>().getEstateDetails(Estate(id: widget.estate.id));
       print("mohammed-------------${widget.user_id}");
        Get.find<WishListController>().getWishList();
@@ -128,8 +128,8 @@ class _EstateDetailsState extends State<EstateDetails> {
                               width: 40,
                               margin: const EdgeInsets.only(bottom: 10),
                               decoration:  BoxDecoration(
-                                  color: estateController.estate.forRent==1?Colors.blue:Colors.orange),
-                              child:  Text( estateController.estate.forRent==1?"للبيع":"للإجار",
+                                  color: estateController.estate.type_add==1?Colors.blue:Colors.orange),
+                              child:  Text( estateController.estate.type_add==1?"للبيع":"للإجار",
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,)
@@ -345,66 +345,279 @@ class _EstateDetailsState extends State<EstateDetails> {
                         ),
                       ):Container(),
                       Divider(height: 1,),
+
                       Text(
-                        'المرافق ',
-                        style: robotoRegular.copyWith(
-                            fontSize: Dimensions.fontSizeSmall),
+                        'التفاصيل',
+                        style: robotoBlack.copyWith(fontSize: 14),
                       ),
+                      SizedBox(height: 10,),
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child:  Text("نوع العقار"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child: Text("سكني",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ),
+                      estateController.estate.space!=null?  Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child:  Text("المساحة"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child: Text("${estateController.estate.space}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ):Container(),
+
+                      estateController.estate.streetSpace!=null?    Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child:  Text("عرض الشارع"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.streetSpace}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ):Container(),
+
+                      estateController.estate.interface!=null?    Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child:  Text(" الواجهة"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.interface}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ):Container(),
+                      estateController.estate.priceNegotiation!=null?    Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child:  Text("السعر"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.priceNegotiation}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ):Container(),
+
+                      estateController.estate.category!="5"? Column(
+                        children: [
+                          estateController.estate.ageEstate!=null?    Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).backgroundColor,
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 0.5), // changes position of shadow
+                                ),
+
+                              ],
+
+                            ),
+                            child: Row(
+
+                              children: [
+                                Expanded(child: Container(
+                                    padding: EdgeInsets.all(10),child:  Text("عمر العقار"))),
+                                VerticalDivider(width: 1.0),
+                                Expanded(child: Container(
+                                    padding: EdgeInsets.all(10),child: Text("${estateController.estate.space}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                              ],
+                            ),
+                          ):Container(),
+                          estateController.estate.networkType!=null? Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).backgroundColor,
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 0.5), // changes position of shadow
+                                ),
+
+                              ],
+
+                            ),
+                            child: Row(
+
+                              children: [
+                                Expanded(child: Container(
+                                    padding: EdgeInsets.all(10),child:  Text("التغطية"))),
+                                VerticalDivider(width: 1.0),
+                                Expanded(child: Container(
+                                    padding: EdgeInsets.all(10),child: Text("${  estateController.estate.networkType}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                              ],
+                            ),
+                          ) : Container(),
+                        ],
+                      ):Container(),
+                      estateController.estate.ownershipType!=null?    Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child:  Text("المعلن"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.ownershipType}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ):Container(),
+
+                      estateController.estate.nationalAddress!=null?    Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child:  Text("الرمز الوطني المختصر"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child: Row(
+                              children: [
+                                Text("${ estateController.estate.nationalAddress}",  style: robotoBlack.copyWith(fontSize: 14)),
+                                IconButton(onPressed:(){
+                                  FlutterClipboard.copy(estateController.estate.nationalAddress.toString()).then(( value ) {
+                                    showCustomSnackBar('تم النسخ'.tr, isError: false);
+                                  });
+                                }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,size: 15,)),
+                              ],
+                            ))),
+                          ],
+                        ),
+                      ):Container(),
+
+
 
                       const MapDetailsView(
                           fromView: true),
-                      estateController.isLoading && estateController.estate.facilities  == null ?Container(): SizedBox(
-                          height: 160,
-                          child:  GridView.builder(
-                            physics: BouncingScrollPhysics(),
-                            itemCount: estateController.estate.facilities.length,
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3 ,
-                              childAspectRatio: (1/0.50),
-                            ),
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-
-
-                                child: Container(
-                                  margin: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                    boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
-                                  ),
-                                  alignment: Alignment.center,
-                                  child:   Row(
-
-                                    children: [
-                                      estateController.estate.facilities[index].image.isEmpty?Container():CustomImage(
-                                        image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
-                                            '/${ estateController.estate.facilities[index].image}',
-                                        height: 30, width: 30,
-                                      ),
-                                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      Flexible(
-                                        flex: 1,
-                                          child: Text(
-                                        estateController.estate.facilities[index].name,
-                                        style: robotoMedium.copyWith(
-                                          fontSize: Dimensions.fontSizeLarge,
-                                          color: Theme.of(context).textTheme.bodyText1.color,
-                                        ),
-                                        maxLines: 2, overflow: TextOverflow.ellipsis,
-                                      )),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                      ),
                       estateController.isLoading && estateController.estate.otherAdvantages  == null?  Container:SizedBox(
-                          height: 160,
+                          height: estateController.estate.otherAdvantages  == null?0:120,
                           child:  GridView.builder(
                             physics: BouncingScrollPhysics(),
                             itemCount: estateController.estate.otherAdvantages.length,
@@ -449,6 +662,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           )
                       ),
 
+
                       Divider(height: 1,),
                       Text("معلومات اخرى",
                           style: robotoBlack.copyWith(fontSize: 14)),
@@ -477,8 +691,8 @@ class _EstateDetailsState extends State<EstateDetails> {
 
                                 child: Column(children: <Widget>[
                                 Image.asset(Images.estate_type,height: 70,width: 70,),
-                                  Text('نوع العقار'),
-                                  Text('سكني'),
+                                  Text('المرافق',style: robotoBlack.copyWith(fontSize: 13)),
+
                                 ]),
                               ),
                     Container(
@@ -500,8 +714,7 @@ class _EstateDetailsState extends State<EstateDetails> {
 
                       child: Column(children: <Widget>[
                       Image.asset(Images.space,height: 70,width: 70,),
-                        Text('المساحة'),
-                        Text(estateController.estate.space),
+                        Text('عروض مع العقار',style: robotoBlack.copyWith(fontSize: 12)),
                       ]),
                     ),
                       Container(
@@ -602,81 +815,86 @@ class _EstateDetailsState extends State<EstateDetails> {
                       SizedBox(height: 6),
                       Divider(height: 1,),
                       SizedBox(height: 6),
-                      Container(
-                        margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
-                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], spreadRadius: 1, blurRadius: 5)],
-                        ),
-                        child: Row(children: [
-
-                          ClipOval(child: CustomImage(
-                            image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'
-                                '/${(userController.agentInfoModel != null && _isLoggedIn) ? userController.agentInfoModel.image : ''}',
-                            height: 100, width: 100, fit: BoxFit.cover,
-                          )),
-                          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-
-                          Expanded(child:
-                          Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-
-                            Text(userController.agentInfoModel.name, style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-
-                            Row(children: [
-
-                              Container(
-                                height: 25, width: 70, alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                ),
-                                child: Center(
-                                  child: Text(estateController.estate.ownershipType, style: robotoBold.copyWith(
-                                    color: Theme.of(context).cardColor,
-                                    fontSize: Dimensions.fontSizeLarge,
-                                  )),
-                                ),
-                              ),
-                              Expanded(child: SizedBox()),
-
-
-
-
-                            ]),
-                            SizedBox(height: 4),
-                           Row(
-                             children: [
-                               Text(
-                                 "رقم المعلن",
-                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                               ),
-                               SizedBox(width: 20),
-                               // Text(
-                               //   userController.agentInfoModel.agent.advertiserNo==null?"":userController.agentInfoModel.agent.advertiserNo,
-                               //   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                               // ),
-                             ],
-                           ),
-                            Row(
-                              children: [
-                                Text(
-                                  "تاريخ النشر",
-                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                                ),
-                                SizedBox(width: 20),
-                                Text(
-                                estateController.estate.createdAt ?? "",
-                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
-                                ),
-                              ],
-                            ),
-                          ])
+                      GestureDetector(
+                        onTap: () async{
+                          await Get.toNamed(RouteHelper.getProfileAgentRoute(estateController.estate.userId));
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
+                          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], spreadRadius: 1, blurRadius: 5)],
                           ),
+                          child: Row(children: [
 
-                        ]),
+                            ClipOval(child: CustomImage(
+                              image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'
+                                  '/${(userController.agentInfoModel != null && _isLoggedIn) ? userController.agentInfoModel.image : ''}',
+                              height: 100, width: 100, fit: BoxFit.cover,
+                            )),
+                            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+
+                            Expanded(child:
+                            Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+
+                              Text(userController.agentInfoModel.name, style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
+                              Row(children: [
+
+                                Container(
+                                  height: 25, width: 70, alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                  ),
+                                  child: Center(
+                                    child: Text(estateController.estate.ownershipType, style: robotoBold.copyWith(
+                                      color: Theme.of(context).cardColor,
+                                      fontSize: Dimensions.fontSizeLarge,
+                                    )),
+                                  ),
+                                ),
+                                Expanded(child: SizedBox()),
+
+
+
+
+                              ]),
+                              SizedBox(height: 4),
+                             Row(
+                               children: [
+                                 Text(
+                                   "رقم المعلن",
+                                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                 ),
+                                 SizedBox(width: 20),
+                                 // Text(
+                                 //   userController.agentInfoModel.agent.advertiserNo==null?"":userController.agentInfoModel.agent.advertiserNo,
+                                 //   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                 // ),
+                               ],
+                             ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "تاريخ النشر",
+                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                  ),
+                                  SizedBox(width: 20),
+                                  Text(
+                                  estateController.estate.createdAt ?? "",
+                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
+                                  ),
+                                ],
+                              ),
+                            ])
+                            ),
+
+                          ]),
+                        ),
                       ),
                       !userController.isLoading ? CustomButton(
                         onPressed: () async{

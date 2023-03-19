@@ -29,6 +29,8 @@ class UserRepo {
     return await apiClient.postMultipartData(AppConstants.UPDATE_PROFILE_URI, _body, [MultipartBody('image', data)]);
   }
 
-
+  Future<Response>  getEstateList(int offset, String filterBy,int user_id) async {
+    return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}/al*l?offset=$offset&user_id=$user_id');
+  }
 
 }

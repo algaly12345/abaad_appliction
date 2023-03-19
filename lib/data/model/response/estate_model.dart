@@ -53,8 +53,7 @@ class Estate {
   String latitude;
   String longitude;
   int zoneId;
-  int forRent;
-  int forSell;
+  String type_add;
   int territoryId;
   String  ageEstate;
   String shortDescription;
@@ -74,6 +73,8 @@ class Estate {
   String city;
   String category;
   List<OtherAdvantages> otherAdvantages;
+  String interface;
+  String streetSpace;
 
 
 
@@ -99,8 +100,7 @@ class Estate {
   this.latitude,
   this.longitude,
   this.zoneId,
-  this.forRent,
-  this.forSell,
+  this.type_add,
   this.territoryId,
   this.ageEstate,
   this.shortDescription,
@@ -119,7 +119,9 @@ class Estate {
     this.city,
     this.title,
     this.category,
-    this.otherAdvantages
+    this.otherAdvantages,
+    this.interface,
+    this.streetSpace
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -155,8 +157,7 @@ class Estate {
     latitude = json['latitude'];
     longitude = json['longitude'];
     zoneId = json['zone_id'];
-    forRent = json['for_rent'];
-    forSell = json['for_sell'];
+    type_add = json['type_add'];
     territoryId = json['territory_id'];
     ageEstate = json['age_estate'];
     shortDescription = json['short_description'];
@@ -188,6 +189,8 @@ class Estate {
         otherAdvantages.add(new OtherAdvantages.fromJson(v));
       });
     }
+    streetSpace=json["street_space"];
+    interface=json["interface"];
 
 
   }
@@ -222,8 +225,7 @@ class Estate {
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     data['zone_id'] = this.zoneId;
-    data['for_rent'] = this.forRent;
-    data['for_sell'] = this.forSell;
+    data['type_add'] = this.type_add;
     data['territory_id'] = this.territoryId;
     data['age_estate'] = this.ageEstate;
     data['short_description'] = this.shortDescription;
@@ -248,6 +250,9 @@ class Estate {
       data['other_advantages'] =
           this.otherAdvantages.map((v) => v.toJson()).toList();
     }
+
+    data["interface"]=this.interface;
+    data["street_space"]=this.streetSpace;
     return data;
   }
 }

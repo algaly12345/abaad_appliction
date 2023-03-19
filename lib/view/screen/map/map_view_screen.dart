@@ -27,7 +27,7 @@ class MapViewScreen extends StatefulWidget {
   static Future<void> loadData(bool reload) async {
     Get.find<AuthController>().getZoneList();
     if(Get.find<EstateController>().estateModel == null) {
-      Get.find<EstateController>().getEstateList(1, false);
+      Get.find<EstateController>().getEstateList(1, false,0);
     }
     Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
   }

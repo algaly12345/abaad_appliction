@@ -66,6 +66,14 @@ class Images {
   static const String planed = 'assets/image/planed.png';
   static const String three_d = 'assets/image/3d.png';
   static const String estate_images = 'assets/image/estate_images.png';
+  static const String youtube = 'assets/image/youtube.png';
+  static const String website = 'assets/image/website.png';
+
+  static const String twiter = 'assets/image/twiter.png';
+  static const String instgram = 'assets/image/instgram.png';
+  static const String facebook = 'assets/image/facebook.png';
+  static const String snap = 'assets/image/snap.png';
+
 
 
 

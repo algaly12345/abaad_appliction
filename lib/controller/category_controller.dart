@@ -11,6 +11,7 @@ class CategoryController extends GetxController implements GetxService {
   CategoryController({@required this.categoryRepo});
 
   List<CategoryModel> _categoryList;
+
   List<FacilitiesModel> _facilitiesList;
   List<OtherAdvantages> _advanList;
   List<CategoryModel> _subCategoryList;
@@ -19,6 +20,8 @@ class CategoryController extends GetxController implements GetxService {
   List<Estate> _searchEstList = [];
   List<bool> _interestSelectedList;
   List<bool> _advanSelectedList;
+  int _subCategoryIndex = 0;
+  List<Estate> _categoryProductList;
 
   bool _isLoading = false;
   int _pageSize;
@@ -46,6 +49,9 @@ class CategoryController extends GetxController implements GetxService {
   String get searchText => _searchText;
   List<Property> get proRestListp => _propertiesRestList;
   int get offset => _offset;
+  int get subCategoryIndex => _subCategoryIndex;
+  List<Estate> get categoryProductList => _categoryProductList;
+  List<CategoryModel> get subCategoryList => _subCategoryList;
 
 
   Future<void> getCategoryList(bool reload) async {
@@ -58,6 +64,7 @@ class CategoryController extends GetxController implements GetxService {
         // _interestSelectedList = [];
         response.body.forEach((category) {
           _categoryList.add(CategoryModel.fromJson(category));
+          _isLoading=false;
           // _interestSelectedList.add(false);
           print("omeromeromer");
         });
@@ -126,9 +133,9 @@ class CategoryController extends GetxController implements GetxService {
     }
     Response response = await categoryRepo.getCategoryRestaurantList(categoryID, offset, type);
     if (response.statusCode == 200) {
-      if (offset == 1) {
-        _categoryRestList = [];
-      }
+      // if (offset == 1) {
+      //   _categoryRestList = [];
+      // }
       _categoryRestList.addAll(EstateModel.fromJson(response.body).estates);
       _isLoading = false;
     } else {
@@ -189,6 +196,49 @@ class CategoryController extends GetxController implements GetxService {
   }
 
 
+  void getSubCategoryList(String categoryID) async {
+    _subCategoryIndex = 0;
+    _subCategoryList = null;
+    _categoryProductList = null;
+    Response response = await categoryRepo.getCategoryList();
+    if (response.statusCode == 200) {
+      _isLoading = false;
+      _subCategoryList= [];
+      _subCategoryList.add(CategoryModel(id: int.parse(categoryID), name: 'all'.tr));
+      _isLoading=false;
+      response.body.forEach((category) => _subCategoryList.add(CategoryModel.fromJson(category)));
+      getCategoryProductList(categoryID, '1');
+    } else {
+      ApiChecker.checkApi(response);
+    }
+  }
+
+  void setSubCategoryIndex(int index) {
+    _subCategoryIndex = index;
+    getCategoryProductList(_subCategoryList[index].id.toString(), '1');
+    update();
+
+  }
+
+  void getCategoryProductList(String categoryID, String offset) async {
+    if(offset == '1') {
+      _categoryProductList = null;
+      _isSearching = false;
+    }
+    Response response = await categoryRepo.getCategoryProductList(categoryID, offset);
+    if (response.statusCode == 200) {
+      if (offset == '1') {
+        _categoryProductList = [];
+      }
+      _isLoading=false;
+      _categoryProductList.addAll(EstateModel.fromJson(response.body).estates);
+      _pageSize = EstateModel.fromJson(response.body).totalSize;
+      _isLoading = false;
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
 
 
 }

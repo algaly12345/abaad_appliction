@@ -99,5 +99,6 @@
   "wallet_amount": "wallet amount",
   "point_to_wallet": "share estate",
   "order_place": "debit operation",
-  "transaction_history": "transaction_history"
+  "transaction_history": "transaction_history",
+  "profile": "profile"
 }

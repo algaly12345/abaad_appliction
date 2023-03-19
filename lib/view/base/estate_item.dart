@@ -328,8 +328,8 @@ estate.category!="5"?     estate.property  != null ?Center(
                         width: 40,
                         margin: const EdgeInsets.only(top: 10),
                         decoration:  BoxDecoration(
-                            color: estate.forRent==1?Colors.blue:Colors.orange),
-                        child:  Text(estate.forRent==1?"للبيع":"للإجار",
+                            color: estate.type_add=="for_rent"?Colors.blue:Colors.orange),
+                        child:  Text(estate.type_add=="for_sell"?"للبيع":"للإجار",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               color: Colors.white,)

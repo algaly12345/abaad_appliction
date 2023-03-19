@@ -10,8 +10,8 @@ class EstateRepo {
   final ApiClient apiClient;
   EstateRepo({@required this.apiClient});
 
-  Future<Response>  getEstateList(int offset, String filterBy) async {
-    return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}/all?offset=$offset');
+  Future<Response>  getEstateList(int offset, String filterBy,int user_id,categoryId) async {
+    return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}/all?category_id=$categoryId&offset=$offset&user_id=$user_id');
   }
 
 
@@ -22,7 +22,7 @@ class EstateRepo {
 
   Future<Response> getCategorisEstateList( int offset, int categoryID, String type) async {
     return await apiClient.getData(
-      '${AppConstants.CATEGORY_ESTATEURI}/all?category_id=1&offset=$offset&limit=10&type=$type',
+      '${AppConstants.CATEGORY_ESTATEURI}/all?category_id=$categoryID&offset=$offset&limit=10&type=$type',
     );
   }
 
@@ -53,7 +53,11 @@ class EstateRepo {
       'price_negotiation':estate.priceNegotiation,
       "facilities":estate.facilities,
       "city":estate.city,
-      "other_advantages":estate.otherAdvantages
+      "other_advantages":estate.otherAdvantages,
+      "interface":estate.interface,
+      "street_space":estate.streetSpace,
+      "type_add":estate.type_add
+
 
 
     });

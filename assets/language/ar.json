@@ -96,5 +96,6 @@
   "wallet_amount": "مبلغ المحفظة",
   "point_to_wallet": "عملية مشاركة",
   "order_place": "عملية سحب",
-  "transaction_history": "المعاملات"
+  "transaction_history": "المعاملات",
+  "profile": "معلومات الملف الشخصى"
 }

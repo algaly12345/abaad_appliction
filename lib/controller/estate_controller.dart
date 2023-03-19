@@ -25,7 +25,9 @@ class EstateController extends GetxController implements GetxService {
 
   var currentStep = 0.obs;
   EstateModel _estateModel;
+  EstateModel _estateModel1;
   List<Estate> _estateList;
+  Estate _restaurant;
   Estate _estate;
   int _categoryIndex = 0;
   int _categoryPostion = 0;
@@ -47,6 +49,8 @@ class EstateController extends GetxController implements GetxService {
   int _currentIndex = 0;
   String _address;
 
+
+
   List<String> _tagList = [];
   List<String> options = [
     "ممرات مكيفة",
@@ -61,6 +65,7 @@ class EstateController extends GetxController implements GetxService {
   List<bool> _advantagesSelectedList;
 
   EstateModel get estateModel => _estateModel;
+  EstateModel get estateModel1 => _estateModel1;
 
   List<Estate> get estateList => _estateList;
 
@@ -100,13 +105,15 @@ class EstateController extends GetxController implements GetxService {
 
   List<bool> get advantagesSelectedList => _advantagesSelectedList;
 
+  Estate get restaurant => _restaurant;
 
-  Future<void> getEstateList(int offset, bool reload) async {
+
+  Future<void> getEstateList(int offset, bool reload ,int category_id) async {
     if (reload) {
       _estateModel = null;
       update();
     }
-    Response response = await estateRepo.getEstateList(offset, _estateType);
+    Response response = await estateRepo.getEstateList(offset, _estateType,0,0);
     if (response.statusCode == 200) {
       if (offset == 1) {
         _estateModel = EstateModel.fromJson(response.body);
@@ -118,8 +125,7 @@ class EstateController extends GetxController implements GetxService {
         _estateModel.offset = EstateModel
             .fromJson(response.body)
             .offset;
-        _estateModel.estates.addAll(EstateModel
-            .fromJson(response.body)
+        _estateModel.estates.addAll(EstateModel.fromJson(response.body)
             .estates);
       }
       update();
@@ -127,6 +133,7 @@ class EstateController extends GetxController implements GetxService {
       ApiChecker.checkApi(response);
     }
   }
+
 
   Future<void> getCategoriesEstateList(int estateId, int offset, String type,
       bool notify) async {
@@ -141,16 +148,13 @@ class EstateController extends GetxController implements GetxService {
     }
 
 
-    Response response = await estateRepo.getCategorisEstateList(
-        1, offset, type);
+    Response response = await estateRepo.getCategorisEstateList(1, 3, type);
     if (response.statusCode == 200) {
       if (offset == 1) {
         _estateList = [];
       }
       print("awad-------------------------------${response.body}");
-      _estateList.addAll(EstateModel
-          .fromJson(response.body)
-          .estates);
+      _estateModel1.estates.addAll(EstateModel.fromJson(response.body).estates);
       update();
     } else {
       print("awad-------------------------------${response.body}");
@@ -164,21 +168,33 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
-  void setCategoryList() {
-    if (Get
-        .find<CategoryController>()
-        .categoryList != null) {
-      _categoryList = [];
-      _categoryList.add(CategoryModel());
+  // void setCategoryList() {
+  //   if (Get
+  //       .find<CategoryController>()
+  //       .categoryList != null) {
+  //     _categoryList = [];
+  //     _categoryList.add(CategoryModel());
+  //
+  //     Get
+  //         .find<CategoryController>()
+  //         .categoryList
+  //         .forEach((category) {
+  //       // if(_restaurant.categoryIds.contains(category.id)) {
+  //       _categoryList.add(category);
+  //       print("list_cate${category.name}");
+  //       // }
+  //     });
+  //   }
+  // }
 
-      Get
-          .find<CategoryController>()
-          .categoryList
-          .forEach((category) {
-        // if(_restaurant.categoryIds.contains(category.id)) {
-        _categoryList.add(category);
-        print("list_cate${category.name}");
-        // }
+
+  void setCategoryList() {
+    if(Get.find<CategoryController>().categoryList != null) {
+      _categoryList = [];
+      _categoryList.add(CategoryModel(id: 0, name: 'all'.tr));
+      Get.find<CategoryController>().categoryList.forEach((category) {
+          _categoryList.add(category);
+
       });
     }
   }
@@ -191,8 +207,11 @@ class EstateController extends GetxController implements GetxService {
 
 
   void setCategoryIndex(int index) {
+
     _categoryIndex = index;
+    getEstateList(1, false, 1);
     update();
+ //    estateList.clear();
   }
 
   void setCategoryPostion(int index) {
@@ -295,7 +314,7 @@ class EstateController extends GetxController implements GetxService {
         restaurantBody, _multiParts);
 
     if (response.statusCode == 200) {
-      int _restaurantId = response.body['restaurant_id'];
+_isLoading=false;
       Get.offAllNamed(RouteHelper.getSuccess());
     } else {
       ApiChecker.checkApi(response);

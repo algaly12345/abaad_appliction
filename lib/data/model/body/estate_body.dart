@@ -12,8 +12,7 @@ class EstateBody {
   String latitude;
   String longitude;
   String  zoneId;
-  String forRent;
-  String forSell;
+  String type_add;
   String territoryId;
   String ageEstate;
   String shortDescription;
@@ -28,6 +27,8 @@ class EstateBody {
   String advertiserNo;
   String city;
   String otherAdvantages;
+  String interface;
+  String streetSpace;
 
 
   EstateBody(
@@ -45,8 +46,7 @@ class EstateBody {
         this.latitude,
         this.longitude,
         this.zoneId,
-        this.forRent,
-        this.forSell,
+        this.type_add,
         this.territoryId,
         this.ageEstate,
         this.shortDescription,
@@ -60,7 +60,9 @@ class EstateBody {
         this.adNumber,
         this.advertiserNo,
         this.city,
-        this.otherAdvantages
+        this.otherAdvantages,
+        this.interface,
+        this.streetSpace
         });
 
   EstateBody.fromJson(Map<String, dynamic> json) {
@@ -80,8 +82,7 @@ class EstateBody {
     latitude = json['latitude'];
     longitude = json['longitude'];
     zoneId = json['zone_id'];
-    forRent = json['for_rent'];
-    forSell = json['for_sell'];
+    type_add = json['type_add'];
     territoryId = json['territory_id'];
     ageEstate = json['age_estate'];
     shortDescription = json['short_description'];
@@ -96,6 +97,8 @@ class EstateBody {
     adNumber = json['ad_number'];
     city=json["city"];
     otherAdvantages=json["other_advantages"];
+    streetSpace=json["street_space"];
+    interface=json["interface"];
 
 
   }
@@ -118,8 +121,7 @@ class EstateBody {
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     data['zone_id'] = this.zoneId;
-    data['for_rent'] = this.forRent;
-    data['for_sell'] = this.forSell;
+    data['type_add'] = this.type_add;
     data['territory_id'] = this.territoryId;
     data['age_estate'] = this.ageEstate;
     data['short_description'] = this.shortDescription;
@@ -133,6 +135,8 @@ class EstateBody {
     data['ad_number'] = this.adNumber;
     data['city']=this.city;
     data["other_advantages"]=this.otherAdvantages;
+    data["interface"]=this.interface;
+    data["street_space"]=this.streetSpace;
     return data;
   }
 }

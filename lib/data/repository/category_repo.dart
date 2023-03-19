@@ -11,6 +11,11 @@ class CategoryRepo {
     return await apiClient.getData(AppConstants.CATEGORIES);
   }
 
+  Future<Response> getCategoryProductList(String categoryID, String offset) async {
+    return await apiClient.getData(
+      '${AppConstants.CATEGORY_ESTATEURI}/all?category_id=$categoryID&offset=$offset&limit=10',
+    );
+  }
 
   Future<Response> getCategoryRestaurantList(String categoryID, int offset, String type) async {
     return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}limit=10&offset=$offset&type=$type');

@@ -50,9 +50,9 @@ class MapScreen extends StatefulWidget {
 
     Get.find<AuthController>().getZoneList();
     if(Get.find<EstateController>().estateModel == null) {
-      Get.find<EstateController>().getEstateList(1, false);
+      Get.find<EstateController>().getEstateList(1, false,0);
     }
-    Get.find<EstateController>().getEstateList(1, false);
+    Get.find<EstateController>().getEstateList(1, false,0);
  //   Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
   }
 
@@ -121,8 +121,7 @@ class _MapViewScreenState extends State<MapScreen> {
       appBar: WebMenuBar(),
         body: GetBuilder<EstateController>(builder: (restController) {
      return   GetBuilder<LocationController>(builder: (locationController) {
-        return restController.estateModel != null
-            ? CustomGoogleMapMarkerBuilder(
+        return restController.estateModel != null ? CustomGoogleMapMarkerBuilder(
           customMarkers: _customMarkers,
           builder: (context, markers) {
             if (markers == null) {
@@ -138,8 +137,7 @@ class _MapViewScreenState extends State<MapScreen> {
                   compassEnabled: false,
                   zoomControlsEnabled: true,
                   onTap: (position) =>
-                      Get.find<SplashController>()
-                          .setNearestEstateIndex(-1),
+                      Get.find<SplashController>().setNearestEstateIndex(-1),
                   minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
                   onMapCreated: (GoogleMapController controller) {
 
@@ -791,7 +789,7 @@ class _MapViewScreenState extends State<MapScreen> {
                       '${estate[index].price}',
                       style:robotoBlack.copyWith(fontSize: 7)
                   ),
-            //      Image.asset(estate[index].serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
+                 Image.asset(estate[index].serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
                 ],
 
               ),

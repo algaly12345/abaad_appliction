@@ -77,8 +77,8 @@ class _EstateImageViewState extends State<EstateImageView> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                      child: GetBuilder<SplashController>(builder: (splashController) {
-                        return CustomImage(
+                      child:  GetBuilder<SplashController>(builder: (splashController) {
+                        return  CustomImage(
                           image: '$_baseUrl/${estateController.estate.images[index]}',
                           fit: BoxFit.cover,
                         );

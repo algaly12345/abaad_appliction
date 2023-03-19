@@ -13,6 +13,7 @@ import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/view/base/custom_dialog_box.dart';
 import 'package:abaad/view/base/not_found.dart';
 import 'package:abaad/view/screen/access_location_screen.dart';
+import 'package:abaad/view/screen/agent/agent_profile_screen.dart';
 import 'package:abaad/view/screen/auth/agent_registration_screen.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
 import 'package:abaad/view/screen/auth/sign_up_screen.dart';
@@ -66,6 +67,7 @@ class RouteHelper {
   static const String conversation = '/conversation';
   static const String wallet = '/wallet';
   static const String feature = '/feature';
+  static const String marketer = '/profile-agent';
 
 
 
@@ -117,7 +119,7 @@ class RouteHelper {
     }
     return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index&estate_id=$estate_id';
   }
-
+  static String getProfileAgentRoute(int id) => '$marketer?id=$id';
   static List<GetPage> routes = [
     // GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
     GetPage(name: splash, page: () {
@@ -190,6 +192,10 @@ class RouteHelper {
     }),
     GetPage(name: businessPlan, page: () => BusinessPlanScreen(estateId: int.parse(Get.parameters['id']))),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
+
+    GetPage(name: marketer, page: () {
+      return Get.arguments ?? AgentProfileScreen(userInfo: Userinfo(id: int.parse(Get.parameters['id'])) ,);
+    }),
   ];
 
 

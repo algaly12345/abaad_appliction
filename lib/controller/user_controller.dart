@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
 import 'package:abaad/data/model/response/conversation_model.dart';
+import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/response_model.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/data/repository/user_repo.dart';
@@ -23,11 +24,15 @@ class UserController extends GetxController implements GetxService {
   UserInfoModel _agentInfoModel;
   XFile _pickedFile;
   bool _isLoading = false;
+  EstateModel _estateModel;
+  String _estateType = 'all';
 
   UserInfoModel get userInfoModel => _userInfoModel;
   UserInfoModel get agentInfoModel => _agentInfoModel;
   XFile get pickedFile => _pickedFile;
   bool get isLoading => _isLoading;
+  EstateModel get estateModel => _estateModel;
+  String get estateType => _estateType;
 
   var latitude = '0'.obs;
   var longitude = '0'.obs;
@@ -208,6 +213,34 @@ class UserController extends GetxController implements GetxService {
     Placemark place = placemark[0];
     address.value = ' ${place.subLocality}, ${place.locality},${place.country}';
     print("adress-------------------------------------${place.locality},${place.country}");
+  }
+
+
+  Future<void> getEstateByUser(int offset, bool reload,int user_id) async {
+    if (reload) {
+      _estateModel = null;
+      update();
+    }
+    Response response = await userRepo.getEstateList(offset, _estateType,user_id);
+    if (response.statusCode == 200) {
+      if (offset == 1) {
+        _estateModel = EstateModel.fromJson(response.body);
+        print("estate response ...............${response.body}");
+      } else {
+        _estateModel.totalSize = EstateModel
+            .fromJson(response.body)
+            .totalSize;
+        _estateModel.offset = EstateModel
+            .fromJson(response.body)
+            .offset;
+        _estateModel.estates.addAll(EstateModel
+            .fromJson(response.body)
+            .estates);
+      }
+      update();
+    } else {
+      ApiChecker.checkApi(response);
+    }
   }
 
 }
