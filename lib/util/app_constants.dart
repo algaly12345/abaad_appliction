@@ -67,7 +67,7 @@ class AppConstants {
   static const String ADVANTAGES="/api/v1/estate/get-advantages";
   static const String REGIONS = '/api/v1/zones/get-regions';
   static const String DISTRICT_BY_CITY = '/api/v1/zones/get-districts-by-cities/';
-  static const String CITIES_BY_REGIONS = '/zones/get-cities-by-regions/';
+  static const String CITIES_BY_REGIONS = '/api/v1/zones/get-cities-by-regions/';
 
 
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];

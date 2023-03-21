@@ -78,7 +78,7 @@ class _ScreenSuccessState extends State<ScreenSuccess> {
           margin: EdgeInsets.symmetric(horizontal: 40),
           child: CustomButton(
             onPressed: () {
-              Get.offAllNamed(RouteHelper.getProfileRoute());
+              Get.offAllNamed(RouteHelper.getInitialRoute());
             },
             buttonText: 'ok'.tr,
           ),

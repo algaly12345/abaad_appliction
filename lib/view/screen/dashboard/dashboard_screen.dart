@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/banner_controller.dart';
+import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 
@@ -43,18 +45,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
   List<Widget> _screens;
+  final ScrollController scrollController = ScrollController();
+
+  final ScrollController _scrollController = ScrollController();
 
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   void initState() {
     super.initState();
 
+    if(Get.find<CategoryController>().categoryList == null) {
+      Get.find<CategoryController>().getCategoryList(true);
+    }
+    Get.find<CategoryController>().getSubCategoryList("0");
+    int offset = 1;
+    Get.find<BannerController>().getBannerList(true,1);
+    scrollController?.addListener(() {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent
+          && Get.find<CategoryController>().categoryProductList != null
+          && !Get.find<CategoryController>().isLoading) {
+        int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
+        if (offset < pageSize) {
+          offset++;
+          print('end of the page');
+          Get.find<CategoryController>().showBottomLoader();
+          Get.find<CategoryController>().getCategoryProductList("0", 0,'0',"0","0","0", offset.toString());
+        }
+      }
+    });
     _pageIndex = widget.pageIndex;
 
     _pageController = PageController(initialPage: widget.pageIndex);
 
+
     _screens = [
- //    LocationPage(),
       MapViewScreen(),
       HomeScreen(),
       ConversationScreen(),
@@ -69,9 +93,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Future.delayed(Duration(seconds: 1), () {
       setState(() {});
     });
+
     /*if(GetPlatform.isMobile) {
       NetworkInfo.checkConnectivity(_scaffoldKey.currentContext);
     }*/
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController?.dispose();
   }
   @override
   Widget build(BuildContext context) {

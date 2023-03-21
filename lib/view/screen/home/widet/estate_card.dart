@@ -49,7 +49,7 @@ class PropertyCard extends StatelessWidget {
                   clipBehavior: Clip.none,
                   children: [
                     CustomImage(
-                      image:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${estate.images[0]}",
+                      image:estate.images.length ==0?1:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${estate.images[0]}",
                       fit:  BoxFit.cover,
                       width: MediaQuery.of(context).size.width,
 

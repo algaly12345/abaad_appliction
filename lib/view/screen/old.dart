@@ -1,102 +1,112 @@
-
 import 'package:flutter/material.dart';
-
-class MyHeader extends StatefulWidget {
-  final String image;
-  final String textTop;
-  final String textBottom;
-  final double offset;
-  const MyHeader(
-      {Key key, this.image, this.textTop, this.textBottom, this.offset})
-      : super(key: key);
-
+class ListViewSelectRemove extends StatefulWidget {
   @override
-  _MyHeaderState createState() => _MyHeaderState();
+  _ListViewSelectRemoveState createState() => _ListViewSelectRemoveState();
 }
 
-class _MyHeaderState extends State<MyHeader> {
+class _ListViewSelectRemoveState extends State<ListViewSelectRemove> {
+  final List<String> _interfaceist = [   " الواجهة الشمالية",
+    " الواجهة الشرقية",
+    "الواجهة الغربية",
+    "الواجهة الجنوبية",];
+  final List<String> _selectedInterfaceistItems = [];
+
   @override
   Widget build(BuildContext context) {
-    return ClipPath(
-      clipper: MyClipper(),
-      child: Container(
-        padding: EdgeInsets.only(left: 40, top: 50, right: 20),
-        height: 350,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Color(0xFF3383CD),
-              Color(0xFF11249F),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Select and Remove Items'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              setState(() {
+                for (final item in _selectedInterfaceistItems) {
+                  print("-----------------${item}");
+                }
+              });
+            },
           ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/virus.png"),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      // return InfoScreen();
-                    },
-                  ),
-                );
-              },
-              child: Image.asset("assets/icons/menu.svg"),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: (widget.offset < 0) ? 0 : widget.offset,
-                    child: Image.asset(
-                      widget.image,
-                      width: 230,
-                      fit: BoxFit.fitWidth,
-                      alignment: Alignment.topCenter,
-                    ),
-                  ),
-                  Positioned(
-                    top: 20 - widget.offset / 2,
-                    left: 150,
-                    child: Text(
-                      "fdgfg",
-                    ),
-                  ),
-                  Container(), // I dont know why it can't work without container
-                ],
+        ],
+      ),
+      body: Container(
+        height: 50,
+
+
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _interfaceist.length,
+          itemBuilder: (context, index) {
+            final item = _interfaceist[index];
+
+            return  Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: TextButton(
+                  style:  ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+
+                   RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  
+                  side: BorderSide(color:Theme.of(context).primaryColor)
+              ),),),
+                  onPressed: (){
+    setState(() {
+            if (_selectedInterfaceistItems.contains(item)) {
+              _selectedInterfaceistItems.remove(item);
+            } else {
+              _selectedInterfaceistItems.add(item);
+            }
+          });
+                  },
+                  child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor : null,fontSize: 17.0),)
               ),
-            ),
-          ],
+            );
+
+            // return Container(
+            //   width: 100,
+            //   height: 60,
+            //
+            //   padding: EdgeInsets.only(right: 10,left: 10),
+            //   decoration: BoxDecoration(
+            //     color:Theme.of(context).cardColor,
+            //     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+            //
+            //     boxShadow: [
+            //       BoxShadow(
+            //         color: Colors.black.withOpacity(.02),
+            //         blurRadius: 10.0,
+            //         spreadRadius: 10.0,
+            //       )
+            //     ],
+            //   ),
+            //   child: GestureDetector(
+            //     onTap: () {
+            //       setState(() {
+            //         if (_selectedItems.contains(item)) {
+            //           _selectedItems.remove(item);
+            //         } else {
+            //           _selectedItems.add(item);
+            //         }
+            //       });
+            //     },
+            //     child: Container(
+            // decoration: BoxDecoration(
+            //   color:  _selectedItems.contains(item) ? Theme.of(context).primaryColor : null,
+            // borderRadius: const BorderRadius.all(Radius.circular(5.0)),),
+            //
+            //       child: Center(
+            //         child: ListTile(
+            //           title: Center(child: Text(item,style: TextStyle(color: _selectedItems.contains(item) ? Theme.of(context).cardColor : null),)),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // );
+          },
         ),
       ),
     );
-  }
-}
-
-class MyClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height - 80);
-    path.quadraticBezierTo(
-        size.width / 2, size.height, size.width, size.height - 80);
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
   }
 }

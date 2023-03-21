@@ -35,7 +35,6 @@ import 'package:abaad/view/screen/estate/business_plan/widgets/success_widget.da
 import 'package:abaad/view/screen/estate/widgets/confiram_location_view.dart';
 import 'package:abaad/view/screen/estate/widgets/estate_bg_widget.dart';
 import 'package:abaad/view/screen/estate/widgets/menu_option.dart';
-import 'package:abaad/view/screen/estate/widgets/redio.dart';
 import 'package:abaad/view/screen/profile/widget/profile_bg_widget_update.dart';
 import 'package:abaad/view/screen/profile/widget/profile_card.dart';
 import 'package:card_swiper/card_swiper.dart';
@@ -95,6 +94,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _userTypeController = TextEditingController();
   final TextEditingController _authorizedController = TextEditingController();
+  final TextEditingController _widthStreetController = TextEditingController();
+
 
 
 
@@ -105,7 +106,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   final FocusNode _vatFocus = FocusNode();
 
   final FocusNode _minTimeFocus = FocusNode();
-  List<RadioModel> netWorkType = <RadioModel>[];
+
 
   var isSelected2 = [false, true];
   bool negotiation;
@@ -146,24 +147,18 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     "7",
     "8",
   ];
-
-  final List<String> _interfaceist = [
-    "شمال",
-    "شرق",
-    "غرب",
-    "جنوب",
-
-  ];
+  final List<String> _interfaceist = [   " الواجهة الشمالية",
+    " الواجهة الشرقية",
+    "الواجهة الغربية",
+    "الواجهة الجنوبية",];
+  final List<String> _selectedInterfaceistItems = [];
 
 
   String valueChoose;
   String _ageValue;
-  String _widthStreet;
   int _selectedRoomIndex = 0;
   int _selectedBathroomsIndex = 0;
   int _selectedLounge=0;
-
-  int _selectedInterface=0;
   List<String> _interests = [];
   String interests;
   bool add=true;
@@ -180,15 +175,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     setState(() => _selectedLounge = index);
   }
 
-  _onSelectedInterface(int index) {
-    setState(() => _selectedInterface = index);
-  }
-
-
   int fieldCount = 0;
   int nextIndex = 0;
-
-
 
   String district;
   String city;
@@ -217,13 +205,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
       Get.find<CategoryController>().getCategoryList(true);
 
       Get.find<CategoryController>().getPropertiesList(1);
-      netWorkType.add( RadioModel(false, Images.stc ,'stc 4G'));
-      netWorkType.add( RadioModel(false, Images.mobily, 'mobiliy 4G'));
-      netWorkType.add( RadioModel(false, Images.zain, 'zain 4G'));
 
-      netWorkType.add( RadioModel(false, Images.stc ,'stc 5G'));
-      netWorkType.add( RadioModel(false, Images.mobily, 'mobiliy 5G'));
-      netWorkType.add( RadioModel(false, Images.zain, 'zain 5G'));
       _isLoggedIn = Get.find<AuthController>().isLoggedIn();
       if(_isLoggedIn && Get.find<UserController>().userInfoModel == null) {
         Get.find<UserController>().getUserInfo();
@@ -784,131 +766,58 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                     ),
                                   ),
                                   Container(
-
-                                    height: 45,
+                                    height: 50,
                                     child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        // ignore: missing_return
-                                        itemCount:  _interfaceist.length, itemBuilder: (context, index) {
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: _interfaceist.length,
+                                      itemBuilder: (context, index) {
+                                        final item = _interfaceist[index];
 
+                                        return  Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: TextButton(
+                                              style:  ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
 
-                                      return   InkWell(
-                                        onTap: (){
-                                          _onSelectedInterface(index);
+                                                  RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(4),
 
-                                        },
-                                        child: Container(
-                                          width: 100,
-                                          padding: EdgeInsets.only(right: 10,left: 10),
-                                          decoration: BoxDecoration(
-                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(.02),
-                                                blurRadius: 10.0,
-                                                spreadRadius: 10.0,
-                                              )
-                                            ],
+                                                      side: BorderSide(color:Theme.of(context).primaryColor)
+                                                  ),),),
+                                              onPressed: (){
+                                                setState(() {
+                                                  if (_selectedInterfaceistItems.contains(item)) {
+                                                    _selectedInterfaceistItems.remove(item);
+                                                  } else {
+                                                    _selectedInterfaceistItems.add(item);
+                                                  }
+                                                });
+                                              },
+                                              child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor :Theme.of(context).primaryColor,fontSize: 15.0),)
                                           ),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                                        );
 
-                                              color: _selectedInterface != null && _selectedInterface == index
-                                                  ? Theme
-                                                  .of(context)
-                                                  .primaryColor
-                                                  : Colors.grey,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black.withOpacity(.02),
-                                                  blurRadius: 10.0,
-                                                  spreadRadius: 10.0,
-                                                )
-                                              ],
-                                            ),
-
-                                            child: Container(
-
-                                              child: Center(child: Text("${_interfaceist[index]}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-
-                                    }),
+                                      },
+                                    ),
                                   ),
                                   SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                   Text(
-                                    "عرض الشارع",
+                                    " عرض الشارع".tr,
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                    decoration: BoxDecoration(
-                                      color: Theme
-                                          .of(context)
-                                          .cardColor,
-                                      borderRadius: BorderRadius.circular(
-                                          Dimensions.RADIUS_SMALL),
-                                      boxShadow: [
-                                        BoxShadow(color: Colors.grey[Get.isDarkMode
-                                            ? 800
-                                            : 200],
-                                            spreadRadius: 2,
-                                            blurRadius: 5,
-                                            offset: Offset(0, 5))
-                                      ],
-                                    ),
-                                    child: DropdownButton<String>(
-                                      focusColor: Colors.white,
-                                      value: _widthStreet,
-                                      isExpanded: true,
-                                      underline: SizedBox(),
-                                      //elevation: 5,
-                                      style: robotoRegular.copyWith(
-                                          fontSize: Dimensions.fontSizeLarge,
-                                          color: Colors.black),
-                                      iconEnabledColor: Colors.black,
-                                      items: <String>[
-
-                                        '1 م',
-                                        '2 م',
-                                        '3 م',
-                                        '4 م',
-                                        '5 م',
-                                        '6 م',
-                                        '7 م',
-                                        '8 م',
-                                        '9 م',
-                                        '10 م',
-                                        'اكثر من  10 م',
-                                      ].map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value, style: const TextStyle(
-                                              color: Colors.black),),
-                                        );
-                                      }).toList(),
-                                      hint: Text(
-                                        "اختر عرض  الشارع".tr,
-                                        style: robotoRegular.copyWith(
-                                            fontSize: Dimensions.fontSizeLarge,
-                                            color: Colors.black),
-                                      ),
-                                      onChanged: (String value) {
-                                        setState(() {
-                                          _widthStreet = value;
-                                        });
-                                      },
-                                    ),
+                                  MyTextField(
+                                    hintText: 'ادخل عرض الشارع بلمتر'.tr,
+                                    controller: _widthStreetController,
+                                    focusNode: _longDescFocus,
+                                    nextFocus: _vatFocus,
+                                    maxLines: 1,
+                                    inputType: TextInputType.number,
+                                    capitalization: TextCapitalization.sentences,
+                                    showBorder: true,
                                   ),
                                   const SizedBox(
                                       height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -1067,131 +976,58 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   ),
                                 ),
                                 Container(
-
-                                  height: 45,
+                                  height: 50,
                                   child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      // ignore: missing_return
-                                      itemCount:  _interfaceist.length, itemBuilder: (context, index) {
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: _interfaceist.length,
+                                    itemBuilder: (context, index) {
+                                      final item = _interfaceist[index];
 
+                                      return  Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: TextButton(
+                                            style:  ButtonStyle(
+                                              backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
+                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
 
-                                    return   InkWell(
-                                      onTap: (){
-                                        _onSelectedInterface(index);
+                                                RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(4),
 
-                                      },
-                                      child: Container(
-                                        width: 100,
-                                        padding: EdgeInsets.only(right: 10,left: 10),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(.02),
-                                              blurRadius: 10.0,
-                                              spreadRadius: 10.0,
-                                            )
-                                          ],
+                                                    side: BorderSide(color:Theme.of(context).primaryColor)
+                                                ),),),
+                                            onPressed: (){
+                                              setState(() {
+                                                if (_selectedInterfaceistItems.contains(item)) {
+                                                  _selectedInterfaceistItems.remove(item);
+                                                } else {
+                                                  _selectedInterfaceistItems.add(item);
+                                                }
+                                              });
+                                            },
+                                            child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor :Theme.of(context).primaryColor,fontSize: 15.0),)
                                         ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                                      );
 
-                                            color: _selectedInterface != null && _selectedInterface == index
-                                                ? Theme
-                                                .of(context)
-                                                .primaryColor
-                                                : Colors.grey,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(.02),
-                                                blurRadius: 10.0,
-                                                spreadRadius: 10.0,
-                                              )
-                                            ],
-                                          ),
-
-                                          child: Container(
-
-                                            child: Center(child: Text("${_interfaceist[index]}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-
-                                  }),
+                                    },
+                                  ),
                                 ),
                                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                 Text(
-                                  "عرض الشارع",
+                                  " عرض الشارع".tr,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(
-                                    height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                  decoration: BoxDecoration(
-                                    color: Theme
-                                        .of(context)
-                                        .cardColor,
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.RADIUS_SMALL),
-                                    boxShadow: [
-                                      BoxShadow(color: Colors.grey[Get.isDarkMode
-                                          ? 800
-                                          : 200],
-                                          spreadRadius: 2,
-                                          blurRadius: 5,
-                                          offset: Offset(0, 5))
-                                    ],
-                                  ),
-                                  child: DropdownButton<String>(
-                                    focusColor: Colors.white,
-                                    value: _widthStreet,
-                                    isExpanded: true,
-                                    underline: SizedBox(),
-                                    //elevation: 5,
-                                    style: robotoRegular.copyWith(
-                                        fontSize: Dimensions.fontSizeLarge,
-                                        color: Colors.black),
-                                    iconEnabledColor: Colors.black,
-                                    items: <String>[
-
-                                      '1 م',
-                                      '2 م',
-                                      '3 م',
-                                      '4 م',
-                                      '5 م',
-                                      '6 م',
-                                      '7 م',
-                                      '8 م',
-                                      '9 م',
-                                      '10 م',
-                                      'اكثر من  10 م',
-                                    ].map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value, style: const TextStyle(
-                                            color: Colors.black),),
-                                      );
-                                    }).toList(),
-                                    hint: Text(
-                                      "select_age_of_the_property".tr,
-                                      style: robotoRegular.copyWith(
-                                          fontSize: Dimensions.fontSizeLarge,
-                                          color: Colors.black),
-                                    ),
-                                    onChanged: (String value) {
-                                      setState(() {
-                                        _widthStreet = value;
-                                      });
-                                    },
-                                  ),
+                                MyTextField(
+                                  hintText: 'ادخل عرض الشارع بلمتر'.tr,
+                                  controller: _widthStreetController,
+                                  focusNode: _longDescFocus,
+                                  nextFocus: _vatFocus,
+                                  maxLines: 1    ,
+                                  inputType: TextInputType.number,
+                                  capitalization: TextCapitalization.sentences,
+                                  showBorder: true,
                                 ),
                                 const SizedBox(
                                     height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -1265,69 +1101,72 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                     },
                                   ),
                                 ),
-                                // categoryController.facilitiesList.length!=null?    Column(
-                                //   children: [
-                                //     ExpansionTile(
-                                //       title: Text("إضافة مرافق"), //add icon//children padding
-                                //       children: [
-                                //      Center(
-                                //        child: Container(
-                                //          height: 240,
-                                //          child:GridView.builder(
-                                //            physics: BouncingScrollPhysics(),
-                                //            itemCount: categoryController.facilitiesList.length,
-                                //            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                //              crossAxisCount: 3 ,
-                                //              childAspectRatio: (1/0.50),
-                                //            ),
-                                //            itemBuilder: (context, index) {
-                                //              return InkWell(
-                                //                onTap: () => categoryController.addInterestSelection(index),
-                                //                child: Container(
-                                //                  margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                //                  padding: EdgeInsets.symmetric(
-                                //                    vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                //                  ),
-                                //                  decoration: BoxDecoration(
-                                //                    color: categoryController.interestSelectedList[index] ? Theme.of(context).primaryColor
-                                //                        : Theme.of(context).cardColor,
-                                //                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                //                    boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
-                                //                  ),
-                                //                  alignment: Alignment.center,
-                                //                  child:   Row(
-                                //
-                                //                    children: [
-                                //                      CustomImage(
-                                //                        image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
-                                //                            '/${categoryController.facilitiesList[index].image}',
-                                //                        height: 30, width: 30,
-                                //                      ),
-                                //                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                //                      Flexible(child: Text(
-                                //                        categoryController.facilitiesList[index].name,
-                                //                        style: robotoMedium.copyWith(
-                                //                          fontSize: Dimensions.fontSizeLarge,
-                                //                          color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
-                                //                              : Theme.of(context).textTheme.bodyText1.color,
-                                //                        ),
-                                //                        maxLines: 2, overflow: TextOverflow.ellipsis,
-                                //                      )),
-                                //                    ],
-                                //                  ),
-                                //                ),
-                                //              );
-                                //            },
-                                //          ),
-                                //        ),
-                                //      ),
-                                //
-                                //
-                                //       ],
-                                //     ),
-                                //
-                                //   ],
-                                // ):Container(),
+                                Container(
+
+                                  child:     categoryController.facilitiesList.length!=null?    Column(
+                                    children: [
+                                      ExpansionTile(
+                                        title: const Text("إضافة تغطية"), //add icon//children padding
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              height: 240,
+                                              child:GridView.builder(
+                                                physics: BouncingScrollPhysics(),
+                                                itemCount: categoryController.facilitiesList.length,
+                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 3 ,
+                                                  childAspectRatio: (1/0.50),
+                                                ),
+                                                itemBuilder: (context, index) {
+                                                  return InkWell(
+                                                    onTap: () => categoryController.addInterestSelection(index),
+                                                    child: Container(
+                                                      margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                      padding: EdgeInsets.symmetric(
+                                                        vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: categoryController.interestSelectedList[index] ? Theme.of(context).primaryColor
+                                                            : Theme.of(context).cardColor,
+                                                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                                        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                                      ),
+                                                      alignment: Alignment.center,
+                                                      child:   Row(
+
+                                                        children: [
+                                                          CustomImage(
+                                                            image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                                                                '/${categoryController.facilitiesList[index].image}',
+                                                            height: 30, width: 30,
+                                                          ),
+                                                          SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                          Flexible(child: Text(
+                                                            categoryController.facilitiesList[index].name,
+                                                            style: robotoMedium.copyWith(
+                                                              fontSize: Dimensions.fontSizeLarge,
+                                                              color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
+                                                                  : Theme.of(context).textTheme.bodyText1.color,
+                                                            ),
+                                                            maxLines: 2, overflow: TextOverflow.ellipsis,
+                                                          )),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+
+
+                                        ],
+                                      ),
+
+                                    ],
+                                  ):Container(),
+                                ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -1392,38 +1231,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                                   ],
                                 ),
-                                Text(
-                                  "network_type".tr,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
-                                  height: 50,
 
-                                  child: ListView.builder(
-                                    itemCount: netWorkType.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return  Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: InkWell(
-                                          //highlightColor: Colors.red,
-                                          splashColor: Colors.blueAccent,
-                                          onTap: () {
-                                            setState(() {
-                                              netWorkType.forEach((element) => element.isSelected = false);
-                                              netWorkType[index].isSelected = true;
-                                              network_type=netWorkType[index].text;
-                                            });
-                                          },
-                                          child: new RadioItem(netWorkType[index]),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
+
 
                                 Text(
                                   'age_of_the_property'.tr,
@@ -2029,9 +1838,16 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                             }
                           }
 
+                          List<Map<String, dynamic >> _interface= [];
+                          setState(() {
+                            for (final item in _selectedInterfaceistItems) {
+                              _interface.add({'"' + "name" + '"':'"' + item + '"'});
+                              showCustomSnackBar("-----------------interface${item}");
+                            }
+                          });
 
 
-showCustomSnackBar("${_advan}");
+
 
                           !restController.isLoading ?     restController.registerRestaurant(
                               EstateBody(
@@ -2048,7 +1864,7 @@ showCustomSnackBar("${_advan}");
                                   latitude: authController.estateLocation.latitude.toString(),
                                   longitude: authController.estateLocation.longitude.toString(),
                                   near: "near",
-                                  networkType: network_type ?? "no",
+                                  networkType:"${_interests}",
                                   ownershipType: _djectivePresenter==1?"مالك":'مفوض',
                                   property: property,
                                   serviceOffers: "serviceOffers",
@@ -2059,8 +1875,8 @@ showCustomSnackBar("${_advan}");
                                   user_id: userController.userInfoModel.id.toString(),
                                   city: city,
                                   otherAdvantages: "${_advan}",
-                                  interface: _selectedInterface==0?"الشمالية":_selectedInterface==1?"الشرقية":_selectedInterface==2?"الغربية":_selectedInterface==3?"الجنوبية":"",
-                                  streetSpace: "${_widthStreet}",
+                                  interface: "${_interface}",
+                                  streetSpace: "${_widthStreetController.text.toString()}",
 
                                   price: _priceController.text,
                                 priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" )): Center(child: CircularProgressIndicator());
@@ -2163,13 +1979,5 @@ showCustomSnackBar("${_advan}");
     );
   }
 
-}
-
-class RadioModel {
-  bool isSelected;
-  final String imge;
-  final String text;
-
-  RadioModel(this.isSelected, this.imge, this.text);
 }
 

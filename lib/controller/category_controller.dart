@@ -1,4 +1,5 @@
 import 'package:abaad/data/api/api_checker.dart';
+import 'package:abaad/data/model/body/filter_body.dart';
 import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/facilities_model.dart';
@@ -21,7 +22,10 @@ class CategoryController extends GetxController implements GetxService {
   List<bool> _interestSelectedList;
   List<bool> _advanSelectedList;
   int _subCategoryIndex = 0;
+  int _filterIndex = 0;
   List<Estate> _categoryProductList;
+
+  List<FilterBody> _filterList;
 
   bool _isLoading = false;
   int _pageSize;
@@ -31,6 +35,7 @@ class CategoryController extends GetxController implements GetxService {
   bool _isEstates = false;
   String _searchText = '';
   int _offset = 1;
+  String _nameCityIndex = "";
 
 
   List<CategoryModel> get categoryList => _categoryList;
@@ -52,6 +57,11 @@ class CategoryController extends GetxController implements GetxService {
   int get subCategoryIndex => _subCategoryIndex;
   List<Estate> get categoryProductList => _categoryProductList;
   List<CategoryModel> get subCategoryList => _subCategoryList;
+  int get filterIndex => _filterIndex;
+
+  List<FilterBody> get filterList => _filterList;
+
+  String get nameCityIndex => _nameCityIndex;
 
 
   Future<void> getCategoryList(bool reload) async {
@@ -204,10 +214,10 @@ class CategoryController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       _isLoading = false;
       _subCategoryList= [];
-      _subCategoryList.add(CategoryModel(id: int.parse(categoryID), name: 'all'.tr));
+      _subCategoryList.add(CategoryModel(id: int.parse(categoryID), name: 'الكل'.tr));
       _isLoading=false;
       response.body.forEach((category) => _subCategoryList.add(CategoryModel.fromJson(category)));
-      getCategoryProductList(categoryID, '1');
+      getCategoryProductList(categoryID, 0 ,'0',"0","0","0","1");
     } else {
       ApiChecker.checkApi(response);
     }
@@ -215,17 +225,25 @@ class CategoryController extends GetxController implements GetxService {
 
   void setSubCategoryIndex(int index) {
     _subCategoryIndex = index;
-    getCategoryProductList(_subCategoryList[index].id.toString(), '1');
+    getCategoryProductList(_subCategoryList[index].id.toString(),  0,'0',"0","0","0","1");
     update();
 
   }
 
-  void getCategoryProductList(String categoryID, String offset) async {
+  void setFilterIndex(int category_id,String cityName) {
+
+    getCategoryProductList(category_id.toString(),0,cityName,"0","0","0","1");
+
+    update();
+
+  }
+
+  void getCategoryProductList(String categoryID,int user_id,String city,String districts, String space,String type_add,String offset) async {
     if(offset == '1') {
       _categoryProductList = null;
       _isSearching = false;
     }
-    Response response = await categoryRepo.getCategoryProductList(categoryID, offset);
+    Response response = await categoryRepo.getCategoryProductList(categoryID,user_id,city,districts,space,type_add, offset);
     if (response.statusCode == 200) {
       if (offset == '1') {
         _categoryProductList = [];
@@ -241,4 +259,8 @@ class CategoryController extends GetxController implements GetxService {
   }
 
 
+
+  String getNameCityIndex() {
+    return _nameCityIndex;
+  }
 }

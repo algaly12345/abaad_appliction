@@ -43,7 +43,7 @@ class Estate {
   int view;
   String status;
   String districts;
-  String networkType;
+  List<NetworkType>  networkType;
   int height;
   int width;
   List<ServiceOffers> serviceOffers;
@@ -64,7 +64,6 @@ class Estate {
 
   String createdAt;
   String updatedAt;
-  List<Facilities> facilities;
   int adNumber;
   int advertiserNo;
   String nationalAddress;
@@ -73,7 +72,7 @@ class Estate {
   String city;
   String category;
   List<OtherAdvantages> otherAdvantages;
-  String interface;
+  List<Interface> interface;
   String streetSpace;
 
 
@@ -108,7 +107,6 @@ class Estate {
   this.floors,
   this.near,
     this.priceNegotiation,
-    this.facilities,
     this.adNumber,
     this.advertiserNo,
     this.nationalAddress,
@@ -141,7 +139,6 @@ class Estate {
     view = json['view'];
     status = json['status'];
     districts = json['districts'];
-    networkType = json['network_type'];
     height = json['height'];
     estate_id=json['estate_id'];
     width = json['width'];
@@ -175,10 +172,10 @@ class Estate {
     category=json["category"];
 
     userId=json['user_id'];
-    if (json['facilities'] != null) {
-      facilities = <Facilities>[];
-      json['facilities'].forEach((v) {
-        facilities.add(Facilities.fromJson(v));
+    if (json['network_type'] != null) {
+      networkType = <NetworkType>[];
+      json['network_type'].forEach((v) {
+        networkType.add(NetworkType.fromJson(v));
       });
 
     }
@@ -189,8 +186,14 @@ class Estate {
         otherAdvantages.add(new OtherAdvantages.fromJson(v));
       });
     }
+
+    if (json['interface'] != null) {
+      interface = <Interface>[];
+      json['interface'].forEach((v) {
+        interface.add(new Interface.fromJson(v));
+      });
+    }
     streetSpace=json["street_space"];
-    interface=json["interface"];
 
 
   }
@@ -212,7 +215,7 @@ class Estate {
     data['status'] = this.status;
     data['districts'] = this.districts;
     data["city"]=this.city;
-    data['network_type'] = this.networkType;
+
     data['height'] = this.height;
     data['width'] = this.width;
     if (this.serviceOffers != null) {
@@ -241,8 +244,8 @@ class Estate {
     data['title']=this.title;
     data['category']=this.category;
 
-    if (this.facilities != null) {
-      data['facilities'] = this.facilities.map((v) => v.toJson()).toList();
+    if (this.networkType != null) {
+      data['network_type'] = this.networkType.map((v) => v.toJson()).toList();
     }
 
 
@@ -251,7 +254,9 @@ class Estate {
           this.otherAdvantages.map((v) => v.toJson()).toList();
     }
 
-    data["interface"]=this.interface;
+    if (this.interface != null) {
+      data['interface'] = this.interface.map((v) => v.toJson()).toList();
+    }
     data["street_space"]=this.streetSpace;
     return data;
   }
@@ -399,13 +404,13 @@ class Property {
   }
 }
 
-class Facilities {
+class NetworkType {
   String name;
   String image;
 
-  Facilities({this.name, this.image});
+  NetworkType({this.name, this.image});
 
-  Facilities.fromJson(Map<String, dynamic> json) {
+  NetworkType.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     image = json['image'];
   }
@@ -428,6 +433,26 @@ class OtherAdvantages {
   OtherAdvantages({this.name});
 
   OtherAdvantages.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    return data;
+  }
+
+
+}
+
+class Interface {
+  String name;
+
+
+  Interface({this.name});
+
+  Interface.fromJson(Map<String, dynamic> json) {
     name = json['name'];
 
   }

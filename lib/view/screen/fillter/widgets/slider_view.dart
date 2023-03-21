@@ -34,7 +34,7 @@ class _SliderViewState extends State<SliderView> {
               Container(
                 width: 170,
                 child: Text(
-                  'Less than ${(distValue / 10).toStringAsFixed(1)} Km',
+                  ' ${(distValue / 10).toStringAsFixed(1)} متر مربع',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -58,7 +58,7 @@ class _SliderViewState extends State<SliderView> {
                 } catch (_) {}
               },
               min: 0,
-              max: 100,
+              max: 10000,
               activeColor: Theme.of(context).primaryColor,
               inactiveColor: Colors.grey.withOpacity(0.4),
               divisions: 100,

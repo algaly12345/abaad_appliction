@@ -1,8 +1,10 @@
+import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/banner_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/localization_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/response/config_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
@@ -16,6 +18,7 @@ import 'package:abaad/view/base/custom_input.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
+import 'package:abaad/view/screen/fillter/fillter_estate_sheet.dart';
 import 'package:abaad/view/screen/home/widet/estate_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hex_color/flutter_hex_color.dart';
@@ -26,6 +29,15 @@ import 'widet/banner_view.dart';
 class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+  static Future<void> loadData(bool reload) async {
+
+    Get.find<AuthController>().getZoneList();
+    if(Get.find<EstateController>().estateModel == null) {
+      Get.find<EstateController>().getEstateList(1, false,0);
+    }
+    Get.find<EstateController>().getEstateList(1, false,0);
+    //   Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
+  }
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -38,10 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    Get.find<CategoryController>().getSubCategoryList("0");
+    if(Get.find<CategoryController>().categoryList == null) {
+      Get.find<CategoryController>().getCategoryList(true);
+    }
+    // Get.find<CategoryController>().getSubCategoryList("0");
     int offset = 1;
     Get.find<BannerController>().getBannerList(true,1);
+   // Get.find<ZoneController>().geZonesList();
     scrollController?.addListener(() {
       if (scrollController.position.pixels == scrollController.position.maxScrollExtent
           && Get.find<CategoryController>().categoryProductList != null
@@ -51,17 +66,14 @@ class _HomeScreenState extends State<HomeScreen> {
           offset++;
           print('end of the page');
           Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList("0", offset.toString());
+          Get.find<CategoryController>().getCategoryProductList("0", 0,'0',"0","0","0", offset.toString());
         }
       }
     });
+
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    scrollController?.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -128,46 +140,59 @@ class _HomeScreenState extends State<HomeScreen> {
                                             (String value) {
                                           setState(() {});
                                         }),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 4.0, right: 4.0),
-                                      padding:
-                                      const EdgeInsets.all(7),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                          BorderRadius.circular(
-                                              4),
-                                          border: Border.all(
-                                            width: 1,
-                                            color: Colors.blue,
-                                          )),
-                                      child: const Icon(
-                                        Icons.qr_code,
-                                        size: 25,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding:
-                                      const EdgeInsets.all(7),
-                                      margin: const EdgeInsets.only(
-                                          left: 4.0, right: 4.0),
-                                      decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius:
-                                          BorderRadius.circular(
-                                              5),
-                                          border: Border.all(
-                                            width: 1,
+                                    GestureDetector(
+                                      onTap: (){
+                                        Get.dialog(FiltersScreen());
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 4.0, right: 4.0),
+                                        padding:
+                                        const EdgeInsets.all(7),
+                                        decoration: BoxDecoration(
                                             color: Colors.white,
-                                          )),
-                                      child: const Icon(
-                                        Icons.filter_list_alt,
-                                        size: 25,
-                                        color: Colors.white,
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                4),
+                                            border: Border.all(
+                                              width: 1,
+                                              color: Colors.blue,
+                                            )),
+                                        child: const Icon(
+                                          Icons.qr_code,
+                                          size: 25,
+                                          color: Colors.blue,
+                                        ),
                                       ),
                                     ),
+
+                                      GetBuilder<ZoneController>(builder: (zoneController) {
+                           return  GestureDetector(
+                              onTap: (){
+                            //    zoneController.categoryList.clear();
+                                zoneController.categoryIndex==0;
+
+                                Get.dialog(FiltersScreen());
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(7),
+                                margin: const EdgeInsets.only(
+                                    left: 4.0, right: 4.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Colors.white,
+                                    )),
+
+
+                                child: const Icon(
+                                  Icons.filter_list_alt, size: 25,
+                                  color: Colors.white,),
+                              ),
+                            );
+                                      })
                                   ],
                                 ),
                               ],
@@ -327,8 +352,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 // ),
 
                 (categoryController.subCategoryList != null ) ? Center(child: Container(
-                    height: 50, width: Dimensions.WEB_MAX_WIDTH, color: Theme.of(context).cardColor,
-                    padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    height: 40,
+                   // width: Dimensions.WEB_MAX_WIDTH, color: Theme.of(context).cardColor,
+                   // padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                     child:
                     ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -337,64 +363,68 @@ class _HomeScreenState extends State<HomeScreen> {
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
 
-                        return InkWell(
-                          onTap: () => categoryController.setSubCategoryIndex(index),
-                          child: Container(
-                            padding: EdgeInsets.only(
-                              left: index == 0 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
-                              right: index == categoryController.subCategoryList.length-1 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
-                              top: Dimensions.PADDING_SIZE_SMALL,
-                            ),
-                            // decoration: BoxDecoration(
-                            //   borderRadius: BorderRadius.horizontal(
-                            //     left: Radius.circular(index == 0 ? Dimensions.RADIUS_EXTRA_LARGE : 0),
-                            //     right: Radius.circular(index == categoryController.subCategoryList.length-1 ? Dimensions.RADIUS_EXTRA_LARGE : 0),
-                            //   ),
-                            //
-                            //
-                            //   color: Theme.of(context).primaryColor.withOpacity(0.1),
-                            // ),
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 6,left: 6),
+                          child: InkWell(
+                            onTap: () => categoryController.setSubCategoryIndex(index),
+                            child: Container(
+
+                              padding: EdgeInsets.only(
+                                left: index == 0 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
+                                right: index == categoryController.subCategoryList.length-1 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
+                             //   top: Dimensions.PADDING_SIZE_SMALL,
+                              ),
+                              // decoration: BoxDecoration(
+                              //   borderRadius: BorderRadius.horizontal(
+                              //     left: Radius.circular(index == 0 ? Dimensions.RADIUS_EXTRA_LARGE : 0),
+                              //     right: Radius.circular(index == categoryController.subCategoryList.length-1 ? Dimensions.RADIUS_EXTRA_LARGE : 0),
+                              //   ),
+                              //
+                              //
+                              //   color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              // ),
 
 
-                            decoration:
-                            BoxDecoration(
-                              border: Border.all(
-                                  color:index == categoryController.subCategoryIndex ? Theme.of(
-                                      context)
-                                      .primaryColor
-                                      : Colors
-                                      .black12,
-                                  width: 2),
-                              borderRadius:
-                              BorderRadius
-                                  .circular(
-                                  2.0),
-                              color: Colors.white30,
-                            ),
-
-
-                            child: Row(children: [
-                              Text(
-                                categoryController.subCategoryList[index].name,
-                                style: index == categoryController.subCategoryIndex
-                                    ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)
-                                    : robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                              decoration:
+                              BoxDecoration(
+                                border: Border.all(
+                                    color:index == categoryController.subCategoryIndex ? Theme.of(
+                                        context)
+                                        .primaryColor
+                                        : Colors
+                                        .black12,
+                                    width: 2),
+                                borderRadius:
+                                BorderRadius
+                                    .circular(
+                                    2.0),
+                                color: Colors.white30,
                               ),
 
-                              SizedBox(width: 5),
-                             index==0?Container():  CustomImage(
-                                  image:
-                                  '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}/${categoryController.subCategoryList[index].image}',
-                                  height: 25,
-                                  width: 25,
-                                  colors:index ==
-                                      categoryController.subCategoryIndex  ? Theme.of(
-                                      context)
-                                      .primaryColor
-                                      : Colors
-                                      .black12),
 
-                            ]),
+                              child: Row(children: [
+                                Text(
+                                  categoryController.subCategoryList[index].name,
+                                  style: index == categoryController.subCategoryIndex
+                                      ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)
+                                      : robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                ),
+
+                                SizedBox(width: 5),
+                               index==0?Container():  CustomImage(
+                                    image:
+                                    '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}/${categoryController.subCategoryList[index].image}',
+                                    height: 25,
+                                    width: 25,
+                                    colors:index ==
+                                        categoryController.subCategoryIndex  ? Theme.of(
+                                        context)
+                                        .primaryColor
+                                        : Colors
+                                        .black12),
+
+                              ]),
+                            ),
                           ),
                         );
                       },
@@ -414,7 +444,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
                 !_isNull ?_products.length>0?         Container(
-                  height: 1000,
                   child: ListView.builder(
                     key: UniqueKey(),
                     physics: NeverScrollableScrollPhysics(),
@@ -425,8 +454,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       return PropertyCard(_products[index]);
                     },
                   ),
-                ):NoDataScreen(
-                  text: 'no_restaurant_available',
+                ):Center(
+                  child: NoDataScreen(
+                    text: 'no_data_available',
+                  ),
                 ):SizedBox(),
 
                 categoryController.isLoading ? Center(child: Padding(

@@ -32,28 +32,28 @@ class PopularFilterListData {
 
   static List<PopularFilterListData> accomodationList = [
     PopularFilterListData(
-      titleTxt: 'All',
+      titleTxt: 'الكل',
       isSelected: false,
     ),
     PopularFilterListData(
-      titleTxt: 'Apartment',
+      titleTxt: 'عروض مع العقار',
       isSelected: false,
     ),
     PopularFilterListData(
-      titleTxt: 'Home',
+      titleTxt: 'جولة افتراضية',
       isSelected: true,
     ),
     PopularFilterListData(
-      titleTxt: 'Villa',
+      titleTxt: 'منظور الشارع',
       isSelected: false,
     ),
-    PopularFilterListData(
-      titleTxt: 'Hotel',
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: 'Resort',
-      isSelected: false,
-    ),
+    // PopularFilterListData(
+    //   titleTxt: 'Hotel',
+    //   isSelected: false,
+    // ),
+    // PopularFilterListData(
+    //   titleTxt: 'Resort',
+    //   isSelected: false,
+    // ),
   ];
 }

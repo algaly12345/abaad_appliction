@@ -54,6 +54,7 @@ class _EstateDetailsState extends State<EstateDetails> {
       if(Get.find<CategoryController>().categoryList == null) {
         Get.find<CategoryController>().getCategoryList(true);
       }
+      Get.find<CategoryController>().getFacilitiesList(true);
       Get.find<EstateController>().getCategoriesEstateList(6, 1, 'all', false);
       Get.find<EstateController>().getEstateDetails(Estate(id: widget.estate.id));
       print("mohammed-------------${widget.user_id}");
@@ -541,7 +542,37 @@ class _EstateDetailsState extends State<EstateDetails> {
                                     padding: EdgeInsets.all(10),child:  Text("التغطية"))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(child: Container(
-                                    padding: EdgeInsets.all(10),child: Text("${  estateController.estate.networkType}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                  height: 30,
+                                  child:GridView.builder(
+                                    physics: BouncingScrollPhysics(),
+                                    itemCount: estateController.estate.networkType.length,
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3 ,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return  Row(
+
+                                        children: [
+                                          CustomImage(
+                                            image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                                                '/${estateController.estate.networkType[index].image}',
+                                            height: 10, width: 10,
+                                          ),
+                                          SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                          Flexible(child: Text(
+                                            estateController.estate.networkType[index].name,
+                                            style: robotoMedium.copyWith(
+                                              fontSize: Dimensions.fontSizeLarge,
+                                              color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
+                                                  : Theme.of(context).textTheme.bodyText1.color,
+                                            ),
+                                            maxLines: 1, overflow: TextOverflow.ellipsis,
+                                          )),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),),
                               ],
                             ),
                           ) : Container(),
@@ -612,7 +643,68 @@ class _EstateDetailsState extends State<EstateDetails> {
                         ),
                       ):Container(),
 
-
+                    estateController.estate.networkType.length >0?    Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("التغطية"),
+              Container(
+                            height: 30,
+                            // child:GridView.builder(
+                            //   physics: BouncingScrollPhysics(),
+                            //   itemCount: estateController.estate.networkType.length,
+                            //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            //     crossAxisCount: 3 ,
+                            //   ),
+                            //   itemBuilder: (context, index) {
+                            //     return  Row(
+                            //
+                            //       children: [
+                            //         CustomImage(
+                            //           image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                            //               '/${estateController.estate.networkType[index].image}',
+                            //           height: 10, width: 10,
+                            //         ),
+                            //         SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                            //         Text(
+                            //           estateController.estate.networkType[index].name,
+                            //           style: robotoMedium.copyWith(
+                            //             fontSize: Dimensions.fontSizeLarge,
+                            //             color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
+                            //                 : Theme.of(context).textTheme.bodyText1.color,
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     );
+                            //   },
+                            // ),
+                           child: ListView.builder(
+                             scrollDirection: Axis.horizontal,
+                             itemCount: estateController.estate.networkType.length,
+                             itemBuilder: (context, index) {
+                               return Padding(
+                                 padding: const EdgeInsets.all(5.0),
+                                 child: Row(
+                                   children: [
+                                     CustomImage(
+                                               image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                                                   '/${estateController.estate.networkType[index].image}',
+                                               height: 15, width: 15
+                                             ), // replace with your icon
+                                     SizedBox(width: 8), // add some space between icon and text
+                                 Text(
+                                           estateController.estate.networkType[index].name,
+                                           style: robotoMedium.copyWith(
+                                             fontSize: Dimensions.fontSizeSmall,
+                                             color: Theme.of(context).textTheme.bodyText1.color,
+                                           ), )// replace with your text
+                                   ],
+                                 ),
+                               );
+                             },
+                           ),
+                          )
+                        ],
+                      ):Container(),
 
                       const MapDetailsView(
                           fromView: true),

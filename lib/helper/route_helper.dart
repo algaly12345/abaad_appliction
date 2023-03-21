@@ -121,7 +121,7 @@ class RouteHelper {
   }
   static String getProfileAgentRoute(int id) => '$marketer?id=$id';
   static List<GetPage> routes = [
-    // GetPage(name: initial, page: () => getRoute(DashboardScreen(pageIndex: 0))),
+     GetPage(name: initial, page: () => DashboardScreen(pageIndex: 0)),
     GetPage(name: splash, page: () {
       NotificationBody _data;
       if(Get.parameters['data'] != 'null') {
