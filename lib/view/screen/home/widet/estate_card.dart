@@ -180,6 +180,10 @@ class PropertyCard extends StatelessWidget {
                         ),
                       ],
                     ),
+                    estate.category=="5"?     Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("${estate.shortDescription}", style: robotoBlack.copyWith(fontSize: 12)),
+                    ):Container(),
                   ],
                 ),
               ),
@@ -349,8 +353,7 @@ class PropertyCard extends StatelessWidget {
                     },
                   ),
                 ),
-              ):Container():        Text("${estate.shortDescription}",
-                  style: robotoBlack.copyWith(fontSize: 12)),
+              ):Container():   Container()
             ],
           ),
         ),

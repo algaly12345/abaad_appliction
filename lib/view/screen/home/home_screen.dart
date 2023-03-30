@@ -29,15 +29,7 @@ import 'widet/banner_view.dart';
 class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-  static Future<void> loadData(bool reload) async {
 
-    Get.find<AuthController>().getZoneList();
-    if(Get.find<EstateController>().estateModel == null) {
-      Get.find<EstateController>().getEstateList(1, false,0);
-    }
-    Get.find<EstateController>().getEstateList(1, false,0);
-    //   Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
-  }
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -207,154 +199,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 150.0,
                   child: BannerView(),
                 ),
-                // Container(
-                //   height: 200,
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       Text(
-                //         "type_property".tr,
-                //         style: robotoRegular.copyWith(
-                //             fontSize: Dimensions.fontSizeDefault,
-                //             color: Theme.of(context).hintColor),
-                //       ),
-                //       SizedBox(height: 7),
-                //       GetBuilder<CategoryController>(
-                //           builder: (categoryController) {
-                //         return (categoryController.categoryList != null)
-                //             ? SizedBox(
-                //                 height: 40,
-                //                 child: ListView.builder(
-                //                     scrollDirection: Axis.horizontal,
-                //                     itemCount: categoryController
-                //                         .categoryList.length,
-                //                     padding: EdgeInsets.only(
-                //                         left: Dimensions
-                //                             .PADDING_SIZE_SMALL),
-                //                     physics: BouncingScrollPhysics(),
-                //                     itemBuilder: (context, index) {
-                //                       String _baseUrl =
-                //                           Get.find<SplashController>()
-                //                               .configModel
-                //                               .baseUrls
-                //                               .categoryImageUrl;
-                //                       return Column(
-                //                         children: [
-                //                           Padding(
-                //                             padding:
-                //                                 const EdgeInsets.only(
-                //                                     right: 5, left: 5),
-                //                             child: InkWell(
-                //                               onTap: () {
-                //                                 restController
-                //                                     .setCategoryIndex(
-                //                                         categoryController
-                //                                             .categoryList[
-                //                                                 index]
-                //                                             .id);
-                //                                 restController.setCategoryPostion(
-                //                                     int.parse(categoryController.categoryList[index]
-                //                                             .position));
-                //                                 setState(() {
-                //                                   //  type_properties=categoryController.categoryList[index].name;
-                //                                 });
-                //                               },
-                //                               child: Container(
-                //                                 height: 40,
-                //                                 padding:
-                //                                     const EdgeInsets
-                //                                             .only(
-                //                                         left: 4.0,
-                //                                         right: 4.0),
-                //                                 decoration:
-                //                                     BoxDecoration(
-                //                                   border: Border.all(
-                //                                       color: categoryController
-                //                                                   .categoryList[
-                //                                                       index]
-                //                                                   .id ==
-                //                                               restController
-                //                                                   .categoryIndex
-                //                                           ? Theme.of(
-                //                                                   context)
-                //                                               .primaryColor
-                //                                           : Colors
-                //                                               .black12,
-                //                                       width: 2),
-                //                                   borderRadius:
-                //                                       BorderRadius
-                //                                           .circular(
-                //                                               2.0),
-                //                                   color: Colors.white30,
-                //                                 ),
-                //                                 child: Row(
-                //                                   children: [
-                //                                     Container(
-                //                                       height: 26,
-                //                                       color:
-                //                                           Colors.white,
-                //                                       child: Text(
-                //                                         categoryController
-                //                                             .categoryList[
-                //                                                 index]
-                //                                             .name,
-                //                                         style: categoryController
-                //                                                     .categoryList[
-                //                                                         index]
-                //                                                     .id ==
-                //                                                 restController
-                //                                                     .categoryIndex
-                //                                             ? robotoBlack
-                //                                                 .copyWith(
-                //                                                     fontSize:
-                //                                                         17)
-                //                                             : robotoRegular.copyWith(
-                //                                                 fontSize:
-                //                                                     Dimensions
-                //                                                         .fontSizeDefault,
-                //                                                 fontStyle:
-                //                                                     FontStyle
-                //                                                         .normal,
-                //                                                 color: Theme.of(context)
-                //                                                     .disabledColor),
-                //                                       ),
-                //                                     ),
-                //                                     SizedBox(width: 5),
-                //                                     CustomImage(
-                //                                         image:
-                //                                             '$_baseUrl/${categoryController.categoryList[index].image}',
-                //                                         height: 25,
-                //                                         width: 25,
-                //                                         colors: categoryController
-                //                                                     .categoryList[
-                //                                                         index]
-                //                                                     .id ==
-                //                                                 restController
-                //                                                     .categoryIndex
-                //                                             ? Theme.of(
-                //                                                     context)
-                //                                                 .primaryColor
-                //                                             : Colors
-                //                                                 .black12),
-                //                                   ],
-                //                                 ),
-                //                               ),
-                //                             ),
-                //                           )
-                //                         ],
-                //                       );
-                //                     }),
-                //               )
-                //             : Container();
-                //       }),
-                //     ],
-                //   ),
-                // ),
 
                 (categoryController.subCategoryList != null ) ? Center(child: Container(
                     height: 40,
-                   // width: Dimensions.WEB_MAX_WIDTH, color: Theme.of(context).cardColor,
-                   // padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
                     child:
                     ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -374,15 +222,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 right: index == categoryController.subCategoryList.length-1 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
                              //   top: Dimensions.PADDING_SIZE_SMALL,
                               ),
-                              // decoration: BoxDecoration(
-                              //   borderRadius: BorderRadius.horizontal(
-                              //     left: Radius.circular(index == 0 ? Dimensions.RADIUS_EXTRA_LARGE : 0),
-                              //     right: Radius.circular(index == categoryController.subCategoryList.length-1 ? Dimensions.RADIUS_EXTRA_LARGE : 0),
-                              //   ),
-                              //
-                              //
-                              //   color: Theme.of(context).primaryColor.withOpacity(0.1),
-                              // ),
 
 
                               decoration:
@@ -431,18 +270,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     )  )) : SizedBox(),
 
 
-
-
-
-
-
-
-
-
-
-
-
-
                 !_isNull ?_products.length>0?         Container(
                   child: ListView.builder(
                     key: UniqueKey(),
@@ -458,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: NoDataScreen(
                     text: 'no_data_available',
                   ),
-                ):SizedBox(),
+                ):const SizedBox(),
 
                 categoryController.isLoading ? Center(child: Padding(
                   padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),

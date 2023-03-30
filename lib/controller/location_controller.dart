@@ -98,7 +98,7 @@ class LocationController extends GetxController implements GetxService {
     return _addressModel;
   }
 
-  Future<ZoneResponseModel> getZone(String lat, String long, bool markerLoad, {bool updateInAddress = false}) async {
+  Future<ZoneResponseModel> getZone(String lat, String long, bool markerLoad, {bool updateInAddress = false}) async    {
     if(markerLoad) {
       _loading = true;
     }else {

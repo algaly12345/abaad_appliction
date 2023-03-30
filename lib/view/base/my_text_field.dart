@@ -21,6 +21,7 @@ class MyTextField extends StatefulWidget {
   final bool autoFocus;
   final GlobalKey<FormFieldState<String>> key;
   final bool showBorder;
+  final double size;
 
   MyTextField(
       {this.hintText = '',
@@ -39,6 +40,7 @@ class MyTextField extends StatefulWidget {
         this.isPassword = false,
         this.autoFocus = false,
         this.showBorder = false,
+        this.size,
         this.key});
 
   @override
@@ -57,7 +59,8 @@ class _MyTextFieldState extends State<MyTextField> {
         maxLines: widget.maxLines,
         controller: widget.controller,
         focusNode: widget.focusNode,
-        style: robotoRegular,
+        style:TextStyle(fontSize:widget.size),
+
         textInputAction: widget.inputAction,
         keyboardType: widget.inputType,
         cursorColor: Theme.of(context).primaryColor,

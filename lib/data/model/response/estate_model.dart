@@ -39,7 +39,7 @@ class Estate {
   int categoryId;
   String   price;
   String ownershipType;
-  String planned;
+
   int view;
   String status;
   String districts;
@@ -49,6 +49,7 @@ class Estate {
   List<ServiceOffers> serviceOffers;
   String qr;
   List<String> images;
+  List<String> planned;
   String arPath;
   String latitude;
   String longitude;
@@ -74,6 +75,7 @@ class Estate {
   List<OtherAdvantages> otherAdvantages;
   List<Interface> interface;
   String streetSpace;
+  String buildSpace;
 
 
 
@@ -119,7 +121,8 @@ class Estate {
     this.category,
     this.otherAdvantages,
     this.interface,
-    this.streetSpace
+    this.streetSpace,
+    this.buildSpace
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -135,7 +138,7 @@ class Estate {
     categoryId = json['category_id'];
     price = json['price'];
     ownershipType = json['ownership_type'];
-    planned = json['planned'];
+
     view = json['view'];
     status = json['status'];
     districts = json['districts'];
@@ -150,6 +153,7 @@ class Estate {
     }
     qr = json['qr'];
     images = json['images'] != null ? json['images'].cast<String>() : [];
+    planned = json['planned'] != null ? json['planned'].cast<String>() : [];
     arPath = json['ar_path'];
     latitude = json['latitude'];
     longitude = json['longitude'];
@@ -194,6 +198,7 @@ class Estate {
       });
     }
     streetSpace=json["street_space"];
+    buildSpace=json["build_space"];
 
 
   }
@@ -243,6 +248,7 @@ class Estate {
     data['estate_id']=this.estate_id;
     data['title']=this.title;
     data['category']=this.category;
+    data["build_space"]=this.buildSpace;
 
     if (this.networkType != null) {
       data['network_type'] = this.networkType.map((v) => v.toJson()).toList();

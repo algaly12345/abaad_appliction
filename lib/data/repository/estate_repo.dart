@@ -56,7 +56,8 @@ class EstateRepo {
       "other_advantages":estate.otherAdvantages,
       "interface":estate.interface,
       "street_space":estate.streetSpace,
-      "type_add":estate.type_add
+      "type_add":estate.type_add,
+      "build_space":estate.buildSpace
 
 
 

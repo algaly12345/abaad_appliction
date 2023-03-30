@@ -44,6 +44,7 @@ import 'package:get/get.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:multiselect/multiselect.dart';
 
 
@@ -89,14 +90,30 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   final FocusNode _firstNameFocus = FocusNode();
   final FocusNode _phoneFocus = FocusNode();
   final FocusNode _longDescFocus = FocusNode();
+  final FocusNode _spaceFocus = FocusNode();
+  final FocusNode _buildSpaceFocus = FocusNode();
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _userTypeController = TextEditingController();
   final TextEditingController _authorizedController = TextEditingController();
   final TextEditingController _widthStreetController = TextEditingController();
+  final TextEditingController _buildSpaceController = TextEditingController();
 
 
+  final TextEditingController _northController = TextEditingController();
+  final TextEditingController _westController = TextEditingController();
+  final TextEditingController _eastController = TextEditingController();
+  final TextEditingController _southController = TextEditingController();
+
+
+  final FocusNode _northFocus = FocusNode();
+
+  final FocusNode _westDesFocus = FocusNode();
+
+  final FocusNode _eastFocus = FocusNode();
+
+  final FocusNode _southFocus = FocusNode();
 
 
   final FocusNode _priceFocus = FocusNode();
@@ -147,10 +164,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     "7",
     "8",
   ];
-  final List<String> _interfaceist = [   " الواجهة الشمالية",
-    " الواجهة الشرقية",
+  final List<String> _interfaceist = [   "الواجهة الشمالية",
+    "الواجهة الشرقية",
     "الواجهة الغربية",
     "الواجهة الجنوبية",];
+  int east, west,north,south=0;
   final List<String> _selectedInterfaceistItems = [];
 
 
@@ -218,6 +236,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     Get.find<AuthController>().getPackageList();
 
   }
+
+  static const _locale = 'en';
+  String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(double.parse(s));
+  String get _currency => NumberFormat.compactSimpleCurrency(locale: _locale).currencySymbol;
+
 
   @override
   Widget build(BuildContext context) {
@@ -468,11 +491,19 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                         SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                         MyTextField(
                           hintText: 'price'.tr,
+                          size: 20,
                           controller: _priceController,
                           focusNode: _priceFocus,
                           nextFocus: _shorDesFocus,
                           inputType: TextInputType.number,
                           showBorder: true,
+                          onChanged: (string) {
+                            string = _formatNumber(string.replaceAll(',', ''));
+                            _priceController.value = TextEditingValue(
+                              text: string,
+                              selection: TextSelection.collapsed(offset: string.length),
+                            );
+                          },
                           capitalization: TextCapitalization.words,
                         ),
                       ],)
@@ -538,21 +569,38 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   ]),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-
                   Text(
                     'space'.tr,
                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                   ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  MyTextField(
-                    hintText: 'enter_the_area'.tr,
-                    controller: _spaceController,
-                    focusNode: _firstNameFocus,
-                    nextFocus: _phoneFocus,
-                    inputType: TextInputType.number,
-                    showBorder: true,
-                    capitalization: TextCapitalization.words,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyTextField(
+                          hintText:restController.getCategoryPostion()==1?"ادخل مساحة الارض (بامتر مربع)": 'enter_the_area'.tr,
+                          size: 17,
+                          controller: _spaceController,
+                          focusNode: _firstNameFocus,
+                          nextFocus: _phoneFocus,
+                          inputType: TextInputType.number,
+                          showBorder: true,
+                          capitalization: TextCapitalization.words,
+                        ),
+                      ),
+                     SizedBox(width: 3,),
+                    restController.getCategoryPostion()==1? Expanded(child:  MyTextField(
+                       hintText: 'ادخل مساحة البناء(بامتر مربع)'.tr,
+                       size: 17,
+                       controller: _buildSpaceController,
+                       focusNode: _buildSpaceFocus,
+                       nextFocus: _phoneFocus,
+                       inputType: TextInputType.number,
+                       showBorder: true,
+                       capitalization: TextCapitalization.words,
+                     ),):Container()
+                    ],
                   ),
+
 
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
@@ -660,6 +708,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     focusNode: _shorDesFocus,
                     nextFocus: _longDescFocus ,
                     inputType: TextInputType.text,
+                    size: 17,
                     capitalization: TextCapitalization.sentences,
                     showBorder: true,
                   ),
@@ -675,7 +724,9 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     hintText: 'enter_long_desc'.tr,
                     controller: _longDescController,
                     focusNode: _longDescFocus,
-                    nextFocus: _vatFocus,
+                    // nextFocus: _vatFocus,
+                    size: 17,
+
                     maxLines: 4,
                     inputType: TextInputType.text,
                     capitalization: TextCapitalization.sentences,
@@ -697,134 +748,102 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     children: [
                       Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            restController.getCategoryPostion()==5?      Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                  Text(
-                                    'إرفاق المخطط',
-                                    style: robotoRegular.copyWith(
-                                        fontSize: Dimensions.fontSizeSmall),
-                                  ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                  Stack(children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                          Dimensions.RADIUS_SMALL),
-                                      child: authController.pickedCover != null ? GetPlatform
-                                          .isWeb ? Image.network(
-                                        authController.pickedCover.path, width: context.width,
-                                        height: 170,
-                                        fit: BoxFit.cover,
-                                      ) : Image.file(
-                                        File(authController.pickedCover.path),
-                                        width: context.width, height: 170, fit: BoxFit.cover,
-                                      ) : Image.asset(
-                                        Images.placeholder, width: context.width,
-                                        height: 170,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      top: 0,
-                                      left: 0,
-                                      child: InkWell(
-                                        onTap: () => authController.pickImage(false, false),
+
+                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                            Text(
+                              'إرفاق صور المخطط'.tr,
+                              style: robotoRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeSmall),
+                            ),
+                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                            SizedBox(
+                              height: 120,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                physics: BouncingScrollPhysics(),
+                                itemCount:restController .pickPlaned.length + 1,
+                                itemBuilder: (context, index) {
+                                  XFile _file = index ==
+                                      restController.pickPlaned.length
+                                      ? null
+                                      : restController.pickPlaned[index];
+                                  if (index == restController.pickPlaned.length) {
+                                    return InkWell(
+                                      onTap: () =>
+                                          restController.pickPlanedImage(false, false),
+                                      child: Container(
+                                        height: 299,
+                                        width: 200,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              Dimensions.RADIUS_SMALL),
+                                          border: Border.all(color: Theme
+                                              .of(context)
+                                              .primaryColor, width: 2),
+                                        ),
                                         child: Container(
+                                          padding: EdgeInsets.all(
+                                              Dimensions.PADDING_SIZE_DEFAULT),
                                           decoration: BoxDecoration(
-                                            color: Colors.black.withOpacity(0.3),
-                                            borderRadius: BorderRadius.circular(
-                                                Dimensions.RADIUS_SMALL),
-                                            border: Border.all(width: 1, color: Theme
+                                            border: Border.all(width: 2, color: Theme
                                                 .of(context)
                                                 .primaryColor),
+                                            shape: BoxShape.circle,
                                           ),
-                                          child: Container(
-                                            margin: EdgeInsets.all(25),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 3, color: Colors.white),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(Icons.camera_alt, color: Colors.white,
-                                                size: 50),
+                                          child: Icon(Icons.camera_alt, color: Theme
+                                              .of(context)
+                                              .primaryColor),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return Container(
+                                    margin: EdgeInsets.only(
+                                        right: Dimensions.PADDING_SIZE_SMALL),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Theme
+                                          .of(context)
+                                          .primaryColor, width: 2),
+                                      borderRadius: BorderRadius.circular(
+                                          Dimensions.RADIUS_SMALL),
+                                    ),
+                                    child: Stack(children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            Dimensions.RADIUS_SMALL),
+                                        child: GetPlatform.isWeb ? Image.network(
+                                          _file.path, width: 150,
+                                          height: 120,
+                                          fit: BoxFit.cover,
+                                        ) : Image.file(
+                                          File(_file.path), width: 150,
+                                          height: 120,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        right: 0, top: 0,
+                                        child: InkWell(
+                                          onTap: () =>
+                                              restController.removePlanedImage(index),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(
+                                                Dimensions.PADDING_SIZE_SMALL),
+                                            child: Icon(Icons.delete_forever,
+                                                color: Colors.red),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ]),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                                  Text(
-                                    " الواجهة".tr,
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: _interfaceist.length,
-                                      itemBuilder: (context, index) {
-                                        final item = _interfaceist[index];
-
-                                        return  Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: TextButton(
-                                              style:  ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
-                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-
-                                                  RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(4),
-
-                                                      side: BorderSide(color:Theme.of(context).primaryColor)
-                                                  ),),),
-                                              onPressed: (){
-                                                setState(() {
-                                                  if (_selectedInterfaceistItems.contains(item)) {
-                                                    _selectedInterfaceistItems.remove(item);
-                                                  } else {
-                                                    _selectedInterfaceistItems.add(item);
-                                                  }
-                                                });
-                                              },
-                                              child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor :Theme.of(context).primaryColor,fontSize: 15.0),)
-                                          ),
-                                        );
-
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                  Text(
-                                    " عرض الشارع".tr,
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  MyTextField(
-                                    hintText: 'ادخل عرض الشارع بلمتر'.tr,
-                                    controller: _widthStreetController,
-                                    focusNode: _longDescFocus,
-                                    nextFocus: _vatFocus,
-                                    maxLines: 1,
-                                    inputType: TextInputType.number,
-                                    capitalization: TextCapitalization.sentences,
-                                    showBorder: true,
-                                  ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-
-                                ],
+                                    ]),
+                                  );
+                                },
                               ),
-                            ):Container(),
+                            ),
+
+
+
                             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
                             restController.getCategoryPostion()==1?    Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -968,69 +987,153 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
 
-                                Text(
-                                  " الواجهة".tr,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
-                                  height: 50,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: _interfaceist.length,
-                                    itemBuilder: (context, index) {
-                                      final item = _interfaceist[index];
+                                    Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-                                      return  Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: TextButton(
-                                            style:  ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-                                                RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(4),
-
-                                                    side: BorderSide(color:Theme.of(context).primaryColor)
-                                                ),),),
-                                            onPressed: (){
-                                              setState(() {
-                                                if (_selectedInterfaceistItems.contains(item)) {
-                                                  _selectedInterfaceistItems.remove(item);
-                                                } else {
-                                                  _selectedInterfaceistItems.add(item);
-                                                }
-                                              });
-                                            },
-                                            child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor :Theme.of(context).primaryColor,fontSize: 15.0),)
+                                      Text(
+                                        " الواجهة".tr,
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      );
+                                      ),
+                                      Container(
+                                        height: 50,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: _interfaceist.length,
+                                          itemBuilder: (context, index) {
+                                            final item = _interfaceist[index];
 
-                                    },
+                                            return  Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: TextButton(
+                                                  style:  ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
+                                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+
+                                                      RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(4),
+
+                                                          side: BorderSide(color:Theme.of(context).primaryColor)
+                                                      ),),),
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if (_selectedInterfaceistItems.contains(item)) {
+                                                        _selectedInterfaceistItems.remove(item);
+                                                        if(item=="الواجهة الشمالية") {
+                                                          north = 0;
+                                                          _northController.clear();
+                                                        }else if(item=="الواجهة الشرقية"){
+                                                          east=0;
+                                                          _eastController.clear();
+
+                                                        }
+                                                        else if(item=="الواجهة الغربية"){
+                                                          west=0;
+                                                          _westController.clear();
+
+                                                        }
+                                                        else if(item=="الواجهة الجنوبية"){
+                                                          south=0;
+                                                          _southController.clear();
+
+                                                        }
+                                                      } else {
+                                                        _selectedInterfaceistItems.add(item);
+                                                        if(item=="الواجهة الشمالية") {
+                                                          north = 1;
+                                                        }else if(item=="الواجهة الشرقية"){
+                                                          east=1;
+
+                                                        }
+                                                        else if(item=="الواجهة الغربية"){
+                                                          west=1;
+
+                                                        }
+                                                        else if(item=="الواجهة الجنوبية"){
+                                                          south=1;
+
+                                                        }
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor :Theme.of(context).primaryColor,fontSize: 15.0),)
+                                              ),
+                                            );
+
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          north==1?   Expanded( // Place `Expanded` inside `Row`
+                                            child: MyTextField(
+                                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                                              controller: _northController,
+                                              focusNode: _northFocus,
+                                              maxLines: 1,
+                                              inputType: TextInputType.number,
+                                              capitalization: TextCapitalization.sentences,
+                                              showBorder: true,
+                                            ),
+                                          ):SizedBox(),
+                                          SizedBox(width: 3,),
+                                          east==1?  Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                                            child: MyTextField(
+                                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                                              controller: _eastController,
+                                              focusNode: _eastFocus,
+                                              nextFocus: _westDesFocus,
+                                              maxLines: 1,
+                                              inputType: TextInputType.number,
+                                              capitalization: TextCapitalization.sentences,
+                                              showBorder: true,
+                                            ),
+                                          ):SizedBox(),
+                                          SizedBox(width: 3,),
+                                          west==1? Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                                            child: MyTextField(
+                                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                                              controller: _westController,
+                                              focusNode: _westDesFocus,
+                                              nextFocus: _southFocus,
+                                              maxLines: 1,
+                                              inputType: TextInputType.number,
+                                              capitalization: TextCapitalization.sentences,
+                                              showBorder: true,
+                                            ),
+                                          ):SizedBox(),
+                                          SizedBox(width: 3,),
+                                          south==1?   Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                                            child: MyTextField(
+                                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                                              controller: _southController ,
+                                              focusNode: _southFocus,
+                                              nextFocus: _vatFocus,
+                                              maxLines: 1,
+                                              inputType: TextInputType.number,
+                                              capitalization: TextCapitalization.sentences,
+                                              showBorder: true,
+                                            ),
+                                          ):SizedBox(),
+                                        ],
+                                      ),
+
+                                      const SizedBox(
+                                          height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
+                                    ],
                                   ),
                                 ),
-                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                Text(
-                                  " عرض الشارع".tr,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                MyTextField(
-                                  hintText: 'ادخل عرض الشارع بلمتر'.tr,
-                                  controller: _widthStreetController,
-                                  focusNode: _longDescFocus,
-                                  nextFocus: _vatFocus,
-                                  maxLines: 1    ,
-                                  inputType: TextInputType.number,
-                                  capitalization: TextCapitalization.sentences,
-                                  showBorder: true,
-                                ),
-                                const SizedBox(
-                                    height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
                                 Text(
                                   'age_of_the_property'.tr,
@@ -1145,7 +1248,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                                           Flexible(child: Text(
                                                             categoryController.facilitiesList[index].name,
                                                             style: robotoMedium.copyWith(
-                                                              fontSize: Dimensions.fontSizeLarge,
+                                                              fontSize: Dimensions.fontSizeSmall,
                                                               color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
                                                                   : Theme.of(context).textTheme.bodyText1.color,
                                                             ),
@@ -1764,6 +1867,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                             showCustomSnackBar('enter_space'.tr);
                           } else if (_shortDesc.isEmpty) {
                             showCustomSnackBar('enter_short_desc'.tr);
+                          }else if(restController.pickedIdentities.length ==null) {
+                            showCustomSnackBar('pleace select image estate'.tr);
                           }
 
                           else {
@@ -1842,7 +1947,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           setState(() {
                             for (final item in _selectedInterfaceistItems) {
                               _interface.add({'"' + "name" + '"':'"' + item + '"'});
-                              showCustomSnackBar("-----------------interface${item}");
+
                             }
                           });
 
@@ -1878,7 +1983,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   interface: "${_interface}",
                                   streetSpace: "${_widthStreetController.text.toString()}",
 
-                                  price: _priceController.text,
+                                  price: _priceController.text.toString(),
+                                buildSpace: _buildSpaceController.text.toString(),
                                 priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" )): Center(child: CircularProgressIndicator());
                          // authController.submitBusinessPlan(restaurantId: 1);
                          //  next();

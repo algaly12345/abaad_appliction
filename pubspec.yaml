@@ -79,6 +79,10 @@ dependencies:
   geocoding: ^2.1.0
   geocode: 1.0.1
   flutter_google_street_view: ^3.1.2
+  flutter_inappwebview: ^5.7.1+2
+  video_player: ^2.6.0
+  flutter_google_places: ^0.3.0
+  google_maps_webservice: ^0.0.19
 
 
 dev_dependencies:

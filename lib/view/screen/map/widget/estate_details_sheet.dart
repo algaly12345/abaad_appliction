@@ -39,7 +39,7 @@ class EstateDetailsSheet extends StatelessWidget {
       ))
     ];
     return GetBuilder<EstateController>(builder: (estateController) {
-      return GetBuilder<SplashController>(builder: (splashController) {
+      return  GetBuilder<SplashController>(builder: (splashController) {
         Estate estate = estateController.estateModel.estates[splashController.nearestEstateIndex];
 
         return Stack(children: [

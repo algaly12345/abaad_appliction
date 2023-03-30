@@ -19,8 +19,11 @@ import 'package:abaad/view/base/custom_dialog.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/map_details_view.dart';
+import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
+import 'package:abaad/view/screen/estate/widgets/interface.dart';
+import 'package:abaad/view/screen/estate/widgets/network_type.dart';
 import 'package:clipboard/clipboard.dart';
 
 import 'package:flutter/material.dart';
@@ -41,6 +44,7 @@ EstateDetails({@required this.estate,this.user_id});
 class _EstateDetailsState extends State<EstateDetails> {
   final ScrollController scrollController = ScrollController();
   final bool _ltr = Get.find<LocalizationController>().isLtr;
+
 
   bool _isLoggedIn;
   @override
@@ -70,16 +74,27 @@ class _EstateDetailsState extends State<EstateDetails> {
   }
   @override
   Widget build(BuildContext context) {
+     List<Estate> restaurants;
     bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+
+     bool _isNull = true;
+     int _length = 0;
+
+
     return  Scaffold(
       body: SingleChildScrollView(
         child: GetBuilder<EstateController>(builder: (estateController) {
+          _isNull = restaurants == null;
+          if(!_isNull) {
+            _length = restaurants.length;
+          }
           return  GetBuilder<UserController>(builder: (userController) {
 
             return (Get.find<AuthController>().isLoggedIn()  && userController.agentInfoModel == null &&estateController.isLoading) ? Center(child: CircularProgressIndicator()) :
             GetBuilder<CategoryController>(builder: (categoryController) {
 
-            Estate _estate;
+
+              Estate _estate;
 
             if(estateController.estate != null   && categoryController.categoryList != null) {
               _estate = estateController.estate;
@@ -87,7 +102,7 @@ class _EstateDetailsState extends State<EstateDetails> {
             estateController.setCategoryList();
 
             return (estateController.estate != null) ?
-            Column(
+               Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [EstateView(fromView: true,estate:estateController.estate,EstateId: widget.estate.id ) ,
 
@@ -130,7 +145,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                               margin: const EdgeInsets.only(bottom: 10),
                               decoration:  BoxDecoration(
                                   color: estateController.estate.type_add==1?Colors.blue:Colors.orange),
-                              child:  Text( estateController.estate.type_add==1?"للبيع":"للإجار",
+                              child:    Text( estateController.estate.type_add=="for_sell"?"للبيع":"للإجار",
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,)
@@ -150,6 +165,8 @@ class _EstateDetailsState extends State<EstateDetails> {
                   ),
                 ),
                 SizedBox(height: 8),
+
+
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 4),
                   padding:  EdgeInsets.only(right: 5,left: 5,bottom: 5,top: 5),
@@ -158,10 +175,9 @@ class _EstateDetailsState extends State<EstateDetails> {
                       BoxShadow(
                         color: Colors.grey,
                         offset: Offset(0.0, 0.2), //(x,y)
-                        blurRadius: 1.0,
-                      ),
+                        blurRadius: 1.0,)
                     ], ),
-                  child: Column(
+                  child:  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
@@ -347,6 +363,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                       ):Container(),
                       Divider(height: 1,),
 
+                      SizedBox(height: 5,),
                       Text(
                         'التفاصيل',
                         style: robotoBlack.copyWith(fontSize: 14),
@@ -435,33 +452,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                         ),
                       ):Container(),
 
-                      estateController.estate.interface!=null?    Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).backgroundColor,
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(0, 0.5), // changes position of shadow
-                            ),
-
-                          ],
-
-                        ),
-                        child: Row(
-
-                          children: [
-                            Expanded(child: Container(
-                                padding: EdgeInsets.all(10),child:  Text(" الواجهة"))),
-                            VerticalDivider(width: 1.0),
-                            Expanded(child: Container(
-                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.interface}",  style: robotoBlack.copyWith(fontSize: 14)))),
-                          ],
-                        ),
-                      ):Container(),
+                      estateController.estate.interface!=null? InterfaceItem(estate: estateController.estate,restaurants:   estateController.estate.interface)   :Container(),
                       estateController.estate.priceNegotiation!=null?    Container(
                         height: 50,
                         decoration: BoxDecoration(
@@ -486,6 +477,35 @@ class _EstateDetailsState extends State<EstateDetails> {
                             VerticalDivider(width: 1.0),
                             Expanded(child: Container(
                                 padding: EdgeInsets.all(10),child: Text("${ estateController.estate.priceNegotiation}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ):Container(),
+
+
+                      estateController.estate.buildSpace!=""?    Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child:  Text("مساحة البناء"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(child: Container(
+                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.buildSpace}",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
                       ):Container(),
@@ -515,67 +535,10 @@ class _EstateDetailsState extends State<EstateDetails> {
                                     padding: EdgeInsets.all(10),child:  Text("عمر العقار"))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(child: Container(
-                                    padding: EdgeInsets.all(10),child: Text("${estateController.estate.space}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                    padding: EdgeInsets.all(10),child: Text("${estateController.estate.ageEstate} سنة",  style: robotoBlack.copyWith(fontSize: 14)))),
                               ],
                             ),
                           ):Container(),
-                          estateController.estate.networkType!=null? Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).backgroundColor,
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 0.5), // changes position of shadow
-                                ),
-
-                              ],
-
-                            ),
-                            child: Row(
-
-                              children: [
-                                Expanded(child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text("التغطية"))),
-                                VerticalDivider(width: 1.0),
-                                Expanded(child: Container(
-                                  height: 30,
-                                  child:GridView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    itemCount: estateController.estate.networkType.length,
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3 ,
-                                    ),
-                                    itemBuilder: (context, index) {
-                                      return  Row(
-
-                                        children: [
-                                          CustomImage(
-                                            image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
-                                                '/${estateController.estate.networkType[index].image}',
-                                            height: 10, width: 10,
-                                          ),
-                                          SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                          Flexible(child: Text(
-                                            estateController.estate.networkType[index].name,
-                                            style: robotoMedium.copyWith(
-                                              fontSize: Dimensions.fontSizeLarge,
-                                              color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
-                                                  : Theme.of(context).textTheme.bodyText1.color,
-                                            ),
-                                            maxLines: 1, overflow: TextOverflow.ellipsis,
-                                          )),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),),
-                              ],
-                            ),
-                          ) : Container(),
                         ],
                       ):Container(),
                       estateController.estate.ownershipType!=null?    Container(
@@ -643,68 +606,8 @@ class _EstateDetailsState extends State<EstateDetails> {
                         ),
                       ):Container(),
 
-                    estateController.estate.networkType.length >0?    Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("التغطية"),
-              Container(
-                            height: 30,
-                            // child:GridView.builder(
-                            //   physics: BouncingScrollPhysics(),
-                            //   itemCount: estateController.estate.networkType.length,
-                            //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            //     crossAxisCount: 3 ,
-                            //   ),
-                            //   itemBuilder: (context, index) {
-                            //     return  Row(
-                            //
-                            //       children: [
-                            //         CustomImage(
-                            //           image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
-                            //               '/${estateController.estate.networkType[index].image}',
-                            //           height: 10, width: 10,
-                            //         ),
-                            //         SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            //         Text(
-                            //           estateController.estate.networkType[index].name,
-                            //           style: robotoMedium.copyWith(
-                            //             fontSize: Dimensions.fontSizeLarge,
-                            //             color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
-                            //                 : Theme.of(context).textTheme.bodyText1.color,
-                            //           ),
-                            //         ),
-                            //       ],
-                            //     );
-                            //   },
-                            // ),
-                           child: ListView.builder(
-                             scrollDirection: Axis.horizontal,
-                             itemCount: estateController.estate.networkType.length,
-                             itemBuilder: (context, index) {
-                               return Padding(
-                                 padding: const EdgeInsets.all(5.0),
-                                 child: Row(
-                                   children: [
-                                     CustomImage(
-                                               image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
-                                                   '/${estateController.estate.networkType[index].image}',
-                                               height: 15, width: 15
-                                             ), // replace with your icon
-                                     SizedBox(width: 8), // add some space between icon and text
-                                 Text(
-                                           estateController.estate.networkType[index].name,
-                                           style: robotoMedium.copyWith(
-                                             fontSize: Dimensions.fontSizeSmall,
-                                             color: Theme.of(context).textTheme.bodyText1.color,
-                                           ), )// replace with your text
-                                   ],
-                                 ),
-                               );
-                             },
-                           ),
-                          )
-                        ],
-                      ):Container(),
+
+                    estateController.estate.networkType. length >0?    NetworkTypeItem(estate: estateController.estate,restaurants: estateController.estate.networkType):Container(),
 
                       const MapDetailsView(
                           fromView: true),
@@ -713,7 +616,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
                           child:  GridView.builder(
                             physics: BouncingScrollPhysics(),
                             itemCount: estateController.estate.otherAdvantages.length,
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3 ,
                               childAspectRatio: (1/0.50),
                             ),
@@ -736,16 +639,16 @@ crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
 
                                       SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      Flexible(
-                                        flex: 1,
-                                          child: Text(
-                                        estateController.estate.otherAdvantages[index].name,
-                                        style: robotoMedium.copyWith(
-                                          fontSize: Dimensions.fontSizeLarge,
-                                          color: Theme.of(context).textTheme.bodyText1.color,
-                                        ),
-                                        maxLines: 2, overflow: TextOverflow.ellipsis,
-                                      )),
+                                      // Flexible(
+                                      //   flex: 1,
+                                      //     child: Text(
+                                      // "${estateController.estate.otherAdvantages[index].name}",
+                                      //   style: robotoMedium.copyWith(
+                                      //     fontSize: Dimensions.fontSizeLarge,
+                                      //     color: Theme.of(context).textTheme.bodyText1.color,
+                                      //   ),
+                                      //   maxLines: 2, overflow: TextOverflow.ellipsis,
+                                      // )),
                                     ],
                                   ),
                                 ),
@@ -1000,10 +903,10 @@ crossAxisAlignment: CrossAxisAlignment.start,
                       ) : Center(child: CircularProgressIndicator()),
 
                     ],
-                  ),
-                ),
+                  ))
 
               ],
+
             )
                 : const SizedBox();
           });
@@ -1020,7 +923,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
     await placemarkFromCoordinates(lat, log);
     Placemark place = placemark[0];
    String  _address= 'Address : ${place.locality},${place.country}';
-   showCustomSnackBar("message   ${place.name}");
+   // showCustomSnackBar("message   ${place.name}");
     print("adress-------------------------------------${place.locality},${place.country}");
   }
 }

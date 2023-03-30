@@ -263,6 +263,12 @@ RatingBar(rating: 4, ratingCount: 4)     ,
                               iconData:Images.facebook,
                               onPressed: () {},
                             ),
+
+                            SocialIcon(
+                              color: Color(0xFF102397),
+                              iconData:Images.tiktok,
+                              onPressed: () {},
+                            ),
                             SocialIcon(
                               color: Color(0xff58b3f5),
                               iconData:Images.snap,
@@ -271,7 +277,9 @@ RatingBar(rating: 4, ratingCount: 4)     ,
                             SocialIcon(
                               color: Color(0xFF38A1F3),
                               iconData:Images.website,
-                              onPressed: () {},
+                              onPressed: () {
+                                _launchURL();
+                              },
                             ),
                             SocialIcon(
                               color: Color(0xFF2867B2),
@@ -361,11 +369,14 @@ class SocialIcon extends StatelessWidget {
       child: Container(
         width: 40.0,
         height: 40.0,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(width: 1, color: Colors.blue)
+        ),
         child: RawMaterialButton(
           shape: CircleBorder(),
           onPressed: onPressed,
-          child:Image.asset(iconData, color: Colors.white),
+          child:Image.asset(iconData,height: 30,width: 30),
         ),
       ),
     );
@@ -373,4 +384,12 @@ class SocialIcon extends StatelessWidget {
 }
 
 
-
+_launchURL() async {
+  const url = 'https://www.tpp.com.sa/';
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  } else {
+    throw 'Could not launch $url';
+  }
+}

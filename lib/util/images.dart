@@ -20,6 +20,7 @@ class Images {
   static const String bed="assets/image/bed.png";
   static const String bc="assets/image/bc.png";
   static const String arrowCircle="assets/image/arrow-circle-right.png";
+  static const String video="assets/image/video.png";
 
 
   static const String home = 'assets/image/home.png';
@@ -73,6 +74,7 @@ class Images {
   static const String instgram = 'assets/image/instgram.png';
   static const String facebook = 'assets/image/facebook.png';
   static const String snap = 'assets/image/snap.png';
+  static const String tiktok = 'assets/image/tiktok.png';
 
 
 

@@ -45,7 +45,10 @@ class EstateController extends GetxController implements GetxService {
   XFile _pickedCover;
   List<Property> _categoryRestList;
   XFile _pickedImage;
+  XFile _pickedPlanedImage;
   List<XFile> _pickedIdentities = [];
+
+  List<XFile> _pickPlaned = [];
   int _currentIndex = 0;
   String _address;
 
@@ -96,8 +99,10 @@ class EstateController extends GetxController implements GetxService {
   int get categoryPostion => _categoryPostion;
 
   XFile get pickedImage => _pickedImage;
+  XFile get pickedPlanedImage => _pickedPlanedImage;
 
   List<XFile> get pickedIdentities => _pickedIdentities;
+  List<XFile> get pickPlaned => _pickPlaned;
 
   int get currentIndex => _currentIndex;
 
@@ -119,14 +124,9 @@ class EstateController extends GetxController implements GetxService {
         _estateModel = EstateModel.fromJson(response.body);
         print("estate response ...............${response.body}");
       } else {
-        _estateModel.totalSize = EstateModel
-            .fromJson(response.body)
-            .totalSize;
-        _estateModel.offset = EstateModel
-            .fromJson(response.body)
-            .offset;
-        _estateModel.estates.addAll(EstateModel.fromJson(response.body)
-            .estates);
+        _estateModel.totalSize = EstateModel.fromJson(response.body).totalSize;
+        _estateModel.offset = EstateModel.fromJson(response.body).offset;
+        _estateModel.estates.addAll(EstateModel.fromJson(response.body).estates);
       }
       update();
     } else {
@@ -244,16 +244,12 @@ class EstateController extends GetxController implements GetxService {
     } else {
       _isLoading = true;
       _estate = null;
-      Response response = await estateRepo.getEstateDetails(
-          estate.id.toString());
+      Response response = await estateRepo.getEstateDetails(estate.id.toString());
       if (response.statusCode == 200) {
-        print(
-            "-------------------------------------detailsapp${response.body}");
         _estate = Estate.fromJson(response.body);
       } else {
         ApiChecker.checkApi(response);
       }
-
       _isLoading = false;
       update();
     }
@@ -296,8 +292,35 @@ class EstateController extends GetxController implements GetxService {
     }
   }
 
+
+  void pickPlanedImage(bool isLogo, bool isRemove) async {
+    if (isRemove) {
+      _pickedPlanedImage = null;
+      _pickPlaned = [];
+    } else {
+      if (isLogo) {
+        _pickedPlanedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+      } else {
+        XFile _xFile = await ImagePicker().pickImage(
+            source: ImageSource.gallery);
+        if (_xFile != null) {
+          _pickPlaned.add(_xFile);
+        }
+      }
+      update();
+    }
+  }
+
   void removeIdentityImage(int index) {
     _pickedIdentities.removeAt(index);
+    update();
+  }
+
+
+
+  void removePlanedImage(int index) {
+    _pickPlaned.removeAt(index);
     update();
   }
 
@@ -309,6 +332,11 @@ class EstateController extends GetxController implements GetxService {
     _multiParts.add(MultipartBody('image', _pickedImage));
     for (XFile file in _pickedIdentities) {
       _multiParts.add(MultipartBody('identity_image[]', file));
+    }
+
+    _multiParts.add(MultipartBody('image', _pickedPlanedImage));
+    for (XFile file in _pickPlaned) {
+      _multiParts.add(MultipartBody('planed_image[]', file));
     }
     Response response = await estateRepo.createEstate(
         restaurantBody, _multiParts);

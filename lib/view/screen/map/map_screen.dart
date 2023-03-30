@@ -10,12 +10,14 @@ import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/cached_img.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/discount_tag.dart';
+import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:abaad/view/screen/fillter/fillter_estate_sheet.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/map/widget/estate_by_category.dart';
@@ -36,6 +38,7 @@ import 'widget/estate_details_sheet.dart';
 import 'widget/location_search_dialog.dart';
 import 'widget/permission_dialog.dart';
 import 'widget/service_offer.dart';
+import 'widget/service_provider.dart';
 
 class MapScreen extends StatefulWidget {
   ZoneModel mainCategory;
@@ -46,15 +49,6 @@ class MapScreen extends StatefulWidget {
   final GoogleMapController googleMapController;
   MapScreen({Key key,@required this.mainCategory,@required this.fromSignUp, @required this.fromAddAddress, @required this.canRoute,
     @required this.route, this.googleMapController,}) : super(key: key);
-  static Future<void> loadData(bool reload) async {
-
-    Get.find<AuthController>().getZoneList();
-    if(Get.find<EstateController>().estateModel == null) {
-      Get.find<EstateController>().getEstateList(1, false,0);
-    }
-    Get.find<EstateController>().getEstateList(1, false,0);
- //   Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
-  }
 
   @override
   State<MapScreen> createState() => _MapViewScreenState();
@@ -63,8 +57,8 @@ class MapScreen extends StatefulWidget {
 class _MapViewScreenState extends State<MapScreen> {
   GoogleMapController _controller;
   List<MarkerData> _customMarkers = [];
-  List<Marker> _markers = <Marker>[];
   CameraPosition _cameraPosition;
+  final ScrollController scrollController = ScrollController();
 
 
   int _reload = 0;
@@ -84,7 +78,26 @@ class _MapViewScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    MapScreen.loadData(false);
+    Get.find<AuthController>().getZoneList();
+    if(Get.find<CategoryController>().categoryList == null) {
+      Get.find<CategoryController>().getCategoryList(true);
+    }
+    // Get.find<CategoryController>().getSubCategoryList("0");
+    int offset = 1;
+    // Get.find<ZoneController>().geZonesList();
+    scrollController?.addListener(() {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent
+          && Get.find<CategoryController>().categoryProductList != null
+          && !Get.find<CategoryController>().isLoading) {
+        int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
+        if (offset < pageSize) {
+          offset++;
+          print('end of the page');
+          Get.find<CategoryController>().showBottomLoader();
+          Get.find<CategoryController>().getCategoryProductList("0", 0,'0',"0","0","0", offset.toString());
+        }
+      }
+    });
     cardTapped = false;
     if(widget.fromAddAddress) {
       Get.find<LocationController>().setPickData();
@@ -108,6 +121,8 @@ class _MapViewScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool _isNull = true;
+    int _length = 0;
     var width = MediaQuery
         .of(context)
         .size
@@ -119,9 +134,27 @@ class _MapViewScreenState extends State<MapScreen> {
 
     return Scaffold(
       appBar: WebMenuBar(),
-        body: GetBuilder<EstateController>(builder: (restController) {
-     return   GetBuilder<LocationController>(builder: (locationController) {
-        return restController.estateModel != null ? CustomGoogleMapMarkerBuilder(
+        body:
+          GetBuilder<CategoryController>(builder: (categoryController) {
+            return GetBuilder<LocationController>(builder: (locationController) {
+
+              List<Estate> _products;
+              if(categoryController.categoryProductList != null) {
+                _products = [];
+                if (categoryController.isSearching) {
+
+                } else {
+                  _products.addAll(categoryController.categoryProductList);
+                }
+              }
+
+
+              _isNull = _products == null;
+              if(!_isNull) {
+                _length = _products.length;
+              }
+
+              return  CustomGoogleMapMarkerBuilder (
           customMarkers: _customMarkers,
           builder: (context, markers) {
             if (markers == null) {
@@ -189,199 +222,24 @@ class _MapViewScreenState extends State<MapScreen> {
                           ]),
                         ),
                       ),
-                      back: Container(
-                        height: 300.0,
-                        width: 225.0,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.95),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: Column(
-                          children: [
-                            _buildReviewItem(),
-
-                            _buildReviewItem(),
-
-
-                            // Container(
-                            //   height: 250.0,
-                            //   child: isReviews
-                            //       ? ListView(
-                            //     children: [
-                            //       if (isReviews &&
-                            //           tappedPlaceDetail['reviews'] !=
-                            //               null)
-                            //         ...tappedPlaceDetail['reviews']!
-                            //             .map((e) {
-                            //           return _buildReviewItem(e);
-                            //         })
-                            //     ],
-                            //   )
-                            //       : _buildPhotoGallery(
-                            //       tappedPlaceDetail['photos'] ?? []),
-                            // )
-                          ],
-                        ),
-                      ),
+                      // back: Container(
+                      //   height: 300.0,
+                      //   width: 225.0,
+                      //   decoration: BoxDecoration(
+                      //       color: Colors.white.withOpacity(0.95),
+                      //       borderRadius: BorderRadius.circular(8.0)),
+                      //   child:ServiceProviderItem(estate:restController.estate,restaurants: restController.estate.serviceOffers,
+                      //   )
+                      // ),
                     ))
                     : Container(),
-                SafeArea(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child:Padding(
-                      padding: const EdgeInsets.only(top: 7.0),
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10.0, right: 7.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
 
-                          children: <Widget>[
-                            Row(
-                              children: [
-
-                                InkWell(
-                                  onTap: () => Get.dialog(LocationSearchDialog(mapController: _controller)),
-                                  child: Container(
-                                    height: 43,
-                                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                    decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
-                                    width: width-130,
-                                    child:  Row(children: [
-                                      Icon(Icons.location_on, size: 25, color: Theme.of(context).primaryColor),
-                                      const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      Expanded(
-                                        child: Text(
-                                          locationController.pickAddress,
-                                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge), maxLines: 1, overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                                      Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
-                                    ]),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 4.0, right: 4.0),
-                                  padding: const EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.blue,
-                                      )),
-
-
-                                  child: const Icon(Icons.qr_code, size: 25,
-                                    color: Colors.blue,),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(7),
-                                  margin: const EdgeInsets.only(
-                                      left: 4.0, right: 4.0),
-                                  decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.white,
-                                      )),
-
-
-                                  child: const Icon(
-                                    Icons.filter_list_alt, size: 25,
-                                    color: Colors.white,),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,),
-                            GetBuilder<CategoryController>(builder: (categoryController) {
-                              return   (categoryController.categoryList != null ) ?
-                              SizedBox(
-                                height: 35,
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: categoryController.categoryList.length,
-                                    padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-                                    physics: BouncingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      String _baseUrl = Get.find<SplashController>().configModel.baseUrls.categoryImageUrl;
-                                      return  Column(
-                                        children: [
-
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 5,left: 5),
-                                            child: InkWell(
-                                              onTap: () => restController.setCategoryIndex(index),
-                                              child: Container(
-                                                height: 35,
-                                                padding: const EdgeInsets.only(
-                                                    left: 4.0, right: 4.0),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:index == restController.categoryIndex
-                                                          ? Theme.of(context).primaryColor:Colors.white
-                                                  ),
-                                                  borderRadius: BorderRadius.circular(2.0),
-                                                  color: Colors.white,
-
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      height: 26,
-                                                      color: Colors.white,
-                                                      child: Text(categoryController.categoryList[index].name,style:  index == restController.categoryIndex
-                                                          ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).primaryColor)
-                                                          : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).disabledColor),),
-                                                    ),
-                                                    SizedBox(width: 5),
-
-                                                    CustomImage( image: '$_baseUrl/${categoryController.categoryList[index].image}',height: 25,width: 25,  colors:index == restController.categoryIndex
-                                                        ? Theme.of(context).primaryColor:Colors.black12),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      );
-
-                                    }),
-                              ):Container();
-
-                            })
-
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                GetBuilder<SplashController>(builder: (splashController) {
-                  return splashController.nearestEstateIndex != -1 ? Positioned(
-                    bottom: 0,
-                    child: EstateDetailsSheet(callback: (int index) =>
-                        _controller.animateCamera(
-                            CameraUpdate.newCameraPosition(
-                                CameraPosition(target: LatLng(
-                                  double.parse(
-                                      restController.estateModel.estates[index]
-                                          .latitude),
-                                  double.parse(
-                                      restController.estateModel.estates[index]
-                                          .longitude),
-                                ), zoom: 16)))),
-                  ) : const SizedBox();
-                }),
 
               ]);
             }
             return
               Stack(children: [
-            GoogleMap(
+                !_isNull ?_products.length>0?     GoogleMap(
             initialCameraPosition: const CameraPosition(zoom: 12, target: LatLng(
               // double.parse(Get.find<LocationController>().getUserAddress().latitude),
               // double.parse(Get.find<LocationController>().getUserAddress().longitude),
@@ -389,19 +247,29 @@ class _MapViewScreenState extends State<MapScreen> {
                 50.109046
             )),
             markers: markers,
-            myLocationEnabled: false,
-            compassEnabled: false,
+            // myLocationEnabled: false,
+            // compassEnabled: false,
             zoomControlsEnabled: true,
               mapType: _currentMapType,
             onTap: (position) => Get.find<SplashController>().setNearestEstateIndex(-1),
             minMaxZoomPreference: MinMaxZoomPreference(0, 40),
             onMapCreated: (GoogleMapController controller) {
             _controller = controller;
-            if(restController.estateModel != null ) {
-            _setMarkers(restController.estateModel.estates);
+            if(_products.length > 0) {
+            _setMarkers(_products);
             }
             },
+            ):Center(
+            child: NoDataScreen(
+            text: 'no_data_available',
             ),
+            ):const SizedBox(),
+
+            categoryController.isLoading ? Center(child: Padding(
+            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+            child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)),
+            )) : SizedBox(),
+
 
               cardTapped
                   ? Positioned(
@@ -449,39 +317,16 @@ class _MapViewScreenState extends State<MapScreen> {
                         ]),
                       ),
                     ),
-                    back: Container(
-                      height: 300.0,
-                      width: 225.0,
-                      decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.95),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Column(
-                        children: [
-                          _buildReviewItem(),
-
-                           _buildReviewItem(),
-
-
-                          // Container(
-                          //   height: 250.0,
-                          //   child: isReviews
-                          //       ? ListView(
-                          //     children: [
-                          //       if (isReviews &&
-                          //           tappedPlaceDetail['reviews'] !=
-                          //               null)
-                          //         ...tappedPlaceDetail['reviews']!
-                          //             .map((e) {
-                          //           return _buildReviewItem(e);
-                          //         })
-                          //     ],
-                          //   )
-                          //       : _buildPhotoGallery(
-                          //       tappedPlaceDetail['photos'] ?? []),
-                          // )
-                        ],
-                      ),
-                    ),
+                    // back: Container(
+                    //   height: 300.0,
+                    //   width: 225.0,
+                    //   decoration: BoxDecoration(
+                    //       color: Colors.white.withOpacity(0.95),
+                    //       borderRadius: BorderRadius.circular(8.0)),
+                    //   child:ServiceProviderItem(estate:restController.estate,restaurants: restController.estate.serviceOffers,
+                    //   )
+                    //
+                    // ),
                   ))
                   : Container(),
 
@@ -568,65 +413,94 @@ class _MapViewScreenState extends State<MapScreen> {
                             return   (categoryController.categoryList != null ) ?
 
                             SizedBox(
-                              height: 35,
-                              child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: categoryController.categoryList.length,
-                                  padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-                                  physics: BouncingScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    String _baseUrl = Get.find<SplashController>().configModel.baseUrls.categoryImageUrl;
-                                    return  Column(
-                                      children: [
+                              child:
+                              (categoryController.subCategoryList != null ) ? Center(child: Container(
+                                  height: 40,
 
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 5,left: 5),
-                                          child: InkWell(
-                                            onTap: () {
-                                              restController.setCategoryIndex(index);
-                                              showModalBottomSheet<int>(
-                                                backgroundColor: Colors.transparent,
-                                                context: context,
-                                                builder: (context) {
-                                                  return BottomSheetWithSnackBar();
-                                                },
-                                              );
-                                            },
-                                            child: Container(
-                                              height: 35,
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0, right: 4.0),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color:index == restController.categoryIndex
-                                                        ? Theme.of(context).primaryColor:Colors.white
-                                                ),
-                                                borderRadius: BorderRadius.circular(2.0),
-                                                color: Colors.white,
+                                  child:
+                                  ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: categoryController.subCategoryList.length,
+                                    padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+                                    physics: BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
 
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    height: 26,
-                                                    color: Colors.white,
-                                                    child: Text(categoryController.categoryList[index].name,style:  index == restController.categoryIndex
-                                                        ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).primaryColor)
-                                                        : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault,fontStyle: FontStyle.normal, color: Theme.of(context).disabledColor),),
-                                                  ),
-                                                  SizedBox(width: 5),
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 6,left: 6),
+                                        child: InkWell(
+                                          onTap: (){
 
-                                                  CustomImage( image: '$_baseUrl/${categoryController.categoryList[index].image}',height: 25,width: 25,  colors:index == restController.categoryIndex
-                                                      ? Theme.of(context).primaryColor:Colors.black12),
-                                                ],
-                                              ),
+
+                                            categoryController.setSubCategoryIndex(index);
+
+                                 setState(() {
+
+
+
+                                   _setMarkers(_products);
+
+
+
+                                 });
+
+
+
+                                          },
+                                          child: Container(
+
+                                            padding: EdgeInsets.only(
+                                              left: index == 0 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
+                                              right: index == categoryController.subCategoryList.length-1 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
+                                              //   top: Dimensions.PADDING_SIZE_SMALL,
                                             ),
-                                          ),
-                                        )
-                                      ],
-                                    );
 
-                                  }),
+
+                                            decoration:
+                                            BoxDecoration(
+                                              border: Border.all(
+                                                  color:index == categoryController.subCategoryIndex ? Theme.of(
+                                                      context)
+                                                      .primaryColor
+                                                      : Colors
+                                                      .black12,
+                                                  width: 2),
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                  2.0),
+                                              color: Colors.white,
+                                            ),
+
+
+                                            child: Row(children: [
+                                              Text(
+                                                categoryController.subCategoryList[index].name,
+                                                style: index == categoryController.subCategoryIndex
+                                                    ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)
+                                                    : robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                              ),
+
+                                              SizedBox(width: 5),
+                                              index==0?Container():  CustomImage(
+                                                  image:
+                                                  '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}/${categoryController.subCategoryList[index].image}',
+                                                  height: 25,
+                                                  width: 25,
+                                                  colors:index ==
+                                                      categoryController.subCategoryIndex  ? Theme.of(
+                                                      context)
+                                                      .primaryColor
+                                                      : Colors
+                                                      .black12),
+
+                                            ]),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  )  )) : SizedBox(),
+
+
                             ):Container();
 
                           })
@@ -702,10 +576,10 @@ class _MapViewScreenState extends State<MapScreen> {
                       _controller.animateCamera(CameraUpdate.newCameraPosition(
                           CameraPosition(target: LatLng(
                             double.parse(
-                                restController.estateModel.estates[index]
+                                _products[index]
                                     .latitude),
                             double.parse(
-                                restController.estateModel.estates[index]
+                                _products[index]
                                     .longitude),
                           ), zoom: 16))), onPressed: () {
 
@@ -719,11 +593,10 @@ class _MapViewScreenState extends State<MapScreen> {
 
             ]);
           },
-        )
-            : const Center(child: CircularProgressIndicator());
-      });
-        }),
-    );
+        );
+          });
+    })
+      );
   }
   void _checkPermission(Function onTap) async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -742,6 +615,7 @@ class _MapViewScreenState extends State<MapScreen> {
   void _setMarkers(List<Estate> estate) async {
     List<LatLng> _latLngs = [];
     _customMarkers = [];
+    print("----------------${estate.length}");
     _customMarkers.add(MarkerData(
       marker: const Marker(markerId: MarkerId('id-0'), position: LatLng(
         // double.parse(Get.find<LocationController>().getUserAddress().latitude),
@@ -753,10 +627,13 @@ class _MapViewScreenState extends State<MapScreen> {
     ));
     int _index = 0;
     for (int index = 0; index < estate.length; index++) {
+    //  print("----------------${estate[index].title}");
       _index++;
       LatLng _latLng = LatLng(double.parse(estate[index].latitude),
           double.parse(estate[index].longitude));
       _latLngs.add(_latLng);
+
+   //   showCustomSnackBar("${estate[index].title}");
 
       _customMarkers.add(MarkerData(
 
@@ -772,8 +649,7 @@ class _MapViewScreenState extends State<MapScreen> {
         child: Column(
           children: [
             Container(
-              width: 45,
-              height: 13,
+
               padding:   const EdgeInsets.only(right: 1,left: 1),
               decoration: BoxDecoration(
                 border: Border.all(
@@ -823,89 +699,7 @@ class _MapViewScreenState extends State<MapScreen> {
     }
   }
 
-}
 
-_buildReviewItem() {
-  return Column(
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 2.0, right: 2.0, top: 8.0),
-        child: Row(
-          children: [
-            Container(
-              height: 35.0,
-              width: 35.0,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: NetworkImage("https://images.unsplash.com/photo-1458071103673-6a6e4c4a3413?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"),
-                      fit: BoxFit.cover)),
-            ),
-            const SizedBox(width: 4.0),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                width: 160.0,
-                child:  Text(
-                  'دهانات الجزيرة',
-                  style: robotoBlack.copyWith(fontSize: 11),
-                ),
-              ),
-              const SizedBox(height: 3.0),
-          SizedBox(
-            height: 16,
-             width: 44,
-            child: CustomPaint(
-              painter: PriceTagPaint(),
-              child: Center(
-                child: Text(
-                  "20%",
-                  style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
-                ),
-              ),
-            ),
-          )
-              // const RatingStars(
-              //   value: 3* 1.0,
-              //   starCount: 5,
-              //   starSize: 7,
-              //   valueLabelColor: Color(0xff9b9b9b),
-              //   valueLabelTextStyle: TextStyle(
-              //       color: Colors.white,
-              //       fontFamily: 'WorkSans',
-              //       fontWeight: FontWeight.w400,
-              //       fontStyle: FontStyle.normal,
-              //       fontSize: 9.0),
-              //   valueLabelRadius: 7,
-              //   maxValue: 5,
-              //   starSpacing: 2,
-              //   maxValueVisibility: false,
-              //   valueLabelVisibility: true,
-              //   animationDuration: Duration(milliseconds: 1000),
-              //   valueLabelPadding:
-              //   EdgeInsets.symmetric(vertical: 1, horizontal: 4),
-              //   valueLabelMargin: EdgeInsets.only(right: 4),
-              //   starOffColor: Color(0xffe7e8ea),
-              //   starColor: Colors.yellow,
-              // )
-            ])
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          child: const Text(
-           "كن أول من يعلم عن عروضنا المميزة وأحدث أفكار  دهانات الجزيرة",
-            style: TextStyle(
-                fontFamily: 'WorkSans',
-                fontSize: 11.0,
-                fontWeight: FontWeight.w400),
-          ),
-        ),
-      ),
-      Divider(color: Colors.grey.shade600, height: 1.0)
-    ],
-  );
 }
 
 

@@ -29,6 +29,7 @@ class EstateBody {
   String otherAdvantages;
   String interface;
   String streetSpace;
+  String buildSpace;
 
 
   EstateBody(
@@ -62,7 +63,8 @@ class EstateBody {
         this.city,
         this.otherAdvantages,
         this.interface,
-        this.streetSpace
+        this.streetSpace,
+        this.buildSpace
         });
 
   EstateBody.fromJson(Map<String, dynamic> json) {
@@ -99,6 +101,7 @@ class EstateBody {
     otherAdvantages=json["other_advantages"];
     streetSpace=json["street_space"];
     interface=json["interface"];
+    buildSpace=json["build_space"];
 
 
   }
@@ -137,6 +140,7 @@ class EstateBody {
     data["other_advantages"]=this.otherAdvantages;
     data["interface"]=this.interface;
     data["street_space"]=this.streetSpace;
+    data["build_space"]=this.buildSpace;
     return data;
   }
 }

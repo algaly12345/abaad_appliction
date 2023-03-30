@@ -114,7 +114,7 @@ class EstateItem extends StatelessWidget {
                                   children: [
                                     Text(" العنوان الوطني : ",
                                         style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
-                                    Text("45",
+                                    Text("${estate.nationalAddress}",
                                         style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
                                   ],
 

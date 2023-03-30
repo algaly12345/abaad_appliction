@@ -44,8 +44,10 @@ class _EstateViewState extends State<EstateView> {
 
     sampleData.add( RadioModel(false, 'صور', Images.estate_images));
     sampleData.add( RadioModel(false, 'تجوال افتراضي', Images.vt));
-    sampleData.add( RadioModel(false, 'عرض الشارع',Images.street_view));
+    sampleData.add( RadioModel(false, 'منظور الشارع',Images.street_view));
     sampleData.add( RadioModel(false, 'المخطط', Images.planed));
+    sampleData.add( RadioModel(false, 'منظور جوي', Images.street_view));
+    sampleData.add( RadioModel(false, 'فبديو', Images.video));
   }
 
   @override
@@ -212,7 +214,7 @@ class _EstateViewState extends State<EstateView> {
                           sampleData.forEach((element) => element.isSelected = false);
                           sampleData[index].isSelected = true;
 
-                          Get.toNamed(RouteHelper.getFeatureRoute(widget.estate.id,sampleData[index].buttonText));
+                          Get.toNamed(RouteHelper.getFeatureRoute(widget.estate.id,sampleData[index].buttonText,widget.estate.arPath));
                         });
                       },
                       child:RadioItem(sampleData[index]),

@@ -155,6 +155,7 @@ class BaseUrls {
   String agentImageUrl;
   String activitiesImageUrl;
   String notificationImageUrl;
+  String planed;
   String provider;
   String banners;
 
@@ -168,6 +169,7 @@ class BaseUrls {
         this.banners,
         this.provider,
         this.chatImageUrl,
+        this.planed
       });
 
   BaseUrls.fromJson(Map<String, dynamic> json) {
@@ -181,6 +183,7 @@ class BaseUrls {
     banners= json["banners"];
     provider= json["provider_image_url"];
     chatImageUrl = json['chat_image_url'];
+    planed = json['planed'];
 
   }
 
@@ -196,6 +199,7 @@ class BaseUrls {
     data['banners'] = this.banners;
     data['provider_image_url'] = this.provider;
     data['chat_image_url'] = this.chatImageUrl;
+    data['planed'] = this.planed;
 
     return data;
   }

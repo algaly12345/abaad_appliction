@@ -24,6 +24,8 @@ class CategoryController extends GetxController implements GetxService {
   int _subCategoryIndex = 0;
   int _filterIndex = 0;
   List<Estate> _categoryProductList;
+  // EstateModel _estateModel;
+  Estate _estate;
 
   List<FilterBody> _filterList;
 
@@ -62,6 +64,8 @@ class CategoryController extends GetxController implements GetxService {
   List<FilterBody> get filterList => _filterList;
 
   String get nameCityIndex => _nameCityIndex;
+  // EstateModel get estateModel => _estateModel;
+  Estate get estate => _estate;
 
 
   Future<void> getCategoryList(bool reload) async {
@@ -76,7 +80,7 @@ class CategoryController extends GetxController implements GetxService {
           _categoryList.add(CategoryModel.fromJson(category));
           _isLoading=false;
           // _interestSelectedList.add(false);
-          print("omeromeromer");
+
         });
       } else {
         ApiChecker.checkApi(response);
@@ -98,7 +102,7 @@ class CategoryController extends GetxController implements GetxService {
         response.body.forEach((category) {
           _facilitiesList.add(FacilitiesModel.fromJson(category));
           _interestSelectedList.add(false);
-          print("omeromeromer");
+
         });
       } else {
         ApiChecker.checkApi(response);
@@ -118,7 +122,6 @@ class CategoryController extends GetxController implements GetxService {
         response.body.forEach((category) {
           _advanList.add(OtherAdvantages.fromJson(category));
           _advanSelectedList.add(false);
-          print("omeromeromer");
         });
       } else {
         ApiChecker.checkApi(response);
@@ -127,32 +130,6 @@ class CategoryController extends GetxController implements GetxService {
     }
   }
 
-
-
-  void getCategoryRestaurantList(String categoryID, int offset, String type, bool notify) async {
-    _offset = offset;
-    if(offset == 1) {
-      if(_type == type) {
-        _isSearching = false;
-      }
-      _type = type;
-      if(notify) {
-        update();
-      }
-      _categoryRestList = null;
-    }
-    Response response = await categoryRepo.getCategoryRestaurantList(categoryID, offset, type);
-    if (response.statusCode == 200) {
-      // if (offset == 1) {
-      //   _categoryRestList = [];
-      // }
-      _categoryRestList.addAll(EstateModel.fromJson(response.body).estates);
-      _isLoading = false;
-    } else {
-      ApiChecker.checkApi(response);
-    }
-    update();
-  }
 
 
 
@@ -172,7 +149,7 @@ class CategoryController extends GetxController implements GetxService {
       response.body.forEach((category) {
         _propertiesRestList.add(Property.fromJson(category));
         // _interestSelectedList.add(false);
-        print("omeromeromer");
+
       });
 
     } else {
@@ -241,16 +218,20 @@ class CategoryController extends GetxController implements GetxService {
   void getCategoryProductList(String categoryID,int user_id,String city,String districts, String space,String type_add,String offset) async {
     if(offset == '1') {
       _categoryProductList = null;
+
       _isSearching = false;
     }
     Response response = await categoryRepo.getCategoryProductList(categoryID,user_id,city,districts,space,type_add, offset);
     if (response.statusCode == 200) {
       if (offset == '1') {
         _categoryProductList = [];
+        //_estateModel = null;
+
       }
       _isLoading=false;
       _categoryProductList.addAll(EstateModel.fromJson(response.body).estates);
       _pageSize = EstateModel.fromJson(response.body).totalSize;
+   //   _estateModel = EstateModel.fromJson(response.body);
       _isLoading = false;
     } else {
       ApiChecker.checkApi(response);
