@@ -16,6 +16,14 @@ class UserInfoModel {
   String image;
   double walletBalance;
   int loyaltyPoint;
+
+  String youtube;
+  String snapchat;
+  String instagram;
+  String website;
+  String tiktok;
+  String twitter;
+
   Userinfo agent;
 
   UserInfoModel(
@@ -36,7 +44,13 @@ class UserInfoModel {
         this.image,
         this.agent,
         this.walletBalance,
-        this.loyaltyPoint});
+        this.loyaltyPoint,
+        this.youtube,
+        this.snapchat,
+        this.instagram,
+        this.website,
+        this.tiktok,
+        this.twitter});
 
   UserInfoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -59,6 +73,13 @@ class UserInfoModel {
     agent = json['agent'] != null ? new Userinfo.fromJson(json['agent']) : null;
     walletBalance = json['wallet_balance'].toDouble();
     loyaltyPoint = json['loyalty_point'];
+
+    youtube = json['youtube'];
+    snapchat = json['snapchat'];
+    instagram = json['instagram'];
+    website = json['website'];
+    tiktok = json['tiktok'];
+    twitter = json['twitter'];
   }
 
   Map<String, dynamic> toJson() {
@@ -78,6 +99,13 @@ class UserInfoModel {
     data['updated_at'] = this.updatedAt;
     data['wallet_balance'] = this.walletBalance;
     data['loyalty_point'] = this.loyaltyPoint;
+    data['youtube'] = this.youtube;
+    data['snapchat'] = this.snapchat;
+    data['instagram'] = this.instagram;
+    data['website'] = this.website;
+    data['tiktok'] = this.tiktok;
+    data['twitter'] = this.twitter;
+
 
     if (this.userinfo != null) {
       data['userinfo'] = this.userinfo.toJson();

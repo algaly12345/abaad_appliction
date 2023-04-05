@@ -47,14 +47,14 @@ class EstateItem extends StatelessWidget {
       child: Container(
         width: context.width,
         padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-
-        ),
+        // decoration: BoxDecoration(
+        //   color: Theme.of(context).cardColor,
+        //
+        // ),
         child: Container(
           alignment: Alignment.center,
           child:Container(
-            height: 140,
+            height: 150,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(4), //border corner radius

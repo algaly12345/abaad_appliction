@@ -29,7 +29,7 @@ class MapViewScreen extends StatefulWidget {
     if(Get.find<EstateController>().estateModel == null) {
       Get.find<EstateController>().getEstateList(1, false,0);
     }
-    Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
+  //  Get.find<SplashController>().setNearestEstateIndex(-1, notify: false);
   }
 
   @override
@@ -40,7 +40,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
   GoogleMapController _controller;
   List<MarkerData> _customMarkers = [];
 
-  List<MarkerData> _customMarkersZone = [];
+  List<MarkerData>  _customMarkersZone = [];
   int _reload = 0;
   Set<Polygon> _polygon = HashSet<Polygon>();
 
@@ -144,8 +144,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   myLocationEnabled: false,
                   compassEnabled: false,
                   zoomControlsEnabled: false,
-                  onTap: (position) =>
-                      Get.find<SplashController>().setNearestEstateIndex(-1),
+                  onTap: (position) {},
                   minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
                   polygons: _polygon,
                   onMapCreated: (GoogleMapController controller) {

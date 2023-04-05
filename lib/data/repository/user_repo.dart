@@ -24,7 +24,7 @@ class UserRepo {
   Future<Response> updateProfile(UserInfoModel userInfoModel, XFile data, String token) async {
     Map<String, String> _body = Map();
     _body.addAll(<String, String>{
-      'name': userInfoModel.name, 'email': userInfoModel.email
+      'name': userInfoModel.name, 'email': userInfoModel.email,'youtube':userInfoModel.youtube,'snapchat':userInfoModel.snapchat,'instagram':userInfoModel.instagram,'website':userInfoModel.website,'tiktok':userInfoModel.tiktok,'twitter':userInfoModel.twitter
     });
     return await apiClient.postMultipartData(AppConstants.UPDATE_PROFILE_URI, _body, [MultipartBody('image', data)]);
   }

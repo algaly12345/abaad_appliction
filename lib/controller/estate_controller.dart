@@ -122,7 +122,7 @@ class EstateController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       if (offset == 1) {
         _estateModel = EstateModel.fromJson(response.body);
-        print("estate response ...............${response.body}");
+        // print("estate response ...............${response.body}");
       } else {
         _estateModel.totalSize = EstateModel.fromJson(response.body).totalSize;
         _estateModel.offset = EstateModel.fromJson(response.body).offset;
@@ -153,11 +153,11 @@ class EstateController extends GetxController implements GetxService {
       if (offset == 1) {
         _estateList = [];
       }
-      print("awad-------------------------------${response.body}");
+      // print("awad-------------------------------${response.body}");
       _estateModel1.estates.addAll(EstateModel.fromJson(response.body).estates);
       update();
     } else {
-      print("awad-------------------------------${response.body}");
+      // print("awad-------------------------------${response.body}");
       ApiChecker.checkApi(response);
     }
   }
@@ -346,8 +346,8 @@ _isLoading=false;
       Get.offAllNamed(RouteHelper.getSuccess());
     } else {
       ApiChecker.checkApi(response);
-      print("---------------------------------------------------${response
-          .body}");
+      // print("---------------------------------------------------${response
+      //     .body}");
     }
     _isLoading = false;
     update();

@@ -31,11 +31,27 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _phoneFocus = FocusNode();
   final FocusNode _userTypeFocus = FocusNode();
+
+  final FocusNode _youtubeFocus = FocusNode();
+  final FocusNode _snapchatFocus = FocusNode();
+  final FocusNode _instagramFocus = FocusNode();
+  final FocusNode _websiteFocus = FocusNode();
+  final FocusNode _tiktokFocus = FocusNode();
+  final FocusNode _twitterFocus = FocusNode();
+
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _userTypeController = TextEditingController();
+
+
+  final TextEditingController _youtubeController = TextEditingController();
+  final TextEditingController _snapchatController = TextEditingController();
+  final TextEditingController _instagramController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _tiktokController = TextEditingController();
+  final TextEditingController _twitterController = TextEditingController();
   bool _isLoggedIn;
 
   @override
@@ -60,6 +76,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           _phoneController.text = userController.userInfoModel.phone ?? '';
           _emailController.text = userController.userInfoModel.email ?? '';
           _userTypeController.text = userController.userInfoModel.agent.membershipType ?? '';
+
+
+          _youtubeController.text = userController.userInfoModel.youtube ?? '';
+          _snapchatController.text = userController.userInfoModel.snapchat ?? '';
+          _tiktokController.text = userController.userInfoModel.tiktok ?? '';
+          _twitterController.text = userController.userInfoModel.twitter?? '';
+          _websiteController.text = userController.userInfoModel.website ?? '';
+          _instagramController.text = userController.userInfoModel.instagram?? '';
+
         }
 
         return _isLoggedIn ? userController.userInfoModel != null ? ProfileBgUpdateWidget(
@@ -177,6 +202,110 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   isEnabled: false,
                 ),
 
+
+
+
+
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text(
+                  'youtube'.tr,
+                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                ),
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                MyTextField(
+                  hintText: 'youtube'.tr,
+                  controller: _youtubeController,
+                  focusNode: _youtubeFocus,
+                  nextFocus: _snapchatFocus,
+                  inputType: TextInputType.name,
+                  capitalization: TextCapitalization.words,
+                ),
+
+
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text(
+                  'snapchat'.tr,
+                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                ),
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                MyTextField(
+                  hintText: 'snapchat'.tr,
+                  controller: _snapchatController,
+                  focusNode: _snapchatFocus,
+                  nextFocus: _instagramFocus,
+                  inputType: TextInputType.name,
+                  capitalization: TextCapitalization.words,
+                ),
+
+
+
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text(
+                  'instagram'.tr,
+                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                ),
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                MyTextField(
+                  hintText: 'instagram'.tr,
+                  controller: _instagramController,
+                  focusNode: _instagramFocus,
+                  nextFocus: _websiteFocus,
+                  inputType: TextInputType.name,
+                  capitalization: TextCapitalization.words,
+                ),
+
+
+
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text(
+                  'website'.tr,
+                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                ),
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                MyTextField(
+                  hintText: 'website'.tr,
+                  controller: _websiteController,
+                  focusNode: _websiteFocus,
+                  nextFocus: _tiktokFocus,
+                  inputType: TextInputType.name,
+                  capitalization: TextCapitalization.words,
+                ),
+
+
+
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text(
+                  'tiktok'.tr,
+                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                ),
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                MyTextField(
+                  hintText: 'tiktok'.tr,
+                  controller: _tiktokController,
+                  focusNode: _tiktokFocus,
+                  nextFocus: _twitterFocus,
+                  inputType: TextInputType.name,
+                  capitalization: TextCapitalization.words,
+                ),
+
+
+
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text(
+                  'twitter'.tr,
+                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                ),
+                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                MyTextField(
+                  hintText: 'twitter'.tr,
+                  controller: _twitterController,
+                  focusNode: _twitterFocus,
+                  nextFocus: _twitterFocus,
+                  inputType: TextInputType.name,
+                  capitalization: TextCapitalization.words,
+                ),
+
+
               ]))),
             ))),
 
@@ -197,8 +326,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     String _lastName = _lastNameController.text.trim();
     String _email = _emailController.text.trim();
     String _phoneNumber = _phoneController.text.trim();
+
+    String _snapchat = _snapchatController.text.trim();
+    String _youtube = _youtubeController.text.trim();
+    String instagram = _instagramController.text.trim();
+    String _tiktok = _tiktokController.text.trim();
+    String _twitter = _twitterController.text.trim();
+    String _website = _websiteController.text.trim();
+
     if (userController.userInfoModel.name == _firstName && userController.userInfoModel.phone == _phoneNumber &&
-        userController.userInfoModel.email == _emailController.text && userController.pickedFile == null) {
+        userController.userInfoModel.email == _emailController.text && userController.pickedFile == null
+        && userController.userInfoModel.snapchat == _snapchat && userController.userInfoModel.youtube == _youtube
+        && userController.userInfoModel.instagram == instagram&& userController.userInfoModel.tiktok == _tiktok
+        && userController.userInfoModel.twitter == _twitter && userController.userInfoModel.website == _website) {
       showCustomSnackBar('change_something_to_update'.tr);
     }else if (_firstName.isEmpty) {
       showCustomSnackBar('enter_your_first_name'.tr);
@@ -211,7 +351,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }else if (_phoneNumber.length < 6) {
       showCustomSnackBar('enter_a_valid_phone_number'.tr);
     } else {
-      UserInfoModel _updatedUser = UserInfoModel(name: _firstName, email: _email, phone: _phoneNumber);
+      UserInfoModel _updatedUser = UserInfoModel(name: _firstName, email: _email,
+          phone: _phoneNumber,
+          snapchat: _snapchatController.text.trim(),
+        youtube: _youtubeController.text.trim(),
+        tiktok: _twitterController.text.trim(),
+        instagram: _instagramController.text.trim(),
+        website: _websiteController.text.trim(),
+          twitter: _twitterController.text.trim()
+      );
       ResponseModel _responseModel = await userController.updateUserInfo(_updatedUser, Get.find<AuthController>().getUserToken());
       if(_responseModel.isSuccess) {
         showCustomSnackBar('profile_updated_successfully'.tr, isError: false);

@@ -1,7 +1,9 @@
 
 import 'package:abaad/data/model/response/language_model.dart';
 import 'package:abaad/util/images.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 class AppConstants {
+  static final myLocation = LatLng(51.5090214, -0.1982948);
   static const String APP_NAME = 'Baad';
   static const double APP_VERSION = 1.0;
   static const String LOGIN_URI = '/api/v1/auth/login';

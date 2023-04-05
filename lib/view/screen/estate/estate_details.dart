@@ -834,7 +834,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                             Expanded(child:
                             Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
 
-                              Text(userController.agentInfoModel.name, style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                              Text("${userController.agentInfoModel.name}", style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
                               SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
                               Row(children: [
