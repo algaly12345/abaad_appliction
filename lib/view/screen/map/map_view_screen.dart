@@ -20,7 +20,6 @@ import 'package:abaad/util/images.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'widget/estate_details_sheet.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key key}) : super(key: key);
@@ -208,7 +207,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
       //       strokeWidth: 4,
       //     )
       // );
-      _customMarkersZone.add(MarkerData(
+      _customMarkersZone.add(
+          MarkerData(
         marker: Marker(markerId: MarkerId('id-$_index'),
             position: _latLng,
             onTap: () async {

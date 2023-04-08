@@ -23,7 +23,7 @@ class ServiceProviderItem extends StatelessWidget {
       _length = restaurants.length;
     return
       !_isNull ? _length > 0 ?Container(
-      height: 50,
+      height: 270,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4.0),
@@ -39,87 +39,102 @@ class ServiceProviderItem extends StatelessWidget {
 
       ),
       child:  ListView.builder(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.vertical,
         itemCount: estate.serviceOffers .length,
         itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 2.0, right: 2.0, top: 8.0),
-                child: Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Theme.of(context).primaryColor),
-                        shape: BoxShape.circle,
-                      ),
-                      child:  GetBuilder<SplashController>(builder: (splashController) {
-                        String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
-                        //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
-                        return CustomImage(
-                          image: '$_baseUrl/${estate.serviceOffers[index].image}',
-                          fit: BoxFit.cover,
-                          height: 35,
-                          width: 35,
-                        );
-                      },
-                      ),
-                    ),
-                    const SizedBox(width: 4.0),
-                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          return
+            Container(
+            padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 3,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+            child: Column(
+              children: [
+
+                Row(
+                    children: [
                       Container(
-                        width: 160.0,
-                        child:  Text(
-                          '${estate.serviceOffers[index].title}',
-                          style: robotoBlack.copyWith(fontSize: 11),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 2, color: Theme.of(context).primaryColor),
+                          shape: BoxShape.circle,
+                        ),
+                        child:  GetBuilder<SplashController>(builder: (splashController) {
+                          String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+                          //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
+                          return CustomImage(
+                            image: '$_baseUrl/${estate.serviceOffers[index].image}',
+                            fit: BoxFit.cover,
+                            height: 35,
+                            width: 35,
+                          );
+                        },
                         ),
                       ),
-                      const SizedBox(height: 3.0),
-                      SizedBox(
-                        height: 16,
-                        width: 44,
-                        child: CustomPaint(
-                          painter: PriceTagPaint(),
-                          child: Center(
-                            child: Text(
-                                "20%",
-                                style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
-                            ),
+                      const SizedBox(width: 4.0),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Container(
+
+                          child:  Text(
+                            '${estate.serviceOffers[index].title}',
+                            style: robotoBlack.copyWith(fontSize: 11),
                           ),
                         ),
-                      )
-                      // const RatingStars(
-                      //   value: 3* 1.0,
-                      //   starCount: 5,
-                      //   starSize: 7,
-                      //   valueLabelColor: Color(0xff9b9b9b),
-                      //   valueLabelTextStyle: TextStyle(
-                      //       color: Colors.white,
-                      //       fontFamily: 'WorkSans',
-                      //       fontWeight: FontWeight.w400,
-                      //       fontStyle: FontStyle.normal,
-                      //       fontSize: 9.0),
-                      //   valueLabelRadius: 7,
-                      //   maxValue: 5,
-                      //   starSpacing: 2,
-                      //   maxValueVisibility: false,
-                      //   valueLabelVisibility: true,
-                      //   animationDuration: Duration(milliseconds: 1000),
-                      //   valueLabelPadding:
-                      //   EdgeInsets.symmetric(vertical: 1, horizontal: 4),
-                      //   valueLabelMargin: EdgeInsets.only(right: 4),
-                      //   starOffColor: Color(0xffe7e8ea),
-                      //   starColor: Colors.yellow,
-                      // )
-                    ])
-                  ],
-                ),
-              ),
-              Divider(color: Colors.grey.shade600, height: 1.0)
-            ],
+                        const SizedBox(height: 3.0),
+                        SizedBox(
+                          height: 16,
+                          width: 44,
+                          child: CustomPaint(
+                            painter: PriceTagPaint(),
+                            child: Center(
+                              child: Text(
+                                  "20%",
+                                  style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
+                              ),
+                            ),
+                          ),
+                        )
+                        // const RatingStars(
+                        //   value: 3* 1.0,
+                        //   starCount: 5,
+                        //   starSize: 7,
+                        //   valueLabelColor: Color(0xff9b9b9b),
+                        //   valueLabelTextStyle: TextStyle(
+                        //       color: Colors.white,
+                        //       fontFamily: 'WorkSans',
+                        //       fontWeight: FontWeight.w400,
+                        //       fontStyle: FontStyle.normal,
+                        //       fontSize: 9.0),
+                        //   valueLabelRadius: 7,
+                        //   maxValue: 5,
+                        //   starSpacing: 2,
+                        //   maxValueVisibility: false,
+                        //   valueLabelVisibility: true,
+                        //   animationDuration: Duration(milliseconds: 1000),
+                        //   valueLabelPadding:
+                        //   EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                        //   valueLabelMargin: EdgeInsets.only(right: 4),
+                        //   starOffColor: Color(0xffe7e8ea),
+                        //   starColor: Colors.yellow,
+                        // )
+                      ])
+                    ],
+                  ),
+
+                // Divider(color: Colors.grey.shade600, height: 1.0)
+              ],
+            ),
           );
         },
       ),
-    ):Text("not data"):Text("looding");
+    ):Text(""):Text("");
   }
 }}

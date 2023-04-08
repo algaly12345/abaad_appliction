@@ -23,38 +23,20 @@ class EstateItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> images = <String>[
-      "https://images.unsplash.com/photo-1458071103673-6a6e4c4a3413?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
-      "https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1470406852800-b97e5d92e2aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80",
-      "https://images.unsplash.com/photo-1473700216830-7e08d47f858e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-    ];
 
-    List<Widget> widgets = [
-      ...images.map<Widget>((img) => Image.network(
-        img,
-        fit: BoxFit.cover,
-      ))
-    ];
-
-    List<ImageProvider> providers = [
-      ...images.map<ImageProvider>((img) => NetworkImage(
-        img,
-      ))
-    ];
     return  InkWell(
       onTap:onPressed,
       child: Container(
         width: context.width,
-        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+        padding: EdgeInsets.only(right: 5,left: 5,top: 3),
         // decoration: BoxDecoration(
         //   color: Theme.of(context).cardColor,
         //
         // ),
         child: Container(
-          alignment: Alignment.center,
+          alignment: Alignment.bottomCenter,
           child:Container(
-            height: 150,
+            height: 155,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(4), //border corner radius
@@ -82,10 +64,9 @@ class EstateItem extends StatelessWidget {
                         children: <Widget>[
 
                           Container(
-                            padding: const EdgeInsets.all(3.0),
-                            child:   Center(child: EstateImageView(estate_id:fav? estate.estate_id:estate.id,fromView: false)),
-                            width: 130,
-                            height: 140,
+                            child:   Container(child: EstateImageView(estate_id:fav? estate.estate_id:estate.id,fromView: false)),
+                            width: 155,
+                            height: 155,
                           ),
                           SizedBox(width: 11.0),
                           Flexible(
@@ -96,10 +77,62 @@ class EstateItem extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
-                                    SizedBox(width: 11.0),
-                                    Text(" ${estate.price}"  ,style: robotoBlack.copyWith(fontSize: 11)),
+                                   Row(
+                                     children: [
+                                       Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                                       SizedBox(width: 11.0),
+                                       Text(" ${estate.price}"  ,style: robotoBlack.copyWith(fontSize: 11)),
+                                     ],
+                                   )
+,
+                                    Container(
+                                      // height: 60,
+
+
+
+                                      child: Column(
+                                        children: [
+                                          fav?  Container(
+                                            width: 30, height: 30,
+                                            margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
+                                            child:     GetBuilder<WishListController>(builder: (wishController) {
+                                              bool _isWished = wishController.wishRestIdList.contains(estate.estate_id);
+                                              return InkWell(
+                                                onTap: () {
+                                                  if(Get.find<AuthController>().isLoggedIn()) {
+                                                    _isWished ? wishController.removeFromWishList(estate.estate_id) : wishController.addToWishList(estate, true);
+                                                  }else {
+                                                    showCustomSnackBar('you_are_not_logged_in'.tr);
+                                                  }
+                                                },
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(vertical:  Dimensions.PADDING_SIZE_SMALL ),
+                                                  child: Icon(
+                                                    _isWished ? Icons.favorite : Icons.favorite_border,  size:25,
+                                                    color: _isWished ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                          ):Container(),
+                                          Container(
+                                            width: 40,
+                                            margin: const EdgeInsets.only(top: 10),
+                                            decoration:  BoxDecoration(
+                                                color: estate.type_add=="for_rent"?Colors.blue:Colors.orange),
+                                            child:  Text(estate.type_add=="for_sell"?"للبيع":"للإجار",
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  color: Colors.white,)
+                                            ),
+                                          ),
+
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(
@@ -295,50 +328,7 @@ estate.category!="5"?     estate.property  != null ?Center(
                   ),
                 ),
 
-                Container(
 
-
-                  child: Column(
-                    children: [
-                      fav?  Container(
-                        width: 30, height: 30,
-                        margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
-                        child:     GetBuilder<WishListController>(builder: (wishController) {
-                          bool _isWished = wishController.wishRestIdList.contains(estate.estate_id);
-                          return InkWell(
-                            onTap: () {
-                              if(Get.find<AuthController>().isLoggedIn()) {
-                                _isWished ? wishController.removeFromWishList(estate.estate_id) : wishController.addToWishList(estate, true);
-                              }else {
-                                showCustomSnackBar('you_are_not_logged_in'.tr);
-                              }
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical:  Dimensions.PADDING_SIZE_SMALL ),
-                              child: Icon(
-                                _isWished ? Icons.favorite : Icons.favorite_border,  size:25,
-                                color: _isWished ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
-                              ),
-                            ),
-                          );
-                        }),
-                      ):Container(),
-                      Container(
-                        width: 40,
-                        margin: const EdgeInsets.only(top: 10),
-                        decoration:  BoxDecoration(
-                            color: estate.type_add=="for_rent"?Colors.blue:Colors.orange),
-                        child:  Text(estate.type_add=="for_sell"?"للبيع":"للإجار",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,)
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
               ],
             ),
           ),

@@ -75,6 +75,7 @@ class Images {
   static const String facebook = 'assets/image/facebook.png';
   static const String snap = 'assets/image/snap.png';
   static const String tiktok = 'assets/image/tiktok.png';
+  static const String near = 'assets/image/near.png';
 
 
 

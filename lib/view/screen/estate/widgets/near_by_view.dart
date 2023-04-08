@@ -1,3 +1,27 @@
+import 'dart:collection';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/estate_controller.dart';
+import 'package:abaad/controller/location_controller.dart';
+import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/user_controller.dart';
+import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/util/dimensions.dart';
+import 'package:abaad/util/images.dart';
+import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/custom_button.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/base/custom_text_field.dart';
+import 'package:abaad/view/screen/map/widget/location_search_dialog.dart';
+import 'package:abaad/view/screen/map/widget/permission_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -12,15 +36,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui' as ui;
 
-
-class CustomMarketInfoWindow extends StatefulWidget {
-  const CustomMarketInfoWindow({Key key}) : super(key: key);
+class NearByView extends StatefulWidget {
+  Estate esate;
+   NearByView({@required this.esate});
 
   @override
-  State<CustomMarketInfoWindow> createState() => _CustomMarketInfoWindowState();
+  State<NearByView> createState() => _NearByViewState();
 }
 
-class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
+class _NearByViewState extends State<NearByView> {
   CustomInfoWindowController _customInfoWindowController =
   CustomInfoWindowController();
   Completer<GoogleMapController> _controller = Completer();
@@ -31,6 +55,7 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
   String type = 'restaurant';
 
   Uint8List imageDataBytes;
+  BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   var markerIcon;
   GlobalKey iconKey = GlobalKey();
 
@@ -38,11 +63,21 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // loadData();
+    currentLat=double.parse(widget.esate.latitude);
+    currentLng=double.parse(widget.esate.longitude);
     navigateToCurrentPosition();
-    Future.delayed(Duration(seconds: 5), () {
-               getCustomMarkerIcon(iconKey);
-             });
+    setCustomMarkerIcon();
+
+    _marker.add(
+        Marker(markerId: MarkerId('id-0'),
+            icon: sourceIcon,
+            position: LatLng(
+              // double.parse(Get.find<LocationController>().getUserAddress().latitude),
+              // double.parse(Get.find<LocationController>().getUserAddress().longitude),
+              double.parse(widget.esate.latitude),
+              double.parse(widget.esate.longitude),
+            ))
+    );
     // getNearbyPlaces();
     // loadData();
   }
@@ -58,10 +93,22 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
   void addMarkers(Results results, int i) {
     _marker.add(Marker(
       markerId: MarkerId(i.toString()),
-      icon: BitmapDescriptor.defaultMarker,
-      position: LatLng(
+      icon:  BitmapDescriptor.defaultMarker,
+
+        position: LatLng(
           results.geometry.location.lat, results.geometry.location.lng),
     ));
+
+    _marker.add(
+        Marker(markerId: MarkerId('id-0'),
+            icon: sourceIcon,
+            position: LatLng(
+              // double.parse(Get.find<LocationController>().getUserAddress().latitude),
+              // double.parse(Get.find<LocationController>().getUserAddress().longitude),
+               double.parse(widget.esate.latitude),
+              double.parse(widget.esate.longitude),
+            ))
+    );
 
     setState(() {});
   }
@@ -83,13 +130,16 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
       debugPrint('My current location');
       debugPrint(value.latitude.toString() + value.longitude.toString());
 
+
       _marker.add(Marker(
           markerId: MarkerId("yeiuwe87"),
           position: LatLng(value.latitude, value.longitude),
           icon:  BitmapDescriptor.defaultMarker,
+
           infoWindow: InfoWindow(
             title: 'My current location',
           )));
+
 
       CameraPosition cameraPosition = CameraPosition(
         target: LatLng(value.latitude, value.longitude),
@@ -106,8 +156,8 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
     });
   }
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
+     CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(76575, 3242342),
     zoom: 14.4746,
   );
 
@@ -151,7 +201,12 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
       body: Stack(
         children: [
           GoogleMap(
-            initialCameraPosition: _kGooglePlex,
+            initialCameraPosition:  CameraPosition(zoom: 12, target: LatLng(
+              // double.parse(Get.find<LocationController>().getUserAddress().latitude),
+              // double.parse(Get.find<LocationController>().getUserAddress().longitude),
+                double.parse(widget.esate.latitude),
+                double.parse(widget.esate.longitude)
+            )),
             myLocationEnabled: true,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
@@ -182,9 +237,9 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
     _marker.clear();
     var url = Uri.parse(
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' +
-            currentLat.toString() +
+            widget.esate.latitude +
             ',' +
-            currentLng.toString() +
+            widget.esate.longitude +
             '&radius=1500&type=' +
             type +
             '&key=AIzaSyDa4Ng7nNB5EkPqvcI1yaxcl8QE1Ja-tPA');
@@ -203,41 +258,15 @@ class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
   }
 
 
-  getMarkerWidget() {
-    return Transform.translate(
-      offset: Offset(50, 50),
-      child: RepaintBoundary(
-        key: iconKey,
-        child: SizedBox(
-          height: 40,
-          width: 40,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                        Images.mail),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 5,
-                top: 6,
-                child: ClipOval(
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    child:Image.asset(Images.location_marker),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+  void setCustomMarkerIcon() {
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, Images.near)
+        .then(
+          (icon) {
+        sourceIcon = icon;
+      },
     );
   }
+
 
 }

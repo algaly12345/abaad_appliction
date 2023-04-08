@@ -23,6 +23,7 @@ import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
 import 'package:abaad/view/screen/estate/widgets/interface.dart';
+import 'package:abaad/view/screen/estate/widgets/near_by_view.dart';
 import 'package:abaad/view/screen/estate/widgets/network_type.dart';
 import 'package:clipboard/clipboard.dart';
 
@@ -662,58 +663,62 @@ class _EstateDetailsState extends State<EstateDetails> {
                       Text("معلومات اخرى",
                           style: robotoBlack.copyWith(fontSize: 14)),
 
-                      Container   (
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Theme.of(context).primaryColor,
-                                      spreadRadius: 1,
-                                      blurRadius: 2,
-                                      offset: Offset(0, 0.5), // changes position of shadow
-                                    ),
+                      GestureDetector(
+                        onTap: (){
+                      Get.dialog(NearByView(esate: _estate,));
+                        },
+                        child: Container   (
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).primaryColor,
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 0.5), // changes position of shadow
+                                      ),
 
-                                  ],
+                                    ],
 
+                                  ),
+
+                                  child: Column(children: <Widget>[
+                                  Image.asset(Images.estate_type,height: 70,width: 70,),
+                                    Text('المرافق',style: robotoBlack.copyWith(fontSize: 13)),
+
+                                  ]),
                                 ),
-
-                                child: Column(children: <Widget>[
-                                Image.asset(Images.estate_type,height: 70,width: 70,),
-                                  Text('المرافق',style: robotoBlack.copyWith(fontSize: 13)),
-
-                                ]),
-                              ),
                     Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context).primaryColor,
-                            spreadRadius: 1,
-                            blurRadius: 2,
-                            offset: Offset(0, 0.5), // changes position of shadow
-                          ),
-
-                        ],
-
-                      ),
-
-                      child: Column(children: <Widget>[
-                      Image.asset(Images.space,height: 70,width: 70,),
-                        Text('عروض مع العقار',style: robotoBlack.copyWith(fontSize: 12)),
-                      ]),
-                    ),
-                      Container(
                         padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).primaryColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+
+                        child: Column(children: <Widget>[
+                        Image.asset(Images.space,height: 70,width: 70,),
+                          Text('عروض مع العقار',style: robotoBlack.copyWith(fontSize: 12)),
+                        ]),
+                    ),
+                        Container(
+                          padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10.0),
@@ -735,7 +740,8 @@ class _EstateDetailsState extends State<EstateDetails> {
               estateController.estate.ageEstate!=null? Text(estateController.estate.ageEstate):Container(),
             ]),
             ),
-                            ]
+                              ]
+                          ),
                         ),
                       ),
                       SizedBox(height: 10),

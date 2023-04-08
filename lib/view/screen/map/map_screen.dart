@@ -37,9 +37,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:abaad/util/images.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_stack/image_stack.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'widget/estate_details_sheet.dart';
 import 'widget/location_search_dialog.dart';
 import 'widget/permission_dialog.dart';
 import 'widget/service_offer.dart';
@@ -73,11 +73,17 @@ class _MapViewScreenState extends State<MapScreen> {
   int _reload = 0;
   Set<Polygon> _polygon = HashSet<Polygon>();
   bool cardTapped = false;
+  bool card = false;
+  bool searchToggle = false;
+  Set<Circle> _circles = Set<Circle>();
+  bool radiusSlider = false;
+
   LatLng _initialPosition;
   var photoGalleryIndex = 0;
   final bool _ltr = Get.find<LocalizationController>().isLtr;
   MapType _currentMapType = MapType.normal;
   // Set<Marker> _markers = Set<Marker>();
+
   var tappedPoint;
   void _onMapTypeButtonPressed() {
     setState(() {
@@ -91,7 +97,7 @@ class _MapViewScreenState extends State<MapScreen> {
   int prevPage = 0;
   bool showBlankCard = false;
   bool pressedNear = false;
-  bool radiusSlider = false;
+
   var radiusValue = 3000.0;
   Timer _debounce;
   String tokenKey = '';
@@ -99,14 +105,35 @@ class _MapViewScreenState extends State<MapScreen> {
   void _onScroll() {
     if (_pageController.page.toInt() != prevPage) {
       prevPage = _pageController.page.toInt();
-      cardTapped = false;
+       cardTapped = false;
       photoGalleryIndex = 1;
       showBlankCard = false;
+      card=false;
       // goToTappedPlace();
       // fetchImage();
     }
   }
   int selectedIndex = 0;
+
+
+  void _setCircle(LatLng point) async {
+
+
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: point, zoom: 12)));
+    setState(() {
+      _circles.add(Circle(
+          circleId: CircleId('raj'),
+          center: point,
+          fillColor: Colors.blue.withOpacity(0.1),
+          radius: radiusValue,
+          strokeColor: Colors.blue,
+          strokeWidth: 1));
+    //  getDirections = false;
+      searchToggle = false;
+      radiusSlider = true;
+    });
+  }
 
 
   @override
@@ -141,6 +168,19 @@ class _MapViewScreenState extends State<MapScreen> {
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
     }
+    // getUserCurrentLocation().then((value) async {
+    //   CameraPosition cameraPosition = new CameraPosition(
+    //     target: LatLng(value.latitude, value.longitude),
+    //     zoom: 14,
+    //   );
+    //   _initialPosition = LatLng(
+    //       value.latitude,
+    //       value.longitude
+    //   );
+    //
+    //   _controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    //   setState(() {});
+    // });
     _initialPosition = LatLng(
         26.451363,
         50.109046
@@ -206,7 +246,7 @@ class _MapViewScreenState extends State<MapScreen> {
                   customMarkers: _customMarkers,
                   builder: (context, markers) {
                     if (markers == null) {
-                      return    Stack(children: [
+                      return              Stack(children: [
                         !_isNull ?_products.length>0?
 
                         GoogleMap(
@@ -216,12 +256,14 @@ class _MapViewScreenState extends State<MapScreen> {
                               26.451363,
                               50.109046
                           )),
+                          // markers: markers,
                           // myLocationEnabled: false,
                           // compassEnabled: false,
                           zoomControlsEnabled: true,
                           mapType: _currentMapType,
                           onTap: (point) {
                             tappedPoint = point;
+                            _setCircle(point);
                           },
                           minMaxZoomPreference: MinMaxZoomPreference(0, 40),
                           onMapCreated: (GoogleMapController controller) {
@@ -229,6 +271,7 @@ class _MapViewScreenState extends State<MapScreen> {
                             if(_products.length > 0) {
                               _setMarkers(_products);
                             }
+
                           },
                         ):Center(
                           child: NoDataScreen(
@@ -252,6 +295,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                 margin: const EdgeInsets.only(left: 10.0, right: 7.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
 
                                   children: <Widget>[
                                     Row(
@@ -298,7 +342,8 @@ class _MapViewScreenState extends State<MapScreen> {
                                         ),
                                         GestureDetector(
                                           onTap: (){
-                                            Get.dialog(FiltersScreen());
+                                            cardTapped=true;
+                                            // Get.dialog(FiltersScreen());
                                           },
                                           child: Container(
                                             padding: const EdgeInsets.all(7),
@@ -349,6 +394,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                                       categoryController.setSubCategoryIndex(index);
 
                                                       setState(() {
+
 
 
 
@@ -419,81 +465,85 @@ class _MapViewScreenState extends State<MapScreen> {
 
                                       ):Container();
 
-                                    })
+                                    }),
+
+
+                                    Container(
+                                        height: 200,
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              height: 60,
+                                              width: 60,
+                                              padding: const EdgeInsets.all(10.0),
+                                              child:  FloatingActionButton(
+                                                child: Icon(Icons.my_location, color: Theme.of(context).primaryColor),
+                                                mini: true, backgroundColor: Theme.of(context).cardColor,
+                                                onPressed: () => _checkPermission(() {
+                                                  Get.find<LocationController>().getCurrentLocation(false, mapController: _controller);
+                                                }),
+                                              ),
+                                            ),
+                                            Container(
+                                              height: 60,
+                                              width: 60,
+                                              padding: const EdgeInsets.all(10.0),
+                                              child: FloatingActionButton(
+                                                backgroundColor: Colors.white,
+                                                heroTag: 'recenterr',
+                                                onPressed:_onMapTypeButtonPressed,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0),
+                                                    side: const BorderSide(color: Color(0xFFECEDF1))),
+                                                child:  Icon(
+                                                  Icons.layers_outlined,
+                                                  color: Theme.of(context).primaryColor,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              height: 60,
+                                              width: 60,
+                                              padding: const EdgeInsets.all(10.0),
+                                              child: FloatingActionButton(
+                                                backgroundColor: Colors.white,
+                                                heroTag: 'recenterr',
+                                                onPressed: () {
+
+                                                },
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0),
+                                                    side: const BorderSide(color: Color(0xFFECEDF1))),
+                                                child: const Icon(
+                                                  Icons.my_location,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )),
                                   ],
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            height: 200,
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  padding: const EdgeInsets.all(10.0),
-                                  child:  FloatingActionButton(
-                                    child: Icon(Icons.my_location, color: Theme.of(context).primaryColor),
-                                    mini: true, backgroundColor: Theme.of(context).cardColor,
-                                    onPressed: () => _checkPermission(() {
-                                      Get.find<LocationController>().getCurrentLocation(false, mapController: _controller);
-                                    }),
-                                  ),
-                                ),
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: FloatingActionButton(
-                                    backgroundColor: Colors.white,
-                                    heroTag: 'recenterr',
-                                    onPressed:_onMapTypeButtonPressed,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                        side: const BorderSide(color: Color(0xFFECEDF1))),
-                                    child:  Icon(
-                                      Icons.layers_outlined,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: FloatingActionButton(
-                                    backgroundColor: Colors.white,
-                                    heroTag: 'recenterr',
-                                    onPressed: () {
+                        // Align(
+                        //           alignment: Alignment.bottomCenter,
+                        //           child:
+                        //           Container(height: 200,
+                        //             child:   nearbyPlacesList(_products))
+                        //         ),
 
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                        side: const BorderSide(color: Color(0xFFECEDF1))),
-                                    child: const Icon(
-                                      Icons.my_location,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        pressedNear
-                            ? Positioned(
-                            bottom: 20.0,
-                            child: Container(
-                              height: 200.0,
-                              width: MediaQuery.of(context).size.width,
-                              child:nearbyPlacesList(_products),
-                            ))
-                            : Container(),
+                        // pressedNear
+                        //     ? Positioned(
+                        //     bottom: 20.0,
+                        //     child: Container(
+                        //       // height: 300.0,
+                        //       width: MediaQuery.of(context).size.width,
+                        //       child:nearbyPlacesList(_products),
+                        //     ))
+                        //     : Container(),
                         cardTapped
                             ? Positioned(
                             top: 100.0,
@@ -502,7 +552,7 @@ class _MapViewScreenState extends State<MapScreen> {
                               front: Container(
                                 height: 250.0,
                                 width: 175.0,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                     color: Colors.white,
                                     borderRadius:
                                     BorderRadius.all(Radius.circular(8.0))),
@@ -511,50 +561,29 @@ class _MapViewScreenState extends State<MapScreen> {
                                     Container(
                                       height: 150.0,
                                       width: 175.0,
-
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(7.0),
-                                      width: 175.0,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Address: ',
-                                            style: TextStyle(
-                                                fontFamily: 'WorkSans',
-                                                fontSize: 12.0,
-                                                fontWeight: FontWeight.w500),
+                                      decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(8.0),
+                                            topRight: Radius.circular(8.0),
                                           ),
-
-                                        ],
-                                      ),
+                                          image: DecorationImage(
+                                              image: NetworkImage('https://cdn.dribbble.com/users/234969/screenshots/5404808/medallion_burst_animation.gif'),
+                                              fit: BoxFit.cover)),
                                     ),
                                     Container(
                                       padding:
-                                      EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
+                                      const EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
                                       width: 175.0,
                                       child: Row(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Contact: ',
-                                            style: TextStyle(
-                                                fontFamily: 'WorkSans',
-                                                fontSize: 12.0,
-                                                fontWeight: FontWeight.w500),
+                                        CrossAxisAlignment.center,
+                                        children:  [
+                                          SizedBox(
+                                            width: 150,
+                                            child: Text(
+                                              "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 11),
+                                            ),
                                           ),
-                                          Container(
-                                              width: 105.0,
-                                              child: Text(
-                                                'none given',
-                                                style: TextStyle(
-                                                    fontFamily: 'WorkSans',
-                                                    fontSize: 11.0,
-                                                    fontWeight: FontWeight.w400),
-                                              ))
                                         ],
                                       ),
                                     ),
@@ -562,71 +591,39 @@ class _MapViewScreenState extends State<MapScreen> {
                                 ),
                               ),
                               back: Container(
-                                height: 300.0,
-                                width: 225.0,
-                                decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.95),
-                                    borderRadius: BorderRadius.circular(8.0)),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                // isReviews = true;
-                                                // isPhotos = false;
-                                              });
-                                            },
-                                            child: AnimatedContainer(
-                                              duration: Duration(milliseconds: 700),
-                                              curve: Curves.easeIn,
-                                              padding: EdgeInsets.fromLTRB(
-                                                  7.0, 4.0, 7.0, 4.0),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                // isReviews = false;
-                                                // isPhotos = true;
-                                              });
-                                            },
-                                            child: AnimatedContainer(
-                                              duration: Duration(milliseconds: 700),
-                                              curve: Curves.easeIn,
-                                              padding: EdgeInsets.fromLTRB(
-                                                  7.0, 4.0, 7.0, 4.0),
-                                              child: Text(
-                                                'Photos',
-                                                style: TextStyle(
-                                                    color:  Colors.black87,
-                                                    fontFamily: 'WorkSans',
-                                                    fontSize: 12.0,
-                                                    fontWeight: FontWeight.w500),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                // height: 300.0,
+                                  width: 225.0,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.95),
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                  child:Column(
+                                    children: [
+                                      for (int i = 0; i < _products.length; i++)
+                                        ServiceProviderItem(estate:_products[i],restaurants:_products[i].serviceOffers,
+                                        ),
+                                    ],
+                                  )
+
                               ),
                             ))
                             : Container(),
 
-                        GetBuilder<SplashController>(builder: (splashController) {
-                          // for (int i = 0; i < _products.length; i++) {
-                          // Estate currentCoordinate = _products[i];
-                          // print('Coordinate ${i+1}: (${currentCoordinate.id}, ${currentCoordinate.title})');
-                          // }
-                          return splashController.nearestEstateIndex != -1 ? nearbyPlacesList(_products): const SizedBox();
-                        }),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child:
+                          Container(
+                            height: 200,
+                            child: GetBuilder<SplashController>(builder: (splashController) {
+                              for (int i = 0; i < _products.length; i++) {
+                                Estate currentCoordinate = _products[i];
+                                print('Coordinate ${i+1}: (${currentCoordinate.id}, ${currentCoordinate.title})');
+                                selectedIndex = i;
+
+                              }
+                              return nearbyPlacesList(_products);
+                            }),
+                          ),
+                        ),
 
                       ]);
                     }
@@ -648,6 +645,7 @@ class _MapViewScreenState extends State<MapScreen> {
                   mapType: _currentMapType,
                   onTap: (point) {
                     tappedPoint = point;
+                    _setCircle(point);
                   },
                   minMaxZoomPreference: MinMaxZoomPreference(0, 40),
                   onMapCreated: (GoogleMapController controller) {
@@ -655,6 +653,7 @@ class _MapViewScreenState extends State<MapScreen> {
                     if(_products.length > 0) {
                       _setMarkers(_products);
                     }
+
                   },
                 ):Center(
                   child: NoDataScreen(
@@ -678,6 +677,7 @@ class _MapViewScreenState extends State<MapScreen> {
                         margin: const EdgeInsets.only(left: 10.0, right: 7.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
 
                           children: <Widget>[
                             Row(
@@ -724,7 +724,8 @@ class _MapViewScreenState extends State<MapScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: (){
-                                    Get.dialog(FiltersScreen());
+
+                                   // Get.dialog(FiltersScreen());
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.all(7),
@@ -846,220 +847,166 @@ class _MapViewScreenState extends State<MapScreen> {
 
                               ):Container();
 
-                            })
+                            }),
+
+
+                            Container(
+                              height: 200,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width: 60,
+                                    padding: const EdgeInsets.all(10.0),
+                                    child:  FloatingActionButton(
+                                      child: Icon(Icons.my_location, color: Theme.of(context).primaryColor),
+                                      mini: true, backgroundColor: Theme.of(context).cardColor,
+                                      onPressed: () => _checkPermission(() {
+                                        Get.find<LocationController>().getCurrentLocation(false, mapController: _controller);
+                                      }),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 60,
+                                    width: 60,
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.white,
+                                      heroTag: 'recenterr',
+                                      onPressed:_onMapTypeButtonPressed,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          side: const BorderSide(color: Color(0xFFECEDF1))),
+                                      child:  Icon(
+                                        Icons.layers_outlined,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 60,
+                                    width: 60,
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.white,
+                                      heroTag: 'recenterr',
+                                      onPressed: () {
+
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          side: const BorderSide(color: Color(0xFFECEDF1))),
+                                      child: const Icon(
+                                        Icons.my_location,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+
                           ],
                         ),
                       ),
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child:
-                Container(height: 200,
-                    child:   nearbyPlacesList(_products))
+        // Align(
+        //           alignment: Alignment.bottomCenter,
+        //           child:
+        //           Container(height: 200,
+        //             child:   nearbyPlacesList(_products))
+        //         ),
 
-                  // Container(
-                  //   height: 200,
-                  //   child: Column(
-                  //     children: [
-                  //       Container(
-                  //         height: 60,
-                  //         width: 60,
-                  //         padding: const EdgeInsets.all(10.0),
-                  //         child:  FloatingActionButton(
-                  //           child: Icon(Icons.my_location, color: Theme.of(context).primaryColor),
-                  //           mini: true, backgroundColor: Theme.of(context).cardColor,
-                  //           onPressed: () => _checkPermission(() {
-                  //             Get.find<LocationController>().getCurrentLocation(false, mapController: _controller);
-                  //           }),
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         height: 60,
-                  //         width: 60,
-                  //         padding: const EdgeInsets.all(10.0),
-                  //         child: FloatingActionButton(
-                  //           backgroundColor: Colors.white,
-                  //           heroTag: 'recenterr',
-                  //           onPressed:_onMapTypeButtonPressed,
-                  //           shape: RoundedRectangleBorder(
-                  //               borderRadius: BorderRadius.circular(10.0),
-                  //               side: const BorderSide(color: Color(0xFFECEDF1))),
-                  //           child:  Icon(
-                  //             Icons.layers_outlined,
-                  //             color: Theme.of(context).primaryColor,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         height: 60,
-                  //         width: 60,
-                  //         padding: const EdgeInsets.all(10.0),
-                  //         child: FloatingActionButton(
-                  //           backgroundColor: Colors.white,
-                  //           heroTag: 'recenterr',
-                  //           onPressed: () {
-                  //
-                  //           },
-                  //           shape: RoundedRectangleBorder(
-                  //               borderRadius: BorderRadius.circular(10.0),
-                  //               side: const BorderSide(color: Color(0xFFECEDF1))),
-                  //           child: const Icon(
-                  //             Icons.my_location,
-                  //             color: Colors.grey,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                ),
-
-                pressedNear
-                    ? Positioned(
-                    bottom: 20.0,
-                    child: Container(
-                      height: 200.0,
-                      width: MediaQuery.of(context).size.width,
-                      child:nearbyPlacesList(_products),
-                    ))
-                    : Container(),
-                cardTapped
-                    ? Positioned(
-                    top: 100.0,
-                    left: 15.0,
-                    child: FlipCard(
-                      front: Container(
-                        height: 250.0,
-                        width: 175.0,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(8.0))),
-                        child: SingleChildScrollView(
-                          child: Column(children: [
-                            Container(
-                              height: 150.0,
-                              width: 175.0,
-
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(7.0),
-                              width: 175.0,
-                              child: Row(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Address: ',
-                                    style: TextStyle(
-                                        fontFamily: 'WorkSans',
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding:
-                              EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
-                              width: 175.0,
-                              child: Row(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Contact: ',
-                                    style: TextStyle(
-                                        fontFamily: 'WorkSans',
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Container(
-                                      width: 105.0,
-                                      child: Text(
-                                            'none given',
-                                        style: TextStyle(
-                                            fontFamily: 'WorkSans',
-                                            fontSize: 11.0,
-                                            fontWeight: FontWeight.w400),
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ]),
-                        ),
-                      ),
-                      back: Container(
-                        height: 300.0,
-                        width: 225.0,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.95),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        // isReviews = true;
-                                        // isPhotos = false;
-                                      });
-                                    },
-                                    child: AnimatedContainer(
-                                      duration: Duration(milliseconds: 700),
-                                      curve: Curves.easeIn,
-                                      padding: EdgeInsets.fromLTRB(
-                                          7.0, 4.0, 7.0, 4.0),
+                // pressedNear
+                //     ? Positioned(
+                //     bottom: 20.0,
+                //     child: Container(
+                //       // height: 300.0,
+                //       width: MediaQuery.of(context).size.width,
+                //       child:nearbyPlacesList(_products),
+                //     ))
+                //     : Container(),
+                        cardTapped
+                            ? Positioned(
+                            top: 100.0,
+                            left: 15.0,
+                            child: FlipCard(
+                              front: Container(
+                                height: 250.0,
+                                width: 175.0,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0))),
+                                child: SingleChildScrollView(
+                                  child: Column(children: [
+                                    Container(
+                                      height: 150.0,
+                                      width: 175.0,
+                                      decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(8.0),
+                                            topRight: Radius.circular(8.0),
+                                          ),
+                                          image: DecorationImage(
+                                              image: NetworkImage('https://cdn.dribbble.com/users/234969/screenshots/5404808/medallion_burst_animation.gif'),
+                                              fit: BoxFit.cover)),
                                     ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        // isReviews = false;
-                                        // isPhotos = true;
-                                      });
-                                    },
-                                    child: AnimatedContainer(
-                                      duration: Duration(milliseconds: 700),
-                                      curve: Curves.easeIn,
-                                      padding: EdgeInsets.fromLTRB(
-                                          7.0, 4.0, 7.0, 4.0),
-                                      child: Text(
-                                        'Photos',
-                                        style: TextStyle(
-                                            color:  Colors.black87,
-                                            fontFamily: 'WorkSans',
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w500),
+                                    Container(
+                                      padding:
+                                      const EdgeInsets.fromLTRB(7.0, 0.0, 7.0, 0.0),
+                                      width: 175.0,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children:  [
+                                          SizedBox(
+                                            width: 150,
+                                            child: Text(
+                                              "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 11),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  )
-                                ],
+                                  ]),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ))
-                    : Container(),
+                              back: Container(
+                                // height: 300.0,
+                                width: 225.0,
+                                decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.95),
+                                    borderRadius: BorderRadius.circular(8.0)),
+                                child:Column(
+                                  children: [
+                                    for (int i = 0; i < _products.length; i++)
+                                    ServiceProviderItem(estate:_products[i],restaurants:_products[i].serviceOffers,
+                                    ),
+                                  ],
+                                )
 
-                GetBuilder<SplashController>(builder: (splashController) {
-                    for (int i = 0; i < _products.length; i++) {
-                    Estate currentCoordinate = _products[i];
-                    print('Coordinate ${i+1}: (${currentCoordinate.id}, ${currentCoordinate.title})');
-                    selectedIndex = i;
+                              ),
+                            ))
+                            : Container(),
 
-                    }
-                  return cardTapped? nearbyPlacesList(_products): const SizedBox();
-                }),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                  child:
+                  Container(
+                    height: 200,
+                    child: GetBuilder<SplashController>(builder: (splashController) {
+                        for (int i = 0; i < _products.length; i++) {
+                        Estate currentCoordinate = _products[i];
+                        print('Coordinate ${i+1}: (${currentCoordinate.id}, ${currentCoordinate.title})');
+                        selectedIndex = i;
+
+                        }
+                      return nearbyPlacesList(_products);
+                    }),
+                  ),
+                ),
 
               ]);
 
@@ -1110,83 +1057,80 @@ class _MapViewScreenState extends State<MapScreen> {
       _customMarkers.add(MarkerData(
 
           marker: Marker(
+              infoWindow: InfoWindow( //popup info
+                title: '${estate[i].title}',
+                snippet: ' المساحة ${estate[i].space}',
+              ),
+
 
               markerId: MarkerId('id-$i'), position: _latLng, onTap: () {
             selectedIndex = i;
             // pressedNear=true;
-           //  Get.find<SplashController>().setNearestEstateIndex(i);
 
-            // cardTapped = fal
+
+
             // _pageController.animateToPage(i, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut,);
                 print("---------------------------------------------$i");
 
             _pageController.animateToPage(selectedIndex, duration: const Duration(milliseconds: 800), curve: Curves.easeInOut,);
 
-            // setState(() {});
+
+
           }),
           child: Column(
             children: [
-              Container(
+              GestureDetector(
+                onTap: (){
+                },
+                child:  Container(
 
-                padding:   const EdgeInsets.only(right: 1,left: 1),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Theme.of(context).secondaryHeaderColor
-                  ),
-                  borderRadius: BorderRadius.circular(2.0),
-                  color: Colors.white,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                        '${currentCoordinate.price}',
-                        style:robotoBlack.copyWith(fontSize: 7)
+
+                  padding:   const EdgeInsets.only(right: 1,left: 1),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Theme.of(context).secondaryHeaderColor
                     ),
-                    Image.asset(currentCoordinate.serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
-                  ],
+                    borderRadius: BorderRadius.circular(2.0),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                          '${currentCoordinate.price}',
+                          style:robotoBlack.copyWith(fontSize: 7)
+                      ),
+                      Image.asset(currentCoordinate.serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
+                    ],
 
+                  ),
                 ),
               ),
 
-              Stack(
+     selectedIndex==i?         Stack(
                 children: [
-                  Image.asset(Images.location_marker, height: 35, width: 35,color:currentCoordinate.serviceOffers.length==0?Theme.of(context).primaryColor:Colors.orange),
+                  Image.asset(Images.location_marker, height: 40, width: 40,color:currentCoordinate.serviceOffers.length==0?Theme.of(context).primaryColorDark:Colors.orange),
                   Positioned(top: 3, left: 0, right: 0, child: Center(
-                    child: ClipOval(child: CustomImage(image: "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Front-Of-Smaller-House-AdobeStock-118866140%20copy.jpeg", placeholder: Images.placeholder, height: 18, width: 18, fit: BoxFit.cover)),
+                    child: ClipOval(child: CustomImage(image: "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Front-Of-Smaller-House-AdobeStock-118866140%20copy.jpeg", placeholder: Images.placeholder, height: 20, width: 20, fit: BoxFit.cover)),
                   )),
                 ],
-              ),
+              ): Stack(
+       children: [
+         Image.asset(Images.location_marker, height: 35, width: 35,color:currentCoordinate.serviceOffers.length==0?Theme.of(context).primaryColor:Colors.orange),
+         Positioned(top: 3, left: 0, right: 0, child: Center(
+           child: ClipOval(child: CustomImage(image: "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Front-Of-Smaller-House-AdobeStock-118866140%20copy.jpeg", placeholder: Images.placeholder, height: 18, width: 18, fit: BoxFit.cover)),
+         )),
+       ],
+     ),
             ],
           )
 
 
       ));
 
-       // Marker marker = Marker(
-       //    markerId: MarkerId('marker_$i'),
-       //    position: _latLng,
-       //     icon: markerIcon ?? BitmapDescriptor.defaultMarker,
-       //    onTap: () {
-       //
-       //      pressedNear=true;
-       //       // Get.find<SplashController>().setNearestEstateIndex(i);
-       //       //    setState(() {
-       //           // cardTapped = fal
-       //            showCustomSnackBar(estate[i].title);
-       //            selectedIndex = i;
-       //           // _pageController.animateToPage(i, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut,);
-       //
-       //            _pageController.animateToPage(i, duration: const Duration(milliseconds: 800), curve: Curves.easeInOut,);
-       //
-       //          // });
-       //    },
-       //   );
 
 
-      // setState(() {
-      //   _markers.add(marker);
-      // });
+
     }
 
 
@@ -1205,6 +1149,16 @@ class _MapViewScreenState extends State<MapScreen> {
   }
 
 
+
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission().then((value) {
+      print(value);
+    }).onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+      print("ERROR" + error.toString());
+    });
+    return await Geolocator.getCurrentPosition();
+  }
   nearbyPlacesList(List<Estate> _products) {
 
     return  PageView.builder(
@@ -1212,17 +1166,34 @@ class _MapViewScreenState extends State<MapScreen> {
         controller: _pageController,
         itemCount: _products.length,
         onPageChanged:(int value) {
+
+
           selectedIndex = value;
           _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
               target: LatLng(
                   double.parse( _products[selectedIndex].latitude),
                   double.parse( _products[selectedIndex].longitude)),
-              zoom: 14.0,
+              zoom: 18.0,
               bearing: 45.0,
               tilt: 45.0)));
 
+
+          if(_products[selectedIndex].serviceOffers.length >0){
+            cardTapped=true;
+            setState(() {
+
+            });
+          }else{
+            cardTapped=false ;
+            setState(() {
+
+            });
+          }
+
+
         },
         itemBuilder: (BuildContext context, int index) {
+
           return AnimatedBuilder(
             animation: _pageController,
 
@@ -1234,6 +1205,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
               }
 
+
               return Center(
                 child: SizedBox(
                   // height: Curves.easeInOut.transform(value) * 125.0,
@@ -1244,29 +1216,91 @@ class _MapViewScreenState extends State<MapScreen> {
             },
             child: InkWell(
               onTap: () async {
-                cardTapped = !cardTapped;
-                if (cardTapped) {
-                  // tappedPlaceDetail = await MapServices()
-                  //     .getPlace(allFavoritePlaces[index]['place_id']);
-                  showCustomSnackBar("message");
-                  setState(() {
-                  });
-                }
+
+
+                        cardTapped==true;
+
 
 
 
               },
-              child: Stack(
+              child: Column(
                 children: [
-                  Center(
-                    child:   EstateItem(estate: _products[index],onPressed: (){
-                      Get.toNamed(RouteHelper.getDetailsRoute( _products[index].id,_products[index].userId));
-                    },fav: false,),
+                  Column(
+                    children: [
+                      Container(
+
+                        width: context.width,
+                        child: _products[index].serviceOffers.length>0? SizedBox(
+                          height: 35,
+
+                          child: Container(
+
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 2, color: Colors.orangeAccent),
+                               color: Colors.white,
+                            ),
+                            child: GestureDetector(
+                              onTap: () async {
+
+                              },
+
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Image.asset(Images.offer_icon, height: 35, width: 40),
+                                      Text("يتضمن عروض خاص مقدمة لك",style: robotoBlack.copyWith(fontSize: 11)),
+                                    ],
+                                  ),
+                                  Center(
+                                    child:      SizedBox(
+
+                                      child: Row(
+                                        children: [
+                                          for (var i = 0; i < _products[index].serviceOffers.length; i++)
+
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(width: 1, color: Theme.of(context).primaryColor),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              alignment: Alignment.topRight,
+                                              child: ClipOval(child: CustomImage(
+                                                image: '${Get.find<SplashController>().configModel.baseUrls.provider}'
+                                                    '/${ _products[index].serviceOffers[i].image}',
+                                                height: 27, width: 27, fit: BoxFit.cover,
+                                              )),
+                                            ),
+
+
+                                        ],
+                                      ),
+                                    ),
+                                    ),
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        ):SizedBox(
+                          height: 35,
+                        ),
+                      ),
+                      Center(
+                        child:   EstateItem(estate: _products[index],onPressed: (){
+                          Get.toNamed(RouteHelper.getDetailsRoute( _products[index].id,_products[index].userId));
+                        },fav: false,),
+                      ),
+                    ],
                   )
                 ],
               ),
             ),
           );
+
         });
   }
 
