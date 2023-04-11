@@ -343,7 +343,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                         GestureDetector(
                                           onTap: (){
                                             cardTapped=true;
-                                            // Get.dialog(FiltersScreen());
+                                        Get.dialog(FiltersScreen());
                                           },
                                           child: Container(
                                             padding: const EdgeInsets.all(7),
@@ -725,7 +725,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                 GestureDetector(
                                   onTap: (){
 
-                                   // Get.dialog(FiltersScreen());
+                               Get.dialog(FiltersScreen());
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.all(7),
@@ -1109,7 +1109,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
      selectedIndex==i?         Stack(
                 children: [
-                  Image.asset(Images.location_marker, height: 40, width: 40,color:currentCoordinate.serviceOffers.length==0?Theme.of(context).primaryColorDark:Colors.orange),
+                  Image.asset(Images.location_marker, height: 40, width: 40,color:currentCoordinate.serviceOffers.length==0?Colors.red:Colors.orange),
                   Positioned(top: 3, left: 0, right: 0, child: Center(
                     child: ClipOval(child: CustomImage(image: "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Front-Of-Smaller-House-AdobeStock-118866140%20copy.jpeg", placeholder: Images.placeholder, height: 20, width: 20, fit: BoxFit.cover)),
                   )),

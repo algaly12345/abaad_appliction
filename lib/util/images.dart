@@ -77,6 +77,10 @@ class Images {
   static const String tiktok = 'assets/image/tiktok.png';
   static const String near = 'assets/image/near.png';
 
+  static const String hosptial = 'assets/image/hosptial.png';
+  static const String mosque = 'assets/image/mosque.png';
+  static const String restaurant = 'assets/image/restaurant.png';
+
 
 
 

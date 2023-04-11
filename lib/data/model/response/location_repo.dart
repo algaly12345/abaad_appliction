@@ -16,8 +16,8 @@ class LocationRepo {
     return await apiClient.getData(AppConstants.ADDRESS_LIST_URI);
   }
 
-  Future<Response> getZone(String lat, String lng) async {
-    return await apiClient.getData('${AppConstants.ZONE_URI}?lat=$lat&lng=$lng');
+  Future<Response> getZone(String lat, String lng,String address) async {
+    return await apiClient.getData('${AppConstants.ZONE_URI}?lat=$lat&lng=$lng&address=$address');
   }
 
   Future<Response> removeAddressByID(int id) async {

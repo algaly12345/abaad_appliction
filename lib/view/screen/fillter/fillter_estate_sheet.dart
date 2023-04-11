@@ -29,10 +29,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
       PopularFilterListData.accomodationList;
   int _typeProperties = 0;
   String type_properties;
+  String ctiy_name;
+  String districts;
 
   RangeValues _values = const RangeValues(100, 600);
-  double distValue = 50.0;
+  double distValue = 0;
   final ScrollController _scrollController = ScrollController();
+
+
 
 
   @override
@@ -322,6 +326,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               onChanged: (int value) {
                                 zoneController.setSubCategoryIndex(value, true);
                                 zoneController.getSubSubCategoryList(value != 0 ? zoneController.subCategoryList[value-1].cityId : 0);
+                                ctiy_name=zoneController.subCategoryList[value-1].nameAr ;
                               },
                               isExpanded: true,
                               underline: SizedBox(),
@@ -359,6 +364,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               }).toList(),
                               onChanged: (int value) {
                                 zoneController.setSubSubCategoryIndex(value, true);
+                                districts= zoneController.subSubCategoryList[value-1].nameAr ;
                               },
                               isExpanded: true,
                               underline: SizedBox(),
@@ -407,8 +413,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                       borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                       highlightColor: Colors.transparent,
                       onTap: () {
-                  //   categoryController.setFilterIndex(restController.getCategoryIndex());
-                        Navigator.pop(context);
+                       showCustomSnackBar("${(distValue/10).toInt()}");
+                    categoryController.setFilterIndex(restController.getCategoryIndex(),ctiy_name,districts,(distValue/10).toInt());
+                    Navigator.pop(context);
                       },
                       child: const Center(
                         child: Text(

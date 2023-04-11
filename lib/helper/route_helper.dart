@@ -28,6 +28,7 @@ import 'package:abaad/view/screen/estate/widgets/feature_item_view.dart';
 import 'package:abaad/view/screen/language/language_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:abaad/view/screen/map/map_screen.dart';
+import 'package:abaad/view/screen/map/pick_map_screen.dart';
 import 'package:abaad/view/screen/notification/notification_screen.dart';
 import 'package:abaad/view/screen/onboard/old/onboarding_screen.dart';
 import 'package:abaad/view/screen/onboard/on_boarding_page.dart';
@@ -50,7 +51,7 @@ class RouteHelper {
   static const String verification = '/verification';
   static const String accessLocation = '/access-location';
   static const String update = '/update';
-  static const String pickMap = '/pick-map';
+   static const String pickMap = '/pick-map';
   static const String interest = '/interest';
   static const String main = '/main';
   static const String profile = '/profile';
@@ -72,6 +73,7 @@ class RouteHelper {
 
 
 
+
   static String getProfileRoute() => '$profile';
   static String getInitialRoute() => '$initial';
   static String getCategoryRoute(int id ) => '$categories?id=$id';
@@ -79,6 +81,7 @@ class RouteHelper {
   static String getUpdateProfileRoute() => '$updateProfile';
   static String getConversationRoute(int id) => '$conversation';
   static String getWalletRoute(bool fromWallet) => '$wallet?page=${fromWallet ? 'wallet' : 'loyalty_points'}';
+  static String getPickMapRoute(String page, bool canRoute) => '$pickMap?page=$page&route=${canRoute.toString()}';
 
   static String getSuccess() => '$success';
   static String getSplashRoute(NotificationBody body) {
@@ -106,6 +109,7 @@ class RouteHelper {
   static String getAddEstateRouteTow() => '$addEstateTow';
   static String getAgentRegister() => '$agent';
   static String getBusinessPlanRoute(int restaurantId) => '$businessPlan?id=$restaurantId';
+
 
 
   static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id}) {
@@ -165,6 +169,17 @@ class RouteHelper {
       bool _fromAddress = Get.parameters['page'] == 'add-address';
       return (_fromAddress && _pickMapScreen == null) ? NotFound() : _pickMapScreen ?? MapScreen(mainCategory:ZoneModel(id: int.parse(Get.parameters['id'])) ,
          fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: _fromAddress, route: Get.parameters['page'],
+        canRoute: Get.parameters['route'] == 'true',
+      );
+    }),
+
+
+    GetPage(name: pickMap, page: () {
+      PickMapScreen _pickMapScreen = Get.arguments;
+      bool _fromAddress = Get.parameters['page'] == 'add-address';
+      return (_fromAddress && _pickMapScreen == null) ? NotFound() : _pickMapScreen != null ? _pickMapScreen
+          : PickMapScreen(
+        fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: _fromAddress, route: Get.parameters['page'],
         canRoute: Get.parameters['route'] == 'true',
       );
     }),

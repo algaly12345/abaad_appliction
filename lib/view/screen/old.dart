@@ -1,243 +1,68 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
-
-import 'package:abaad/data/repository/nearbyplacesmodel.dart';
-import 'package:abaad/util/images.dart';
-import 'package:custom_info_window/custom_info_window.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'dart:ui' as ui;
-
-
-class CustomMarketInfoWindow extends StatefulWidget {
-  const CustomMarketInfoWindow({Key key}) : super(key: key);
-
-  @override
-  State<CustomMarketInfoWindow> createState() => _CustomMarketInfoWindowState();
-}
-
-class _CustomMarketInfoWindowState extends State<CustomMarketInfoWindow> {
-  CustomInfoWindowController _customInfoWindowController =
-  CustomInfoWindowController();
-  Completer<GoogleMapController> _controller = Completer();
-  final List<Marker> _marker = [];
-  NearbyPlacesResponse nearbyPlacesResponse = NearbyPlacesResponse();
-  double currentLat = 0.0;
-  double currentLng = 0.0;
-  String type = 'restaurant';
-
-  Uint8List imageDataBytes;
-  var markerIcon;
-  GlobalKey iconKey = GlobalKey();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // loadData();
-    navigateToCurrentPosition();
-    Future.delayed(Duration(seconds: 5), () {
-               getCustomMarkerIcon(iconKey);
-             });
-    // getNearbyPlaces();
-    // loadData();
-  }
-
-  loadData() {
-    if (nearbyPlacesResponse.results != null) {
-      for (int i = 0; i < nearbyPlacesResponse.results.length; i++) {
-        addMarkers(nearbyPlacesResponse.results[i], i);
-      }
-    }
-  }
-
-  void addMarkers(Results results, int i) {
-    _marker.add(Marker(
-      markerId: MarkerId(i.toString()),
-      icon: BitmapDescriptor.defaultMarker,
-      position: LatLng(
-          results.geometry.location.lat, results.geometry.location.lng),
-    ));
-
-    setState(() {});
-  }
-
-  Future<Position> getUserCurrentLocation() async {
-    await Geolocator.requestPermission()
-        .then((value) {})
-        .onError((error, stackTrace) {
-      debugPrint('error in getting current location');
-      debugPrint(error.toString());
-    });
-
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }
-
-  void navigateToCurrentPosition() {
-    getUserCurrentLocation().then((value) async {
-      debugPrint('My current location');
-      debugPrint(value.latitude.toString() + value.longitude.toString());
-
-      _marker.add(Marker(
-          markerId: MarkerId("yeiuwe87"),
-          position: LatLng(value.latitude, value.longitude),
-          icon:  BitmapDescriptor.defaultMarker,
-          infoWindow: InfoWindow(
-            title: 'My current location',
-          )));
-
-      CameraPosition cameraPosition = CameraPosition(
-        target: LatLng(value.latitude, value.longitude),
-        zoom: 14,
-      );
-
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-      setState(() {
-        currentLat = value.latitude;
-        currentLng = value.longitude;
-        getNearbyPlaces(type);
-      });
-    });
-  }
-
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          PopupMenuButton(
-            // add icon, by default "3 dot" icon
-            // icon: Icon(Icons.book)
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem<int>(
-                    value: 0,
-                    child: Text("Restaurant"),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 1,
-                    child: Text("Hospital"),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 2,
-                    child: Text("Mosque"),
-                  ),
-                ];
-              }, onSelected: (value) {
-            if (value == 0) {
-              type = 'restaurant';
-              getNearbyPlaces(type);
-            } else if (value == 1) {
-              type = 'hospital';
-              getNearbyPlaces(type);
-            } else if (value == 2) {
-              type = 'mosque';
-              getNearbyPlaces(type);
-            }
-          }),
-        ],
-      ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            initialCameraPosition: _kGooglePlex,
-            myLocationEnabled: true,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-            markers: Set<Marker>.of(_marker),
-          ),
-          CustomInfoWindow(
-            controller: _customInfoWindowController,
-            height: 0,
-            width: 0,
-            offset: 0,
-          )
-        ],
-      ),
-    );
-  }
-  Future<void> getCustomMarkerIcon(GlobalKey iconKey) async {
-    RenderRepaintBoundary boundary = iconKey.currentContext.findRenderObject();
-    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    var pngBytes = byteData.buffer.asUint8List();
-    setState(() {
-      markerIcon = BitmapDescriptor.fromBytes(pngBytes);
-    });
-  }
-
-  void getNearbyPlaces(String type) async {
-    _marker.clear();
-    var url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' +
-            currentLat.toString() +
-            ',' +
-            currentLng.toString() +
-            '&radius=1500&type=' +
-            type +
-            '&key=AIzaSyDa4Ng7nNB5EkPqvcI1yaxcl8QE1Ja-tPA');
-
-    var response = await http.post(url);
-
-    print("printing latlng");
-    print(jsonDecode(response.body));
-    nearbyPlacesResponse =
-        NearbyPlacesResponse.fromJson(jsonDecode(response.body));
-    print("printing latlng");
-    print(jsonDecode(response.body));
-
-    loadData();
-    setState(() {});
-  }
-
-
-  getMarkerWidget() {
-    return Transform.translate(
-      offset: Offset(50, 50),
-      child: RepaintBoundary(
-        key: iconKey,
-        child: SizedBox(
-          height: 40,
-          width: 40,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                        Images.mail),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 5,
-                top: 6,
-                child: ClipOval(
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    child:Image.asset(Images.location_marker),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-}
+// import 'dart:async';
+// import 'dart:convert';
+// import 'dart:typed_data';
+//
+// import 'package:abaad/data/repository/nearbyplacesmodel.dart';
+// import 'package:abaad/util/images.dart';
+// import 'package:custom_info_window/custom_info_window.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/rendering.dart';
+// import 'package:geolocator/geolocator.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:ui' as ui;
+//
+// class _HomePageState extends State<HomePage> {
+//   String _active;
+//   int iter = 0;
+//   String activeButton;
+//   List<String> selectBarData = ['dasdasdas'];
+//   List<String> modes = ['deep-sleep', 'pain-relief'];
+//   List<String> sounds = ['campfire', 'rain'];
+//
+//   // ValueChanged<String> callback
+//   void active(String btn) {
+//     setState(() => _active = btn);
+//   }
+//
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//           body: Column(
+//             children: <Widget>[
+//               Container(
+//                   padding: EdgeInsets.only(left: 25, right: 25, top: 60),
+//                   child: Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: <CircleButton>[
+//                       new CircleButton(
+//                         action: active, //pass data from child to parent
+//                         tag: "button1", //specifies attribute of button
+//                         active: _active == "button1" ? true : false, //set button active based on value in this parent
+//                         imageData: 'assets/body-organ.png',
+//                         buttonName: 'Mode',
+//                       ),
+//                       new CircleButton(
+//                         action: active,
+//                         tag: "button2",
+//                         active: _active == "button2" ? true : false,
+//                         imageData: 'assets/audio.png',
+//                         buttonName: 'Sounds',
+//                       ),
+//                       new CircleButton(
+//                         action: active,
+//                         tag: "button3",
+//                         active: _active == "button2" ? true : false,
+//                         imageData: 'assets/speaker.png',
+//                         buttonName: 'Volume',
+//                       )
+//                     ],
+//                   )),
+//               selectBar()
+//             ],
+//           )),
+//     );
+//   }
+// }

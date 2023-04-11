@@ -175,7 +175,7 @@ class PropertyCard extends StatelessWidget {
                           width: 5.0,
                         ),
                         Text(
-                          "${estate.address}",
+                          "${estate.title}",
                           style: robotoBlack.copyWith(fontSize: 12),
                         ),
                       ],

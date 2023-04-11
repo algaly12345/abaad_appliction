@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
+import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/body/estate_body.dart';
@@ -35,12 +36,16 @@ import 'package:abaad/view/screen/estate/business_plan/widgets/success_widget.da
 import 'package:abaad/view/screen/estate/widgets/confiram_location_view.dart';
 import 'package:abaad/view/screen/estate/widgets/estate_bg_widget.dart';
 import 'package:abaad/view/screen/estate/widgets/menu_option.dart';
+import 'package:abaad/view/screen/map/pick_map_screen.dart';
+import 'package:abaad/view/screen/map/widget/permission_dialog.dart';
 import 'package:abaad/view/screen/profile/widget/profile_bg_widget_update.dart';
 import 'package:abaad/view/screen/profile/widget/profile_card.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -211,6 +216,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     print("adress-------------------------------------${place.locality},${place.country}");
   }
 
+
+  GoogleMapController _mapController;
+  CameraPosition _cameraPosition;
+  LatLng _initialPosition;
+
   @override
   void initState() {
     super.initState();
@@ -234,6 +244,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
     Get.find<AuthController>().resetBusiness();
     Get.find<AuthController>().getPackageList();
+
+    _initialPosition = LatLng(
+      double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
+      double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
+    );
 
   }
 
@@ -261,7 +276,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
              _phoneController.text = userController.userInfoModel.phone ?? '';
          //    _userTypeController.text = userController.userInfoModel.userType ?? '';
            }
-    return Column(
+    return    GetBuilder<LocationController>(builder: (locationController) {
+      return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             currentStep != 5? const SizedBox(height: 30):Container(),
@@ -473,10 +489,87 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   ),
 
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                     Container(
+                    height: 140,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                      border: Border.all(width: 2, color: Theme.of(context).primaryColor),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                      child: Stack(clipBehavior: Clip.none, children: [
+                        GoogleMap(
+                          initialCameraPosition: CameraPosition(target: _initialPosition, zoom: 17),
+                          minMaxZoomPreference: MinMaxZoomPreference(0, 30),
+                          onTap: (latLng) {
+                            Get.toNamed(
+                              RouteHelper.getPickMapRoute('add-address', false),
+                              arguments: PickMapScreen(
+                                fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
+                                route: null, canRoute: false,
+                              ),
+                            );
+                          },
+                          zoomControlsEnabled: false,
+                          compassEnabled: false,
+                          indoorViewEnabled: true,
+                          mapToolbarEnabled: false,
+                          onCameraIdle: () {
+                            locationController.updatePosition(_cameraPosition, true);
+                          },
+                          onCameraMove: ((position) => _cameraPosition = position),
+                          onMapCreated: (GoogleMapController controller) {
+                            locationController.setMapController(controller);
+                            // if(widget.address == null) {
+                              locationController.getCurrentLocation(true, mapController: controller);
+                            // }
+                          },
+                        ),
+                        locationController.loading ? Center(child: CircularProgressIndicator()) : SizedBox(),
+                        Center(child: !locationController.loading ? Image.asset(Images.pick_marker, height: 50, width: 50)
+                            : CircularProgressIndicator()),
+                        Positioned(
+                          bottom: 10, right: 0,
+                          child: InkWell(
+                            onTap: () => _checkPermission(() {
+                              locationController.getCurrentLocation(true, mapController: locationController.mapController);
+                            }),
+                            child: Container(
+                              width: 30, height: 30,
+                              margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
+                              child: Icon(Icons.my_location, color: Theme.of(context).primaryColor, size: 20),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 10, right: 0,
+                          child: InkWell(
+                            onTap: () {
+                              Get.toNamed(
+                                RouteHelper.getPickMapRoute('add-address', false),
+                                arguments: PickMapScreen(
+                                  fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
+                                  route: null, canRoute: false,
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 30, height: 30,
+                              margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
+                              child: Icon(Icons.fullscreen, color: Theme.of(context).primaryColor, size: 20),
+                            ),
+                          ),
+                        ),
+                      ]),
+                    )),
 
-                  authController.zoneList != null ? SelectLocationView(
-                      fromView: true) : Center(
-                      child: CircularProgressIndicator()),
+
+                  // authController.zoneList != null ? SelectLocationView(
+                  //     fromView: true) : Center(
+                  //     child: CircularProgressIndicator()),
                   SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                   Text(
@@ -1869,6 +1962,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                             showCustomSnackBar('enter_short_desc'.tr);
                           }else if(restController.pickedIdentities.length ==null) {
                             showCustomSnackBar('pleace select image estate'.tr);
+                          }else if( locationController.pickAddress==''){
+                            showCustomSnackBar('اضف الموقع من الخريطة'.tr);
                           }
 
                           else {
@@ -1876,11 +1971,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           }
                         }
                         else if(currentStep==2){
-                         if (authController.pickedCover == null&& restController.getCategoryPostion()==5) {
-                             // next();
-                          showCustomSnackBar('select_plan_photo'.tr);
-
-                        }else if(restController.getCategoryPostion()==1&&_ageValue==null){
+                          if(restController.getCategoryPostion()==1&&_ageValue==null){
 
                            showCustomSnackBar('اختر عمر العقار'.tr);
          // List<String> _interests = [];
@@ -1892,7 +1983,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
          // }
                          }
                          else{
-                           getAddressFromLatLang(authController.estateLocation.latitude,authController.estateLocation.longitude);
+                           getAddressFromLatLang(locationController.pickPosition.latitude,locationController.pickPosition.longitude);
                            next();
                          }
 
@@ -1957,7 +2048,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           !restController.isLoading ?     restController.registerRestaurant(
                               EstateBody(
                                   type_add:_typeProperties==0?"for_sell":"for_rent" ,
-                                  address: "${district} -${city}",
+                                  address: "${locationController.address}",
                                   space: _space,
                                   longDescription: _longDescController.text,
                                   shortDescription: _shortDesc,
@@ -1966,8 +2057,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   arPath: "3434",
                                   districts: district,
                                   floors: "4545",
-                                  latitude: authController.estateLocation.latitude.toString(),
-                                  longitude: authController.estateLocation.longitude.toString(),
+                                  latitude: locationController.pickPosition.latitude.toString(),
+                                  longitude: locationController.pickPosition.longitude.toString(),
                                   near: "near",
                                   networkType:"${_interests}",
                                   ownershipType: _djectivePresenter==1?"مالك":'مفوض',
@@ -2005,7 +2096,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
 
-       );
+       );    });
        });
     });
     });
@@ -2053,6 +2144,20 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
           );
         }
     );
+  }
+
+  void _checkPermission(Function onTap) async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if(permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if(permission == LocationPermission.denied) {
+      showCustomSnackBar('you_have_to_allow'.tr);
+    }else if(permission == LocationPermission.deniedForever) {
+      Get.dialog(PermissionDialog());
+    }else {
+      onTap();
+    }
   }
 
   Widget baseCardWidget(AuthController authController, BuildContext context,{ @required String title, @required int index, @required Function onTap}){

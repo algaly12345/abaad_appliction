@@ -11,6 +11,7 @@ import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
@@ -53,11 +54,14 @@ class _NearByViewState extends State<NearByView> {
   double currentLat = 0.0;
   double currentLng = 0.0;
   String type = 'restaurant';
+  String type_value;
 
   Uint8List imageDataBytes;
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   var markerIcon;
   GlobalKey iconKey = GlobalKey();
+  List<RadioModel> sampleData = new List<RadioModel>();
+
 
   @override
   void initState() {
@@ -78,6 +82,9 @@ class _NearByViewState extends State<NearByView> {
               double.parse(widget.esate.longitude),
             ))
     );
+    sampleData.add( RadioModel(false, 'مطعم', Images.restaurant));
+    sampleData.add( RadioModel(false, 'مسجد', Images.mosque));
+    sampleData.add( RadioModel(false, 'مستشفى',Images.hosptial));
     // getNearbyPlaces();
     // loadData();
   }
@@ -164,40 +171,7 @@ class _NearByViewState extends State<NearByView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          PopupMenuButton(
-            // add icon, by default "3 dot" icon
-            // icon: Icon(Icons.book)
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem<int>(
-                    value: 0,
-                    child: Text("Restaurant"),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 1,
-                    child: Text("Hospital"),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 2,
-                    child: Text("Mosque"),
-                  ),
-                ];
-              }, onSelected: (value) {
-            if (value == 0) {
-              type = 'restaurant';
-              getNearbyPlaces(type);
-            } else if (value == 1) {
-              type = 'hospital';
-              getNearbyPlaces(type);
-            } else if (value == 2) {
-              type = 'mosque';
-              getNearbyPlaces(type);
-            }
-          }),
-        ],
-      ),
+      appBar:  CustomAppBar(title: 'المرافق'.tr),
       body: Stack(
         children: [
           GoogleMap(
@@ -218,9 +192,55 @@ class _NearByViewState extends State<NearByView> {
             height: 0,
             width: 0,
             offset: 0,
-          )
+          ),
+
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 60,
+                color: Colors.white,
+                child: ListView.builder(
+                  itemCount: sampleData.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    return  InkWell(
+                      //highlightColor: Colors.red,
+                      splashColor: Colors.blueAccent,
+                      onTap: () {
+                        setState(() {
+                          sampleData.forEach((element) => element.isSelected = false);
+                          sampleData[index].isSelected = true;
+
+
+
+
+                          if (sampleData[index].buttonText=='مطعم') {
+                            type = 'restaurant';
+                            getNearbyPlaces(type);
+                          } else if (sampleData[index].buttonText=='مستشفى') {
+                            type = 'hospital';
+                            getNearbyPlaces(type);
+                          } else if (sampleData[index].buttonText=='مسجد') {
+                            type = 'mosque';
+                            getNearbyPlaces(type);
+                          }
+
+                        });
+                      },
+                      child: new RadioItem(sampleData[index]),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+
+
         ],
+
       ),
+
     );
   }
   Future<void> getCustomMarkerIcon(GlobalKey iconKey) async {
@@ -269,4 +289,58 @@ class _NearByViewState extends State<NearByView> {
   }
 
 
+}
+
+
+class RadioModel {
+  bool isSelected;
+  final String buttonText;
+  final String text;
+
+  RadioModel(this.isSelected, this.buttonText, this.text);
+}
+
+
+class RadioItem extends StatelessWidget {
+  final RadioModel _item;
+  RadioItem(this._item);
+  @override
+  Widget build(BuildContext context) {
+    return  Container(
+      height: 34,
+      decoration:  BoxDecoration(
+        color: _item.isSelected
+            ?  Theme.of(context).primaryColor
+            : Colors.transparent,
+        border:  Border.all(
+            width: 1.0,
+            color: _item.isSelected
+                ? Theme.of(context).primaryColor
+                : Colors.grey),
+        borderRadius: const BorderRadius.all(const Radius.circular(2.0)),
+      ),
+      margin:  EdgeInsets.all(8.0),
+      padding:  EdgeInsets.all(5.0),
+      child:  Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Container(
+            height: 50.0,
+            width: 50.0,
+
+            child:  Center(
+              child:  Image.asset(_item.text,height: 24,width: 24,color: _item.isSelected
+                  ? Theme.of(context).backgroundColor
+                  : Colors.grey)),
+            ),
+          Container(
+            margin: new EdgeInsets.only(left: 10.0),
+            child:  Text(_item.buttonText,style: robotoBlack.copyWith(fontSize: 11, color: _item.isSelected
+                ? Theme.of(context).backgroundColor
+                : Colors.grey)),
+          )
+        ],
+      ),
+    );
+  }
 }

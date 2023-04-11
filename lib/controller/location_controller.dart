@@ -109,7 +109,7 @@ class LocationController extends GetxController implements GetxService {
       update();
     }
     ZoneResponseModel _responseModel;
-    Response response = await locationRepo.getZone(lat, long);
+    Response response = await locationRepo.getZone(lat, long,pickAddress);
     if(response.statusCode == 200) {
       _inZone = true;
       _zoneID = int.parse(jsonDecode(response.body['zone_id'])[0].toString());
