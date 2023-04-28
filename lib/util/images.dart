@@ -7,7 +7,7 @@ class Images {
   static const String english = 'assets/image/english.png';
   static const String language = 'assets/image/language.png';
   static const String onboard_1 = 'assets/image/onboard_1.gif';
-  static const String onboard_2 = 'assets/image/onboard_2.git';
+  static const String onboard_2 = 'assets/image/onboard_2.gif';
   static const String onboard_3 = 'assets/image/onboard_1.gif';
   static const String  pick_marker = 'assets/image/pick_marker.png';
   static const String estate_marker = 'assets/image/pick_marker.png';
@@ -80,6 +80,7 @@ class Images {
   static const String hosptial = 'assets/image/hosptial.png';
   static const String mosque = 'assets/image/mosque.png';
   static const String restaurant = 'assets/image/restaurant.png';
+  static const String background = 'assets/image/background.png';
 
 
 

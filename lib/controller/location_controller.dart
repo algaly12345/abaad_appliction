@@ -8,7 +8,9 @@ import 'package:abaad/data/model/response/address_model.dart';
 import 'package:abaad/data/model/response/location_repo.dart';
 import 'package:abaad/data/model/response/place_details_model.dart';
 import 'package:abaad/data/model/response/prediction_model.dart';
+import 'package:abaad/data/model/response/region_model.dart';
 import 'package:abaad/data/model/response/response_model.dart';
+import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/data/model/response/zone_response_model.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
@@ -40,6 +42,10 @@ class LocationController extends GetxController implements GetxService {
   GoogleMapController _mapController;
   List<PredictionModel> _predictionList = [];
   bool _updateAddAddressData = true;
+  List<int> _zoneIds = [];
+  List<int> _cityIds = [];
+  List<ZoneModel> _categoryList;
+  int _categoryIndex = 0;
 
 
   List<PredictionModel> get predictionList => _predictionList;
@@ -57,6 +63,10 @@ class LocationController extends GetxController implements GetxService {
   int get zoneID => _zoneID;
   bool get buttonDisabled => _buttonDisabled;
   GoogleMapController get mapController => _mapController;
+  List<int> get zoneIds => _zoneIds;
+  List<int> get cityIds => _cityIds;
+  List<ZoneModel> get categoryList => _categoryList;
+  int get categoryIndex => _categoryIndex;
   Future<AddressModel> getCurrentLocation(bool fromAddress, {GoogleMapController mapController, LatLng defaultLatLng, bool notify = true}) async {
     _loading = true;
     if(notify) {
@@ -427,5 +437,30 @@ class LocationController extends GetxController implements GetxService {
 
 
 
-
+  Future<void> getCategoryList() async {
+    _zoneIds = [];
+    _cityIds = [];
+    _zoneIds.add(0);
+    _cityIds.add(0);
+   // getSubCategoryList(0);
+    Response response = await locationRepo.getZoneList();
+    if (response.statusCode == 200) {
+      _categoryList = [];
+      response.body.forEach((category) => _categoryList.add(ZoneModel.fromJson(category)));
+      if(_categoryList != null) {
+        for(int index=0; index<_categoryList.length; index++) {
+          _zoneIds.add(_categoryList[index].id);
+        }
+      }
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+  void setCategoryIndex(int index, bool notify) {
+    _categoryIndex = index;
+    if(notify) {
+      update();
+    }
+  }
 }

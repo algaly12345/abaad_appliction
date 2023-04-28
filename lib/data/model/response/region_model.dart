@@ -5,6 +5,8 @@ class RegionModel {
   String nameAr;
   String nameEn;
   int population;
+  String latitude;
+  String longitude;
 
   RegionModel(
       {this.regionId,
@@ -12,7 +14,8 @@ class RegionModel {
         this.code,
         this.nameAr,
         this.nameEn,
-        this.population});
+        this.population,this.latitude,
+        this.longitude});
 
   RegionModel.fromJson(Map<String, dynamic> json) {
     regionId = json['region_id'];
@@ -21,6 +24,8 @@ class RegionModel {
     nameAr = json['name_ar'];
     nameEn = json['name_en'];
     population = json['population'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +36,8 @@ class RegionModel {
     data['name_ar'] = this.nameAr;
     data['name_en'] = this.nameEn;
     data['population'] = this.population;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     return data;
   }
 }

@@ -9,6 +9,7 @@ class ZoneModel {
   String longitude;
   String createdAt;
   int  territory_id;
+  int estate_count;
   String updatedAt;
 
 
@@ -25,6 +26,7 @@ class ZoneModel {
     territory_id = json['territory_id'];
     latitude = json['latitude'];
     longitude = json['longitude'];
+    estate_count = json['estate_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +42,7 @@ class ZoneModel {
     data['territory_id'] = this.territory_id;
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
+    data['estate_count'] = this.estate_count;
 
     return data;
   }

@@ -68,7 +68,9 @@ class EstateRepo {
 
 
 
-
+  Future<Response> getZoneList() async {
+    return await apiClient.getData(AppConstants.ZONE_ALL);
+  }
 
 
 

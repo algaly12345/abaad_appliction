@@ -1,68 +1,106 @@
-// import 'dart:async';
-// import 'dart:convert';
-// import 'dart:typed_data';
-//
-// import 'package:abaad/data/repository/nearbyplacesmodel.dart';
-// import 'package:abaad/util/images.dart';
-// import 'package:custom_info_window/custom_info_window.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/rendering.dart';
-// import 'package:geolocator/geolocator.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:ui' as ui;
-//
-// class _HomePageState extends State<HomePage> {
-//   String _active;
-//   int iter = 0;
-//   String activeButton;
-//   List<String> selectBarData = ['dasdasdas'];
-//   List<String> modes = ['deep-sleep', 'pain-relief'];
-//   List<String> sounds = ['campfire', 'rain'];
-//
-//   // ValueChanged<String> callback
-//   void active(String btn) {
-//     setState(() => _active = btn);
-//   }
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//           body: Column(
-//             children: <Widget>[
-//               Container(
-//                   padding: EdgeInsets.only(left: 25, right: 25, top: 60),
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: <CircleButton>[
-//                       new CircleButton(
-//                         action: active, //pass data from child to parent
-//                         tag: "button1", //specifies attribute of button
-//                         active: _active == "button1" ? true : false, //set button active based on value in this parent
-//                         imageData: 'assets/body-organ.png',
-//                         buttonName: 'Mode',
-//                       ),
-//                       new CircleButton(
-//                         action: active,
-//                         tag: "button2",
-//                         active: _active == "button2" ? true : false,
-//                         imageData: 'assets/audio.png',
-//                         buttonName: 'Sounds',
-//                       ),
-//                       new CircleButton(
-//                         action: active,
-//                         tag: "button3",
-//                         active: _active == "button2" ? true : false,
-//                         imageData: 'assets/speaker.png',
-//                         buttonName: 'Volume',
-//                       )
-//                     ],
-//                   )),
-//               selectBar()
-//             ],
-//           )),
-//     );
-//   }
-// }
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+
+class VideoUploadScreen extends StatefulWidget {
+  @override
+  _VideoUploadScreenState createState() => _VideoUploadScreenState();
+}
+
+class _VideoUploadScreenState extends State<VideoUploadScreen> {
+  File _videoFile;
+
+  Future<void> _pickVideo() async {
+   // File videoFile = await ImagePicker.pickVideo(source: ImageSource.gallery);
+    setState(() {
+    //  _videoFile = videoFile;
+    });
+  }
+
+  Future<void> _uploadVideo() async {
+    if (_videoFile == null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Please select a video file first.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Create a multipart request
+    var request = http.MultipartRequest('POST', Uri.parse('https://your-server-url.com/upload'));
+
+    // Attach the video file to the request
+    request.files.add(await http.MultipartFile.fromPath('video', _videoFile.path));
+
+    // Send the request and get the response
+    var response = await request.send();
+
+    // Check the response status code
+    if (response.statusCode == 200) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Success'),
+          content: Text('Video upload successful.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Video upload failed with status code: ${response.statusCode}'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Video Upload'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _videoFile == null
+                ? Text('No video selected')
+                : Text('Selected video: ${_videoFile.path}'),
+            ElevatedButton(
+              onPressed: _pickVideo,
+              child: Text('Pick Video'),
+            ),
+            ElevatedButton(
+              onPressed: _uploadVideo,
+              child: Text('Upload Video'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

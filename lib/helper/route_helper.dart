@@ -76,7 +76,7 @@ class RouteHelper {
 
   static String getProfileRoute() => '$profile';
   static String getInitialRoute() => '$initial';
-  static String getCategoryRoute(int id ) => '$categories?id=$id';
+  static String getCategoryRoute(int id ,String  longitude,String latitude ) => '$categories?id=$id&latitude=$latitude&longitude=$longitude';
   static String getNotificationRoute() => '$notification';
   static String getUpdateProfileRoute() => '$updateProfile';
   static String getConversationRoute(int id) => '$conversation';
@@ -167,7 +167,7 @@ class RouteHelper {
     GetPage(name: categories, page: () {
       MapScreen _pickMapScreen = Get.arguments;
       bool _fromAddress = Get.parameters['page'] == 'add-address';
-      return (_fromAddress && _pickMapScreen == null) ? NotFound() : _pickMapScreen ?? MapScreen(mainCategory:ZoneModel(id: int.parse(Get.parameters['id'])) ,
+      return (_fromAddress && _pickMapScreen == null) ? NotFound() : _pickMapScreen ?? MapScreen(mainCategory:ZoneModel(id: int.parse(Get.parameters['id']),latitude:Get.parameters['latitude'],longitude: Get.parameters['longitude'] ) ,
          fromSignUp: Get.parameters['page'] == signUp, fromAddAddress: _fromAddress, route: Get.parameters['page'],
         canRoute: Get.parameters['route'] == 'true',
       );

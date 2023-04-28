@@ -83,6 +83,7 @@ dependencies:
   video_player: ^2.6.0
   flutter_google_places: ^0.3.0
   google_maps_webservice: ^0.0.19
+  animated_text_kit: ^1.1.0
 
 
 

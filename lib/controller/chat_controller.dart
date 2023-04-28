@@ -253,14 +253,13 @@ class ChatController extends GetxController implements GetxService {
       _response = await chatRepo.sendMessage(message, _myImages, 0, UserType.admin, null,estate_id);
     } else if(notificationBody.restaurantId != null) {
       _response = await chatRepo.sendMessage(message, _myImages, notificationBody.restaurantId, null, conversationID,estate_id);
-    } else if(notificationBody.deliverymanId != null) {
-      _response = await chatRepo.sendMessage(message, _myImages, notificationBody.restaurantId, UserType.vendor, conversationID,estate_id);
     }
     if (_response.statusCode == 200) {
       _chatImage = [];
       _chatRawImage = [];
       _isSendButtonActive = false;
       _isLoading = false;
+      print("---------------------------------${_response.body}");
       _messageModel = MessageModel.fromJson(_response.body);
       if(index != null && _searchConversationModel != null) {
         _searchConversationModel.conversations[index].lastMessageTime = DateConverter.isoStringToLocalString(_messageModel.messages[0].createdAt);

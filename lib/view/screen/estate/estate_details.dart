@@ -52,24 +52,16 @@ class _EstateDetailsState extends State<EstateDetails> {
   void initState() {
     super.initState();
 
+    _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
 
 
-    if(Get.find<AuthController>().isLoggedIn()) {
-      if(Get.find<CategoryController>().categoryList == null) {
-        Get.find<CategoryController>().getCategoryList(true);
-      }
-      Get.find<CategoryController>().getFacilitiesList(true);
-      Get.find<EstateController>().getCategoriesEstateList(6, 1, 'all', false);
-      Get.find<EstateController>().getEstateDetails(Estate(id: widget.estate.id));
-      print("mohammed-------------${widget.user_id}");
-       Get.find<WishListController>().getWishList();
 
 
-    }
+
+      Get.find<UserController>().getUserInfoByID(widget.user_id);
 
 
-    Get.find<UserController>().getUserInfoByID(widget.user_id);
     getAddressFromLatLang(26.439280,50.094460);
 
   }
@@ -389,10 +381,12 @@ class _EstateDetailsState extends State<EstateDetails> {
                         child: Row(
 
                           children: [
-                            Expanded(child: Container(
+                            Expanded( flex: 1,
+                                child: Container(
                                 padding: EdgeInsets.all(10),child:  Text("نوع العقار"))),
                             VerticalDivider(width: 1.0),
-                            Expanded(child: Container(
+                            Expanded(flex: 1,
+                                child: Container(
                                 padding: EdgeInsets.all(10),child: Text("سكني",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
@@ -416,10 +410,12 @@ class _EstateDetailsState extends State<EstateDetails> {
                         child: Row(
 
                           children: [
-                            Expanded(child: Container(
+                            Expanded(flex: 1,
+                                child: Container(
                                 padding: EdgeInsets.all(10),child:  Text("المساحة"))),
                             VerticalDivider(width: 1.0),
-                            Expanded(child: Container(
+                            Expanded(flex: 1,
+                                child: Container(
                                 padding: EdgeInsets.all(10),child: Text("${estateController.estate.space}",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
@@ -444,10 +440,12 @@ class _EstateDetailsState extends State<EstateDetails> {
                         child: Row(
 
                           children: [
-                            Expanded(child: Container(
+                            Expanded(flex: 1,
+                                child: Container(
                                 padding: EdgeInsets.all(10),child:  Text("عرض الشارع"))),
                             VerticalDivider(width: 1.0),
-                            Expanded(child: Container(
+                            Expanded(flex: 1,
+                                child: Container(
                                 padding: EdgeInsets.all(10),child: Text("${ estateController.estate.streetSpace}",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
@@ -473,10 +471,12 @@ class _EstateDetailsState extends State<EstateDetails> {
                         child: Row(
 
                           children: [
-                            Expanded(child: Container(
+                            Expanded(
+                                flex: 1,child: Container(
                                 padding: EdgeInsets.all(10),child:  Text("السعر"))),
                             VerticalDivider(width: 1.0),
-                            Expanded(child: Container(
+                            Expanded(flex: 1,
+                                child: Container(
                                 padding: EdgeInsets.all(10),child: Text("${ estateController.estate.priceNegotiation}",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
@@ -502,10 +502,11 @@ class _EstateDetailsState extends State<EstateDetails> {
                         child: Row(
 
                           children: [
-                            Expanded(child: Container(
+                            Expanded(flex: 1,
+                                child: Container(
                                 padding: EdgeInsets.all(10),child:  Text("مساحة البناء"))),
                             VerticalDivider(width: 1.0),
-                            Expanded(child: Container(
+                            Expanded(flex: 1,child: Container(
                                 padding: EdgeInsets.all(10),child: Text("${ estateController.estate.buildSpace}",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
@@ -532,10 +533,10 @@ class _EstateDetailsState extends State<EstateDetails> {
                             child: Row(
 
                               children: [
-                                Expanded(child: Container(
+                                Expanded(flex: 1,child: Container(
                                     padding: EdgeInsets.all(10),child:  Text("عمر العقار"))),
                                 VerticalDivider(width: 1.0),
-                                Expanded(child: Container(
+                                Expanded(flex: 1,child: Container(
                                     padding: EdgeInsets.all(10),child: Text("${estateController.estate.ageEstate} سنة",  style: robotoBlack.copyWith(fontSize: 14)))),
                               ],
                             ),
@@ -561,10 +562,10 @@ class _EstateDetailsState extends State<EstateDetails> {
                         child: Row(
 
                           children: [
-                            Expanded(child: Container(
+                            Expanded(flex: 1,child: Container(
                                 padding: EdgeInsets.all(10),child:  Text("المعلن"))),
                             VerticalDivider(width: 1.0),
-                            Expanded(child: Container(
+                            Expanded(flex: 1,child: Container(
                                 padding: EdgeInsets.all(10),child: Text("${ estateController.estate.ownershipType}",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
@@ -589,10 +590,10 @@ class _EstateDetailsState extends State<EstateDetails> {
                         child: Row(
 
                           children: [
-                            Expanded(child: Container(
+                            Expanded(flex: 1,child: Container(
                                 padding: EdgeInsets.all(10),child:  Text("الرمز الوطني المختصر"))),
                             VerticalDivider(width: 1.0),
-                            Expanded(child: Container(
+                            Expanded(flex: 1,child: Container(
                                 padding: EdgeInsets.all(10),child: Row(
                               children: [
                                 Text("${ estateController.estate.nationalAddress}",  style: robotoBlack.copyWith(fontSize: 14)),
@@ -608,7 +609,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                       ):Container(),
 
 
-                    estateController.estate.networkType. length >0?    NetworkTypeItem(estate: estateController.estate,restaurants: estateController.estate.networkType):Container(),
+                    estateController.estate.networkType. length >0&& estateController.estate.networkType  == null?    NetworkTypeItem(estate: estateController.estate,restaurants: estateController.estate.networkType):Container(),
 
                       const MapDetailsView(
                           fromView: true),
@@ -837,10 +838,13 @@ class _EstateDetailsState extends State<EstateDetails> {
                             )),
                             SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
-                            Expanded(child:
+                            Expanded(flex: 1,
+                                child:
                             Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-
-                              Text("${userController.agentInfoModel.name}", style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                            //  Text("${ _isLoggedIn ? '${userController.agentInfoModel.name}' : 'guest'.tr}", style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                              Text(
+                                _isLoggedIn ? '${userController.agentInfoModel.name}' : 'guest'.tr,
+                                style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),),
                               SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
                               Row(children: [
@@ -858,7 +862,8 @@ class _EstateDetailsState extends State<EstateDetails> {
                                     )),
                                   ),
                                 ),
-                                Expanded(child: SizedBox()),
+                                Expanded(flex: 1,
+                                    child: SizedBox()),
 
 
 
@@ -906,7 +911,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           ));
                         },
                         buttonText: 'تواصل مع المعلن',
-                      ) : Center(child: CircularProgressIndicator()),
+                      ) : Center(child: Container()),
 
                     ],
                   ))

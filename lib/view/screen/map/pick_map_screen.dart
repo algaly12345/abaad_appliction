@@ -1,3 +1,4 @@
+import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/helper/responsive_helper.dart';
@@ -46,6 +47,7 @@ class _PickMapScreenState extends State<PickMapScreen> {
       double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
       double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
     );
+    Get.find<AuthController>().getZoneList();
   }
 
   @override
@@ -54,7 +56,17 @@ class _PickMapScreenState extends State<PickMapScreen> {
       appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
       body: SafeArea(child: Center(child: SizedBox(
         width: Dimensions.WEB_MAX_WIDTH,
-        child: GetBuilder<LocationController>(builder: (locationController) {
+        child: GetBuilder<AuthController>(builder: (authController) {
+
+
+       return GetBuilder<LocationController>(builder: (locationController) {
+
+         List<int> _zoneIndexList = [];
+         if(authController.zoneList != null) {
+           for(int index=0; index<locationController.categoryList.length; index++) {
+             _zoneIndexList.add(index);
+           }
+         }
           /*print('--------------${'${locationController.pickPlaceMark.name ?? ''} '
               '${locationController.pickPlaceMark.locality ?? ''} '
               '${locationController.pickPlaceMark.postalCode ?? ''} ${locationController.pickPlaceMark.country ?? ''}'}');*/
@@ -63,7 +75,9 @@ class _PickMapScreenState extends State<PickMapScreen> {
 
             GoogleMap(
               initialCameraPosition: CameraPosition(
-                target: widget.fromAddAddress ? LatLng(locationController.position.latitude, locationController.position.longitude)
+                target: widget.fromAddAddress ? LatLng(
+                    double.parse(locationController.categoryList[locationController.categoryIndex-1] .latitude)??0,
+                    double.parse( locationController.categoryList[locationController.categoryIndex-1].longitude)??0)
                     : _initialPosition,
                 zoom: 16,
               ),
@@ -127,7 +141,7 @@ class _PickMapScreenState extends State<PickMapScreen> {
             Positioned(
               bottom: Dimensions.PADDING_SIZE_LARGE, left: Dimensions.PADDING_SIZE_SMALL, right: Dimensions.PADDING_SIZE_SMALL,
               child: !locationController.isLoading ? CustomButton(
-                buttonText: locationController.inZone ? widget.fromAddAddress ? 'pick_address'.tr : 'pick_location'.tr
+                buttonText: locationController.inZone ? widget.fromAddAddress ? 'حدد الموقع'.tr : 'pick_location'.tr
                     : 'هذ العقار مضاف مسبقا '.tr,
                 onPressed: (locationController.buttonDisabled || locationController.loading) ? null : () {
                   if(locationController.pickPosition.latitude != 0 && locationController.pickAddress.isNotEmpty) {
@@ -138,7 +152,8 @@ class _PickMapScreenState extends State<PickMapScreen> {
                         ), zoom: 17)));
                         locationController.setAddAddressData();
                       }
-                      Get.back();
+     showCustomSnackBar("${                 locationController.categoryList[locationController.categoryIndex-1].longitude}");
+           Get.back();
                     }else {
                       // AddressModel _address = AddressModel(
                       //   latitude: locationController.pickPosition.latitude.toString(),
@@ -155,7 +170,8 @@ class _PickMapScreenState extends State<PickMapScreen> {
             ),
 
           ]);
-        }),
+        });
+        })
       ))),
     );
   }

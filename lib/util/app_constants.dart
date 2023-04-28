@@ -9,7 +9,7 @@ class AppConstants {
   static const String LOGIN_URI = '/api/v1/auth/login';
 //static const String BASE_URL = 'http://alharthi.iaspl.net';
   static const String LAND_SERVICE_URL = 'https://geoportal-st.gasgi.gov.sa/hosting/rest/services/Hosted/MOT_Layer04_View/FeatureServer/0/query?where=1%3D1&outFields=&outSR=4326&f=json';
-  static const String BASE_URL = 'http://192.168.23.37/abbaad-dashboard';
+  static const String BASE_URL = 'http://192.168.39.37/abbaadRepo';
    static const String REGISTER_URI = '/api/v1/auth/register';
   static const String THEME = 'theme';
   static const String TOKEN = 'abaad_token';

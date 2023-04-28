@@ -135,32 +135,32 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
-  Future<void> getCategoriesEstateList(int estateId, int offset, String type,
-      bool notify) async {
-    _foodOffset = offset;
-    if (offset == 1 || _estateList == null) {
-      _type = type;
-
-      _estateList = null;
-      if (notify) {
-        update();
-      }
-    }
-
-
-    Response response = await estateRepo.getCategorisEstateList(1, 3, type);
-    if (response.statusCode == 200) {
-      if (offset == 1) {
-        _estateList = [];
-      }
-      // print("awad-------------------------------${response.body}");
-      _estateModel1.estates.addAll(EstateModel.fromJson(response.body).estates);
-      update();
-    } else {
-      // print("awad-------------------------------${response.body}");
-      ApiChecker.checkApi(response);
-    }
-  }
+  // Future<void> getCategoriesEstateList(int estateId, int offset, String type,
+  //     bool notify) async {
+  //   _foodOffset = offset;
+  //   if (offset == 1 || _estateList == null) {
+  //     _type = type;
+  //
+  //     _estateList = null;
+  //     if (notify) {
+  //       update();
+  //     }
+  //   }
+  //
+  //
+  //   Response response = await estateRepo.getCategorisEstateList(1, 3, type);
+  //   if (response.statusCode == 200) {
+  //     if (offset == 1) {
+  //       _estateList = [];
+  //     }
+  //     // print("awad-------------------------------${response.body}");
+  //     _estateModel1.estates.addAll(EstateModel.fromJson(response.body).estates);
+  //     update();
+  //   } else {
+  //     // print("awad-------------------------------${response.body}");
+  //     ApiChecker.checkApi(response);
+  //   }
+  // }
 
   void setRestaurantType(String type) {
     _estateType = type;
@@ -352,6 +352,7 @@ _isLoading=false;
     _isLoading = false;
     update();
   }
+
 
 
   @override

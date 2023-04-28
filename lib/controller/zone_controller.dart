@@ -41,6 +41,10 @@ class ZoneController extends GetxController implements GetxService {
   List<int> get subSubCategoryIds => _subSubCategoryIds;
 
 
+
+
+
+
   Future<void> getLandList() async {
 
 

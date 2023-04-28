@@ -20,6 +20,7 @@ import 'package:abaad/view/base/cached_img.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/discount_tag.dart';
+import 'package:abaad/view/base/drawer_menu.dart';
 import 'package:abaad/view/base/estate_item.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:abaad/view/screen/fillter/fillter_estate_sheet.dart';
@@ -157,7 +158,7 @@ class _MapViewScreenState extends State<MapScreen> {
           offset++;
           print('end of the page');
           Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList("0", 0,'0',"0","0","0", offset.toString());
+    //      Get.find<CategoryController>().getCategoryProductList("${widget.mainCategory.id}", 0,'0',"0","0","0", offset.toString());
         }
       }
     });
@@ -181,10 +182,13 @@ class _MapViewScreenState extends State<MapScreen> {
     //   _controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
     //   setState(() {});
     // });
+
     _initialPosition = LatLng(
         26.451363,
         50.109046
     );
+
+    Get.find<CategoryController>().setFilterIndex(widget.mainCategory.id,0,"0","0",0,"0");
   }
   @override
   void dispose() {
@@ -204,7 +208,7 @@ class _MapViewScreenState extends State<MapScreen> {
     });
   }
 
-
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -220,9 +224,12 @@ class _MapViewScreenState extends State<MapScreen> {
         .height;
 
     return Scaffold(
-      appBar: WebMenuBar(),
+        key: _key,
+        appBar: WebMenuBar(ontop:()=>     _key.currentState.openDrawer(),),
+        drawer: DrawerMenu(),
         body:
           GetBuilder<CategoryController>(builder: (categoryController) {
+
             return GetBuilder<LocationController>(builder: (locationController) {
 
               List<Estate> _products;
@@ -250,11 +257,11 @@ class _MapViewScreenState extends State<MapScreen> {
                         !_isNull ?_products.length>0?
 
                         GoogleMap(
-                          initialCameraPosition: const CameraPosition(zoom: 12, target: LatLng(
+                          initialCameraPosition:  CameraPosition(zoom: 12, target: LatLng(
                             // double.parse(Get.find<LocationController>().getUserAddress().latitude),
                             // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-                              26.451363,
-                              50.109046
+                              double.parse(widget.mainCategory.longitude),
+                            double.parse(widget.mainCategory.latitude),
                           )),
                           // markers: markers,
                           // myLocationEnabled: false,
@@ -632,11 +639,11 @@ class _MapViewScreenState extends State<MapScreen> {
                 !_isNull ?_products.length>0?
 
                 GoogleMap(
-                  initialCameraPosition: const CameraPosition(zoom: 12, target: LatLng(
+                  initialCameraPosition:  CameraPosition(zoom: 12, target: LatLng(
                     // double.parse(Get.find<LocationController>().getUserAddress().latitude),
                     // double.parse(Get.find<LocationController>().getUserAddress().longitude),
-                      26.451363,
-                      50.109046
+                    double.parse(widget.mainCategory.longitude),
+                    double.parse(widget.mainCategory.latitude),
                   )),
                   markers: markers,
                   // myLocationEnabled: false,
@@ -1171,8 +1178,8 @@ class _MapViewScreenState extends State<MapScreen> {
           selectedIndex = value;
           _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
               target: LatLng(
-                  double.parse( _products[selectedIndex].latitude),
-                  double.parse( _products[selectedIndex].longitude)),
+                  double.parse( _products[selectedIndex].latitude)??0  ,
+                  double.parse( _products[selectedIndex].longitude)??0),
               zoom: 18.0,
               bearing: 45.0,
               tilt: 45.0)));

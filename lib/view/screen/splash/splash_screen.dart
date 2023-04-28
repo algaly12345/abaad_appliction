@@ -11,6 +11,7 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/view/base/no_internet_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity/connectivity.dart';
 
 import 'package:flutter/material.dart';
@@ -120,9 +121,16 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
+      backgroundColor: Image.asset(Images.background).color,
+
       body: GetBuilder<SplashController>(builder: (splashController) {
         return Container(
-          color: Colors.white,
+          decoration:  BoxDecoration(
+              image:  DecorationImage(
+                image:  AssetImage(Images.background),
+                fit: BoxFit.fill,
+              )
+          ),
           child: Center(
 
             child: splashController.hasConnection ? Column(
@@ -130,6 +138,29 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 Image.asset(Images.logo, width: 150),
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            SizedBox(
+
+              child: ColorizeAnimatedTextKit(
+                onTap: () {
+                  print("Tap Event");
+                },
+                text: const [
+                  "ابعاد",
+                  'مستقبل العقار'
+                ],
+                textStyle: const TextStyle(
+                    fontSize: 50.0,
+                    fontFamily: "Horizon"
+                ),
+                alignment: Alignment.center,
+                colors: const [
+                  Colors.purple,
+                  Colors.blue,
+                  Colors.yellow,
+                  Colors.red,
+                ],
+              ),
+            ),
                 /*SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
               Text(AppConstants.APP_NAME, style: robotoMedium.copyWith(fontSize: 25)),*/
               ],

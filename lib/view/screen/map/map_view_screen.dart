@@ -220,7 +220,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
                   ), zoom: 11)));
               // Future.delayed(Duration(seconds: 1), () {
-              Get.toNamed(RouteHelper.getCategoryRoute(2));
+
+              Get.toNamed(RouteHelper.getCategoryRoute(zone[index].id,zone[index].latitude,zone[index].longitude));
               // });
 
             }),
@@ -289,7 +290,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
 
-                            children: <Widget>[Text('52', textAlign: TextAlign.left, style: TextStyle(
+                            children: <Widget>[Text('${zone[index].estate_count }', textAlign: TextAlign.left, style: TextStyle(
                                 color: Color.fromRGBO(55, 133, 250, 1),
                                 fontFamily: 'Cairo',
                                 fontSize: 7,

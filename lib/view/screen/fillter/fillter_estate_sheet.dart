@@ -35,6 +35,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   RangeValues _values = const RangeValues(100, 600);
   double distValue = 0;
   final ScrollController _scrollController = ScrollController();
+  int _value1;
 
 
 
@@ -55,7 +56,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           offset++;
           print('end of the page');
           Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList("0", 0,'0',"0","0","0", offset.toString());
+          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
         }
       }
     });
@@ -285,7 +286,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
                             ),
                             child: DropdownButton<int>(
-                              value: zoneController.categoryIndex,
+                              value: _value1,
                               items: zoneController.zoneIds.map((int value) {
                                 return DropdownMenuItem<int>(
                                   value: zoneController.zoneIds.indexOf(value),
@@ -293,6 +294,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                 );
                               }).toList(),
                               onChanged: (int value) {
+                                setState(() {
+                                  _value1 = value;
+                                });
                                 zoneController.setCategoryIndex(value, true);
                                 zoneController.getSubCategoryList(value != 0 ? zoneController.categoryList[value-1].regionId : 0);
                               },
@@ -413,8 +417,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                       borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                       highlightColor: Colors.transparent,
                       onTap: () {
-                       showCustomSnackBar("${(distValue/10).toInt()}");
-                    categoryController.setFilterIndex(restController.getCategoryIndex(),ctiy_name,districts,(distValue/10).toInt());
+                       showCustomSnackBar("${_typeProperties}");
+                       String type_estate= _typeProperties==0?"for_sell":"for_rent";
+                    categoryController.setFilterIndex(0,restController.getCategoryIndex(),ctiy_name,districts,(distValue/10).toInt(),type_estate);
                     Navigator.pop(context);
                       },
                       child: const Center(

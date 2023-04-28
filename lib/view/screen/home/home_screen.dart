@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           offset++;
           print('end of the page');
           Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList("0", 0,'0',"0","0","0", offset.toString());
+          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
         }
       }
     });
@@ -281,7 +281,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       return PropertyCard(_products[index]);
                     },
                   ),
-                ):Center(
+                )
+                    :Center(
                   child: NoDataScreen(
                     text: 'no_data_available',
                   ),

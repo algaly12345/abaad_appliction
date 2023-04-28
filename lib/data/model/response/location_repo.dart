@@ -56,4 +56,12 @@ class LocationRepo {
     return await apiClient.getData('${AppConstants.PLACE_DETAILS_URI}?placeid=$placeID');
   }
 
+
+  Future<Response> getRegionList() async {
+    return await apiClient.getData(AppConstants.REGIONS);
+  }
+  Future<Response> getZoneList() async {
+    return await apiClient.getData(AppConstants.ZONE_ALL);
+  }
+
 }

@@ -53,6 +53,7 @@ class PropertyCard extends StatelessWidget {
                       fit:  BoxFit.cover,
                       width: MediaQuery.of(context).size.width,
 
+
                     ),
                     Positioned(
                       top: 10.0,

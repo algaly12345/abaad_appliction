@@ -66,7 +66,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
         });
       });
 
-    _controller2=VideoPlayerController.network("${ Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/vedio5.mp4")
+    _controller2=VideoPlayerController.network("${ Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/vedio5.mp41")
       ..initialize().then((_){
         setState(() {
 

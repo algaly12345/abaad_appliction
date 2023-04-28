@@ -9,6 +9,7 @@ import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/body/estate_body.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/package_model.dart';
+import 'package:abaad/data/model/response/region_model.dart';
 import 'package:abaad/helper/color_coverter.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
@@ -175,7 +176,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     "الواجهة الجنوبية",];
   int east, west,north,south=0;
   final List<String> _selectedInterfaceistItems = [];
-
+  int _value1;
 
   String valueChoose;
   String _ageValue;
@@ -241,7 +242,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
       Get.find<UserController>().initData();
 
     }
-
+    Get.find<AuthController>().getZoneList();
     Get.find<AuthController>().resetBusiness();
     Get.find<AuthController>().getPackageList();
 
@@ -249,6 +250,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
       double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
       double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
     );
+    Get.find<LocationController>().getCategoryList();
 
   }
 
@@ -259,7 +261,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
   @override
   Widget build(BuildContext context) {
-
+    bool _isNull = true;
+    int _length = 0;
 
     return Scaffold(
 
@@ -267,6 +270,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
       body: SingleChildScrollView(
         child:
       GetBuilder<AuthController>(builder: (authController) {
+
               return GetBuilder<EstateController>(builder: (restController) {
                 return GetBuilder<CategoryController>(
                builder: (categoryController) {
@@ -277,6 +281,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
          //    _userTypeController.text = userController.userInfoModel.userType ?? '';
            }
     return    GetBuilder<LocationController>(builder: (locationController) {
+
+
       return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -487,7 +493,39 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           }),
                     ],
                   ),
+                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
+                  Text(
+                    'المنطقة'.tr,
+                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                  ),
+
+                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                      boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
+                    ),
+                    child: DropdownButton<int>(
+                      value: _value1,
+                      items: locationController.zoneIds==null?Container():locationController.zoneIds.map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: locationController.zoneIds.indexOf(value),
+                          child: Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name : 'Select'),
+                        );
+                      }).toList(),
+                      onChanged: (int value) {
+                        setState(() {
+                          _value1 = value;
+                        });
+                        locationController.setCategoryIndex(value, true);
+                  //      restController.getSubCategoryList(value != 0 ? restController.categoryList[value-1].id : 0, null);
+                      },
+                      isExpanded: true,
+                      underline: SizedBox(),
+                    ),
+                  ),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                      Container(
                     height: 140,
@@ -547,13 +585,16 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           top: 10, right: 0,
                           child: InkWell(
                             onTap: () {
+                              if( locationController.categoryList[locationController.categoryIndex-1].name==null){
+                                showCustomSnackBar('حدد المنطقة'.tr);
+                              }else{
                               Get.toNamed(
                                 RouteHelper.getPickMapRoute('add-address', false),
                                 arguments: PickMapScreen(
                                   fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
                                   route: null, canRoute: false,
                                 ),
-                              );
+                              );}
                             },
                             child: Container(
                               width: 30, height: 30,
@@ -1933,6 +1974,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   Expanded(
                     child: CustomButton(
                       onPressed: () {
+                        showCustomSnackBar(authController.zoneList[authController.selectedZoneIndex].latitude);
 
                         String _price;
                         String _shortDesc;
@@ -2066,7 +2108,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   serviceOffers: "serviceOffers",
                                   facilities: "${_interests}",
                                   territoryId: "1",
-                                  zoneId: "1",
+                                  zoneId: locationController.categoryList[locationController.categoryIndex-1].id.toString(),
                                   nationalAddress: "234234",
                                   user_id: userController.userInfoModel.id.toString(),
                                   city: city,
