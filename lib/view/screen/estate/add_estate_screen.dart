@@ -170,6 +170,17 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     "7",
     "8",
   ];
+  final List<String> _kitchenList = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+  ];
   final List<String> _interfaceist = [   "الواجهة الشمالية",
     "الواجهة الشرقية",
     "الواجهة الغربية",
@@ -183,6 +194,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   int _selectedRoomIndex = 0;
   int _selectedBathroomsIndex = 0;
   int _selectedLounge=0;
+  int _selectedkitchen=0;
   List<String> _interests = [];
   String interests;
   bool add=true;
@@ -197,6 +209,10 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
   _onSelectedlounge(int index) {
     setState(() => _selectedLounge = index);
+  }
+
+  _onSelectedkitchen(int index) {
+    setState(() => _selectedkitchen = index);
   }
 
   int fieldCount = 0;
@@ -1118,6 +1134,57 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   }),
                                 ),
 
+
+                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                Text(
+                                  "عدد المطابخ",
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(.02),
+                                        blurRadius: 10.0,
+                                        spreadRadius: 10.0,
+                                      )
+                                    ],
+                                  ),
+                                  height: 50,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      // ignore: missing_return
+                                      itemCount:  _loungeList.length, itemBuilder: (context, index) {
+
+
+                                    return   InkWell(
+                                      onTap: (){
+                                        _onSelectedkitchen(index);
+
+                                      },
+                                      child: Container(
+                                        width: 50,
+                                        child: Card(
+                                          color: _selectedkitchen != null && _selectedkitchen == index
+                                              ? Theme
+                                              .of(context)
+                                              .primaryColor
+                                              : Colors.grey,
+                                          child: Container(
+                                            child: Center(child: Text("${_kitchenList[index]==10?"9+":_kitchenList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+
+                                  }),
+                                ),
+
                                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
 
@@ -1988,7 +2055,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                    //    showCustomSnackBar("----------------------lat${authController.estateLocation.longitude}");
 
                    //     String property = '{"room": "44", "bathroom": 30}';
-                        String  property ='[{"name":"حمام", "number":"${_selectedBathroomsIndex}"},{"name":"غرف نوم", "number":"${_selectedRoomIndex}"},{"name":"صلات", "number":"${_selectedLounge}"}]';
+                        String  property ='[{"name":"حمام", "number":"${_selectedBathroomsIndex}"},{"name":"غرف نوم", "number":"${_selectedRoomIndex}"},{"name":"صلات", "number":"${_selectedLounge}"},{"name":"مطبخ", "number":"${_selectedkitchen}"}]';
 
                         if(currentStep==1) {
 

@@ -36,7 +36,7 @@ class EstateItem extends StatelessWidget {
         child: Container(
           alignment: Alignment.bottomCenter,
           child:Container(
-            height: 155,
+            // height:fav?150: 155,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(4), //border corner radius
@@ -167,6 +167,42 @@ estate.category!="5"?     estate.property  != null ?Center(
       itemBuilder: (context, index) {
 
         return  estate.property[index].name=="حمام"? Container(
+          decoration: BoxDecoration(color: Theme
+              .of(context)
+              .cardColor,
+            borderRadius: BorderRadius.circular(
+                Dimensions.RADIUS_SMALL),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0.0, 0.2), //(x,y)
+                blurRadius: 6.0,
+              ),
+            ],),
+          margin: EdgeInsets.only(top: 5,bottom: 5,right: 2,left: 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceBetween,
+            children: <Widget>[
+              SizedBox(
+                height: 22.0,
+                width: 22.0,
+
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Image.asset(
+                      Images.bathroom, height: 15,
+                      color: Theme.of(context).primaryColor,
+                      width: 15),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 7.0),
+                child: Text(" ${estate.property[index].number ?? ""}حمام",style: robotoBlack.copyWith(fontSize: 9,)),
+              )
+            ],
+          ),
+        ):estate.property[index].name=="مطبخ"? Container(
           decoration: BoxDecoration(color: Theme
               .of(context)
               .cardColor,

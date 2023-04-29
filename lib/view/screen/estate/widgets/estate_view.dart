@@ -214,7 +214,7 @@ class _EstateViewState extends State<EstateView> {
                           sampleData.forEach((element) => element.isSelected = false);
                           sampleData[index].isSelected = true;
 
-                          Get.toNamed(RouteHelper.getFeatureRoute(widget.estate.id,sampleData[index].buttonText,widget.estate.arPath));
+                          Get.toNamed(RouteHelper.getFeatureRoute(widget.estate.id,sampleData[index].buttonText,widget.estate.arPath,widget.estate.latitude,widget.estate.longitude));
                         });
                       },
                       child:RadioItem(sampleData[index]),

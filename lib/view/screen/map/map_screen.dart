@@ -1045,7 +1045,7 @@ class _MapViewScreenState extends State<MapScreen> {
     _customMarkers=[];
     _customMarkers.clear();
 
-    print("----------------${estate.length}");
+
     _customMarkers.add(MarkerData(
       marker: const Marker(markerId: MarkerId('id-0'), position: LatLng(
         // double.parse(Get.find<LocationController>().getUserAddress().latitude),

@@ -82,6 +82,9 @@ class _FeatureScreenState extends State<FeatureScreen> {
       _initData();
     }
 
+
+    print ("------------------------this id estate${widget.estate.longitude}");
+
   }
 
 
@@ -195,12 +198,12 @@ class _FeatureScreenState extends State<FeatureScreen> {
             ):widget.featureId=="منظور الشارع"?SafeArea(
               child: Center(
                 child: FlutterGoogleStreetView(
-                    initPos:LatLng(double.parse(estateController.estate.latitude),double.parse(estateController.estate.longitude)),
+                    initPos:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)),
                     onStreetViewCreated: (StreetViewController controller) async {
                       //save controller for late using
                       streetViewController = controller;
                       //change position by controller
-                      controller.setPosition(position:LatLng(double.parse(estateController.estate.latitude),double.parse(estateController.estate.longitude)));
+                      controller.setPosition(position:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)));
                     }
                 ),
               ),

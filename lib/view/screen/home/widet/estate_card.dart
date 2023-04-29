@@ -235,13 +235,43 @@ class PropertyCard extends StatelessWidget {
                             )),
                           ],
                         ),
-                      ): estate.property[index].name=="مطلبخ"?Container(
+                      ): estate.property[index].name=="مطبخ"? Container(
                         decoration: BoxDecoration(color: Theme
                             .of(context)
                             .cardColor,
                           borderRadius: BorderRadius.circular(
                               2),
                           boxShadow: const [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 0.2), //(x,y)
+                              blurRadius: 1.0,
+                            ),
+                          ],),
+                        margin: EdgeInsets.only(top: 8,bottom: 5,right: 2,left: 2),
+                        child: Row(
+
+                          children: <Widget>[
+                            SizedBox(
+                              height: 22.0,
+                              width: 22.0,
+
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                child: Image.asset(
+                                    Images.bathroom, height: 15,
+                                    color: Theme.of(context).primaryColor,
+                                    width: 15),
+                              ),
+                            ),
+                            Container(
+                                margin: const EdgeInsets.only(left: 5.0,right: 5.0),
+                                child: Text(" ${estate.property[index].number ?? ""} مطبخ  ", style: robotoRegular.copyWith(
+                                    fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor),
+                                )),
+                          ],
+                        ),
+                      ):  estate.property[index].name=="مطلبخ"?Container(decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(2), boxShadow: const [
                             BoxShadow(
                               color: Colors.grey,
                               offset: Offset(0.0, 0.1), //(x,y)

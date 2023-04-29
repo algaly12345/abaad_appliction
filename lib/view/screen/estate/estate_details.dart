@@ -311,7 +311,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                          .number}  غرف النوم"),
                    )
                  ],
-               ),):estateController.estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
+               ),):estateController.estate.property[index].name=="مطبخ"?Container(decoration: BoxDecoration(color: Theme
                                   .of(context)
                                   .cardColor,
                                 borderRadius: BorderRadius.circular(
@@ -342,7 +342,75 @@ class _EstateDetailsState extends State<EstateDetails> {
                                     margin: const EdgeInsets.only(left: 10.0),
                                     child: Text(" ${ estateController.estate
                                         .property[index]
-                                        .number}عدد الصالات"),
+                                        .number} مطبخ "),
+                                  )
+                                ],
+                              ),):estateController.estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
+                                  .of(context)
+                                  .cardColor,
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.RADIUS_SMALL),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0, 0.2), //(x,y)
+                                    blurRadius: 6.0,
+                                  ),
+                                ],), margin: const EdgeInsets.all(5.0), child: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    height: 40.0,
+                                    width: 40.0,
+
+                                    child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      child: Image.asset(
+                                          Images.bed, height: 24,
+                                          color: Theme.of(context).primaryColor,
+                                          width: 24),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 10.0),
+                                    child: Text(" ${ estateController.estate
+                                        .property[index]
+                                        .number} صالات"),
+                                  )
+                                ],
+                              ),):estateController.estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
+                                  .of(context)
+                                  .cardColor,
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.RADIUS_SMALL),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0, 0.2), //(x,y)
+                                    blurRadius: 6.0,
+                                  ),
+                                ],), margin: const EdgeInsets.all(5.0), child: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    height: 40.0,
+                                    width: 40.0,
+
+                                    child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      child: Image.asset(
+                                          Images.bed, height: 24,
+                                          color: Theme.of(context).primaryColor,
+                                          width: 24),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 10.0),
+                                    child: Text(" ${ estateController.estate
+                                        .property[index]
+                                        .number} صالات"),
                                   )
                                 ],
                               ),):Container():Container();

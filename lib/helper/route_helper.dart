@@ -102,7 +102,7 @@ class RouteHelper {
     return '$verification?page=$page&number=$number&token=$token&pass=$pass';
   }
   static String getDetailsRoute(int id,int user_id) => '$estate?id=$id&user_id=$user_id';
-  static String getFeatureRoute(int id,String  feature_id ,String path) => '$feature?id=$id&feature_id=$feature_id&path=$path';
+  static String getFeatureRoute(int id,String  feature_id ,String path, String latitude, String longitude ) => '$feature?id=$id&feature_id=$feature_id&path=$path&latitude=$latitude&longitude=$longitude';
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
   static String getAddEstateRoute() => '$addEstate';
@@ -203,7 +203,7 @@ class RouteHelper {
     }),
 
     GetPage(name: feature, page: () {
-      return Get.arguments ?? FeatureScreen(estate: Estate(id: int.parse(Get.parameters['id'])),featureId:Get.parameters['feature_id'],path:Get.parameters['path'] );
+      return Get.arguments ?? FeatureScreen(estate: Estate(id: int.parse(Get.parameters['id']),latitude:Get.parameters['latitude'],longitude: Get.parameters['longitude']),featureId:Get.parameters['feature_id'],path:Get.parameters['path'] );
     }),
     GetPage(name: businessPlan, page: () => BusinessPlanScreen(estateId: int.parse(Get.parameters['id']))),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
