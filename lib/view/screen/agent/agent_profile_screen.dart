@@ -123,7 +123,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                                       fontSize: Dimensions.fontSizeDefault),
                                 ),
                         Text(
-                          _isLoggedIn ? '${userController.agentInfoModel.userinfo.membershipType}' : 'guest'.tr,
+                           '${userController.agentInfoModel.userinfo.membershipType}',
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),)
 
 
@@ -147,7 +147,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                                         fontSize: Dimensions.fontSizeDefault),
                                 ),
                                 Text(
-                                  _isLoggedIn ? '${userController.agentInfoModel.userinfo.advertiserNo}' : 'guest'.tr,
+                                '${userController.agentInfoModel.userinfo.advertiserNo}' ,
                                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
                               ],
                             ),
@@ -163,17 +163,17 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                    Text(
-                   _isLoggedIn ? '${userController.agentInfoModel.name}' : 'guest'.tr,
+                   '${userController.agentInfoModel.name}',
                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                    ),
                       SizedBox(height: 4),
-                      Text(  _isLoggedIn ? '${userController.agentInfoModel.phone}' : 'guest'.tr,
+                      Text(   '${userController.agentInfoModel.phone}',
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       SizedBox(height: 4),
 RatingBar(rating: 4, ratingCount: 4)     ,
                       Text(
-                       _isLoggedIn ? '${userController.agentInfoModel.userinfo.membershipType}' : 'guest'.tr,
+                       '${userController.agentInfoModel.userinfo.membershipType}',
                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                      ),
 
@@ -303,6 +303,8 @@ RatingBar(rating: 4, ratingCount: 4)     ,
 
 
 
+
+
                 ]) : SizedBox(),
                 SizedBox(height: _isLoggedIn ? 6 : 0),
                 Container(
@@ -311,6 +313,7 @@ RatingBar(rating: 4, ratingCount: 4)     ,
                     physics: BouncingScrollPhysics(),
                     itemCount:  restController.estateModel.estates.length,
                     scrollDirection: Axis.vertical,
+
                     itemBuilder: (context, index) {
                       return  GetBuilder<EstateController>(builder: (wishController) {
                         return  EstateItem(estate: restController.estateModel.estates[index],onPressed: (){
@@ -326,10 +329,13 @@ RatingBar(rating: 4, ratingCount: 4)     ,
                   Text('${'version'.tr}:', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
                   SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                   Text(AppConstants.APP_VERSION.toString(), style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
+
+
                 ]),
 
               ]),
             ))),
+
           ),
         ): const Center(child: CircularProgressIndicator());
       });
@@ -392,4 +398,6 @@ _launchURL() async {
   } else {
     throw 'Could not launch $url';
   }
+
+
 }

@@ -57,7 +57,8 @@ class EstateRepo {
       "interface":estate.interface,
       "street_space":estate.streetSpace,
       "type_add":estate.type_add,
-      "build_space":estate.buildSpace
+      "build_space":estate.buildSpace,
+      "document_number":estate.documentNumber
 
 
 

@@ -13,9 +13,10 @@ import 'package:abaad/view/base/no_internet_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity/connectivity.dart';
-
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share/share.dart';
 
 class SplashScreen extends StatefulWidget {
   final NotificationBody body;
@@ -88,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
               }else if(widget.body.notificationType == NotificationType.general){
                 Get.offNamed(RouteHelper.getNotificationRoute());
               }else {
-           //     Get.offNamed(RouteHelper.getChatRoute(notificationBody: widget.body, conversationID: widget.body.conversationId));
+                Get.offNamed(RouteHelper.getChatRoute(notificationBody: widget.body, conversationID: widget.body.conversationId));
               }
             }else {
               if (Get.find<AuthController>().isLoggedIn()) {
@@ -107,7 +108,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     Get.offNamed(RouteHelper.getOnBoardingRoute());
                   }
                 } else {
-                  Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
+                  Get.offNamed(RouteHelper.getInitialRoute());
+                  // Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
                 }
               }
             }
@@ -169,5 +171,63 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }),
     );
+  }
+
+
+  void initDynamicLinks() async{
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink)async{
+          final Uri deeplink = dynamicLink.link;
+
+          if(deeplink != null){
+            handleMyLink(deeplink);
+          }
+        },
+        onError: (OnLinkErrorException e)async{
+          print("We got error $e");
+
+        }
+
+    );
+  }
+
+
+
+  void handleMyLink(Uri url){
+    List<String> sepeatedLink = [];
+    /// osama.link.page/Hellow --> osama.link.page and Hellow
+    sepeatedLink.addAll(url.path.split('/'));
+
+    print("The Token that i'm interesed in is ${sepeatedLink[1]}");
+   // Get.to(()=>ProductDetailScreen(sepeatedLink[1]));
+
+  }
+
+
+  buildDynamicLinks(String title,String image,String docId) async {
+    String url = "http://osam.page.link";
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: url,
+      link: Uri.parse('$url/$docId'),
+      androidParameters: AndroidParameters(
+        packageName: "com.dotcoder.dynamic_link_example",
+        minimumVersion: 0,
+      ),
+      iosParameters: IosParameters(
+        bundleId: "Bundle-ID",
+        minimumVersion: '0',
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          description: '',
+          imageUrl:
+          Uri.parse("$image"),
+          title: title),
+    );
+    final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+
+    String desc = '${dynamicUrl.shortUrl.toString()}';
+
+    await Share.share(desc, subject: title,);
+
   }
 }

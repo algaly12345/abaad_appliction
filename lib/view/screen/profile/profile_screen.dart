@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/theme_controller.dart';
@@ -7,6 +9,7 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
@@ -18,6 +21,7 @@ import 'package:get/get.dart';
 import '../../../util/images.dart';
 import 'widget/profile_bg_widget.dart';
 import 'widget/profile_button_mode.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -131,9 +135,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }),
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
               ProfileButton(icon: Icons.share, title: 'share_app'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                Get.find<ThemeController>().toggleTheme();
+                if (Platform.isIOS) {
+                  // print('is a IOS');
+                  Share.share('https://play.google.com/store/apps/details?id=sa.pdm.abaad.abaad', subject: 'Look what I made!');
+
+                } else if (Platform.isAndroid) {
+                  Share.share('https://play.google.com/store/apps/details?id=sa.pdm.abaad.abaad', subject: 'Look what I made!');
+                } else {
+                }
               }),
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
+              _isLoggedIn ? ProfileButton(
+                icon: Icons.delete, title: 'delete_account'.tr,
+                onTap: () {
+                  Get.dialog(ConfirmationDialog(icon: Images.support,
+                    title: 'are_you_sure_to_delete_account'.tr,
+                    description: 'it_will_remove_your_all_information'.tr, isLogOut: true,
+                    onYesPressed: () => userController.removeUser(),
+                  ), useSafeArea: false);
+                },
+              ) : SizedBox(),
               // SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
               // _isLoggedIn ? GetBuilder<AuthController>(builder: (authController) {
               //   return ProfileButton(

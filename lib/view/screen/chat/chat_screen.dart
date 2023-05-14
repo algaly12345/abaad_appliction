@@ -213,6 +213,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           maxLines: null,
                           decoration: InputDecoration(
                             border: InputBorder.none,
+
                             hintText: 'type_here'.tr,
                             hintStyle: robotoRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.fontSizeLarge),
                           ),

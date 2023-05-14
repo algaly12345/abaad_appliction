@@ -100,5 +100,16 @@
   "point_to_wallet": "share estate",
   "order_place": "debit operation",
   "transaction_history": "transaction_history",
-  "profile": "profile"
+  "profile": "profile",
+  "guest": "guest",
+  "you_are_not_logged_in": "you are not logged in",
+  "sorry": "sorry",
+  "we_are_under_maintenance": "We Are Under Maintenance",
+  "we_will_be_right_back": "We Will Be Right Back",
+  "back_press_again_to_exit": "Back press again to exit",
+  "share_app": "share app",
+  "are_you_sure_to_delete_account": "Are you sure to delete your account?",
+  "it_will_remove_your_all_information": "It will remove your all information.",
+  "delete_account": "Delete Account",
+  "type_here": "Type here....."
 }

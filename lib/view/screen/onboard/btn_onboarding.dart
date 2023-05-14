@@ -38,7 +38,8 @@ class BtnOnBoarding extends StatelessWidget {
       // hide on boarding
     //  await OnBoardingLocalStorage.showOnBoarding(false);
       Get.find<SplashController>().disableIntro();
-      Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.onBoarding));
+      Get.offNamed(RouteHelper.getInitialRoute());
+      // Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.onBoarding));
     } else {
       pageController.animateToPage(
         currentPage + 1,

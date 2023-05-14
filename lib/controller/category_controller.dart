@@ -207,9 +207,9 @@ class CategoryController extends GetxController implements GetxService {
 
   }
 
-  void setFilterIndex(int zone_id,int category_id,String cityName,String districts,int  space,String add_type) {
-
-    getCategoryProductList(zone_id,category_id.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0",add_type.toString() ?? "0","1");
+  void setFilterIndex(int zone_id, int index,String cityName,String districts,int  space,String add_type) {
+    _subCategoryIndex = index;
+    getCategoryProductList(zone_id,_subCategoryList[index].id.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0",add_type.toString() ?? "0","1");
 
     update();
 

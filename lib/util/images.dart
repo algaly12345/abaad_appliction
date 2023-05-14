@@ -21,6 +21,7 @@ class Images {
   static const String bc="assets/image/bc.png";
   static const String arrowCircle="assets/image/arrow-circle-right.png";
   static const String video="assets/image/video.png";
+  static const String support_image = 'assets/image/support_image.png';
 
 
   static const String home = 'assets/image/home.png';
@@ -81,6 +82,7 @@ class Images {
   static const String mosque = 'assets/image/mosque.png';
   static const String restaurant = 'assets/image/restaurant.png';
   static const String background = 'assets/image/background.png';
+  static const String guest = 'assets/image/guest.png';
 
 
 

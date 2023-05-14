@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
@@ -10,6 +12,7 @@ import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 
 class DrawerMenu extends StatelessWidget {
 
@@ -61,22 +64,23 @@ class DrawerMenu extends StatelessWidget {
               Divider(height: 1),
 
               listItem(2,Icons.support_agent_outlined, 'help_support'.tr, Colors.orange,(){
-                //Get.toNamed(RouteHelper.getSupportRoute(0));
+                Get.toNamed( RouteHelper.getSupportRoute());
               }),
               Divider(height: 1),
 
               listItem(3,Icons.policy, 'privacy_policy'.tr, Colors.pink,(){
-                //  Get.toNamed(RouteHelper.getHtmlRoute("privacy-policy"));
+                 Get.toNamed(RouteHelper.getHtmlRoute("privacy-policy"));
               }),
               Divider(height: 1),
 
               listItem(4,Icons.info, 'about_us'.tr, Colors.deepPurple,(){
-                //   Get.toNamed(RouteHelper.getHtmlRoute("about-us"));
+                  Get.toNamed(RouteHelper.getHtmlRoute("about-us"));
               }),
               Divider(height: 1),
 
               listItem(5,Icons.list_alt, 'terms_conditions'.tr, Colors.grey,(){
-                //      Get.toNamed(RouteHelper.getHtmlRoute("terms_conditions"));
+
+                     Get.toNamed(RouteHelper.getHtmlRoute("terms_conditions"));
               }),
               Divider(height: 1),
 
@@ -85,6 +89,19 @@ class DrawerMenu extends StatelessWidget {
               }),
 
               Divider(height: 1),
+              Divider(height: 1),
+
+              listItem(4,Icons.share, 'share_app'.tr, Colors.deepOrangeAccent,(){
+
+                if (Platform.isIOS) {
+                  // print('is a IOS');
+                  Share.share('https://play.google.com/store/apps/details?id=sa.pdm.abaad.abaad', subject: 'Look what I made!');
+
+                } else if (Platform.isAndroid) {
+                  Share.share('https://play.google.com/store/apps/details?id=sa.pdm.abaad.abaad', subject: 'Look what I made!');
+                } else {
+                }
+              }),
 
               listItem(8,Icons.logout,  _isLoggedIn ? 'logout'.tr : 'sign_in'.tr, Colors.orange,(){
 

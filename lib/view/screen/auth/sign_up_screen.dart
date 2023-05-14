@@ -307,7 +307,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (_fullName.isEmpty) {
-      showCustomSnackBar('enter_your_first_name'.tr);
+      showCustomSnackBar('enter_your_name'.tr);
     }else if (_email.isEmpty) {
       showCustomSnackBar('enter_email_address'.tr);
     }else if (!GetUtils.isEmail(_email)) {

@@ -12,6 +12,7 @@ import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/image_view_dialog.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
+import 'package:abaad/view/screen/estate/web_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -19,9 +20,8 @@ import 'package:get/get.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:video_player/video_player.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
-
+import 'package:webview_flutter/webview_flutter.dart';
 class FeatureScreen extends StatefulWidget {
   final featureId;
   final Estate estate;
@@ -38,9 +38,9 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
   final Completer<WebViewController> _controller = Completer<WebViewController>();
   String selectedUrl;
+  WebViewController controllerGlobal;
   bool _isLoading = true;
   PullToRefreshController pullToRefreshController;
-  MyInAppBrowser browser;
 
   StreetViewController streetViewController;
   VideoPlayerController _controller1;
@@ -78,18 +78,17 @@ class _FeatureScreenState extends State<FeatureScreen> {
       _controller2.value.isPlaying?_controller2.pause():_controller2.play();
     }
     else if(widget.featureId=="تجوال افتراضي"){
-      selectedUrl =widget.path;
+
       _initData();
     }
 
 
-    print ("------------------------this id estate${widget.estate.longitude}");
+
 
   }
 
 
   void _initData() async {
-    browser = MyInAppBrowser();
 
     if (Platform.isAndroid) {
       await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
@@ -108,27 +107,8 @@ class _FeatureScreenState extends State<FeatureScreen> {
       }
     }
 
-    pullToRefreshController = PullToRefreshController(
-      options: PullToRefreshOptions(
-        color: Colors.black,
-      ),
-      onRefresh: () async {
-        if (Platform.isAndroid) {
-          browser.webViewController.reload();
-        } else if (Platform.isIOS) {
-          browser.webViewController.loadUrl(urlRequest: URLRequest(url: await browser.webViewController.getUrl()));
-        }
-      },
-    );
-    browser.pullToRefreshController = pullToRefreshController;
 
-    await browser.openUrlRequest(
-      urlRequest: URLRequest(url: Uri.parse(selectedUrl)),
-      options: InAppBrowserClassOptions(
-        inAppWebViewGroupOptions: InAppWebViewGroupOptions(crossPlatform: InAppWebViewOptions(useShouldOverrideUrlLoading: true, useOnLoadResource: true)),
-        crossPlatform: InAppBrowserOptions(hideUrlBar: true, hideToolbarTop: GetPlatform.isAndroid),
-      ),
-    );
+
   }
 
   @override
@@ -187,13 +167,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
             ):widget.featureId=="تجوال افتراضي"?Center(
               child: Container(
                 width: Dimensions.WEB_MAX_WIDTH,
-                child: Stack(
-                  children: [
-                    _isLoading ? Center(
-                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)),
-                    ) : SizedBox.shrink(),
-                  ],
-                ),
+                child: WebViewScreen(  url: widget.estate.arPath),
               ),
             ):widget.featureId=="منظور الشارع"?SafeArea(
               child: Center(
@@ -288,81 +262,4 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
 
 
-
-class MyInAppBrowser extends InAppBrowser {
-
-  MyInAppBrowser({ int windowId, UnmodifiableListView<UserScript> initialUserScripts})
-      : super(windowId: windowId, initialUserScripts: initialUserScripts);
-
-  bool _canRedirect = true;
-
-  @override
-  Future onBrowserCreated() async {
-    print("\n\nBrowser Created!\n\n");
-  }
-
-  @override
-  Future onLoadStart(url) async {
-    print("\n\nStarted: $url\n\n");
-    //_redirect(url.toString());
-  }
-
-  @override
-  Future onLoadStop(url) async {
-    pullToRefreshController?.endRefreshing();
-    print("\n\nStopped: $url\n\n");
-   // _redirect(url.toString());
-  }
-
-  @override
-  void onLoadError(url, code, message) {
-    pullToRefreshController?.endRefreshing();
-    print("Can't load [$url] Error: $message");
-  }
-
-  @override
-  void onProgressChanged(progress) {
-    if (progress == 100) {
-      pullToRefreshController?.endRefreshing();
-    }
-    print("Progress: $progress");
-  }
-
-  @override
-  void onExit() {
-    if(_canRedirect) {
-    //  Get.back();
-    }
-    print("\n\nBrowser closed!\n\n");
-  }
-
-  @override
-  Future<NavigationActionPolicy> shouldOverrideUrlLoading(navigationAction) async {
-    print("\n\nOverride ${navigationAction.request.url}\n\n");
-    return NavigationActionPolicy.ALLOW;
-  }
-
-  @override
-  void onLoadResource(response) {
-    print("Started at: " + response.startTime.toString() + "ms ---> duration: " + response.duration.toString() + "ms " + (response.url ?? '').toString());
-  }
-
-  @override
-  void onConsoleMessage(consoleMessage) {
-    print("""
-    console output:
-      message: ${consoleMessage.message}
-      messageLevel: ${consoleMessage.messageLevel.toValue()}
-   """);
-  }
-  //
-  // void _redirect(String url) {
-  //   if(_canRedirect) {
-  //
-  //       _canRedirect = false;
-  //       close();
-  //     }
-  //
-  //   }
- }
 

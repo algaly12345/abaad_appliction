@@ -91,6 +91,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
   final TextEditingController _shortDescController = TextEditingController();
   final TextEditingController _longDescController = TextEditingController();
+  final TextEditingController _documentNumberController  = TextEditingController();
 
   final TextEditingController _spaceController = TextEditingController();
   final FocusNode _firstNameFocus = FocusNode();
@@ -98,6 +99,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   final FocusNode _longDescFocus = FocusNode();
   final FocusNode _spaceFocus = FocusNode();
   final FocusNode _buildSpaceFocus = FocusNode();
+  final FocusNode _documentNumberFocus = FocusNode();
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -283,7 +285,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     return Scaffold(
 
 
-      body: SingleChildScrollView(
+      body: Get.find<AuthController>().isLoggedIn() ? SingleChildScrollView(
         child:
       GetBuilder<AuthController>(builder: (authController) {
 
@@ -1683,7 +1685,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                        Text("ad_typ".tr, style: robotoRegular.copyWith(
+                        Text("نوع المعلن", style: robotoRegular.copyWith(
                             fontSize: Dimensions.fontSizeDefault, color: Theme
                             .of(context)
                             .hintColor),),
@@ -1749,6 +1751,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           ],
                         ),
                         _djectivePresenter==0?Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
@@ -1774,6 +1777,22 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       ],
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    Text(
+                      'رقم الوثيقة'.tr,
+                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                    ),
+                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    MyTextField(
+                      hintText: 'ادخل رقم الوثيقة'.tr,
+                      controller: _documentNumberController,
+                      focusNode: _documentNumberFocus,
+
+                      inputType: TextInputType.text,
+                      size: 17,
+                      capitalization: TextCapitalization.sentences,
+                      showBorder: true,
+                    ),
+                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                   ]))),
                 )
 
@@ -2185,6 +2204,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                                   price: _priceController.text.toString(),
                                 buildSpace: _buildSpaceController.text.toString(),
+                                documentNumber: _documentNumberController.text.toString(),
                                 priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" )): Center(child: CircularProgressIndicator());
                          // authController.submitBusinessPlan(restaurantId: 1);
                          //  next();
@@ -2211,7 +2231,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     });
     }),
 
-      ),
+      ): NotLoggedInScreen(),
 
 
 

@@ -76,6 +76,7 @@ class Estate {
   List<Interface> interface;
   String streetSpace;
   String buildSpace;
+  String documentNumber;
 
 
 
@@ -122,7 +123,8 @@ class Estate {
     this.otherAdvantages,
     this.interface,
     this.streetSpace,
-    this.buildSpace
+    this.buildSpace,
+    this.documentNumber
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -199,6 +201,7 @@ class Estate {
     }
     streetSpace=json["street_space"];
     buildSpace=json["build_space"];
+    documentNumber=json["document_number"];
 
 
   }
@@ -249,6 +252,7 @@ class Estate {
     data['title']=this.title;
     data['category']=this.category;
     data["build_space"]=this.buildSpace;
+    data["document_number"]=this.documentNumber;
 
     if (this.networkType != null) {
       data['network_type'] = this.networkType.map((v) => v.toJson()).toList();
@@ -312,6 +316,7 @@ class ServiceOffers {
   String updatedAt;
   Pivot pivot;
   String image;
+  String phoneProvider;
 
   ServiceOffers(
       {this.id,
@@ -326,7 +331,10 @@ class ServiceOffers {
         this.createdAt,
         this.updatedAt,
         this.pivot,
-      this.image});
+      this.image,
+
+
+        this.phoneProvider});
 
   ServiceOffers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -341,6 +349,7 @@ class ServiceOffers {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     image = json['image'];
+    phoneProvider  =json['phone_provider']  ;
     pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
   }
 
@@ -357,6 +366,7 @@ class ServiceOffers {
     data['offer_type'] = this.offerType;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['phone_provider']=this.phoneProvider;
     data['image'] = this.image;
     if (this.pivot != null) {
       data['pivot'] = this.pivot.toJson();

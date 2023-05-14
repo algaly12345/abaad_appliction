@@ -19,6 +19,7 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/cached_img.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/base/details_dilog.dart';
 import 'package:abaad/view/base/discount_tag.dart';
 import 'package:abaad/view/base/drawer_menu.dart';
 import 'package:abaad/view/base/estate_item.dart';
@@ -39,6 +40,7 @@ import 'package:get/get.dart';
 import 'package:abaad/util/images.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_stack/image_stack.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'widget/location_search_dialog.dart';
@@ -397,8 +399,8 @@ class _MapViewScreenState extends State<MapScreen> {
                                                       _customMarkers=[];
                                                       // _customMarkers.clear();
 
-
-                                                      categoryController.setSubCategoryIndex(index);
+                                                 //     categoryController.setFilterIndex(0,index,"0","0",0,"0");
+                                                   categoryController.setSubCategoryIndex(index);
 
                                                       setState(() {
 
@@ -780,8 +782,8 @@ class _MapViewScreenState extends State<MapScreen> {
                                               // _customMarkers.clear();
 
 
-                                              categoryController.setSubCategoryIndex(index);
-
+                                               categoryController.setSubCategoryIndex(index);
+                                              //categoryController.setFilterIndex(0,index,"0","0",0,"0");
                                               setState(() {
 
 
@@ -1046,6 +1048,7 @@ class _MapViewScreenState extends State<MapScreen> {
     _customMarkers.clear();
 
 
+
     _customMarkers.add(MarkerData(
       marker: const Marker(markerId: MarkerId('id-0'), position: LatLng(
         // double.parse(Get.find<LocationController>().getUserAddress().latitude),
@@ -1060,6 +1063,7 @@ class _MapViewScreenState extends State<MapScreen> {
       print('Coordinate ${i+1}: (${currentCoordinate.id}, ${currentCoordinate.title})');
       LatLng _latLng = LatLng(double.parse(currentCoordinate.latitude), double.parse(currentCoordinate.longitude));
       _latLngs.add(_latLng);
+
 
       _customMarkers.add(MarkerData(
 
@@ -1077,7 +1081,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
 
             // _pageController.animateToPage(i, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut,);
-                print("---------------------------------------------$i");
+                print("-----------------------------------------omeromer----");
 
             _pageController.animateToPage(selectedIndex, duration: const Duration(milliseconds: 800), curve: Curves.easeInOut,);
 
@@ -1088,6 +1092,7 @@ class _MapViewScreenState extends State<MapScreen> {
             children: [
               GestureDetector(
                 onTap: (){
+
                 },
                 child:  Container(
 
@@ -1103,9 +1108,8 @@ class _MapViewScreenState extends State<MapScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                          '${currentCoordinate.price}',
-                          style:robotoBlack.copyWith(fontSize: 7)
+                      Text(currentCoordinate.price.length ==5? '${currentCoordinate.price } الف':currentCoordinate.price.length ==4? '${currentCoordinate.price } الف':currentCoordinate.price.length ==7? '${currentCoordinate.price } الف':currentCoordinate.price.length ==6? '${currentCoordinate.price } الف':currentCoordinate.price.length >=9? '${currentCoordinate.price } مليون':currentCoordinate.price,
+                          style:robotoBlack.copyWith(fontSize: 9)
                       ),
                       Image.asset(currentCoordinate.serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
                     ],
@@ -1118,14 +1122,14 @@ class _MapViewScreenState extends State<MapScreen> {
                 children: [
                   Image.asset(Images.location_marker, height: 40, width: 40,color:currentCoordinate.serviceOffers.length==0?Colors.red:Colors.orange),
                   Positioned(top: 3, left: 0, right: 0, child: Center(
-                    child: ClipOval(child: CustomImage(image: "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Front-Of-Smaller-House-AdobeStock-118866140%20copy.jpeg", placeholder: Images.placeholder, height: 20, width: 20, fit: BoxFit.cover)),
+                    child: ClipOval(child: CustomImage(image:currentCoordinate.images.length ==0?1:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${currentCoordinate.images[0]}", placeholder: Images.placeholder, height: 20, width: 20, fit: BoxFit.cover)),
                   )),
                 ],
               ): Stack(
        children: [
          Image.asset(Images.location_marker, height: 35, width: 35,color:currentCoordinate.serviceOffers.length==0?Theme.of(context).primaryColor:Colors.orange),
          Positioned(top: 3, left: 0, right: 0, child: Center(
-           child: ClipOval(child: CustomImage(image: "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/Stock-Front-Of-Smaller-House-AdobeStock-118866140%20copy.jpeg", placeholder: Images.placeholder, height: 18, width: 18, fit: BoxFit.cover)),
+           child: ClipOval(child: CustomImage(  image:currentCoordinate.images.length ==0?1:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${currentCoordinate.images[0]}", placeholder: Images.placeholder, height: 18, width: 18, fit: BoxFit.cover)),
          )),
        ],
      ),
@@ -1298,7 +1302,9 @@ class _MapViewScreenState extends State<MapScreen> {
                       ),
                       Center(
                         child:   EstateItem(estate: _products[index],onPressed: (){
-                          Get.toNamed(RouteHelper.getDetailsRoute( _products[index].id,_products[index].userId));
+                          // showCustomSnackBar("${ _products[index].title}");
+                          Get.dialog(DettailsDilog(estate:_products[index]));
+                         // Get.toNamed(RouteHelper.getDetailsRoute( _products[index].id,_products[index].userId));
                         },fav: false,),
                       ),
                     ],

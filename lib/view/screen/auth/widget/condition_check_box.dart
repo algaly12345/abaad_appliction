@@ -19,8 +19,7 @@ class ConditionCheckBox extends StatelessWidget {
       ),
       Text('i_agree_with'.tr, style: robotoRegular),
       InkWell(
-        onTap: () =>
-         null ,
+        onTap: () => Get.toNamed(RouteHelper.getHtmlRoute('terms_conditions')),
         child: Padding(
           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
           child: Text('terms_conditions'.tr, style: robotoMedium.copyWith(color: Colors.blue)),

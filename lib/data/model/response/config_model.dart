@@ -33,6 +33,7 @@ class ConfigModel {
   int minimumPointToTransfer;
   String currencySymbol;
   int digitAfterDecimalPoint;
+  String termsAndConditions;
 
 
 
@@ -67,6 +68,7 @@ class ConfigModel {
         this.minimumPointToTransfer,
         this.currencySymbol,
         this.digitAfterDecimalPoint,
+        this.termsAndConditions,
       });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
@@ -103,6 +105,7 @@ class ConfigModel {
     minimumPointToTransfer = json['minimum_point_to_transfer'];
     currencySymbol = json['currency_symbol'];
     digitAfterDecimalPoint = json['digit_after_decimal_point'];
+    termsAndConditions = json['terms_and_conditions'];
 
   }
 
@@ -140,6 +143,8 @@ class ConfigModel {
     data['minimum_point_to_transfer'] = this.minimumPointToTransfer;
     data['currency_symbol'] = this.currencySymbol;
     data['digit_after_decimal_point'] = this.digitAfterDecimalPoint;
+    data['terms_and_conditions']=this.termsAndConditions;
+
 
 
     return data;

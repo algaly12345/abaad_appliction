@@ -20,11 +20,13 @@ import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/map_details_view.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
+import 'package:abaad/view/base/offer_list.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
 import 'package:abaad/view/screen/estate/widgets/interface.dart';
 import 'package:abaad/view/screen/estate/widgets/near_by_view.dart';
 import 'package:abaad/view/screen/estate/widgets/network_type.dart';
+import 'package:abaad/view/screen/fillter/fillter_estate_sheet.dart';
 import 'package:clipboard/clipboard.dart';
 
 import 'package:flutter/material.dart';
@@ -97,7 +99,7 @@ class _EstateDetailsState extends State<EstateDetails> {
             return (estateController.estate != null) ?
                Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [EstateView(fromView: true,estate:estateController.estate,EstateId: widget.estate.id ) ,
+              children: [EstateView(fromView: true,estate:estateController.estate ) ,
 
 
                 Container(
@@ -518,6 +520,35 @@ class _EstateDetailsState extends State<EstateDetails> {
                           ],
                         ),
                       ):Container(),
+                      estateController.estate.documentNumber!=null?    Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(flex: 1,
+                                child: Container(
+                                    padding: EdgeInsets.all(10),child:  Text("رقم الوثيقة"))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(flex: 1,
+                                child: Container(
+                                    padding: EdgeInsets.all(10),child: Text("${ estateController.estate.documentNumber}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ):Container(),
 
                       estateController.estate.interface!=null? InterfaceItem(estate: estateController.estate,restaurants:   estateController.estate.interface)   :Container(),
                       estateController.estate.priceNegotiation!=null?    Container(
@@ -706,7 +737,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                                   alignment: Alignment.center,
                                   child:   Row(
 
-                                    children: [
+                                    children: const [
 
                                       SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                       // Flexible(
@@ -731,51 +762,55 @@ class _EstateDetailsState extends State<EstateDetails> {
                       Divider(height: 1,),
                       Text("معلومات اخرى",
                           style: robotoBlack.copyWith(fontSize: 14)),
-
-                      GestureDetector(
-                        onTap: (){
-                      Get.dialog(NearByView(esate: _estate,));
-                        },
-                        child: Container   (
+                 Container   (
                           padding: EdgeInsets.all(10),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Theme.of(context).primaryColor,
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(0, 0.5), // changes position of shadow
-                                      ),
+                                GestureDetector(
+                                  onTap: (){
+                                    Get.dialog(NearByView(esate: _estate,));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).primaryColor,
+                                          spreadRadius: 1,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 0.5), // changes position of shadow
+                                        ),
 
-                                    ],
+                                      ],
 
+                                    ),
+
+                                    child: Column(children: <Widget>[
+                                    Image.asset(Images.estate_type,height: 70,width: 70,),
+                                      Text('المرافق',style: robotoBlack.copyWith(fontSize: 13)),
+
+                                    ]),
                                   ),
-
-                                  child: Column(children: <Widget>[
-                                  Image.asset(Images.estate_type,height: 70,width: 70,),
-                                    Text('المرافق',style: robotoBlack.copyWith(fontSize: 13)),
-
-                                  ]),
                                 ),
-                    Container(
+                           GestureDetector(
+                             onTap: (){
+                               Get.dialog(OfferList(estate: estateController.estate));
+                             },
+                             child: Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10.0),
                           boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).primaryColor,
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(0, 0.5), // changes position of shadow
-                            ),
+                              BoxShadow(
+                                color: Theme.of(context).primaryColor,
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: Offset(0, 0.5), // changes position of shadow
+                              ),
 
                           ],
 
@@ -786,6 +821,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           Text('عروض مع العقار',style: robotoBlack.copyWith(fontSize: 12)),
                         ]),
                     ),
+                           ),
                         Container(
                           padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -812,7 +848,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                               ]
                           ),
                         ),
-                      ),
+
                       SizedBox(height: 10),
                       Divider(height: 1,),
                       SizedBox(height: 6),
@@ -911,7 +947,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                             Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                             //  Text("${ _isLoggedIn ? '${userController.agentInfoModel.name}' : 'guest'.tr}", style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
                               Text(
-                                _isLoggedIn ? '${userController.agentInfoModel.name}' : 'guest'.tr,
+                           '${userController.agentInfoModel.name}',
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),),
                               SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 

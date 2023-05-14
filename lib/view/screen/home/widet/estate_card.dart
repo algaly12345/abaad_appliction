@@ -8,6 +8,7 @@ import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/base/details_dilog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
@@ -21,7 +22,8 @@ class PropertyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return  GestureDetector(
       onTap: (){
-        Get.toNamed(RouteHelper.getDetailsRoute(estate.id,estate.userId));
+        Get.dialog(DettailsDilog(estate:estate));
+        // Get.toNamed(RouteHelper.getDetailsRoute(estate.id,estate.userId));
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 6,top: 6),
@@ -63,7 +65,7 @@ class PropertyCard extends StatelessWidget {
                         margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
                         child:      GetBuilder<WishListController>(builder: (wishController) {
-                          bool _isWished =  wishController.wishRestList.contains(estate.id);
+                       //   bool _isWished =  wishController.wishRestList.contains(estate.id);
                           return InkWell(
                             onTap: () {
                               if(Get.find<AuthController>().isLoggedIn()) {

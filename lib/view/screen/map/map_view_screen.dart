@@ -293,7 +293,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                             children: <Widget>[Text('${zone[index].estate_count }', textAlign: TextAlign.left, style: TextStyle(
                                 color: Color.fromRGBO(55, 133, 250, 1),
                                 fontFamily: 'Cairo',
-                                fontSize: 7,
+                                fontSize: 10,
                                 letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
                                 fontWeight: FontWeight.normal,
                                 height: 1.5

@@ -15,7 +15,7 @@ class NotLoggedInScreen extends StatelessWidget {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
           Image.asset(
-            Images.placeholder,
+            Images.guest,
             width: MediaQuery.of(context).size.height*0.25,
             height: MediaQuery.of(context).size.height*0.25,
           ),
@@ -37,7 +37,7 @@ class NotLoggedInScreen extends StatelessWidget {
 
           SizedBox(
             width: 200,
-            child: CustomButton(buttonText: 'login_to_continue'.tr, height: 40, onPressed: () {
+            child: CustomButton(buttonText: 'تسجيل الدخول '.tr, height: 40, onPressed: () {
               Get.toNamed(RouteHelper.getSignInRoute(RouteHelper.main));
             }),
           ),

@@ -10,6 +10,7 @@ import 'package:abaad/data/model/response/land_service.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/util/app_constants.dart';
+import 'package:abaad/util/html_type.dart';
 import 'package:abaad/view/base/custom_dialog_box.dart';
 import 'package:abaad/view/base/not_found.dart';
 import 'package:abaad/view/screen/access_location_screen.dart';
@@ -24,7 +25,9 @@ import 'package:abaad/view/screen/estate/add_estate_screen.dart';
 import 'package:abaad/view/screen/estate/confiram_screen.dart';
 import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
 import 'package:abaad/view/screen/estate/estate_details.dart';
+import 'package:abaad/view/screen/estate/web_view_screen.dart';
 import 'package:abaad/view/screen/estate/widgets/feature_item_view.dart';
+import 'package:abaad/view/screen/html/html_viewer_screen.dart';
 import 'package:abaad/view/screen/language/language_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:abaad/view/screen/map/map_screen.dart';
@@ -35,6 +38,7 @@ import 'package:abaad/view/screen/onboard/on_boarding_page.dart';
 import 'package:abaad/view/screen/profile/profile_screen.dart';
 import 'package:abaad/view/screen/profile/update_profile_screen.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
+import 'package:abaad/view/screen/support/support_screen.dart';
 import 'package:abaad/view/screen/test.dart';
 import 'package:abaad/view/screen/update/update_screen.dart';
 import 'package:abaad/view/screen/wallet/wallet_screen.dart';
@@ -69,11 +73,15 @@ class RouteHelper {
   static const String wallet = '/wallet';
   static const String feature = '/feature';
   static const String marketer = '/profile-agent';
+  static const String html = '/html';
+  static const String webview = '/webview';
+  static const String support = '/help-and-support';
 
 
 
 
 
+  static String getHtmlRoute(String page) => '$html?page=$page';
   static String getProfileRoute() => '$profile';
   static String getInitialRoute() => '$initial';
   static String getCategoryRoute(int id ,String  longitude,String latitude ) => '$categories?id=$id&latitude=$latitude&longitude=$longitude';
@@ -82,7 +90,7 @@ class RouteHelper {
   static String getConversationRoute(int id) => '$conversation';
   static String getWalletRoute(bool fromWallet) => '$wallet?page=${fromWallet ? 'wallet' : 'loyalty_points'}';
   static String getPickMapRoute(String page, bool canRoute) => '$pickMap?page=$page&route=${canRoute.toString()}';
-
+  static String getSupportRoute() => '$support';
   static String getSuccess() => '$success';
   static String getSplashRoute(NotificationBody body) {
     String _data = 'null';
@@ -102,6 +110,8 @@ class RouteHelper {
     return '$verification?page=$page&number=$number&token=$token&pass=$pass';
   }
   static String getDetailsRoute(int id,int user_id) => '$estate?id=$id&user_id=$user_id';
+  // static String getWebViewRoute(String ar_path) => 'ar_path=$webview';
+  static String getWebViewRoute(String page) => '$webview?url=$page';
   static String getFeatureRoute(int id,String  feature_id ,String path, String latitude, String longitude ) => '$feature?id=$id&feature_id=$feature_id&path=$path&latitude=$latitude&longitude=$longitude';
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
@@ -159,6 +169,7 @@ class RouteHelper {
       fromSignUp: Get.parameters['page'] == signUp, fromHome: Get.parameters['page'] == 'home', route: null,pageIndex: 0,
     )),
 
+    GetPage(name: support, page: () => SupportScreen()),
     GetPage(name: notification, page: () =>NotificationScreen()),
     GetPage(name: update, page: () => UpdateScreen(isUpdate: Get.parameters['update'] == 'true')),
     GetPage(name: profile, page: () => ProfileScreen()),
@@ -172,8 +183,14 @@ class RouteHelper {
         canRoute: Get.parameters['route'] == 'true',
       );
     }),
-
-
+    GetPage(name: html, page: () => HtmlViewerScreen(
+      htmlType: Get.parameters['page'] == 'terms-and-condition' ? HtmlType.TERMS_AND_CONDITION
+          : Get.parameters['page'] == 'privacy-policy' ? HtmlType.PRIVACY_POLICY
+          : Get.parameters['page'] == 'shipping-policy' ? HtmlType.SHIPPING_POLICY
+          : Get.parameters['page'] == 'cancellation-policy' ? HtmlType.CANCELLATION_POLICY
+          : Get.parameters['page'] == 'refund-policy' ? HtmlType.REFUND_POLICY : HtmlType.ABOUT_US,
+    )),
+    GetPage(name: webview, page: () => WebViewScreen(url: Get.parameters['url'])),
     GetPage(name: pickMap, page: () {
       PickMapScreen _pickMapScreen = Get.arguments;
       bool _fromAddress = Get.parameters['page'] == 'add-address';

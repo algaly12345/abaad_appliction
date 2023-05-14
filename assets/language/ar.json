@@ -97,5 +97,16 @@
   "point_to_wallet": "عملية مشاركة",
   "order_place": "عملية سحب",
   "transaction_history": "المعاملات",
-  "profile": "معلومات الملف الشخصى"
+  "profile": "معلومات الملف الشخصى",
+  "guest": "زائر",
+  "you_are_not_logged_in": "لم يتم تسجيل الدخول ",
+  "sorry": "عفوا",
+  "we_are_under_maintenance": "نحن تحت الصيانة",
+  "we_will_be_right_back": "سوف نعود",
+  "back_press_again_to_exit": "اضغط مرة أخرى للخروج",
+  "share_app": "شارك التطبيق",
+  "are_you_sure_to_delete_account": "هل أنت متأكد من حذف حسابك?",
+  "it_will_remove_your_all_information": "سوف يزيل كل المعلومات الخاصة بك.",
+  "remove_account": "إزالة الحساب",
+  "type_here": "أكتب هنا....."
 }

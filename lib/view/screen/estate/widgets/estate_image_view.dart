@@ -55,7 +55,7 @@ class _EstateImageViewState extends State<EstateImageView> {
                 autoPlay: true,
                 height: widget.fromView ? 340 : (context.height * 0.70),
 
-                autoPlayInterval: Duration(seconds: 7),
+                autoPlayInterval: Duration(seconds: 3),
                 onPageChanged: (index, reason) {
                   estateController.setCurrentIndex(index, true);
                 },
@@ -111,7 +111,7 @@ class _EstateImageViewState extends State<EstateImageView> {
 
         ],
       ) : Shimmer(
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 1),
         enabled: estateController.estate.images == null,
         child: Container(margin: EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),

@@ -19,14 +19,15 @@ import 'package:abaad/view/screen/map/widget/location_search_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:share/share.dart';
 
 class EstateView extends StatefulWidget {
   final bool fromView;
  final  Estate estate;
- final EstateId;
 
 
-  const EstateView({@required this.fromView,this.estate,this.EstateId});
+  const EstateView({@required this.fromView,this.estate});
 
   @override
   State<EstateView> createState() => _EstateViewState();
@@ -65,12 +66,11 @@ class _EstateViewState extends State<EstateView> {
 
       return SingleChildScrollView(
         child: Card(
-          elevation: 2,
+          // elevation: 2,
           child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Padding(
             padding: EdgeInsets.all(widget.fromView ? 0 : 4),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
            //   const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
 
@@ -121,7 +121,12 @@ class _EstateViewState extends State<EstateView> {
                                 ],
                               ),
                               SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                              Icon(Icons.share, size: 23, color: Theme.of(context).textTheme.bodyText1.color),
+
+                              GestureDetector(
+                                onTap: (){
+                                  buildDynamicLinks(widget.estate.title, "https://tse2.mm.bing.net/th?id=OIP.I2HMxoqdd2NMj1qw0p3_egHaEK&pid=Api&P=0", widget.estate.id.toString());
+                                },
+                                  child: Icon(Icons.share, size: 23, color: Theme.of(context).textTheme.bodyText1.color)),
                             ]),
                       ),
                     Container(
@@ -165,7 +170,7 @@ class _EstateViewState extends State<EstateView> {
                                       margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
                                       child:      GetBuilder<WishListController>(builder: (wishController) {
-                                        bool _isWished =  wishController.wishRestList.contains(widget.EstateId);
+                                     //   bool _isWished =  wishController.wishRestList.contains(widget.EstateId);
                                         return InkWell(
                                           onTap: () {
                                             if(Get.find<AuthController>().isLoggedIn()) {
@@ -213,8 +218,14 @@ class _EstateViewState extends State<EstateView> {
                         setState(() {
                           sampleData.forEach((element) => element.isSelected = false);
                           sampleData[index].isSelected = true;
-
-                          Get.toNamed(RouteHelper.getFeatureRoute(widget.estate.id,sampleData[index].buttonText,widget.estate.arPath,widget.estate.latitude,widget.estate.longitude));
+                          if(sampleData[index].buttonText=="تجوال افتراضي"){
+                            Get.toNamed(RouteHelper.getWebViewRoute(widget.estate.arPath));
+                          }else {
+                            Get.toNamed(RouteHelper.getFeatureRoute(
+                                widget.estate.id, sampleData[index].buttonText,
+                                widget.estate.arPath, widget.estate.latitude,
+                                widget.estate.longitude));
+                          }
                         });
                       },
                       child:RadioItem(sampleData[index]),
@@ -240,6 +251,33 @@ class _EstateViewState extends State<EstateView> {
         ),
       );
     });
+  }
+
+  buildDynamicLinks(String title,String image,String docId) async {
+    String url = "http://osam.page.link";
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: url,
+      link: Uri.parse('$url/$docId'),
+      androidParameters: AndroidParameters(
+        packageName: "com.dotcoder.dynamic_link_example",
+        minimumVersion: 0,
+      ),
+      iosParameters: IosParameters(
+        bundleId: "Bundle-ID",
+        minimumVersion: '0',
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          description: '',
+          imageUrl:
+          Uri.parse("$image"),
+          title: title),
+    );
+    final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+
+    String desc = '${dynamicUrl.shortUrl.toString()}';
+
+    await Share.share(desc, subject: title,);
+
   }
 }
 class RadioModel {
