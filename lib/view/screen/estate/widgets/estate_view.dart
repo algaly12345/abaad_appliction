@@ -124,7 +124,7 @@ class _EstateViewState extends State<EstateView> {
 
                               GestureDetector(
                                 onTap: (){
-                                  buildDynamicLinks(widget.estate.title, "https://tse2.mm.bing.net/th?id=OIP.I2HMxoqdd2NMj1qw0p3_egHaEK&pid=Api&P=0", widget.estate.id.toString());
+                                  buildDynamicLinks(widget.estate.title, "${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}", widget.estate.id.toString());
                                 },
                                   child: Icon(Icons.share, size: 23, color: Theme.of(context).textTheme.bodyText1.color)),
                             ]),
