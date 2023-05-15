@@ -254,12 +254,12 @@ class _EstateViewState extends State<EstateView> {
   }
 
   buildDynamicLinks(String title,String image,String docId) async {
-    String url = "http://osam.page.link";
+    String url = "https://abaad.page.link";
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: url,
       link: Uri.parse('$url/$docId'),
       androidParameters: AndroidParameters(
-        packageName: "com.dotcoder.dynamic_link_example",
+        packageName: "sa.pdm.abaad.abaad",
         minimumVersion: 0,
       ),
       iosParameters: IosParameters(

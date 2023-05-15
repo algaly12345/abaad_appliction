@@ -11,6 +11,7 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/view/base/no_internet_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
+import 'package:abaad/view/screen/estate/estate_details.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -33,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
+    initDynamicLinks();
     bool _firstTime = true;
     _onConnectivityChanged = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if(!_firstTime) {
@@ -199,13 +200,14 @@ class _SplashScreenState extends State<SplashScreen> {
     sepeatedLink.addAll(url.path.split('/'));
 
     print("The Token that i'm interesed in is ${sepeatedLink[1]}");
-   // Get.to(()=>ProductDetailScreen(sepeatedLink[1]));
+    // Get.to(()=>EstateDetails(estate: ,));
+     Get.toNamed(RouteHelper.getDetailsRoute(  int.parse(sepeatedLink[1]),0));
 
   }
 
 
   buildDynamicLinks(String title,String image,String docId) async {
-    String url = "http://osam.page.link";
+    String url = "https://abaad.page.link";
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: url,
       link: Uri.parse('$url/$docId'),
