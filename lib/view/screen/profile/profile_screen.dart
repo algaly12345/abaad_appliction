@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ]) : SizedBox(),
               SizedBox(height: _isLoggedIn ? 30 : 0),
               ProfileButton(icon: Icons.language, title: 'language'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                Get.find<ThemeController>().toggleTheme();
+                Get.toNamed(RouteHelper.getLanguageRoute("menu"));
               }),
               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
               ProfileButtonMode(icon: Icons.dark_mode, title: 'dark_mode'.tr, isButtonActive: Get.isDarkMode, onTap: () {
@@ -174,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : Dimensions.PADDING_SIZE_LARGE),
 
               ProfileButton(icon: Icons.list_alt, title: 'terms_conditions'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                Get.find<ThemeController>().toggleTheme();
+                Get.toNamed(RouteHelper.getHtmlRoute("terms_conditions"));
               }),
               // _isLoggedIn ? ProfileButton(
               //   icon: Icons.delete, title: 'delete_account'.tr,

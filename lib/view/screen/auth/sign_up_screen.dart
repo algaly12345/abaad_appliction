@@ -198,27 +198,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //   onSubmit: (text) => (GetPlatform.isWeb && authController.acceptTerms) ? _register(authController, _countryDialCode) : null,
                       // ),
 
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'refer_code'.tr,
-                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
-                          ),
-                          CustomTextField(
-                            hintText: 'refer_code'.tr,
-                            controller: _referCodeController,
-                            focusNode: _referCodeFocus,
-                            inputAction: TextInputAction.done,
-                            inputType: TextInputType.text,
-                            capitalization: TextCapitalization.words,
-                            prefixIcon: Images.arabic,
-                            divider: false,
-                            prefixSize: 14,
-                          ),
-                        ],
-                      ),
+                //       SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                //       Column(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Text(
+                //             'refer_code'.tr,
+                //             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                //           ),
+                //           CustomTextField(
+                //             hintText: 'refer_code'.tr,
+                //             controller: _referCodeController,
+                //             focusNode: _referCodeFocus,
+                //             inputAction: TextInputAction.done,
+                //             inputType: TextInputType.text,
+                //             capitalization: TextCapitalization.words,
+                //             prefixIcon: Images.arabic,
+                //             divider: false,
+                //             prefixSize: 14,
+                //           ),
+                //         ],
+                //       ),
 
                     ]),
                   ),
@@ -308,10 +308,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (_fullName.isEmpty) {
       showCustomSnackBar('enter_your_name'.tr);
-    }else if (_email.isEmpty) {
-      showCustomSnackBar('enter_email_address'.tr);
-    }else if (!GetUtils.isEmail(_email)) {
-      showCustomSnackBar('enter_a_valid_email_address'.tr);
     }else if (_number.isEmpty) {
       showCustomSnackBar('enter_phone_number'.tr);
     }else if (!_isValid) {

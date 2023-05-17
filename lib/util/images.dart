@@ -83,6 +83,7 @@ class Images {
   static const String restaurant = 'assets/image/restaurant.png';
   static const String background = 'assets/image/background.png';
   static const String guest = 'assets/image/guest.png';
+  static const String logo_an = 'assets/image/logo_an.gif';
 
 
 

@@ -9,6 +9,7 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
+import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/no_internet_screen.dart';
 import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:abaad/view/screen/estate/estate_details.dart';
@@ -139,31 +140,33 @@ class _SplashScreenState extends State<SplashScreen> {
             child: splashController.hasConnection ? Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(Images.logo, width: 150),
+                Image.asset(Images.logo_an, width: 150),
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-            SizedBox(
 
-              child: ColorizeAnimatedTextKit(
-                onTap: () {
-                  print("Tap Event");
-                },
-                text: const [
-                  "ابعاد",
-                  'مستقبل العقار'
-                ],
-                textStyle: const TextStyle(
-                    fontSize: 50.0,
-                    fontFamily: "Horizon"
-                ),
-                alignment: Alignment.center,
-                colors: const [
-                  Colors.purple,
-                  Colors.blue,
-                  Colors.yellow,
-                  Colors.red,
-                ],
-              ),
-            ),
+            Text("abaad".tr, style: robotoMedium.copyWith(fontSize: 25,color: Theme.of(context).primaryColor)),
+                Text("optimal_real_estate_marketing".tr, style: robotoMedium.copyWith(fontSize: 25,color: Theme.of(context).primaryColor)),
+            // Container(
+            //
+            //   child: ColorizeAnimatedTextKit(
+            //     onTap: () {
+            //       print("Tap Event");
+            //     },
+            //     text:  [
+            //       "abaad".tr,
+            //       'optimal_real_estate_marketing'.tr,
+            //     ],
+            //     textStyle: const TextStyle(
+            //         fontSize: 40.0,
+            //         fontFamily: "Horizon",
+            //     ),
+            //     alignment: Alignment.center,
+            //     colors: const [
+            //       Colors.blueGrey,
+            //       Colors.blue,
+            //     ],
+            //   ),
+            // ),
+
                 /*SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
               Text(AppConstants.APP_NAME, style: robotoMedium.copyWith(fontSize: 25)),*/
               ],

@@ -114,7 +114,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: widget.featureId=="صور" ? 'صور'.tr :widget.featureId=="تجوال افتراضي"?"تجوال افتراضي":widget.featureId=="منظور الشارع"?"عرض الشارع":widget.featureId=="المخطط"?"المخطط":widget.featureId=="فبديو"?"فبديو":widget.featureId=="منظور جوي"?"منظور جوي":""),
+      appBar: CustomAppBar(title: widget.featureId=="صور" ? 'صور'.tr :widget.featureId=="تجوال افتراضي"?"تجوال افتراضي":widget.featureId=="منظور الشارع"?"منظور الشارع":widget.featureId=="المخطط"?"المخطط":widget.featureId=="فبديو"?"فبديو":widget.featureId=="منظور جوي"?"منظور جوي":""),
       body: SafeArea(
         child:  GetBuilder<EstateController>(builder: (estateController) {
           return !estateController.isLoading   ? estateController.estate.images.length > 0 ? Center(

@@ -48,7 +48,7 @@ class _EstateViewState extends State<EstateView> {
     sampleData.add( RadioModel(false, 'منظور الشارع',Images.street_view));
     sampleData.add( RadioModel(false, 'المخطط', Images.planed));
     sampleData.add( RadioModel(false, 'منظور جوي', Images.street_view));
-    sampleData.add( RadioModel(false, 'فبديو', Images.video));
+    sampleData.add( RadioModel(false, 'فيديو', Images.video));
   }
 
   @override
@@ -115,7 +115,7 @@ class _EstateViewState extends State<EstateView> {
 
                                   Icon(Icons.remove_red_eye_outlined),
                                   SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                  Text("454 ",style: robotoBlack.copyWith(fontSize: 11),),
+                                  Text("${widget.estate.view}",style: robotoBlack.copyWith(fontSize: 11),),
 
                                   Text(" مشاهدة",style: robotoBlack.copyWith(fontSize: 11),),
                                 ],
