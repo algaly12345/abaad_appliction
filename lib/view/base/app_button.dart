@@ -9,7 +9,7 @@ class AppButton extends StatelessWidget {
     this.roundness = 8.0,
     this.btnColor,
     this.fontWeight = FontWeight.bold,
-    this.padding = const EdgeInsets.symmetric(vertical: 24),
+    this.padding = const EdgeInsets.symmetric(vertical: 5),
     this.trailingWidget,
     this.titleColor,
      this.onPressed,
@@ -28,8 +28,8 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 145.0,
-      height: 53.0,
+      width: 130.0,
+      height: 40.0,
       child: MaterialButton(
         visualDensity: VisualDensity.compact,
         shape: RoundedRectangleBorder(
@@ -56,7 +56,7 @@ class AppButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   trailingWidget ?? const SizedBox(),
-                  const SizedBox(width: 17.0),
+                  const SizedBox(width: 20.0),
                   Text(
                     label,
                     textAlign: TextAlign.center,

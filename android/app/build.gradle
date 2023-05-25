@@ -51,9 +51,19 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            signingConfigs {
+                robert {
+                    storePassword 'omeromer'
+                    storeFile file('C://Users/Dev/.android/debug.keystore')
+                    keyPassword 'omeromer'
+                    keyAlias 'key0'
+                }
+            }
         }
     }
+    buildToolsVersion '33.0.0'
 }
+
 
 flutter {
     source '../..'

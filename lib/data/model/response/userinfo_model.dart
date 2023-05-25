@@ -126,7 +126,7 @@ class Userinfo {
   String identityType;
   String image;
   String commercialRegisterionNo;
-  int   userId;
+  int    userId;
   String name;
   String phone;
   String createdAt;

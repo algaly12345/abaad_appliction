@@ -21,7 +21,7 @@ class Dots extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             ),
             margin: const EdgeInsets.only(right: 5),
-            height: 7.0,
+            height: 5.0,
             curve: Curves.easeIn,
             width: currentPage == currentIndex ? 27 : 7,
           );

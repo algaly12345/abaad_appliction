@@ -172,10 +172,18 @@ class _FeatureScreenState extends State<FeatureScreen> {
             ):widget.featureId=="منظور الشارع"?SafeArea(
               child: Center(
                 child: FlutterGoogleStreetView(
+                    initSource: StreetViewSource.outdoor,
+                    initBearing: 30,
                     initPos:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)),
                     onStreetViewCreated: (StreetViewController controller) async {
                       //save controller for late using
                       streetViewController = controller;
+                      // controller.animateTo(
+                      // duration: 750,
+                      // camera: StreetViewPanoramaCamera(
+                      //     bearing: 150, tilt: 2));
+
+
                       //change position by controller
                       controller.setPosition(position:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)));
                     }

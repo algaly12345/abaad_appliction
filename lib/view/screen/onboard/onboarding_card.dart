@@ -80,11 +80,11 @@ class OnBoardingCard extends StatelessWidget {
 
 
         Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.only(right: 12,left: 12),
           child: Text(
             onboardingContent.title,
             textAlign: TextAlign.center,
-            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)
+            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)
           ),
         ),
       ],

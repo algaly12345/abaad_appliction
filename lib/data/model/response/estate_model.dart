@@ -314,9 +314,10 @@ class ServiceOffers {
   String offerType;
   String createdAt;
   String updatedAt;
-  Pivot pivot;
   String image;
   String phoneProvider;
+  int category_id;
+  int offer_id;
 
   ServiceOffers(
       {this.id,
@@ -330,11 +331,12 @@ class ServiceOffers {
         this.offerType,
         this.createdAt,
         this.updatedAt,
-        this.pivot,
       this.image,
 
 
-        this.phoneProvider});
+        this.phoneProvider,
+      this.category_id,
+      this.offer_id});
 
   ServiceOffers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -350,7 +352,8 @@ class ServiceOffers {
     updatedAt = json['updated_at'];
     image = json['image'];
     phoneProvider  =json['phone_provider']  ;
-    pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
+    offer_id =json['offer_id']  ;
+    category_id =json['category_id']  ;
   }
 
   Map<String, dynamic> toJson() {
@@ -368,31 +371,13 @@ class ServiceOffers {
     data['updated_at'] = this.updatedAt;
     data['phone_provider']=this.phoneProvider;
     data['image'] = this.image;
-    if (this.pivot != null) {
-      data['pivot'] = this.pivot.toJson();
-    }
+    data['offer_id']=this.offer_id;
+    data['category_id'] = this.category_id;
+
     return data;
   }
 }
 
-class Pivot {
-  int estateId;
-  int offerId;
-
-  Pivot({this.estateId, this.offerId});
-
-  Pivot.fromJson(Map<String, dynamic> json) {
-    estateId = json['estate_id'];
-    offerId = json['offer_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['estate_id'] = this.estateId;
-    data['offer_id'] = this.offerId;
-    return data;
-  }
-}
 
 
 class Property {

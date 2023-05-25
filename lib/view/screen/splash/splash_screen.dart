@@ -31,12 +31,15 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   StreamSubscription<ConnectivityResult> _onConnectivityChanged;
-
+  Timer _timer;
   @override
   void initState() {
     super.initState();
     initDynamicLinks();
     bool _firstTime = true;
+
+    // _timer = Timer.periodic(Duration(seconds: 10), (timer){
+
     _onConnectivityChanged = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if(!_firstTime) {
         bool isNotConnected = result != ConnectivityResult.wifi && result != ConnectivityResult.mobile;
@@ -62,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Get.find<AuthController>().clearSharedAddress();
     }
     _route();
-
+    // });
   }
 
   @override
@@ -75,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _route() {
     Get.find<SplashController>().getConfigData().then((isSuccess) {
       if(isSuccess) {
-        Timer(Duration(seconds: 1), () async {
+        Timer(Duration(seconds: 20), () async {
           int _minimumVersion = 0;
           if(GetPlatform.isAndroid) {
             _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionAndroid;

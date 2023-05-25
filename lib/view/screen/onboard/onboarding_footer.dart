@@ -24,7 +24,7 @@ class OnBoardingFooter extends StatelessWidget {
         BtnOnBoarding(
           currentPage: currentPage,
           pageController: pageController,
-          trailingWidget: Image.asset(Images.arrowCircle),
+          trailingWidget: Image.asset(Images.arrowCircle,height: 20,),
         ),
         const SizedBox(height: 20.0),
         Dots(currentPage: currentPage),

@@ -250,7 +250,7 @@ class _MapViewScreenState extends State<MapScreen> {
                 _length = _products.length;
               }
 
-              _setMarkers(_products);
+            //  _setMarkers(_products);
               return         !_isNull ?_products.length>0?    CustomGoogleMapMarkerBuilder (
                   customMarkers: _customMarkers,
                   builder: (context, markers) {
@@ -892,25 +892,25 @@ class _MapViewScreenState extends State<MapScreen> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    height: 60,
-                                    width: 60,
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: FloatingActionButton(
-                                      backgroundColor: Colors.white,
-                                      heroTag: 'recenterr',
-                                      onPressed: () {
-
-                                      },
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
-                                          side: const BorderSide(color: Color(0xFFECEDF1))),
-                                      child: const Icon(
-                                        Icons.my_location,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   height: 60,
+                                  //   width: 60,
+                                  //   padding: const EdgeInsets.all(10.0),
+                                  //   child: FloatingActionButton(
+                                  //     backgroundColor: Colors.white,
+                                  //     heroTag: 'recenterr',
+                                  //     onPressed: () {
+                                  //
+                                  //     },
+                                  //     shape: RoundedRectangleBorder(
+                                  //         borderRadius: BorderRadius.circular(10.0),
+                                  //         side: const BorderSide(color: Color(0xFFECEDF1))),
+                                  //     child: const Icon(
+                                  //       Icons.my_location,
+                                  //       color: Colors.grey,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               )),
 
@@ -1187,7 +1187,7 @@ class _MapViewScreenState extends State<MapScreen> {
               zoom: 18.0,
               bearing: 45.0,
               tilt: 45.0)));
-
+showCustomSnackBar("${_products[selectedIndex].serviceOffers.length}");
 
           if(_products[selectedIndex].serviceOffers.length >0){
             cardTapped=true;
