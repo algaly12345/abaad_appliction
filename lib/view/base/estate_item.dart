@@ -1,4 +1,5 @@
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/helper/route_helper.dart';
@@ -64,9 +65,29 @@ class EstateItem extends StatelessWidget {
                         children: <Widget>[
 
                           Container(
-                            child:   Container(child: EstateImageView(estate_id:fav? estate.estate_id:estate.id,fromView: false)),
                             width: 155,
                             height: 155,
+                            child:   Container(child:   Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 5)],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                child:  GetBuilder<SplashController>(builder: (splashController) {
+                                  String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+                                  return         CustomImage(
+                                    image:estate.images.length ==0?1:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${estate.images[0]}",
+                                    fit:  BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width,
+
+
+                                  );
+                                },
+                                ),
+                              ),
+                            )),
                           ),
                           SizedBox(width: 11.0),
                           Flexible(
