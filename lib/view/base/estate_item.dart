@@ -102,7 +102,7 @@ class EstateItem extends StatelessWidget {
                                   children: [
                                    Row(
                                      children: [
-                                       Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                                       Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
                                        SizedBox(width: 11.0),
                                        Text(" ${estate.price}"  ,style: robotoBlack.copyWith(fontSize: 11)),
                                      ],
@@ -160,14 +160,14 @@ class EstateItem extends StatelessWidget {
                                   height: 3.0,
                                 ),
                                 Text("${estate.title}",
-                                    style: robotoBlack.copyWith(fontSize: 12)),
+                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                                 const SizedBox(
                                   height: 3.0,
                                 ),
                                 Row(
                                   children: [
                                     Text(" العنوان الوطني : ",
-                                        style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
+                                        style: robotoBlack.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.black26)),
                                     Text("${estate.nationalAddress}",
                                         style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
                                   ],

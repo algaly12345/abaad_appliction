@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
@@ -24,7 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key key}) : super(key: key);
   static Future<void> loadData(bool reload) async {
-    Get.find<AuthController>().getZoneList();
+
     if(Get.find<EstateController>().estateModel == null) {
       Get.find<EstateController>().getEstateList(1, false,0);
     }
@@ -37,7 +38,6 @@ class MapViewScreen extends StatefulWidget {
 
 class _MapViewScreenState extends State<MapViewScreen> {
   GoogleMapController _controller;
-  List<MarkerData> _customMarkers = [];
 
   List<MarkerData>  _customMarkersZone = [];
   int _reload = 0;
@@ -60,20 +60,6 @@ class _MapViewScreenState extends State<MapViewScreen> {
     _controller?.dispose();
   }
 
-  Widget _customMarker(String path) {
-    return Stack(
-      children: [
-        Image.asset(Images.mail, height: 40, width: 40),
-        Positioned(top: 3, left: 0, right: 0, child: Center(
-          child: ClipOval(child: CustomImage(image: path,
-              placeholder: Images.mail,
-              height: 20,
-              width: 20,
-              fit: BoxFit.cover)),
-        )),
-      ],
-    );
-  }
 
   get borderRadius => BorderRadius.circular(8.0);
   final GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -89,17 +75,17 @@ class _MapViewScreenState extends State<MapViewScreen> {
         .height;
 
     return Scaffold(
-      // appBar:  WebMenuBar(ontop:()=>   _key.currentState.openDrawer(),),
+      //appBar:  WebMenuBar(ontop:()=>   _key.currentState.openDrawer(),),
 
       body: GetBuilder<AuthController>(builder: (authController) {
         // print("zone_list${authController.zoneList}");
-        List<int> _zoneIndexList = [];
-        if (authController.zoneList != null) {
-          //  print("zone_list${authController.zoneModel.name}");
-          for (int index = 0; index < authController.zoneList.length; index++) {
-            _zoneIndexList.add(index);
-          }
-        }
+        // List<int> _zoneIndexList = [];
+        // if (authController.zoneList != null) {
+        //   //  print("zone_list${authController.zoneModel.name}");
+        //   for (int index = 0; index < authController.zoneList.length; index++) {
+        //     _zoneIndexList.add(index);
+        //   }
+        // }
         return authController.zoneList != null ? CustomGoogleMapMarkerBuilder(
           customMarkers: _customMarkersZone,
           builder: (context, markers) {
@@ -117,11 +103,13 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   myLocationEnabled: false,
                   compassEnabled: false,
                   zoomControlsEnabled: true,
-                  onTap: (position) =>
-                      Get.find<SplashController>()
-                          .setNearestEstateIndex(-1),
+
+
+
+                  onTap: (position) => Get.find<SplashController>().setNearestEstateIndex(-1),
                   minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
                   onMapCreated: (GoogleMapController controller) {
+                    _setMarkersZone(authController.zoneList);
 
                   },
                 ),
@@ -220,7 +208,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
                   ), zoom: 11)));
               // Future.delayed(Duration(seconds: 1), () {
-
+              // Get.offNamed(RouteHelper.getAccessLocationRoute('verification'));
+              Get.find<CategoryController>().setFilterIndex(zone[index].id,0,"0","0",0,"0");
               Get.toNamed(RouteHelper.getCategoryRoute(zone[index].id,zone[index].latitude,zone[index].longitude));
               // });
 

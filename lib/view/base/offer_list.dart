@@ -1,13 +1,16 @@
 
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/screen/map/widget/service_offer.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OfferList extends StatefulWidget {
@@ -44,11 +47,13 @@ class _OfferListState extends State<OfferList> {
               child:  GetBuilder<SplashController>(builder: (splashController) {
                 String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
                 //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
-                return CustomImage(
-                  image: '$_baseUrl/${widget.estate.serviceOffers[index].image}',
-                  fit: BoxFit.cover,
-                  height: 35,
-                  width: 35,
+                return ClipOval(
+                  child: CustomImage(
+                    image: '$_baseUrl/${widget.estate.serviceOffers[index].image}',
+                    fit: BoxFit.cover,
+                    height: 35,
+                    width: 35,
+                  ),
                 );
               },
               ),
@@ -57,19 +62,25 @@ class _OfferListState extends State<OfferList> {
             subtitle:      Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 16,
-                  width: 44,
-                  child: CustomPaint(
-                    painter: PriceTagPaint(),
-                    child: Center(
-                      child: Text(
-                          "20%",
-                          style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
-                      ),
-                    ),
-                  ),
+            Row(
+            children: [
+              widget. estate.serviceOffers[index].servicePrice!=null?Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)):Text("discount".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+          SizedBox(width: 11.0),
+              widget.estate.serviceOffers[index].discount!=null?  SizedBox(
+            height: 16,
+            width: 44,
+            child: CustomPaint(
+              painter: PriceTagPaint(),
+              child: Center(
+                child: Text(
+                    "${widget.estate.serviceOffers[index].discount}%",
+                    style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
                 ),
+              ),
+            ),
+          ):Text(" ${widget.estate.serviceOffers[index].servicePrice} ريال "  ,style: robotoBlack.copyWith(fontSize: 11)),
+          ],
+        ),
               ],
             ),
             trailing:  IconButton(
@@ -107,8 +118,9 @@ class _OfferListState extends State<OfferList> {
                                     Expanded(
 flex: 1,
                                       child:GestureDetector(
-                                        onTap:(){__launchWhatsapp(""
-                                            "+966${widget.estate.serviceOffers[index].phoneProvider}");
+
+                                        onTap:(){
+                                          buildDynamicLinks(widget.estate.title, "${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}", widget.estate.id.toString(),widget.estate.serviceOffers[index].phoneProvider);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
@@ -217,6 +229,44 @@ flex: 1,
 
   }
 
+
+  buildDynamicLinks(String title,String image,String docId,String phone) async {
+    String url = "https://abaad.page.link";
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: url,
+      link: Uri.parse('$url/$docId'),
+      androidParameters: AndroidParameters(
+        packageName: "sa.pdm.abaad.abaad",
+        minimumVersion: 0,
+      ),
+      iosParameters: IosParameters(
+        bundleId: "Bundle-ID",
+        minimumVersion: '0',
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          description: '',
+          imageUrl:
+          Uri.parse("$image"),
+          title: title),
+    );
+    final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+
+    String desc = '${dynamicUrl.shortUrl.toString()}';
+
+    var whatsapp = "$phone";
+    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=${desc} \n مرحبا لديك عرض في  تطبيق ابعاد ");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("WhatsApp is not installed on the device"),
+        ),
+      );
+    }
+   // await Share.share(desc, subject: title,);
+
+  }
   __launchWhatsapp(String  number) async {
     var whatsapp = "${number}";
     var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=مرحبا  لديك عرض  في تطبيق ابعاد");

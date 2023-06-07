@@ -234,7 +234,7 @@ class _EstateViewState extends State<EstateView> {
                 ),
               ),
 
-              widget.estate.serviceOffers.length >0?  ServiceProivderView(productModel: widget.estate,fromView: widget.fromView):Container(),
+              widget.estate.serviceOffers.length >0?  ServiceProivderView(estate: widget.estate,fromView: widget.fromView):Container(),
 
 
 

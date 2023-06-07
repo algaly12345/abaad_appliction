@@ -14,9 +14,9 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 
 
 class ServiceProivderView extends StatefulWidget {
-  final Estate productModel;
+  final Estate estate;
   final bool fromView;
-  ServiceProivderView({@required this.productModel,this.fromView});
+  ServiceProivderView({@required this.estate,this.fromView});
 
   @override
   State<ServiceProivderView> createState() => _ServiceProivderViewState();
@@ -24,196 +24,156 @@ class ServiceProivderView extends StatefulWidget {
 
 class _ServiceProivderViewState extends State<ServiceProivderView> {
   final PageController _controller = PageController();
-
+  final CarouselController carouselController = CarouselController();
+  int currentIndex = 0;
   @override
   void initState() {
     super.initState();
 
-    Get.find<EstateController>().getEstateDetails(Estate(id: widget.productModel.id));
+    Get.find<EstateController>().getEstateDetails(Estate(id: widget.estate.id));
 
   }
   @override
   Widget build(BuildContext context) {
 
 
-    return GetBuilder<EstateController>(builder: (estateController) {
-      return  (estateController.estate != null && estateController.estate.shortDescription != null) ?
-      Container(
+
+    return  widget.estate.serviceOffers != null?
+    Container(
+      height: 130,
+      child: Stack(children: [
 
 
-        padding: EdgeInsets.only(top: 2),
-        child: (estateController.estate != null && estateController.estate.serviceOffers != null)  != null ? Stack(
-
-          children: [
-            Expanded(
-              child: CarouselSlider.builder(
-
-                options: CarouselOptions(
-                  viewportFraction: 1,
-                  autoPlay: true,
-                  height: 100,
-
-                  autoPlayInterval: Duration(seconds: 7),
-                  onPageChanged: (index, reason) {
-                    estateController.setCurrentIndex(index, true);
-                  },
+        Positioned(
+          top: 4,
+          right: 0,
+          left: 0,
+          bottom: 4,
+          child: GetBuilder<SplashController>(builder: (splashController) {
+            String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+            return  CarouselSlider(
+              items: widget.estate.serviceOffers
+                  .map(
+                    (item) => CustomImage(
+                  image: '$_baseUrl/${item.image}', fit: BoxFit.cover,
+                  width: double.infinity,
                 ),
-                itemCount:estateController.estate.serviceOffers== 0 ? 1 : estateController.estate.serviceOffers.length,
-                itemBuilder: (context, index, _) {
-                  //
-                  return InkWell(
-                    onTap: (){
-
-
-                    },
-
-                    // ),
-child: Container(
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4), //border corner radius
-                        boxShadow:[
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5), //color of shadow
-                            spreadRadius: 5, //spread radius
-                            blurRadius: 7, // blur radius
-                            offset: Offset(0, 2), // changes position of shadow
-                            //first paramerter of offset is left-right
-                            //second parameter is top to down
-                          ),
-                          //you can set more BoxShadow() here
-                        ],
-                      ),
-                      child: Row(
-                        children: <Widget>[
-
-                          Expanded(
-                            child: Column(
-                              children: <Widget>[
-
-                                Expanded(
-                                  child: Row(
-                                    children: <Widget>[
-
-                                      Flexible(
-                                        flex: 4,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                          BorderRadius.circular(3.0),
-                                          child:  GetBuilder<SplashController>(builder: (splashController) {
-                                          String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
-                                         //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
-                                            return CustomImage(
-                                              image: '$_baseUrl/${estateController.estate.serviceOffers[index].image}',
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                        ),
-                                      ),),
-                                      SizedBox(width: 11.0),
-                                      Flexible(
-                                        flex: 5,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Row(
-                                              children: [
-                                                estateController.estate.serviceOffers[index].discount=="price"?Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)):Text("discount".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
-                                                SizedBox(width: 11.0),
-                                                estateController.estate.serviceOffers[index].discount!="price"?  SizedBox(
-                                                  height: 16,
-                                                  width: 44,
-                                                  child: CustomPaint(
-                                                    painter: PriceTagPaint(),
-                                                    child: Center(
-                                                      child: Text(
-                                                          "${estateController.estate.serviceOffers[index].discount}%",
-                                                          style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ):Text(" ${estateController.estate.serviceOffers[index].servicePrice}"  ,style: robotoBlack.copyWith(fontSize: 11)),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 3.0,
-                                            ),
-                                            Text("${estateController.estate.serviceOffers[index].title}",
-                                                style: robotoBlack.copyWith(fontSize: 12)),
-                                            const SizedBox(
-                                              height: 3.0,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text("",
-                                                    style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
-                                                Text("",
-                                                    style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
-                                              ],
-
-                                            ),
-                                            const SizedBox(
-                                              height: 7.0,
-                                            ),
-
-
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Container(
-                              height: 30,
-                              width: 30,
-                              child: Image.asset(Images.offer_icon),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
+              )
+                  .toList(),
+              carouselController: carouselController,
+              options: CarouselOptions(
+                scrollPhysics: const BouncingScrollPhysics(),
+                autoPlay: true,
+                aspectRatio: 2,
+                viewportFraction: 1,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    currentIndex = index;
+                  });
                 },
               ),
+            );
+          },),),
+        Positioned(
+          bottom: 10,
+          left: 6,
+          right: 6,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+
+              child:  Text(
+                '${   widget.estate.serviceOffers[currentIndex].title}',
+                style: robotoBlack.copyWith(fontSize: 11,color: Colors.white),
+              ),
             ),
-
-
-            Positioned(
-              bottom: 5,
-              right: 20,
-              child:Row(
+            const SizedBox(height: 3.0),
+            Row(
+              children: [
+                widget.estate.serviceOffers[currentIndex].servicePrice!=null?Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge,color: Colors.white)):Text("discount".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge,color:  Colors.white)),
+                SizedBox(width: 11.0),
+                widget.estate.serviceOffers[currentIndex].discount!=null?  SizedBox(
+                  height: 16,
+                  width: 44,
+                  child: CustomPaint(
+                    painter: PriceTagPaint(),
+                    child: Center(
+                      child: Text(
+                          "${   widget.estate.serviceOffers[currentIndex].discount}%",
+                          style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
+                      ),
+                    ),
+                  ),
+                ):Text(" ${   widget.estate.serviceOffers[currentIndex].servicePrice} ريال "  ,style: robotoBlack.copyWith(fontSize: 11,color: Colors.white)),
+              ],
+            ),
+            // const RatingStars(
+            //   value: 3* 1.0,
+            //   starCount: 5,
+            //   starSize: 7,
+            //   valueLabelColor: Color(0xff9b9b9b),
+            //   valueLabelTextStyle: TextStyle(
+            //       color: Colors.white,
+            //       fontFamily: 'WorkSans',
+            //       fontWeight: FontWeight.w400,
+            //       fontStyle: FontStyle.normal,
+            //       fontSize: 9.0),
+            //   valueLabelRadius: 7,
+            //   maxValue: 5,
+            //   starSpacing: 2,
+            //   maxValueVisibility: false,
+            //   valueLabelVisibility: true,
+            //   animationDuration: Duration(milliseconds: 1000),
+            //   valueLabelPadding:
+            //   EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+            //   valueLabelMargin: EdgeInsets.only(right: 4),
+            //   starOffColor: Color(0xffe7e8ea),
+            //   starColor: Colors.yellow,
+            // )
+          ]),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:estateController.estate.serviceOffers.map((bnr) {
-                  int index =estateController.estate.serviceOffers.indexOf(bnr);
-                  return TabPageSelectorIndicator(
-                    backgroundColor: index == estateController.currentIndex ? Colors.orange
-                        : Theme.of(context).primaryColor.withOpacity(0.5),
-                    borderColor: Theme.of(context).backgroundColor,
-                    size: index == estateController.currentIndex ? 10 : 7,
+                children: widget.estate.serviceOffers.asMap().entries.map((entry) {
+
+                  return GestureDetector(
+                    onTap: () => carouselController.animateToPage(entry.key),
+                    child: Container(
+                      width: currentIndex == entry.key ? 17 : 7,
+                      height: 7.0,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 3.0,
+                      ),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: currentIndex == entry.key
+                              ? Colors.red
+                              : Colors.teal),
+                    ),
                   );
                 }).toList(),
               ),
-            ),
-
-          ],
-        ) : Shimmer(
-          duration: Duration(seconds: 2),
-          enabled: widget.productModel.serviceOffers == null,
-          child: Container(margin: EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-            color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300],
-          )),
+            ],
+          ),
         ),
-      ) :  Center(child:Container());
-    });
+        Positioned(
+          top: 0,
+          right: 0,
+          left: 0,
+          bottom: 0,
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius:
+                BorderRadius.all(
+                    Radius.circular(8)),
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(Images.background_gray))),
+          ),
+        ),
+      ]),
+    ) :  Center(child:Container());
+
   }
 }

@@ -60,8 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     Get.find<SplashController>().initSharedData();
-    if(Get.find<LocationController>().getUserAddress() != null && (Get.find<LocationController>().getUserAddress().zoneIds == null
-        || Get.find<LocationController>().getUserAddress().zoneData == null)) {
+    if(Get.find<LocationController>().getUserAddress() != null) {
       Get.find<AuthController>().clearSharedAddress();
     }
     _route();
@@ -113,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     Get.offNamed(RouteHelper.getOnBoardingRoute());
                   }
                 } else {
-                  Get.offNamed(RouteHelper.getInitialRoute());
+                //  Get.offNamed(RouteHelper.getInitialRoute());
                   // Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
                 }
               }

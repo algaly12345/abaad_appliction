@@ -8,6 +8,9 @@ class SearchController extends GetxController implements GetxService {
   final SearchRepo searchRepo;
   SearchController({@required this.searchRepo});
 
+  List<Estate> _searchProductList;
+  List<Estate> _allProductList;
+  List<Estate> _suggestedFoodList;
   List<Estate> _searchRestList;
   List<Estate> _allRestList;
   String _searchText = '';
@@ -25,6 +28,10 @@ class SearchController extends GetxController implements GetxService {
   bool _isDiscountedFoods = false;
   bool _veg = false;
   bool _nonVeg = false;
+
+  List<Estate> get searchProductList => _searchProductList;
+  List<Estate> get allProductList => _allProductList;
+  List<Estate> get suggestedFoodList => _suggestedFoodList;
   List<Estate> get searchRestList => _searchRestList;
   String get searchText => _searchText;
   double get lowerValue => _lowerValue;
@@ -72,6 +79,8 @@ class SearchController extends GetxController implements GetxService {
       _prodResultText = '';
       _restResultText = '';
       _allRestList = null;
+      _allProductList = null;
+      _searchProductList = null;
       _searchRestList = null;
       _sortIndex = -1;
       _isDiscountedFoods = false;
@@ -91,23 +100,88 @@ class SearchController extends GetxController implements GetxService {
     update();
   }
 
+  // void sortFoodSearchList() {
+  //   _searchProductList= [];
+  //   _searchProductList.addAll(_allProductList);
+  //   if(_upperValue > 0) {
+  //     _searchProductList.removeWhere((product) => (product.price) <= _lowerValue || (product.price) > _upperValue);
+  //   }
+  //   if(_rating != -1) {
+  //     _searchProductList.removeWhere((product) => product.avgRating < _rating);
+  //   }
+  //   if(!_veg && _nonVeg) {
+  //     _searchProductList.removeWhere((product) => product.veg == 1);
+  //   }
+  //   if(!_nonVeg && _veg) {
+  //     _searchProductList.removeWhere((product) => product.veg == 0);
+  //   }
+  //   if(_isAvailableFoods || _isDiscountedFoods) {
+  //     if(_isAvailableFoods) {
+  //       _searchProductList.removeWhere((product) => !DateConverter.isAvailable(product.availableTimeStarts, product.availableTimeEnds));
+  //     }
+  //     if(_isDiscountedFoods) {
+  //       _searchProductList.removeWhere((product) => product.discount == 0);
+  //     }
+  //   }
+  //   if(_sortIndex != -1) {
+  //     if(_sortIndex == 0) {
+  //       _searchProductList.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  //     }else {
+  //       _searchProductList.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  //       Iterable iterable = _searchProductList.reversed;
+  //       _searchProductList = iterable.toList();
+  //     }
+  //   }
+  //   update();
+  // }
 
+  // void sortRestSearchList() {
+  //   _searchRestList = [];
+  //   _searchRestList.addAll(_allRestList);
+  //   if(_rating != -1) {
+  //     _searchRestList.removeWhere((restaurant) => restaurant.avgRating < _rating);
+  //   }
+  //   if(!_veg && _nonVeg) {
+  //     _searchRestList.removeWhere((product) => product.nonVeg == 0);
+  //   }
+  //   if(!_nonVeg && _veg) {
+  //     _searchRestList.removeWhere((product) => product.veg == 0);
+  //   }
+  //   if(_isAvailableFoods || _isDiscountedFoods) {
+  //     if(_isAvailableFoods) {
+  //       _searchRestList.removeWhere((restaurant) => restaurant.open == 0);
+  //     }
+  //     if(_isDiscountedFoods) {
+  //       _searchRestList.removeWhere((restaurant) => restaurant.discount == null);
+  //     }
+  //   }
+  //   if(_sortIndex != -1) {
+  //     if(_sortIndex == 0) {
+  //       _searchRestList.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  //     }else {
+  //       _searchRestList.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  //       Iterable iterable = _searchRestList.reversed;
+  //       _searchRestList = iterable.toList();
+  //     }
+  //   }
+  //   update();
+  // }
 
   void setSearchText(String text) {
     _searchText = text;
     update();
   }
 
-  // void getSuggestedFoods() async {
-  //   Response response = await searchRepo.getSuggestedFoods();
-  //   if(response.statusCode == 200) {
-  //     _suggestedFoodList = [];
-  //     response.body.forEach((suggestedFood) => _suggestedFoodList.add(Product.fromJson(suggestedFood)));
-  //   }else {
-  //     ApiChecker.checkApi(response);
-  //   }
-  //   update();
-  // }
+  void getSuggestedFoods() async {
+    Response response = await searchRepo.getSuggestedFoods();
+    if(response.statusCode == 200) {
+      _suggestedFoodList = [];
+      response.body.forEach((suggestedFood) => _suggestedFoodList.add(Estate.fromJson(suggestedFood)));
+    }else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
 
   void searchData(String query) async {
     if((_isRestaurant && query.isNotEmpty && query != _restResultText) || (!_isRestaurant && query.isNotEmpty && query != _prodResultText)) {
@@ -119,39 +193,42 @@ class SearchController extends GetxController implements GetxService {
         _searchRestList = null;
         _allRestList = null;
       } else {
+        _searchProductList = null;
+        _allProductList = null;
       }
       if (!_historyList.contains(query)) {
         _historyList.insert(0, query);
       }
-     // searchRepo.saveSearchHistory(_historyList);
+      searchRepo.saveSearchHistory(_historyList);
       _isSearchMode = false;
       update();
 
-      // Response response = await searchRepo.getSearchData(query, _isRestaurant);
-      // if (response.statusCode == 200) {
-      //   if (query.isEmpty) {
-      //     if (_isRestaurant) {
-      //       _searchRestList = [];
-      //     } else {
-      //     }
-      //   } else {
-      //     if (_isRestaurant) {
-      //       _restResultText = query;
-      //       _searchRestList = [];
-      //       _allRestList = [];
-      //       _searchRestList.addAll(EstateModel.fromJson(response.body).estates);
-      //       _allRestList.addAll(EstateModel.fromJson(response.body).estates);
-      //     } else {
-      //       // _prodResultText = query;
-      //       // _searchProductList = [];
-      //       // _allProductList = [];
-      //       // _searchProductList.addAll(ProductModel.fromJson(response.body).products);
-      //       // _allProductList.addAll(ProductModel.fromJson(response.body).products);
-      //     }
-      //   }
-      // } else {
-      //   ApiChecker.checkApi(response);
-      // }
+      Response response = await searchRepo.getSearchData(query, _isRestaurant);
+      if (response.statusCode == 200) {
+        if (query.isEmpty) {
+          if (_isRestaurant) {
+            _searchRestList = [];
+          } else {
+            _searchProductList = [];
+          }
+        } else {
+          if (_isRestaurant) {
+            _restResultText = query;
+            _searchRestList = [];
+            _allRestList = [];
+            _searchRestList.addAll(EstateModel.fromJson(response.body).estates);
+            _allRestList.addAll(EstateModel.fromJson(response.body).estates);
+          } else {
+            _prodResultText = query;
+            _searchProductList = [];
+            _allProductList = [];
+            _searchProductList.addAll(EstateModel.fromJson(response.body).estates);
+            _allProductList.addAll(EstateModel.fromJson(response.body).estates);
+          }
+        }
+      } else {
+        ApiChecker.checkApi(response);
+      }
       update();
     }
   }
@@ -159,17 +236,17 @@ class SearchController extends GetxController implements GetxService {
   void getHistoryList() {
     _searchText = '';
     _historyList = [];
- //   _historyList.addAll(searchRepo.getSearchAddress());
+    _historyList.addAll(searchRepo.getSearchAddress());
   }
 
   void removeHistory(int index) {
     _historyList.removeAt(index);
-   // searchRepo.saveSearchHistory(_historyList);
+    searchRepo.saveSearchHistory(_historyList);
     update();
   }
 
   void clearSearchAddress() async {
-   // searchRepo.clearSearchHistory();
+    searchRepo.clearSearchHistory();
     _historyList = [];
     update();
   }

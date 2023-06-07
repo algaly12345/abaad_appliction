@@ -11,6 +11,7 @@ import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
+import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:country_code_picker/country_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,7 +59,7 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'complete_the_data'.tr),
-      body: GetBuilder<AuthController>(builder: (authController) {
+      body: Get.find<AuthController>().isLoggedIn() ? GetBuilder<AuthController>(builder: (authController) {
     return  GetBuilder<UserController>(builder: (userController) {
     return (_isLoggedIn && userController.userInfoModel == null) ? Center(child: CircularProgressIndicator()) :
     userController.userInfoModel.userType=="agent" ? Column(children: [
@@ -228,7 +229,7 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
 
         ]):Center(child: Text("تواصل مع الدعم الفني"),);
       });
-      }),
+      }): NotLoggedInScreen(),
     );
   }
 

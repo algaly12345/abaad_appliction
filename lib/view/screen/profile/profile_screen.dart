@@ -12,12 +12,13 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
+import 'package:abaad/view/base/rating_bar.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/profile/widget/profile_button.dart';
 import 'package:abaad/view/screen/profile/widget/profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:launch_review/launch_review.dart';
 import '../../../util/images.dart';
 import 'widget/profile_bg_widget.dart';
 import 'widget/profile_button_mode.dart';
@@ -30,7 +31,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoggedIn;
-
+  int _rating = 0;
   @override
   void initState() {
     super.initState();
@@ -44,6 +45,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
 
+    List<Widget> array = [];
+    var filled = Colors.blue;
+    var empty = Colors.black;
 
     return Scaffold(
       appBar:  CustomAppBar(title: 'profile'.tr),
@@ -74,6 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 alignment: Alignment.topRight,
                 child: Column(
                   children: [
+
                     Text(
                       _isLoggedIn ? '${userController.userInfoModel.name}' : 'guest'.tr,
                       style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
@@ -115,25 +120,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Get.find<ThemeController>().toggleTheme();
               }),
 
-              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
+              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
               ProfileButton(icon: Icons.generating_tokens, title: 'your_rating'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                Get.find<ThemeController>().toggleTheme();
+                LaunchReview.launch(
+                    androidAppId: "sa.pdm.abaad.abaad", iOSAppId: '33443434');
+
+
+
               }),
 
 
 
+              //
+              // SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
+              // ProfileButton(icon: Icons.supervised_user_circle_outlined, title: 'membership_modification'.tr, isButtonActive: Get.isDarkMode, onTap: () {
+              //   Get.toNamed(RouteHelper.getAgentRegister());
+              // }),
 
-              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
-              ProfileButton(icon: Icons.supervised_user_circle_outlined, title: 'membership_modification'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                Get.toNamed(RouteHelper.getAgentRegister());
-              }),
 
-
-              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
+              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
               ProfileButton(icon: Icons.subscriptions_outlined, title: 'subscribe_type'.tr, isButtonActive: Get.isDarkMode, onTap: () {
                 Get.find<ThemeController>().toggleTheme();
               }),
-              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
+              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
               ProfileButton(icon: Icons.share, title: 'share_app'.tr, isButtonActive: Get.isDarkMode, onTap: () {
                 if (Platform.isIOS) {
                   // print('is a IOS');
@@ -144,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 } else {
                 }
               }),
-              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
+              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
               _isLoggedIn ? ProfileButton(
                 icon: Icons.delete, title: 'delete_account'.tr,
                 onTap: () {
@@ -164,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //   },
               //   );
               // }) : SizedBox(),
-              // SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 0),
+              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
               //
 
               ProfileButton(icon: Icons.edit, title: 'edit_profile'.tr, isButtonActive: Get.isDarkMode, onTap: () {
@@ -186,7 +195,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //     // ), useSafeArea: false);
               //   },
               // ) : SizedBox(),
-              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_LARGE : 0),
+              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_LARGE : 5),
 
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text('${'version'.tr}:', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
@@ -200,4 +209,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }),
     );
   }
+
+
+
+
+
 }
+
+

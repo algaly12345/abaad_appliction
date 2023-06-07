@@ -10,17 +10,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 class ServiceProviderItem extends StatelessWidget {
   final Estate estate;
-  final List<ServiceOffers> restaurants;
-  const ServiceProviderItem({Key key,this.estate ,this.restaurants}) : super(key: key);
+
+  const ServiceProviderItem({Key key,this.estate}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
     bool _isNull = true;
     int _length = 0;
 
-    _isNull = restaurants == null;
+    _isNull = estate == null;
     if(!_isNull) {
-      _length = restaurants.length;
+      print("---------------------------------------4${estate.id}");
+      _length = estate.serviceOffers.length;
     return
       !_isNull ? _length > 0 ?Container(
       height: 270,
@@ -70,11 +72,13 @@ class ServiceProviderItem extends StatelessWidget {
                         child:  GetBuilder<SplashController>(builder: (splashController) {
                           String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
                           //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
-                          return CustomImage(
-                            image: '$_baseUrl/${estate.serviceOffers[index].image}',
-                            fit: BoxFit.cover,
-                            height: 35,
-                            width: 35,
+                          return ClipOval(
+                            child: CustomImage(
+                              image: '$_baseUrl/${estate.serviceOffers[index].image}',
+                              fit: BoxFit.cover,
+                              height: 35,
+                              width: 35,
+                            ),
                           );
                         },
                         ),
@@ -89,19 +93,25 @@ class ServiceProviderItem extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 3.0),
-                        SizedBox(
-                          height: 16,
-                          width: 44,
-                          child: CustomPaint(
-                            painter: PriceTagPaint(),
-                            child: Center(
-                              child: Text(
-                                  "20%",
-                                  style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
+                        Row(
+                          children: [
+                           estate.serviceOffers[index].servicePrice!=null?Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)):Text("discount".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                            SizedBox(width: 11.0),
+                           estate.serviceOffers[index].discount!=null?  SizedBox(
+                              height: 16,
+                              width: 44,
+                              child: CustomPaint(
+                                painter: PriceTagPaint(),
+                                child: Center(
+                                  child: Text(
+                                      "${estate.serviceOffers[index].discount}%",
+                                      style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        )
+                            ):Text(" ${estate.serviceOffers[index].servicePrice} ريال "  ,style: robotoBlack.copyWith(fontSize: 11)),
+                          ],
+                        ),
                         // const RatingStars(
                         //   value: 3* 1.0,
                         //   starCount: 5,

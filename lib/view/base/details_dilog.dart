@@ -80,20 +80,20 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                         Text(
                           'العنوان'.tr,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                          style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
                         ),
                         Text("${widget.estate.title}",
-                            style: robotoBlack.copyWith(fontSize: 14)),
+                            style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
 
                         Text(
                           'وصف مختصر'.tr,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("${widget.estate.shortDescription}",
-                                style: robotoBlack.copyWith(fontSize: 14)),
+                                style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
                             Align(
                               alignment: Alignment.topLeft,
                               child: Container(
@@ -698,19 +698,19 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                       alignment: Alignment.center,
                                       child:   Row(
 
-                                        children: const [
+                                        children:  [
 
                                           SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                          // Flexible(
-                                          //   flex: 1,
-                                          //     child: Text(
-                                          // "${estateController.estate.otherAdvantages[index].name}",
-                                          //   style: robotoMedium.copyWith(
-                                          //     fontSize: Dimensions.fontSizeLarge,
-                                          //     color: Theme.of(context).textTheme.bodyText1.color,
-                                          //   ),
-                                          //   maxLines: 2, overflow: TextOverflow.ellipsis,
-                                          // )),
+                                          Flexible(
+                                            flex: 1,
+                                              child: Text(
+                                          "${widget.estate.otherAdvantages[index].name}",
+                                            style: robotoMedium.copyWith(
+                                              fontSize: Dimensions.fontSizeLarge,
+                                              color: Theme.of(context).textTheme.bodyText1.color,
+                                            ),
+                                            maxLines: 2, overflow: TextOverflow.ellipsis,
+                                          )),
                                         ],
                                       ),
                                     ),
@@ -783,7 +783,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                       ]),
                                     ),
                                   ),
-                                  Container(
+                                  widget.estate.ageEstate!=null?Container(
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -800,11 +800,13 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                                     ),
 
-                                    child: Column(children: <Widget>[
+                                    child:Column(children: <Widget>[
                                       Image.asset(Images.age_estate,height: 70,width: 70,),
                                       Text('عمر العقار'),
-                                      widget.estate.ageEstate!=null? Text(widget.estate.ageEstate):Container(),
+                                       Text(widget.estate.ageEstate),
                                     ]),
+                                  ):Container(
+                                      height: 70,width: 70
                                   ),
                                 ]
                             ),
@@ -870,7 +872,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                 children:  <Widget>[
                                   Text('الرمز الوطني المختصر'),
 
-                                  Text('546854166'),
+                                  Text('${widget.estate.nationalAddress}'),
                                   IconButton(onPressed:(){
                                     FlutterClipboard.copy(widget.estate.nationalAddress).then(( value ) {
                                       showCustomSnackBar('تم النسخ'.tr, isError: false);

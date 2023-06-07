@@ -84,7 +84,7 @@ class _MapViewScreenState extends State<MapScreen> {
   LatLng _initialPosition;
   var photoGalleryIndex = 0;
   final bool _ltr = Get.find<LocalizationController>().isLtr;
-  MapType _currentMapType = MapType.normal;
+  MapType _currentMapType = MapType.satellite;
   // Set<Marker> _markers = Set<Marker>();
 
   var tappedPoint;
@@ -119,6 +119,7 @@ class _MapViewScreenState extends State<MapScreen> {
   int selectedIndex = 0;
 
 
+  Estate estate;
   void _setCircle(LatLng point) async {
 
 
@@ -144,33 +145,33 @@ class _MapViewScreenState extends State<MapScreen> {
     super.initState();
     _pageController = PageController(initialPage: 1, viewportFraction: 0.85)
       ..addListener(_onScroll);
-    Get.find<AuthController>().getZoneList();
-    if(Get.find<CategoryController>().categoryList == null) {
-      Get.find<CategoryController>().getCategoryList(true);
-    }
+    // Get.find<AuthController>().getZoneList();
+    // if(Get.find<CategoryController>().categoryList == null) {
+    //   Get.find<CategoryController>().getCategoryList(true);
+    // }
     // Get.find<CategoryController>().getSubCategoryList("0");
     int offset = 1;
     // Get.find<ZoneController>().geZonesList();
-    scrollController?.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent
-          && Get.find<CategoryController>().categoryProductList != null
-          && !Get.find<CategoryController>().isLoading) {
-        int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
-        if (offset < pageSize) {
-          offset++;
-          print('end of the page');
-          Get.find<CategoryController>().showBottomLoader();
-          //      Get.find<CategoryController>().getCategoryProductList("${widget.mainCategory.id}", 0,'0',"0","0","0", offset.toString());
-        }
-      }
-    });
+    // scrollController?.addListener(() {
+    //   if (scrollController.position.pixels == scrollController.position.maxScrollExtent
+    //       && Get.find<CategoryController>().categoryProductList != null
+    //       && !Get.find<CategoryController>().isLoading) {
+    //     int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
+    //     if (offset < pageSize) {
+    //       offset++;
+    //       print('end of the page');
+    //       Get.find<CategoryController>().showBottomLoader();
+    //       //      Get.find<CategoryController>().getCategoryProductList("${widget.mainCategory.id}", 0,'0',"0","0","0", offset.toString());
+    //     }
+    //   }
+    // });
     cardTapped = false;
-    if(widget.fromAddAddress) {
-      Get.find<LocationController>().setPickData();
-    }
-    if(Get.find<CategoryController>().categoryList == null) {
-      Get.find<CategoryController>().getCategoryList(true);
-    }
+    // if(widget.fromAddAddress) {
+    //   Get.find<LocationController>().setPickData();
+    // }
+    // if(Get.find<CategoryController>().categoryList == null) {
+    //   Get.find<CategoryController>().getCategoryList(true);
+    // }
     // getUserCurrentLocation().then((value) async {
     //   CameraPosition cameraPosition = new CameraPosition(
     //     target: LatLng(value.latitude, value.longitude),
@@ -190,7 +191,7 @@ class _MapViewScreenState extends State<MapScreen> {
         50.109046
     );
 
-    Get.find<CategoryController>().setFilterIndex(widget.mainCategory.id,0,"0","0",0,"0");
+   // Get.find<CategoryController>().setFilterIndex(widget.mainCategory.id,0,"0","0",0,"0");
   }
   @override
   void dispose() {
@@ -250,11 +251,15 @@ class _MapViewScreenState extends State<MapScreen> {
               _length = _products.length;
             }
 
-            //  _setMarkers(_products);
+
+            _setMarkers(_products);
+
             return         !_isNull ?_products.length>0?    CustomGoogleMapMarkerBuilder (
               customMarkers: _customMarkers,
               builder: (context, markers) {
+
                 if (markers == null) {
+
                   return              Stack(children: [
                     !_isNull ?_products.length>0?
 
@@ -268,7 +273,7 @@ class _MapViewScreenState extends State<MapScreen> {
                       // markers: markers,
                       // myLocationEnabled: false,
                       // compassEnabled: false,
-                      zoomControlsEnabled: true,
+                       zoomControlsEnabled: false,
                       mapType: _currentMapType,
                       onTap: (point) {
                         tappedPoint = point;
@@ -276,17 +281,45 @@ class _MapViewScreenState extends State<MapScreen> {
                       },
                       minMaxZoomPreference: MinMaxZoomPreference(0, 40),
                       onMapCreated: (GoogleMapController controller) {
+
                         _controller = controller;
-                        if(_products.length > 0) {
-                          _setMarkers(_products);
-                        }
+
+                        // if(_products.length > 0) {
+                        //   _setMarkers(_products);
+                        // }
 
                       },
                     ):Center(
                       child: NoDataScreen(
                         text: 'no_data_available',
                       ),
-                    ):const SizedBox(),
+                    ):  GoogleMap(
+                      initialCameraPosition:  CameraPosition(zoom: 12, target: LatLng(
+                        // double.parse(Get.find<LocationController>().getUserAddress().latitude),
+                        // double.parse(Get.find<LocationController>().getUserAddress().longitude),
+                        double.parse(widget.mainCategory.longitude),
+                        double.parse(widget.mainCategory.latitude),
+                      )),
+                      // markers: markers,
+                      // myLocationEnabled: false,
+                      // compassEnabled: false,
+                      zoomControlsEnabled: false,
+                      mapType: _currentMapType,
+                      onTap: (point) {
+                        tappedPoint = point;
+                        _setCircle(point);
+                      },
+                      minMaxZoomPreference: MinMaxZoomPreference(0, 40),
+                      onMapCreated: (GoogleMapController controller) {
+
+                        _controller = controller;
+
+                        // if(_products.length > 0) {
+                        //   _setMarkers(_products);
+                        // }
+
+                      },
+                    ),
 
                     categoryController.isLoading ? Center(child: Padding(
                       padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
@@ -376,8 +409,8 @@ class _MapViewScreenState extends State<MapScreen> {
                                 ),
                                 const SizedBox(
                                   height: 5,),
-                                GetBuilder<CategoryController>(builder: (categoryController) {
-                                  return   (categoryController.categoryList != null ) ?
+
+
 
                                   SizedBox(
                                     child:
@@ -472,9 +505,9 @@ class _MapViewScreenState extends State<MapScreen> {
                                         )  )) : SizedBox(),
 
 
-                                  ):Container();
+                                  ),
 
-                                }),
+
 
 
                                 Container(
@@ -590,7 +623,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                       SizedBox(
                                         width: 150,
                                         child: Text(
-                                          "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 11),
+                                          "يتضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 11),
                                         ),
                                       ),
                                     ],
@@ -607,9 +640,9 @@ class _MapViewScreenState extends State<MapScreen> {
                                   borderRadius: BorderRadius.circular(8.0)),
                               child:Column(
                                 children: [
-                                  for (int i = 0; i < _products.length; i++)
-                                    ServiceProviderItem(estate:_products[i],restaurants:_products[i].serviceOffers,
-                                    ),
+                                  // for (int i = 0; i < _products.length; i++)
+                                  //   ServiceProviderItem(estate:_products[i],serviceOffers:_products[i].serviceOffers,
+                                  //   ),
                                 ],
                               )
 
@@ -650,7 +683,7 @@ class _MapViewScreenState extends State<MapScreen> {
                       markers: markers,
                       // myLocationEnabled: false,
                       // compassEnabled: false,
-                      zoomControlsEnabled: true,
+                      zoomControlsEnabled: false,
                       mapType: _currentMapType,
                       onTap: (point) {
                         tappedPoint = point;
@@ -659,16 +692,42 @@ class _MapViewScreenState extends State<MapScreen> {
                       minMaxZoomPreference: MinMaxZoomPreference(0, 40),
                       onMapCreated: (GoogleMapController controller) {
                         _controller = controller;
-                        if(_products.length > 0) {
+                        // if(_products.length > 0) {
                           _setMarkers(_products);
-                        }
+                        // }
 
                       },
                     ):Center(
                       child: NoDataScreen(
                         text: 'no_data_available',
                       ),
-                    ):const SizedBox(),
+                    ):  GoogleMap(
+                      initialCameraPosition:  CameraPosition(zoom: 12, target: LatLng(
+                        // double.parse(Get.find<LocationController>().getUserAddress().latitude),
+                        // double.parse(Get.find<LocationController>().getUserAddress().longitude),
+                        double.parse(widget.mainCategory.longitude),
+                        double.parse(widget.mainCategory.latitude),
+                      )),
+                      // markers: markers,
+                      // myLocationEnabled: false,
+                      // compassEnabled: false,
+                      zoomControlsEnabled: false,
+                      mapType: _currentMapType,
+                      onTap: (point) {
+                        tappedPoint = point;
+                        _setCircle(point);
+                      },
+                      minMaxZoomPreference: MinMaxZoomPreference(0, 40),
+                      onMapCreated: (GoogleMapController controller) {
+
+                        _controller = controller;
+
+                        // if(_products.length > 0) {
+                        //   _setMarkers(_products);
+                        // }
+
+                      },
+                    ),
 
                     categoryController.isLoading ? Center(child: Padding(
                       padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
@@ -758,8 +817,6 @@ class _MapViewScreenState extends State<MapScreen> {
                                 ),
                                 const SizedBox(
                                   height: 5,),
-                                GetBuilder<CategoryController>(builder: (categoryController) {
-                                  return   (categoryController.categoryList != null ) ?
 
                                   SizedBox(
                                     child:
@@ -854,10 +911,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                         )  )) : SizedBox(),
 
 
-                                  ):Container();
-
-                                }),
-
+                                  ),
 
                                 Container(
                                     height: 200,
@@ -920,22 +974,7 @@ class _MapViewScreenState extends State<MapScreen> {
                         ),
                       ),
                     ),
-                    // Align(
-                    //           alignment: Alignment.bottomCenter,
-                    //           child:
-                    //           Container(height: 200,
-                    //             child:   nearbyPlacesList(_products))
-                    //         ),
 
-                    // pressedNear
-                    //     ? Positioned(
-                    //     bottom: 20.0,
-                    //     child: Container(
-                    //       // height: 300.0,
-                    //       width: MediaQuery.of(context).size.width,
-                    //       child:nearbyPlacesList(_products),
-                    //     ))
-                    //     : Container(),
                     cardTapped
                         ? Positioned(
                         top: 100.0,
@@ -990,9 +1029,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                   borderRadius: BorderRadius.circular(8.0)),
                               child:Column(
                                 children: [
-                                  for (int i = 0; i < _products.length; i++)
-                                    ServiceProviderItem(estate:_products[i],restaurants:_products[i].serviceOffers,
-                                    ),
+                                    ServiceProviderItem(estate:estate),
                                 ],
                               )
 
@@ -1013,6 +1050,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
                           }
                           return nearbyPlacesList(_products);
+
                         }),
                       ),
                     ),
@@ -1152,11 +1190,11 @@ class _MapViewScreenState extends State<MapScreen> {
       _reload = 1;
     }
 
-    await Future.delayed(const Duration(seconds: 3));
-    if (_reload == 1) {
-      setState(() {});
-      _reload = 2;
-    }
+    // await Future.delayed(const Duration(seconds: 3));
+    // if (_reload == 1) {
+    //   setState(() {});
+    //   _reload = 2;
+    // }
   }
 
 
@@ -1177,19 +1215,20 @@ class _MapViewScreenState extends State<MapScreen> {
         controller: _pageController,
         itemCount: _products.length,
         onPageChanged:(int value) {
-
+          _setMarkers(_products);
 
           selectedIndex = value;
           _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
               target: LatLng(
                   double.parse( _products[selectedIndex].latitude)??0  ,
                   double.parse( _products[selectedIndex].longitude)??0),
-              zoom: 18.0,
+              zoom: 25.0,
               bearing: 45.0,
               tilt: 45.0)));
-          showCustomSnackBar("${_products[selectedIndex].serviceOffers.length}");
+
 
           if(_products[selectedIndex].serviceOffers.length >0){
+           estate= _products[selectedIndex];
             cardTapped=true;
             setState(() {
 
@@ -1209,6 +1248,7 @@ class _MapViewScreenState extends State<MapScreen> {
             animation: _pageController,
 
             builder: (BuildContext context, Widget widget) {
+
               double value = 1;
               if (_pageController.position.haveDimensions) {
                 value = (_pageController.page - index);
@@ -1229,7 +1269,15 @@ class _MapViewScreenState extends State<MapScreen> {
               onTap: () async {
 
 
-                cardTapped==true;
+if(cardTapped==true){
+  cardTapped=false;
+}else if(cardTapped==false){
+  cardTapped=true;
+}
+
+                setState(() {
+
+                });
 
 
 
@@ -1282,6 +1330,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                               child: ClipOval(child: CustomImage(
                                                 image: '${Get.find<SplashController>().configModel.baseUrls.provider}'
                                                     '/${ _products[index].serviceOffers[i].image}',
+                                                placeholder: Images.placeholder,
                                                 height: 27, width: 27, fit: BoxFit.cover,
                                               )),
                                             ),

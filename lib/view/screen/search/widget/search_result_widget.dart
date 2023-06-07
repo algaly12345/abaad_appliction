@@ -1,6 +1,7 @@
 import 'package:abaad/controller/search_controller.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/screen/search/widget/item_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,6 +34,11 @@ class _SearchResultWidgetState extends State<SearchResultWidget> with TickerProv
           _isNull = searchController.searchRestList == null;
           if(!_isNull) {
             _length = searchController.searchRestList.length;
+          }
+        }else {
+          _isNull = searchController.searchProductList == null;
+          if(!_isNull) {
+            _length = searchController.searchProductList.length;
           }
         }
         return _isNull ? SizedBox() : Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Padding(
@@ -77,6 +83,13 @@ class _SearchResultWidgetState extends State<SearchResultWidget> with TickerProv
           }
           return false;
         },
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            ItemView(isRestaurant: false),
+            ItemView(isRestaurant: true),
+          ],
+        ),
       )),
 
     ]);

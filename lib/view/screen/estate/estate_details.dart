@@ -737,19 +737,19 @@ class _EstateDetailsState extends State<EstateDetails> {
                                   alignment: Alignment.center,
                                   child:   Row(
 
-                                    children: const [
+                                    children:  [
 
                                       SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      // Flexible(
-                                      //   flex: 1,
-                                      //     child: Text(
-                                      // "${estateController.estate.otherAdvantages[index].name}",
-                                      //   style: robotoMedium.copyWith(
-                                      //     fontSize: Dimensions.fontSizeLarge,
-                                      //     color: Theme.of(context).textTheme.bodyText1.color,
-                                      //   ),
-                                      //   maxLines: 2, overflow: TextOverflow.ellipsis,
-                                      // )),
+                                      Flexible(
+                                        flex: 1,
+                                          child: Text(
+                                      "${estateController.estate.otherAdvantages[index].name}",
+                                        style: robotoMedium.copyWith(
+                                          fontSize: Dimensions.fontSizeLarge,
+                                          color: Theme.of(context).textTheme.bodyText1.color,
+                                        ),
+                                        maxLines: 2, overflow: TextOverflow.ellipsis,
+                                      )),
                                     ],
                                   ),
                                 ),

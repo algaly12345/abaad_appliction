@@ -173,15 +173,16 @@ class _FeatureScreenState extends State<FeatureScreen> {
               child: Center(
                 child: FlutterGoogleStreetView(
                     initSource: StreetViewSource.outdoor,
-                    initBearing: 30,
+                    // initBearing: 30,
+                    zoomGesturesEnabled: false,
                     initPos:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)),
                     onStreetViewCreated: (StreetViewController controller) async {
                       //save controller for late using
                       streetViewController = controller;
-                      // controller.animateTo(
-                      // duration: 750,
-                      // camera: StreetViewPanoramaCamera(
-                      //     bearing: 150, tilt: 2));
+                      controller.animateTo(
+                      duration: 3000,
+                      camera: StreetViewPanoramaCamera(
+                          bearing: 200, tilt: 3));
 
 
                       //change position by controller

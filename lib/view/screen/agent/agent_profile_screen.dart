@@ -14,6 +14,7 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/estate_item.dart';
+import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/rating_bar.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/profile/widget/profile_button.dart';

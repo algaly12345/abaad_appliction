@@ -36,6 +36,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui' as ui;
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:marker_icon/marker_icon.dart';
 
 class NearByView extends StatefulWidget {
   Estate esate;
@@ -58,9 +63,14 @@ class _NearByViewState extends State<NearByView> {
 
   Uint8List imageDataBytes;
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor hospitalIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor restlIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor mosqueIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor schoolIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor pharmacylIcon = BitmapDescriptor.defaultMarker;
   var markerIcon;
   GlobalKey iconKey = GlobalKey();
-  List<RadioModel> sampleData = new List<RadioModel>();
+  List<RadioModel> sampleData = <RadioModel>[];
 
 
   @override
@@ -71,10 +81,15 @@ class _NearByViewState extends State<NearByView> {
     currentLng=double.parse(widget.esate.longitude);
     navigateToCurrentPosition();
     setCustomMarkerIcon();
+    setHospitalMarkerIcon();
+    setRestMarkerIcon();
+    setMosqueMarkerIcon();
+    setSchoolMarkerIcon();
+    setParmceyIcon();
 
     _marker.add(
         Marker(markerId: MarkerId('id-0'),
-            icon: sourceIcon,
+            icon:sourceIcon,
             position: LatLng(
               // double.parse(Get.find<LocationController>().getUserAddress().latitude),
               // double.parse(Get.find<LocationController>().getUserAddress().longitude),
@@ -85,6 +100,8 @@ class _NearByViewState extends State<NearByView> {
     sampleData.add( RadioModel(false, 'مطعم', Images.restaurant));
     sampleData.add( RadioModel(false, 'مسجد', Images.mosque));
     sampleData.add( RadioModel(false, 'مستشفى',Images.hosptial));
+    sampleData.add( RadioModel(false, 'مدارس',Images.hosptial));
+    sampleData.add( RadioModel(false, 'صيدليات',Images.heart));
     // getNearbyPlaces();
     // loadData();
   }
@@ -100,7 +117,13 @@ class _NearByViewState extends State<NearByView> {
   void addMarkers(Results results, int i) {
     _marker.add(Marker(
       markerId: MarkerId(i.toString()),
-      icon:  BitmapDescriptor.defaultMarker,
+      onTap: (){
+
+      },
+      infoWindow: InfoWindow( //popup info
+    title: '${results.name}',
+    ) ,
+      icon: type=="restaurant"?restlIcon:type=="mosque"?mosqueIcon:type=="hospital"?hospitalIcon:type=="school"?schoolIcon:type=="pharmacy"?pharmacylIcon: sourceIcon ,
 
         position: LatLng(
           results.geometry.location.lat, results.geometry.location.lng),
@@ -133,14 +156,14 @@ class _NearByViewState extends State<NearByView> {
   }
 
   void navigateToCurrentPosition() {
-    getUserCurrentLocation().then((value) async {
+
       debugPrint('My current location');
-      debugPrint(value.latitude.toString() + value.longitude.toString());
+      debugPrint(widget.esate.latitude + widget.esate.longitude);
 
 
       _marker.add(Marker(
           markerId: MarkerId("yeiuwe87"),
-          position: LatLng(value.latitude, value.longitude),
+          position: LatLng(double.parse(widget.esate.latitude), double.parse(widget.esate.longitude)),
           icon:  BitmapDescriptor.defaultMarker,
 
           infoWindow: InfoWindow(
@@ -148,25 +171,14 @@ class _NearByViewState extends State<NearByView> {
           )));
 
 
-      CameraPosition cameraPosition = CameraPosition(
-        target: LatLng(value.latitude, value.longitude),
-        zoom: 14,
-      );
 
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
       setState(() {
-        currentLat = value.latitude;
-        currentLng = value.longitude;
+        currentLat =double.parse(widget.esate.latitude);
+        currentLng = double.parse(widget.esate.longitude);
         getNearbyPlaces(type);
       });
-    });
   }
 
-     CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(76575, 3242342),
-    zoom: 14.4746,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -175,13 +187,14 @@ class _NearByViewState extends State<NearByView> {
       body: Stack(
         children: [
           GoogleMap(
-            initialCameraPosition:  CameraPosition(zoom: 12, target: LatLng(
+            initialCameraPosition:  CameraPosition(zoom: 14.4, target: LatLng(
               // double.parse(Get.find<LocationController>().getUserAddress().latitude),
               // double.parse(Get.find<LocationController>().getUserAddress().longitude),
                 double.parse(widget.esate.latitude),
                 double.parse(widget.esate.longitude)
             )),
             myLocationEnabled: true,
+
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
@@ -204,11 +217,11 @@ class _NearByViewState extends State<NearByView> {
                   itemCount: sampleData.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
-                    return  InkWell(
+                    return   InkWell(
                       //highlightColor: Colors.red,
                       splashColor: Colors.blueAccent,
-                      onTap: () {
-                        setState(() {
+                      onTap: () async{
+
                           sampleData.forEach((element) => element.isSelected = false);
                           sampleData[index].isSelected = true;
 
@@ -218,15 +231,23 @@ class _NearByViewState extends State<NearByView> {
                           if (sampleData[index].buttonText=='مطعم') {
                             type = 'restaurant';
                             getNearbyPlaces(type);
+
                           } else if (sampleData[index].buttonText=='مستشفى') {
+
                             type = 'hospital';
                             getNearbyPlaces(type);
                           } else if (sampleData[index].buttonText=='مسجد') {
                             type = 'mosque';
                             getNearbyPlaces(type);
+                          }else if (sampleData[index].buttonText=='مدارس') {
+                            type = 'school';
+                            getNearbyPlaces(type);
+                          }else if (sampleData[index].buttonText=='صيدليات') {
+                            type = 'pharmacy';
+                            getNearbyPlaces(type);
                           }
 
-                        });
+
                       },
                       child: new RadioItem(sampleData[index]),
                     );
@@ -288,6 +309,58 @@ class _NearByViewState extends State<NearByView> {
     );
   }
 
+  void setHospitalMarkerIcon() {
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, Images.mark_hosiptal)
+        .then(
+          (icon) {
+        hospitalIcon = icon;
+      },
+    );
+  }
+
+
+  void setRestMarkerIcon() {
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, Images.mark_restaurant)
+        .then(
+          (icon) {
+        restlIcon = icon;
+      },
+    );
+  }
+  void setMosqueMarkerIcon() {
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, Images.mark_mosque)
+        .then(
+          (icon) {
+            mosqueIcon = icon;
+      },
+    );
+  }
+
+
+  void setSchoolMarkerIcon() {
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, Images.mark_school)
+        .then(
+          (icon) {
+        schoolIcon = icon;
+      },
+    );
+  }
+
+
+  void setParmceyIcon() {
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, Images.mark_pharmcy)
+        .then(
+          (icon) {
+        pharmacylIcon = icon;
+      },
+    );
+  }
+
 
 }
 
@@ -313,19 +386,18 @@ class RadioItem extends StatelessWidget {
             ?  Theme.of(context).primaryColor
             : Colors.transparent,
         border:  Border.all(
-            width: 1.0,
+            width: 2.0,
             color: _item.isSelected
                 ? Theme.of(context).primaryColor
                 : Colors.grey),
-        borderRadius: const BorderRadius.all(const Radius.circular(2.0)),
+        borderRadius: const BorderRadius.all(const Radius.circular(8.0)),
       ),
-      margin:  EdgeInsets.all(8.0),
-      padding:  EdgeInsets.all(5.0),
+      margin:  EdgeInsets.only(bottom: 7,top: 7,right: 4,left: 4),
       child:  Row(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Container(
-            height: 50.0,
+            height: 30.0,
             width: 50.0,
 
             child:  Center(
@@ -334,7 +406,7 @@ class RadioItem extends StatelessWidget {
                   : Colors.grey)),
             ),
           Container(
-            margin: new EdgeInsets.only(left: 10.0),
+            margin:  EdgeInsets.all( 7.0),
             child:  Text(_item.buttonText,style: robotoBlack.copyWith(fontSize: 11, color: _item.isSelected
                 ? Theme.of(context).backgroundColor
                 : Colors.grey)),

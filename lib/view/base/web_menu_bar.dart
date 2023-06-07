@@ -18,51 +18,50 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: Container(
-      width: Dimensions.WEB_MAX_WIDTH,
-      color: Theme.of(context).cardColor,
-      padding: EdgeInsets.only(top: 38 ,right: 7,left: 7,),
-      child:     GetBuilder<UserController>(builder: (estateController) {
-      return Row(
-        children: [
-          InkWell(
-            onTap:ontop,
-            child:  Image.asset(Images.menu, width: 37.0, height: 37.0),
-          ),
-          const Spacer(),
-          Center(
-            child:  Column(
-              children: [
-                Text(
-                    'موقعك',style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)
+        width: Dimensions.WEB_MAX_WIDTH,
+        color: Theme.of(context).cardColor,
+        padding: EdgeInsets.only(top: 32 ,right: 7,left: 7,),
+        child:     GetBuilder<UserController>(builder: (estateController) {
+          return Row(
+            children: [
+              InkWell(
+                onTap:ontop,
+                child:  Image.asset(Images.menu, width: 37.0, height: 37.0),
+              ),
+              const Spacer(),
+              Center(
+                child:  Column(
+                  children: [
+                    Text(
+                        'موقعك',style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)
+                    ),
+                    Text(
+                        '${estateController.address  }',style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)
+                    ),
+                  ],
                 ),
-                Text(
-                  '${estateController.address  }',style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)
-          ),
-              ],
-            ),
-          ),
-          const Spacer(),
-          InkWell(
-            child: GetBuilder<NotificationController>(builder: (notificationController) {
-              return Stack(children: [
-                Icon(Icons.notifications_active_outlined, size: 37, color: Theme.of(context).textTheme.bodyText1.color),
-                notificationController.hasNotification ? Positioned(top: 0, right: 0, child: Container(
-                  height: 10, width: 10, decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor, shape: BoxShape.circle,
-                  border: Border.all(width: 1, color: Theme.of(context).cardColor),
-                ),
-                )) : SizedBox(),
-              ]);
-            }),
-            onTap: () => Get.toNamed(RouteHelper.getNotificationRoute()),
-          ),
-        ],
-      );
-      })
+              ),
+              const Spacer(),
+              InkWell(
+                child: GetBuilder<NotificationController>(builder: (notificationController) {
+                  return Stack(children: [
+                    Icon(Icons.notifications_active_outlined, size: 37, color: Theme.of(context).textTheme.bodyText1.color),
+                    notificationController.hasNotification ? Positioned(top: 0, right: 0, child: Container(
+                      height: 10, width: 10, decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor, shape: BoxShape.circle,
+                      border: Border.all(width: 1, color: Theme.of(context).cardColor),
+                    ),
+                    )) : SizedBox(),
+                  ]);
+                }),
+                onTap: () => Get.toNamed(RouteHelper.getNotificationRoute()),
+              ),
+            ],
+          );
+        })
     ));
   }
   @override
   Size get preferredSize => Size(Dimensions.WEB_MAX_WIDTH, 55);
 }
-
 

@@ -85,6 +85,17 @@ class Images {
   static const String guest = 'assets/image/guest.png';
   static const String logo_an = 'assets/image/logo_an.gif';
 
+  static const String mark_hosiptal = 'assets/image/mark_hosiptal.png';
+  static const String mark_restaurant = 'assets/image/mark_restaurant.png';
+  static const String mark_school = 'assets/image/mark_school.png';
+  static const String mark_mosque = 'assets/image/mak_mosqu.png';
+  static const String mark_pharmcy = 'assets/image/mark_pharmcy.png';
+
+  static const String background_gray = 'assets/image/background_gray.png';
+
+
+
+
 
 
 

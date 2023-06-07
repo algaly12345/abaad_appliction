@@ -5,7 +5,6 @@ import 'package:abaad/controller/banner_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
-
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
@@ -59,7 +58,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Get.find<CategoryController>().getCategoryList(true);
     }
     Get.find<CategoryController>().getSubCategoryList("0");
+   // Get.find<CategoryController>().setFilterIndex(0,0,"0","0",0,"0");
     int offset = 1;
+    Get.find<AuthController>().getZoneList();
     Get.find<BannerController>().getBannerList(true,1);
     scrollController?.addListener(() {
       if (scrollController.position.pixels == scrollController.position.maxScrollExtent
@@ -106,8 +107,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    Get.find<UserController>().getUserInfo();
-    bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+    // Get.find<UserController>().getUserInfo();
+    // bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
     return WillPopScope(
       onWillPop: () async {
@@ -124,9 +125,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
           ));
 
-          Timer(Duration(seconds: 2), () {
-
-          });
+          // Timer(Duration(seconds: 2), () {
+          //
+          // });
           return false;
 
         }

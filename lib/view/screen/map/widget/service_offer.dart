@@ -10,7 +10,6 @@ class PriceTagPaint extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     Path path = Path();
-
     path
       ..moveTo(0, size.height * .5)
       ..lineTo(size.width * .13, 0)
