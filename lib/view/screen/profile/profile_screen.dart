@@ -12,6 +12,7 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/rating_bar.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/profile/widget/profile_button.dart';
@@ -140,7 +141,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
               ProfileButton(icon: Icons.subscriptions_outlined, title: 'subscribe_type'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                Get.find<ThemeController>().toggleTheme();
+                showCustomSnackBar("الإشتراك غير متاح حاليا");
+                // Get.find<ThemeController>().toggleTheme();
               }),
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
               ProfileButton(icon: Icons.share, title: 'share_app'.tr, isButtonActive: Get.isDarkMode, onTap: () {

@@ -49,7 +49,7 @@ class ZoneController extends GetxController implements GetxService {
 
 
     Response response = await zoneRepo.getLandService();
-   // print("land response ...............${_estateModel.features}");
+
     if (response.statusCode == 200) {
     {
       print("land response ............${response.body}");
@@ -82,7 +82,9 @@ class ZoneController extends GetxController implements GetxService {
       if(_categoryList != null) {
         for(int index=0; index<_categoryList.length; index++) {
           _zoneIds.add(_categoryList[index].regionId);
+
         }
+
       }
     } else {
       ApiChecker.checkApi(response);
@@ -131,7 +133,7 @@ class ZoneController extends GetxController implements GetxService {
         response.body.forEach((category) => _subSubCategoryList.add(DistrictModel.fromJson(category)));
         if(_subSubCategoryList != null) {
           for(int index=0; index<_subSubCategoryList.length; index++) {
-            _subSubCategoryIds.add(int.parse(_subSubCategoryList[index].districtId));
+            _subSubCategoryIds.add(_subSubCategoryList[index].districtId);
           }
           // if(product != null && product.categoryIds.length > 1) {
           //   setSubCategoryIndex(_subCategoryIds.indexOf(int.parse(product.categoryIds[1].id)), false);

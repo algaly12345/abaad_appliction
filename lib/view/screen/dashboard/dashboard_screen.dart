@@ -5,6 +5,7 @@ import 'package:abaad/controller/banner_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
+import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
@@ -12,6 +13,8 @@ import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_image.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/base/details_dilog.dart';
 import 'package:abaad/view/base/drawer_menu.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/chat/chat_screen.dart';
@@ -25,7 +28,8 @@ import 'package:abaad/view/screen/old.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:share/share.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class DashboardScreen extends StatefulWidget {
   final bool fromSignUp;
@@ -56,9 +60,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
+
     }
+
+     Get.find<UserController>().getUserInfo();
     Get.find<CategoryController>().getSubCategoryList("0");
-   // Get.find<CategoryController>().setFilterIndex(0,0,"0","0",0,"0");
+    Get.find<ZoneController>().getCategoryList();
     int offset = 1;
     Get.find<AuthController>().getZoneList();
     Get.find<BannerController>().getBannerList(true,1);
@@ -71,7 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           offset++;
           print('end of the page');
           Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
+       //   Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
         }
       }
     });
@@ -92,7 +99,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     ];
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 10), () async{
+     await _initDynamicLinks(context);
+
       setState(() {});
     });
 
@@ -204,8 +213,77 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+
+
+
+
   }
 
+  void _initDynamicLinks(context) async {
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          final Uri deepLink = dynamicLink?.link;
+
+          if (deepLink != null) {
+            // final code = deepLink.path.split('/')[1];
+            handleMyLink(deepLink);
+          }
+        }, onError: (OnLinkErrorException error) async {
+      // show error
+    });
+
+    final PendingDynamicLinkData data =
+    await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      // final code = deepLink.path.split('/')[1];
+      handleMyLink(deepLink);
+    }
+  }
+
+
+
+  void handleMyLink(Uri url){
+    List<String> sepeatedLink = [];
+    /// osama.link.page/Hellow --> osama.link.page and Hellow
+    sepeatedLink.addAll(url.path.split('/'));
+
+    print("The Token that i'm interesed in is ${sepeatedLink[1]}");
+    // Get.to(()=>EstateDetails(estate: ,));
+
+    // Get.dialog(DettailsDilog(estate:_products[index]));
+    Get.toNamed(RouteHelper.getDetailsRoute(  int.parse(sepeatedLink[1])));
+
+  }
+
+
+  buildDynamicLinks(String title,String image,String docId) async {
+    String url = "https://abaad.page.link";
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: url,
+      link: Uri.parse('$url/$docId'),
+      androidParameters: AndroidParameters(
+        packageName: "com.dotcoder.dynamic_link_example",
+        minimumVersion: 0,
+      ),
+      iosParameters: IosParameters(
+        bundleId: "Bundle-ID",
+        minimumVersion: '0',
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          description: '',
+          imageUrl:
+          Uri.parse("$image"),
+          title: title),
+    );
+    final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+
+    String desc = '${dynamicUrl.shortUrl.toString()}';
+
+    await Share.share(desc, subject: title,);
+
+  }
   void _setPage(int pageIndex) {
     setState(() {
       _pageController.jumpToPage(pageIndex);
@@ -259,4 +337,6 @@ Widget listItem( int  index ,IconData icon, String label, Color color,onTop) {
       ),
     ),
   );
+
+
 }

@@ -603,7 +603,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               ):Container(),
                             ],
                           ):Container(),
-                          widget.estate.ownershipType!=null?    Container(
+                          widget.estate.users.name!=null?    Container(
                             height: 50,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -626,7 +626,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                     padding: EdgeInsets.all(10),child:  Text("المعلن"))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child: Text("${ widget.estate.ownershipType}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                    padding: EdgeInsets.all(10),child: Text("${ widget.estate.users.phone}",  style: robotoBlack.copyWith(fontSize: 14)))),
                               ],
                             ),
                           ):Container(),
@@ -885,13 +885,13 @@ class _DettailsDilogState extends State<DettailsDilog> {
                           Divider(height: 1,),
                           SizedBox(height: 6),
 
-      GetBuilder<UserController>(builder: (userController) {
-
-        return Column(
+      Column(
           children: [
             GestureDetector(
               onTap: () async{
-                await Get.toNamed(RouteHelper.getProfileAgentRoute(widget.estate.userId));
+                print("-------------------------------");
+            await    Get.toNamed(RouteHelper.getProfileAgentRoute(widget.estate.users.id));
+
               },
               child:
 
@@ -907,7 +907,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                   ClipOval(child: CustomImage(
                     image: '${Get.find<SplashController>().configModel.baseUrls.customerImageUrl}'
-                        '/${(userController.agentInfoModel != null && _isLoggedIn) ? userController.agentInfoModel.image : ''}',
+                        '/${widget.estate.users.image != null  ? widget.estate.users.image  : ''}',
                     height: 100, width: 100, fit: BoxFit.cover,
                   )),
                   SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
@@ -917,7 +917,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                       Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                         //  Text("${ _isLoggedIn ? '${userController.agentInfoModel.name}' : 'guest'.tr}", style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
                         Text(
-                          '${userController.agentInfoModel.name}',
+                          '${widget.estate.users.name }',
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),),
                         SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
@@ -976,19 +976,19 @@ class _DettailsDilogState extends State<DettailsDilog> {
                 ]),
               ),
             ),
-            !userController.isLoading ? CustomButton(
+            CustomButton(
               onPressed: () async{
                 await Get.toNamed(RouteHelper.getChatRoute(
                     notificationBody: NotificationBody(orderId: widget.estate.id, restaurantId: widget.estate.userId),
-                    user: Userinfo(id:  widget.estate.userId, name: userController.agentInfoModel.name,  image: userController.agentInfoModel.image,),estate_id: widget.estate.id
+                    user: Userinfo(id:  widget.estate.userId, name:widget.estate.users.name ,  image: widget.estate.users.image ),estate_id: widget.estate.id
 
                 ));
               },
               buttonText: 'تواصل مع المعلن',
-            ) : Center(child: Container()),
+            ),
           ],
-        );
-      })
+        ),
+
                         ],
                       ))
 

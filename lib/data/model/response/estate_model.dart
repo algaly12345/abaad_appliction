@@ -69,7 +69,7 @@ class Estate {
   int advertiserNo;
   String nationalAddress;
   int userId;
-  int estate_id;
+  String estate_id;
   String city;
   String category;
   List<OtherAdvantages> otherAdvantages;
@@ -77,6 +77,7 @@ class Estate {
   String streetSpace;
   String buildSpace;
   String documentNumber;
+  Users users;
 
 
 
@@ -124,7 +125,8 @@ class Estate {
     this.interface,
     this.streetSpace,
     this.buildSpace,
-    this.documentNumber
+    this.documentNumber,
+    this.users
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -202,6 +204,8 @@ class Estate {
     streetSpace=json["street_space"];
     buildSpace=json["build_space"];
     documentNumber=json["document_number"];
+    users = json['users'] != null ? new Users.fromJson(json['users']) : null;
+
 
 
   }
@@ -268,6 +272,9 @@ class Estate {
       data['interface'] = this.interface.map((v) => v.toJson()).toList();
     }
     data["street_space"]=this.streetSpace;
+    if (this.users != null) {
+      data['users'] = this.users.toJson();
+    }
     return data;
   }
 }
@@ -449,20 +456,53 @@ class OtherAdvantages {
 
 class Interface {
   String name;
+  String space;
 
 
-  Interface({this.name});
+  Interface({this.name,this.space});
 
   Interface.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    space =json['space'];
 
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
+    data['space']=this.space;
     return data;
   }
 
 
+}
+
+
+
+class Users {
+  int id;
+  String name;
+  String email;
+  String phone;
+  String image;
+
+  Users({this.name, this.email, this.phone, this.image});
+
+  Users.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    phone = json['phone'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['email'] = this.email;
+    data['phone'] = this.phone;
+    data['image'] = this.image;
+    return data;
+  }
 }

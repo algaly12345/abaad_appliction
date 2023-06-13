@@ -109,7 +109,7 @@ class RouteHelper {
   static String getVerificationRoute(String number, String token, String page, String pass) {
     return '$verification?page=$page&number=$number&token=$token&pass=$pass';
   }
-  static String getDetailsRoute(int id,int user_id) => '$estate?id=$id&user_id=$user_id';
+  static String getDetailsRoute(int id) => '$estate?id=$id';
   // static String getWebViewRoute(String ar_path) => 'ar_path=$webview';
   static String getWebViewRoute(String page) => '$webview?url=$page';
   static String getFeatureRoute(int id,String  feature_id ,String path, String latitude, String longitude ) => '$feature?id=$id&feature_id=$feature_id&path=$path&latitude=$latitude&longitude=$longitude';
@@ -216,7 +216,7 @@ class RouteHelper {
         estate_id:  Get.parameters['estate_id'] != 'null' ?Get.parameters['estate_id'] : null);
     }),
     GetPage(name: estate, page: () {
-      return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])),user_id:int.parse(Get.parameters['user_id']) ,);
+      return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])) ,);
     }),
 
     GetPage(name: feature, page: () {

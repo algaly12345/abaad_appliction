@@ -48,7 +48,15 @@ class InterfaceItem extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: estate.interface .length,
               itemBuilder: (context, index) {
-                return Padding(
+                return Container(
+                  margin: const EdgeInsets.all(0),
+                  decoration:  BoxDecoration(
+                    color: Colors.blue.shade200,
+                    shape: BoxShape.rectangle,
+                    borderRadius:const BorderRadius.only(
+                      topLeft: Radius.circular(4.0),
+                      bottomLeft: Radius.circular(4.0),
+                    ),),
                   padding: const EdgeInsets.all(5.0),
                   child: Row(
                     children: [
@@ -57,7 +65,13 @@ class InterfaceItem extends StatelessWidget {
                         style: robotoMedium.copyWith(
                           fontSize: Dimensions.fontSizeSmall,
                           color: Theme.of(context).textTheme.bodyText1.color,
-                        ), )// replace with your text
+                        ), ),
+                      Text(
+                          "${estate.interface[index].space} م ",
+                          style: robotoMedium.copyWith(
+                            fontSize: Dimensions.fontSizeSmall,
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                          ), ),
                     ],
                   ),
                 );
@@ -66,6 +80,6 @@ class InterfaceItem extends StatelessWidget {
           ))),
         ],
       ),
-    ):Text("not data"):Text("looding");
+    ):Text(""):Text("");
   }
 }}

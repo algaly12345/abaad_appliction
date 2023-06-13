@@ -1,5 +1,5 @@
 class DistrictModel {
-  String districtId;
+  int districtId;
   int cityId;
   int regionId;
   String nameAr;

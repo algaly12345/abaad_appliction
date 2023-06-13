@@ -54,20 +54,23 @@ class WishListController extends GetxController implements GetxService {
     _wishRestList = [];
     _wishRestIdList = [];
     Response response = await wishListRepo.getWishList();
-
+   // print("omeromeromeromeomromer${response.body["estate"]}");
     if (response.statusCode == 200) {
       update();
 
 
       response.body['estate'].forEach((restaurant) async {
         Estate _restaurant;
-
+        print("omeromeromeromeomromer${response.body['estate']}");
         try{
           _restaurant = Estate.fromJson(restaurant);
-        }catch(e){}
+        }catch(e){
+          showCustomSnackBar("${e}");
+
+        }
         _wishRestList.add(_restaurant);
-        _wishRestIdList.add(_restaurant.estate_id);
-      //  print("omeromeromeromeomromer${restaurant.body}");
+        _wishRestIdList.add(int.parse(_restaurant.estate_id));
+
       });
     } else {
       ApiChecker.checkApi(response);

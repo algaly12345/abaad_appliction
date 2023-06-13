@@ -340,14 +340,14 @@ class EstateController extends GetxController implements GetxService {
     }
     Response response = await estateRepo.createEstate(
         restaurantBody, _multiParts);
-
+    print("save estate---------------------------------------------------${response
+        .body}");
     if (response.statusCode == 200) {
-_isLoading=false;
+      _isLoading=false;
       Get.offAllNamed(RouteHelper.getSuccess());
     } else {
       ApiChecker.checkApi(response);
-      // print("---------------------------------------------------${response
-      //     .body}");
+      print("error estate---------------------------------------------------${response.body}");
     }
     _isLoading = false;
     update();

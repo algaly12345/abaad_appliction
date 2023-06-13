@@ -124,7 +124,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                                       fontSize: Dimensions.fontSizeDefault),
                                 ),
                         Text(
-                           '${userController.agentInfoModel.userinfo.membershipType}',
+                           '${userController.agentInfoModel.userinfo.membershipType!=null?userController.agentInfoModel.userinfo.membershipType:''}',
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),)
 
 
@@ -174,7 +174,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                       SizedBox(height: 4),
 RatingBar(rating: 4, ratingCount: 4)     ,
                       Text(
-                       '${userController.agentInfoModel.userinfo.membershipType}',
+                       '${userController.agentInfoModel.userinfo.membershipType!=null?userController.agentInfoModel.userinfo.membershipType:''}',
                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                      ),
 
@@ -318,7 +318,7 @@ RatingBar(rating: 4, ratingCount: 4)     ,
                     itemBuilder: (context, index) {
                       return  GetBuilder<EstateController>(builder: (wishController) {
                         return  EstateItem(estate: restController.estateModel.estates[index],onPressed: (){
-                          Get.toNamed(RouteHelper.getDetailsRoute( restController.estateModel.estates[index].id,restController.estateModel.estates[index].userId));
+                          Get.toNamed(RouteHelper.getDetailsRoute( restController.estateModel.estates[index].id));
                         },fav: false,);
                       });
                     },

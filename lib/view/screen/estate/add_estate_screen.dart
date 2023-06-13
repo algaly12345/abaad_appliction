@@ -189,7 +189,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     "الواجهة الجنوبية",];
   int east, west,north,south=0;
   final List<String> _selectedInterfaceistItems = [];
-  int _value1;
+  int _value1=0;
 
   String valueChoose;
   String _ageValue;
@@ -231,8 +231,6 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     String  _address= 'Address : ${place.locality},${place.country}';
     district=place.subLocality;
     city=place.locality;
-    showCustomSnackBar("message${place.subLocality}");
-    print("adress-------------------------------------${place.locality},${place.country}");
   }
 
 
@@ -530,7 +528,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       items: locationController.zoneIds==null?Container():locationController.zoneIds.map((int value) {
                         return DropdownMenuItem<int>(
                           value: locationController.zoneIds.indexOf(value),
-                          child: Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name : 'Select'),
+                          child: Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name : 'حدد المنطقة'),
                         );
                       }).toList(),
                       onChanged: (int value) {
@@ -559,13 +557,20 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           initialCameraPosition: CameraPosition(target: _initialPosition, zoom: 17),
                           minMaxZoomPreference: MinMaxZoomPreference(0, 30),
                           onTap: (latLng) {
-                            Get.toNamed(
-                              RouteHelper.getPickMapRoute('add-address', false),
-                              arguments: PickMapScreen(
-                                fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
-                                route: null, canRoute: false,
-                              ),
-                            );
+
+
+                              if( _value1==0){
+                                showCustomSnackBar('حدد المنطقة'.tr);
+                              }else{
+                                Get.toNamed(
+                                  RouteHelper.getPickMapRoute('add-address', false),
+                                  arguments: PickMapScreen(
+                                    fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
+                                    route: null, canRoute: false,
+                                  ),
+                                );}
+
+
                           },
                           zoomControlsEnabled: false,
                           compassEnabled: false,
@@ -577,8 +582,20 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           onCameraMove: ((position) => _cameraPosition = position),
                           onMapCreated: (GoogleMapController controller) {
                             locationController.setMapController(controller);
+
+                              if( _value1==0){
+                                showCustomSnackBar('حدد المنطقة'.tr);
+                              }else{
+                                Get.toNamed(
+                                  RouteHelper.getPickMapRoute('add-address', false),
+                                  arguments: PickMapScreen(
+                                    fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
+                                    route: null, canRoute: false,
+                                  ),
+                                );}
+
                             // if(widget.address == null) {
-                              locationController.getCurrentLocation(true, mapController: controller);
+                         //     locationController.getCurrentLocation(true, mapController: controller);
                             // }
                           },
                         ),
@@ -589,7 +606,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           bottom: 10, right: 0,
                           child: InkWell(
                             onTap: () => _checkPermission(() {
-                              locationController.getCurrentLocation(true, mapController: locationController.mapController);
+
+                              // locationController.getCurrentLocation(true, mapController: locationController.mapController);
                             }),
                             child: Container(
                               width: 30, height: 30,
@@ -603,7 +621,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           top: 10, right: 0,
                           child: InkWell(
                             onTap: () {
-                              if( locationController.categoryList[locationController.categoryIndex-1].name==null){
+                              if( _value1==0){
                                 showCustomSnackBar('حدد المنطقة'.tr);
                               }else{
                               Get.toNamed(
@@ -669,7 +687,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     Container(
                       height: 70,
                       padding: EdgeInsets.only(
-                        right: 9, left: 9, top: 16,bottom: 4),
+                        right: 4, left: 4, top: 16,bottom: 4),
                       child: ToggleButtons(
                         borderColor: Theme
                             .of(context)
@@ -2058,9 +2076,9 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   ),
                   SizedBox(width: 6),
                   Expanded(
-                    child: CustomButton(
+                    child:  !restController.isLoading ?  CustomButton(
                       onPressed: () {
-                        showCustomSnackBar(authController.zoneList[authController.selectedZoneIndex].latitude);
+                        showCustomSnackBar(_northController.text.toString());
 
                         String _price;
                         String _shortDesc;
@@ -2165,7 +2183,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                           List<Map<String, dynamic >> _interface= [];
                           setState(() {
                             for (final item in _selectedInterfaceistItems) {
-                              _interface.add({'"' + "name" + '"':'"' + item + '"'});
+                              _interface.add({'"' + "name" + '"':'"' + item + '"','"' + "space" + '"':   item=="الواجهة الشمالية"? '"${_northController.text.toString()}"':  item=="الواجهة الشرقية"? '"${_eastController.text.toString()}"': item=="الواجهة الغربية"?'"${_westController.text.toString()}"':item=="الواجهة الجنوبية"?'"${_southController.text.toString()}"':""  });
 
                             }
                           });
@@ -2173,7 +2191,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
 
-                          !restController.isLoading ?     restController.registerRestaurant(
+                            restController.registerRestaurant(
                               EstateBody(
                                   type_add:_typeProperties==0?"for_sell":"for_rent" ,
                                   address: "${locationController.address}",
@@ -2205,7 +2223,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   price: _priceController.text.toString(),
                                 buildSpace: _buildSpaceController.text.toString(),
                                 documentNumber: _documentNumberController.text.toString(),
-                                priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" )): Center(child: CircularProgressIndicator());
+                                priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ));
                          // authController.submitBusinessPlan(restaurantId: 1);
                          //  next();
                         }
@@ -2215,7 +2233,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       buttonText:
                       currentStep == stepLength ? 'confirm'.tr : 'next'.tr,
 
-                    ),
+                    ): Center(child: CircularProgressIndicator()),
                   )
                 ],
               ),

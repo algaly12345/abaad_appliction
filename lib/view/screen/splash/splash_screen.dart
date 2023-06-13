@@ -4,6 +4,7 @@ import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
+import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/app_constants.dart';
@@ -32,14 +33,12 @@ class _SplashScreenState extends State<SplashScreen> {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   StreamSubscription<ConnectivityResult> _onConnectivityChanged;
   Timer _timer;
+
   @override
   void initState() {
     super.initState();
     initDynamicLinks();
     bool _firstTime = true;
-
-    // _timer = Timer.periodic(Duration(seconds: 10), (timer){
-
     _onConnectivityChanged = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if(!_firstTime) {
         bool isNotConnected = result != ConnectivityResult.wifi && result != ConnectivityResult.mobile;
@@ -60,11 +59,13 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     Get.find<SplashController>().initSharedData();
-    if(Get.find<LocationController>().getUserAddress() != null) {
+    if(Get.find<LocationController>().getUserAddress() != null && (Get.find<LocationController>().getUserAddress().zoneIds == null
+        || Get.find<LocationController>().getUserAddress().zoneData == null)) {
       Get.find<AuthController>().clearSharedAddress();
     }
+  // Get.find<CartController>().getCartData();
     _route();
-    // });
+
   }
 
   @override
@@ -77,19 +78,19 @@ class _SplashScreenState extends State<SplashScreen> {
   void _route() {
     Get.find<SplashController>().getConfigData().then((isSuccess) {
       if(isSuccess) {
-        Timer(Duration(seconds: 20), () async {
-          int _minimumVersion = 0;
+        Timer(Duration(seconds: 1), () async {
+          double _minimumVersion = 0;
           if(GetPlatform.isAndroid) {
-            _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionAndroid;
+         //   _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionAndroid;
           }else if(GetPlatform.isIOS) {
-            _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionIos;
+          //  _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionIos;
           }
           if(AppConstants.APP_VERSION < _minimumVersion || Get.find<SplashController>().configModel.maintenanceMode) {
             Get.offNamed(RouteHelper.getUpdateRoute(AppConstants.APP_VERSION < _minimumVersion));
           }else {
             if(widget.body != null) {
               if (widget.body.notificationType == NotificationType.order) {
-              //  Get.offNamed(RouteHelper.getOrderDetailsRoute(widget.body.orderId));
+
               }else if(widget.body.notificationType == NotificationType.general){
                 Get.offNamed(RouteHelper.getNotificationRoute());
               }else {
@@ -112,8 +113,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     Get.offNamed(RouteHelper.getOnBoardingRoute());
                   }
                 } else {
-                //  Get.offNamed(RouteHelper.getInitialRoute());
-                  // Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
+                  Get.offNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
                 }
               }
             }
@@ -145,29 +145,29 @@ class _SplashScreenState extends State<SplashScreen> {
                 Image.asset(Images.logo_an, width: 150),
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-            Text("abaad".tr, style: robotoMedium.copyWith(fontSize: 25,color: Theme.of(context).primaryColor)),
+                Text("abaad".tr, style: robotoMedium.copyWith(fontSize: 25,color: Theme.of(context).primaryColor)),
                 Text("optimal_real_estate_marketing".tr, style: robotoMedium.copyWith(fontSize: 25,color: Theme.of(context).primaryColor)),
-            // Container(
-            //
-            //   child: ColorizeAnimatedTextKit(
-            //     onTap: () {
-            //       print("Tap Event");
-            //     },
-            //     text:  [
-            //       "abaad".tr,
-            //       'optimal_real_estate_marketing'.tr,
-            //     ],
-            //     textStyle: const TextStyle(
-            //         fontSize: 40.0,
-            //         fontFamily: "Horizon",
-            //     ),
-            //     alignment: Alignment.center,
-            //     colors: const [
-            //       Colors.blueGrey,
-            //       Colors.blue,
-            //     ],
-            //   ),
-            // ),
+                // Container(
+                //
+                //   child: ColorizeAnimatedTextKit(
+                //     onTap: () {
+                //       print("Tap Event");
+                //     },
+                //     text:  [
+                //       "abaad".tr,
+                //       'optimal_real_estate_marketing'.tr,
+                //     ],
+                //     textStyle: const TextStyle(
+                //         fontSize: 40.0,
+                //         fontFamily: "Horizon",
+                //     ),
+                //     alignment: Alignment.center,
+                //     colors: const [
+                //       Colors.blueGrey,
+                //       Colors.blue,
+                //     ],
+                //   ),
+                // ),
 
                 /*SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
               Text(AppConstants.APP_NAME, style: robotoMedium.copyWith(fontSize: 25)),*/
@@ -206,7 +206,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     print("The Token that i'm interesed in is ${sepeatedLink[1]}");
     // Get.to(()=>EstateDetails(estate: ,));
-     Get.toNamed(RouteHelper.getDetailsRoute(  int.parse(sepeatedLink[1]),0));
+    Get.toNamed(RouteHelper.getDetailsRoute(  int.parse(sepeatedLink[1])));
 
   }
 

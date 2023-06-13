@@ -1,10 +1,12 @@
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
+import 'package:abaad/view/base/details_dilog.dart';
 import 'package:abaad/view/base/estate_item.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/screen/favourite/widget/favourite_view.dart';
@@ -42,7 +44,9 @@ class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProv
             itemBuilder: (context, index) {
               return  GetBuilder<WishListController>(builder: (wishController) {
                 return  EstateItem(estate: wishController.wishRestList[index],onPressed: (){
-                  Get.toNamed(RouteHelper.getDetailsRoute( wishController.wishRestList[index].estate_id,wishController.wishRestList[index].userId));
+                  // Get.find<UserController>().getUserInfoByID(wishController.wishRestList[index].userId);
+                Get.dialog(DettailsDilog(estate:wishController.wishRestList[index]));
+               //  Get.toNamed(RouteHelper.getDetailsRoute( int.parse(wishController.wishRestList[index].estate_id),wishController.wishRestList[index].userId));
                 },fav: true,);
               });
             },

@@ -37,8 +37,8 @@ import 'package:get/get.dart';
 import 'widgets/estate_view.dart';
 class EstateDetails extends StatefulWidget {
 final Estate estate;
-final int user_id;
-EstateDetails({@required this.estate,this.user_id});
+
+EstateDetails({@required this.estate});
 
   @override
   State<EstateDetails> createState() => _EstateDetailsState();
@@ -60,8 +60,6 @@ class _EstateDetailsState extends State<EstateDetails> {
 
 
 
-
-      Get.find<UserController>().getUserInfoByID(widget.user_id);
 
 
     getAddressFromLatLang(26.439280,50.094460);

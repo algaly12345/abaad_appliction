@@ -35,7 +35,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   RangeValues _values = const RangeValues(100, 600);
   double distValue = 0;
   final ScrollController _scrollController = ScrollController();
-  int _value1;
+  int _value1=0;
 
 
 
@@ -287,10 +287,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
                             ),
                             child: DropdownButton<int>(
                               value: _value1,
+
                               items: zoneController.zoneIds.map((int value) {
                                 return DropdownMenuItem<int>(
                                   value: zoneController.zoneIds.indexOf(value),
-                                  child: Text(value != 0 ? zoneController.categoryList[(zoneController.zoneIds.indexOf(value)-1)].nameAr : 'Select'),
+                                  child: Text(value != 0 ? zoneController.categoryList[(zoneController.zoneIds.indexOf(value)-1)].nameAr : 'اختر المنطقة'),
                                 );
                               }).toList(),
                               onChanged: (int value) {
@@ -324,7 +325,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               items: zoneController.cityIds.map((int value) {
                                 return DropdownMenuItem<int>(
                                   value: zoneController.cityIds.indexOf(value),
-                                  child: Text(value != 0 ? zoneController.subCategoryList[(zoneController.cityIds.indexOf(value)-1)].nameAr : 'Select'),
+                                  child: Text(value != 0 ? zoneController.subCategoryList[(zoneController.cityIds.indexOf(value)-1)].nameAr : 'اختر المدينة'),
                                 );
                               }).toList(),
                               onChanged: (int value) {
@@ -363,7 +364,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               items: zoneController.subSubCategoryIds.map((int value) {
                                 return DropdownMenuItem<int>(
                                   value: zoneController.subSubCategoryIds.indexOf(value),
-                                  child: Text(value != 0 ? zoneController.subSubCategoryList[(zoneController.subSubCategoryIds.indexOf(value)-1)].nameAr : 'Select'),
+                                  child: Text(value != 0 ? zoneController.subSubCategoryList[(zoneController.subSubCategoryIds.indexOf(value)-1)].nameAr : 'اختر الحي'),
                                 );
                               }).toList(),
                               onChanged: (int value) {

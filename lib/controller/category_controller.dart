@@ -4,6 +4,7 @@ import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/facilities_model.dart';
 import 'package:abaad/data/repository/category_repo.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -210,7 +211,6 @@ class CategoryController extends GetxController implements GetxService {
   void setFilterIndex(int zone_id, int index,String cityName,String districts,int  space,String add_type) {
     _subCategoryIndex = index;
     getCategoryProductList(zone_id,_subCategoryList[index].id.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0",add_type.toString() ?? "0","1");
-
     update();
 
   }

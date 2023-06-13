@@ -9,6 +9,7 @@ import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/localization_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
@@ -172,6 +173,8 @@ class _MapViewScreenState extends State<MapScreen> {
     // if(Get.find<CategoryController>().categoryList == null) {
     //   Get.find<CategoryController>().getCategoryList(true);
     // }
+
+
     // getUserCurrentLocation().then((value) async {
     //   CameraPosition cameraPosition = new CameraPosition(
     //     target: LatLng(value.latitude, value.longitude),
@@ -191,7 +194,7 @@ class _MapViewScreenState extends State<MapScreen> {
         50.109046
     );
 
-   // Get.find<CategoryController>().setFilterIndex(widget.mainCategory.id,0,"0","0",0,"0");
+
   }
   @override
   void dispose() {
@@ -251,8 +254,11 @@ class _MapViewScreenState extends State<MapScreen> {
               _length = _products.length;
             }
 
+            if(categoryController.subCategoryIndex==0){
+              _setMarkers(_products);
+            }
 
-            _setMarkers(_products);
+
 
             return         !_isNull ?_products.length>0?    CustomGoogleMapMarkerBuilder (
               customMarkers: _customMarkers,
@@ -264,7 +270,7 @@ class _MapViewScreenState extends State<MapScreen> {
                     !_isNull ?_products.length>0?
 
                     GoogleMap(
-                      initialCameraPosition:  CameraPosition(zoom: 12, target: LatLng(
+                      initialCameraPosition:  CameraPosition(zoom: 10, target: LatLng(
                         // double.parse(Get.find<LocationController>().getUserAddress().latitude),
                         // double.parse(Get.find<LocationController>().getUserAddress().longitude),
                         double.parse(widget.mainCategory.longitude),
@@ -294,7 +300,7 @@ class _MapViewScreenState extends State<MapScreen> {
                         text: 'no_data_available',
                       ),
                     ):  GoogleMap(
-                      initialCameraPosition:  CameraPosition(zoom: 12, target: LatLng(
+                      initialCameraPosition:  CameraPosition(zoom: 10, target: LatLng(
                         // double.parse(Get.find<LocationController>().getUserAddress().latitude),
                         // double.parse(Get.find<LocationController>().getUserAddress().longitude),
                         double.parse(widget.mainCategory.longitude),
@@ -1319,7 +1325,7 @@ if(cardTapped==true){
 
                                       child: Row(
                                         children: [
-                                          for (var i = 0; i < 3; i++)
+                                          for (var i = 0; i < 1; i++)
 
                                             Container(
                                               decoration: BoxDecoration(
@@ -1329,8 +1335,7 @@ if(cardTapped==true){
                                               alignment: Alignment.topRight,
                                               child: ClipOval(child: CustomImage(
                                                 image: '${Get.find<SplashController>().configModel.baseUrls.provider}'
-                                                    '/${ _products[index].serviceOffers[i].image}',
-                                                placeholder: Images.placeholder,
+                                                    '/${(_products[index].serviceOffers[i].image!=null)? _products[index].serviceOffers[i].image:Images.image}',
                                                 height: 27, width: 27, fit: BoxFit.cover,
                                               )),
                                             ),

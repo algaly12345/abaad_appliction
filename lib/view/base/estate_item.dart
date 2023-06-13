@@ -124,7 +124,7 @@ class EstateItem extends StatelessWidget {
                                               return InkWell(
                                                 onTap: () {
                                                   if(Get.find<AuthController>().isLoggedIn()) {
-                                                    _isWished ? wishController.removeFromWishList(estate.estate_id) : wishController.addToWishList(estate, true);
+                                                    _isWished ? wishController.removeFromWishList(int.parse(estate.estate_id)) : wishController.addToWishList(estate, true);
                                                   }else {
                                                     showCustomSnackBar('you_are_not_logged_in'.tr);
                                                   }

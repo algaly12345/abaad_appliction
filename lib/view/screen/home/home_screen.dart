@@ -132,13 +132,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             (String value) {
                                           setState(() {});
                                         }),
+                                    SizedBox(width: 3,),
                                     GestureDetector(
                                       onTap: (){
                                         Get.dialog(FiltersScreen());
                                       },
                                       child: Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 4.0, right: 4.0),
+                                        // margin: const EdgeInsets.only(
+                                        //     left: 4.0, right: 4.0),
                                         padding:
                                         const EdgeInsets.all(7),
                                         decoration: BoxDecoration(
@@ -157,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     ),
-
+                                    SizedBox(width: 3,),
                                       GetBuilder<ZoneController>(builder: (zoneController) {
                            return  GestureDetector(
                               onTap: (){
@@ -168,8 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(7),
-                                margin: const EdgeInsets.only(
-                                    left: 4.0, right: 4.0),
+                                // margin: const EdgeInsets.only(
+                                //     left: 4.0, right: 4.0),
                                 decoration: BoxDecoration(
                                     color: Colors.blue,
                                     borderRadius: BorderRadius.circular(5),
