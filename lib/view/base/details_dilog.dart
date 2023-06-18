@@ -21,8 +21,10 @@ import 'package:abaad/view/screen/estate/widgets/near_by_view.dart';
 import 'package:abaad/view/screen/estate/widgets/network_type.dart';
 import 'package:abaad/view/screen/map/widget/service_offer.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DettailsDilog extends StatefulWidget {
@@ -38,6 +40,8 @@ class DettailsDilog extends StatefulWidget {
 
 class _DettailsDilogState extends State<DettailsDilog> {
   bool _isLoggedIn;
+  String like;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -978,9 +982,31 @@ class _DettailsDilogState extends State<DettailsDilog> {
             ),
             CustomButton(
               onPressed: () async{
+          //      buildDynamicLinks(widget.estate.title, "${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}", widget.estate.id.toString());
+                String url = "https://abaad.page.link";
+                final DynamicLinkParameters parameters = DynamicLinkParameters(
+                  uriPrefix: url,
+                  link: Uri.parse('$url/${widget.estate.id.toString()}'),
+                  androidParameters: AndroidParameters(
+                    packageName: "sa.pdm.abaad.abaad",
+                    minimumVersion: 0,
+                  ),
+                  iosParameters: IosParameters(
+                    bundleId: "Bundle-ID",
+                    minimumVersion: '0',
+                  ),
+                  socialMetaTagParameters: SocialMetaTagParameters(
+                      description: '',
+                      imageUrl:
+                      Uri.parse("${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}"),
+                      title: widget.estate.title),
+                );
+                final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+
+                String desc = '${dynamicUrl.shortUrl.toString()}';
                 await Get.toNamed(RouteHelper.getChatRoute(
                     notificationBody: NotificationBody(orderId: widget.estate.id, restaurantId: widget.estate.userId),
-                    user: Userinfo(id:  widget.estate.userId, name:widget.estate.users.name ,  image: widget.estate.users.image ),estate_id: widget.estate.id
+                    user: Userinfo(id:  widget.estate.userId, name:widget.estate.users.name ,  image: widget.estate.users.image ),estate_id: widget.estate.id,link: desc
 
                 ));
               },
@@ -1002,6 +1028,11 @@ class _DettailsDilogState extends State<DettailsDilog> {
     );
 
   }
+
+
+
+
+
 
 
 }

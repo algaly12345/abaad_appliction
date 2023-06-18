@@ -53,14 +53,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
       }
 
       return Scaffold(
-        floatingActionButton: (chatController.conversationModel != null && !chatController.hasAdmin) ? FloatingActionButton.extended(
-          label: Text('${'chat_with'.tr} ${AppConstants.APP_NAME}', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white)),
-          icon: Icon(Icons.chat, color: Colors.white),
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () => Get.toNamed(RouteHelper.getChatRoute(notificationBody: NotificationBody(
-            notificationType: NotificationType.message, adminId: 0,
-          ),estate_id: 3)),
-        ) : null,
+        // floatingActionButton: (chatController.conversationModel != null && !chatController.hasAdmin) ? FloatingActionButton.extended(
+        //   label: Text('${'chat_with'.tr} ${AppConstants.APP_NAME}', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white)),
+        //   icon: Icon(Icons.chat, color: Colors.white),
+        //   backgroundColor: Theme.of(context).primaryColor,
+        //   onPressed: () => Get.toNamed(RouteHelper.getChatRoute(notificationBody: NotificationBody(
+        //     notificationType: NotificationType.message, adminId: 0,
+        //   ),estate_id: 3)),
+        // ) : null,
         body: Padding(
           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
           child: Column(children: [
@@ -177,23 +177,27 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     '${_user.name}', style: robotoMedium,
                                   ) : Text('user_deleted'.tr, style: robotoMedium),
                                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-
                                   Text(
-                                    '${_type.tr}',
-                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                    DateConverter.localDateToIsoStringAMPM(DateConverter.dateTimeStringToDate(
+                                        _conversation.conversations[index].lastMessageTime)),
+                                    style: robotoRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.fontSizeExtraSmall),
                                   ),
+                                  // Text(
+                                  //   '${_type.tr}',
+                                  //   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                  // ),
                                 ])),
                               ]),
                             ),
 
-                            Positioned(
-                              right: 5,bottom: 5,
-                              child: Text(
-                                DateConverter.localDateToIsoStringAMPM(DateConverter.dateTimeStringToDate(
-                                    _conversation.conversations[index].lastMessageTime)),
-                                style: robotoRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.fontSizeExtraSmall),
-                              ),
-                            ),
+                            // Positioned(
+                            //   right: 5,bottom: 4,
+                            //   child: Text(
+                            //     DateConverter.localDateToIsoStringAMPM(DateConverter.dateTimeStringToDate(
+                            //         _conversation.conversations[index].lastMessageTime)),
+                            //     style: robotoRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.fontSizeExtraSmall),
+                            //   ),
+                            // ),
 
                             GetBuilder<UserController>(builder: (userController) {
                               return (userController.userInfoModel != null && userController.userInfoModel.agent != null

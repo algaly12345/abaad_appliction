@@ -99,7 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     ];
 
-    Future.delayed(Duration(seconds: 10), () async{
+    Future.delayed(Duration(seconds: 5), () async{
      await _initDynamicLinks(context);
 
       setState(() {});
@@ -228,6 +228,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // final code = deepLink.path.split('/')[1];
             handleMyLink(deepLink);
           }
+
+
+
+
+
+
+
         }, onError: (OnLinkErrorException error) async {
       // show error
     });
@@ -264,7 +271,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       uriPrefix: url,
       link: Uri.parse('$url/$docId'),
       androidParameters: AndroidParameters(
-        packageName: "com.dotcoder.dynamic_link_example",
+        packageName: "sa.pdm.abaad.abaad",
         minimumVersion: 0,
       ),
       iosParameters: IosParameters(

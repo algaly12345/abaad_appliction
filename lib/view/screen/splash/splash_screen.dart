@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
+import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/dimensions.dart';
@@ -37,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    initDynamicLinks();
+
     bool _firstTime = true;
     _onConnectivityChanged = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if(!_firstTime) {
@@ -79,6 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Get.find<SplashController>().getConfigData().then((isSuccess) {
       if(isSuccess) {
         Timer(Duration(seconds: 1), () async {
+          initDynamicLinks();
           double _minimumVersion = 0;
           if(GetPlatform.isAndroid) {
          //   _minimumVersion = Get.find<SplashController>().configModel.appMinimumVersionAndroid;
@@ -99,7 +102,7 @@ class _SplashScreenState extends State<SplashScreen> {
             }else {
               if (Get.find<AuthController>().isLoggedIn()) {
                 Get.find<AuthController>().updateToken();
-                await Get.find<WishListController>().getWishList();
+             //   await Get.find<WishListController>().getWishList();
                 if (Get.find<LocationController>().getUserAddress() != null) {
                   Get.offNamed(RouteHelper.getInitialRoute());
                 } else {
@@ -205,36 +208,11 @@ class _SplashScreenState extends State<SplashScreen> {
     sepeatedLink.addAll(url.path.split('/'));
 
     print("The Token that i'm interesed in is ${sepeatedLink[1]}");
-    // Get.to(()=>EstateDetails(estate: ,));
+    Get.find<EstateController>().getEstateDetails(Estate(id:  int.parse(sepeatedLink[1])));
     Get.toNamed(RouteHelper.getDetailsRoute(  int.parse(sepeatedLink[1])));
 
   }
 
 
-  buildDynamicLinks(String title,String image,String docId) async {
-    String url = "https://abaad.page.link";
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: url,
-      link: Uri.parse('$url/$docId'),
-      androidParameters: AndroidParameters(
-        packageName: "com.dotcoder.dynamic_link_example",
-        minimumVersion: 0,
-      ),
-      iosParameters: IosParameters(
-        bundleId: "Bundle-ID",
-        minimumVersion: '0',
-      ),
-      socialMetaTagParameters: SocialMetaTagParameters(
-          description: '',
-          imageUrl:
-          Uri.parse("$image"),
-          title: title),
-    );
-    final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
 
-    String desc = '${dynamicUrl.shortUrl.toString()}';
-
-    await Share.share(desc, subject: title,);
-
-  }
 }

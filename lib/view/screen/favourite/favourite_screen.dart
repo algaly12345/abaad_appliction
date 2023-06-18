@@ -6,6 +6,7 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/details_dilog.dart';
 import 'package:abaad/view/base/estate_item.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
@@ -45,8 +46,9 @@ class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProv
               return  GetBuilder<WishListController>(builder: (wishController) {
                 return  EstateItem(estate: wishController.wishRestList[index],onPressed: (){
                   // Get.find<UserController>().getUserInfoByID(wishController.wishRestList[index].userId);
-                Get.dialog(DettailsDilog(estate:wishController.wishRestList[index]));
-               //  Get.toNamed(RouteHelper.getDetailsRoute( int.parse(wishController.wishRestList[index].estate_id),wishController.wishRestList[index].userId));
+            //    Get.dialog(DettailsDilog(estate:wishController.wishRestList[index]));
+               //   showCustomSnackBar("${wishController.wishRestList[index].estate_id}");
+              Get.toNamed(RouteHelper.getDetailsRoute( int.parse(wishController.wishRestList[index].estate_id)));
                 },fav: true,);
               });
             },

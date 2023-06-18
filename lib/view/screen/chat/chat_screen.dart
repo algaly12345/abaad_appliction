@@ -16,7 +16,9 @@ import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/paginated_list_view.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
+import 'package:abaad/view/screen/chat/widget/fetch_preview.dart';
 import 'package:abaad/view/screen/chat/widget/message_bubble.dart';
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -28,7 +30,8 @@ class ChatScreen extends StatefulWidget {
   final int conversationID;
   final int index;
   final String  estate_id;
-  const ChatScreen({@required this.notificationBody, @required this.user, this.conversationID, this.index,this.estate_id});
+  final String link;
+  const ChatScreen({@required this.notificationBody, @required this.user, this.conversationID, this.index,this.estate_id,this.link});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -39,6 +42,10 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _inputMessageController = TextEditingController();
   bool _isLoggedIn;
   StreamSubscription _stream;
+  String url;
+  var data;
+  final String _errorImage =
+      "https://i.ytimg.com/vi/z8wrRRR7_qU/maxresdefault.jpg";
 
   @override
   void initState() {
@@ -54,7 +61,19 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     }
 
-    print("----------------------------estate${widget.estate_id}");
+   // _getMetadata(widget.link);
+
+    if(widget.link=="null"){
+
+      _inputMessageController.text="";
+
+      // _inputMessageController.text=widget.link;
+    }else{
+      setState(() {
+      });
+      Get.find<ChatController>().toggleSendButtonActivity();
+      _inputMessageController.text=widget.link;
+    }
 
   }
 
@@ -66,6 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return GetBuilder<ChatController>(builder: (chatController) {
       String _baseUrl = '';
       if(widget.notificationBody.adminId != null) {
@@ -184,7 +204,15 @@ class _ChatScreenState extends State<ChatScreen> {
                             }),
                       ) : SizedBox();
                     }),
+                    AnyLinkPreview(
 
+                      link: widget.link,
+                      displayDirection: UIDirection.uiDirectionHorizontal,
+                      cache: Duration(hours: 1),
+                      backgroundColor: Colors.grey[300],
+                      errorWidget: SizedBox(),
+                      errorImage: _errorImage,
+                    ),
                     Row(children: [
 
                       InkWell(
@@ -211,6 +239,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           style: robotoRegular,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
+
                           decoration: InputDecoration(
                             border: InputBorder.none,
 
@@ -225,6 +254,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             }
                           },
                           onChanged: (String newText) {
+
                             if(newText.trim().isNotEmpty && !Get.find<ChatController>().isSendButtonActive) {
                               Get.find<ChatController>().toggleSendButtonActivity();
                             }else if(newText.isEmpty && Get.find<ChatController>().isSendButtonActive) {
@@ -273,4 +303,30 @@ class _ChatScreenState extends State<ChatScreen> {
       );
     });
   }
+
+  // void _getMetadata(String url) async {
+  //   bool _isValid = _getUrlValid(url);
+  //   if (_isValid) {
+  //     Metadata _metadata = await AnyLinkPreview.getMetadata(
+  //       link: url,
+  //       cache: Duration(days: 7),
+  //       proxyUrl: "https://cors-anywhere.herokuapp.com/", // Needed for web app
+  //     );
+  //     debugPrint("URL6 => ${_metadata?.title}");
+  //     debugPrint(_metadata?.desc);
+  //   } else {
+  //     debugPrint("URL is not valid");
+  //   }
+  // }
+
+  bool _getUrlValid(String url) {
+    bool _isUrlValid = AnyLinkPreview.isValidLink(
+      url,
+      protocols: ['http', 'https'],
+      hostWhitelist: ['https://youtube.com/'],
+      hostBlacklist: ['https://facebook.com/'],
+    );
+    return _isUrlValid;
+  }
+
 }

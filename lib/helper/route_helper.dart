@@ -122,7 +122,7 @@ class RouteHelper {
 
 
 
-  static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id}) {
+  static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id,String link}) {
     String _notificationBody = 'null';
     if(notificationBody != null) {
       _notificationBody = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));
@@ -131,7 +131,7 @@ class RouteHelper {
     if(user != null) {
       _user = base64Encode(utf8.encode(jsonEncode(user.toJson())));
     }
-    return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index&estate_id=$estate_id';
+    return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index&estate_id=$estate_id&link=$link';
   }
   static String getProfileAgentRoute(int id) => '$marketer?id=$id';
   static List<GetPage> routes = [
@@ -213,7 +213,7 @@ class RouteHelper {
         notificationBody: _notificationBody,
         user: _user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']) : null,
         conversationID: (Get.parameters['conversation_id'] != null && Get.parameters['conversation_id'] != 'null') ? int.parse(Get.parameters['conversation_id']) : null,
-        estate_id:  Get.parameters['estate_id'] != 'null' ?Get.parameters['estate_id'] : null);
+        estate_id:  Get.parameters['estate_id'] != 'null' ?Get.parameters['estate_id']: null ,link:Get.parameters['like'] != 'null' ?Get.parameters['link']: null );
     }),
     GetPage(name: estate, page: () {
       return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])) ,);

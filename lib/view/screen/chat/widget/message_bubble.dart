@@ -10,9 +10,11 @@ import 'package:abaad/helper/user_type.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/screen/chat/widget/image_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MessageBubble extends StatelessWidget {
   final Message message;
@@ -50,17 +52,28 @@ class MessageBubble extends StatelessWidget {
             child: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
 
               if(message.message != null) Flexible(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).secondaryHeaderColor,
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(Dimensions.RADIUS_DEFAULT),
-                      topRight: Radius.circular(Dimensions.RADIUS_DEFAULT),
-                      bottomLeft: Radius.circular(Dimensions.RADIUS_DEFAULT),
+                child: GestureDetector(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(Dimensions.RADIUS_DEFAULT),
+                        topRight: Radius.circular(Dimensions.RADIUS_DEFAULT),
+                        bottomLeft: Radius.circular(Dimensions.RADIUS_DEFAULT),
+                      ),
                     ),
+                    padding: EdgeInsets.all(message.message != null ? Dimensions.PADDING_SIZE_DEFAULT : 0),
+                    child: GestureDetector( onTap: () async{
+    showCustomSnackBar(message.message);
+    var url =message.message;
+    if (await canLaunch(url)) {
+    await launch(url);
+    } else {
+    throw 'Could not launch $url';
+    }
+    },
+                        child: Text(message.message ?? '')),
                   ),
-                  padding: EdgeInsets.all(message.message != null ? Dimensions.PADDING_SIZE_DEFAULT : 0),
-                  child: Text(message.message ?? ''),
                 ),
               ),
               SizedBox(height: 8.0),
@@ -136,7 +149,16 @@ class MessageBubble extends StatelessWidget {
                     ),
                     child: Container(
                       padding: EdgeInsets.all(message.message != null ? Dimensions.PADDING_SIZE_DEFAULT : 0),
-                      child: Text(message.message ?? ''),
+                      child: GestureDetector(
+                          onTap: () async{
+                            showCustomSnackBar(message.message);
+                            var url =message.message;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          },                          child: Text(message.message ?? '')),
                     ),
                   ),
                 ) : SizedBox(),

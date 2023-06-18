@@ -55,12 +55,7 @@ class _EstateDetailsState extends State<EstateDetails> {
     super.initState();
 
     _isLoggedIn = Get.find<AuthController>().isLoggedIn();
-
-
-
-
-
-
+    Get.find<EstateController>().getEstateDetails(Estate(id:  widget.estate.id));
 
     getAddressFromLatLang(26.439280,50.094460);
 
@@ -945,7 +940,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                             Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                             //  Text("${ _isLoggedIn ? '${userController.agentInfoModel.name}' : 'guest'.tr}", style: robotoMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
                               Text(
-                           '${userController.agentInfoModel.name}',
+                           '${estateController.estate.users.name}',
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),),
                               SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 

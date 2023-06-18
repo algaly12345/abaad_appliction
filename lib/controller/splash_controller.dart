@@ -31,7 +31,7 @@ class SplashController extends GetxController implements GetxService {
 
       _isSuccess = true;
     }else {
-      ApiChecker.checkApi(response);
+     ApiChecker.checkApi(response);
       if(response.statusText == ApiClient.noInternetMessage) {
         _hasConnection = false;
       }

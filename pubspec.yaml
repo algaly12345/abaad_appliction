@@ -92,6 +92,7 @@ dependencies:
   share:
   marker_icon: any
   launch_review: ^3.0.1
+  any_link_preview: ^3.0.0
 
 
 
