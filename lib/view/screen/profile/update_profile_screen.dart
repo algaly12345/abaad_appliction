@@ -138,6 +138,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   nextFocus: _lastNameFocus,
                   inputType: TextInputType.name,
                   capitalization: TextCapitalization.words,
+                  showBorder: true,
                 ),
 
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
@@ -153,6 +154,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   focusNode: _emailFocus,
                   inputAction: TextInputAction.done,
                   inputType: TextInputType.emailAddress,
+                  showBorder: true,
                 ),
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
@@ -174,6 +176,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   controller: _phoneController,
                   focusNode: _phoneFocus,
                   inputType: TextInputType.phone,
+                  showBorder: true,
                   isEnabled: false,
                 ),
 
@@ -200,6 +203,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   focusNode: _userTypeFocus,
                   inputType: TextInputType.phone,
                   isEnabled: false,
+                  showBorder: true,
                 ),
 
 
@@ -219,12 +223,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   nextFocus: _snapchatFocus,
                   inputType: TextInputType.name,
                   capitalization: TextCapitalization.words,
+                  showBorder: true,
                 ),
 
 
                 SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                 Text(
-                  'snapchat'.tr,
+                  'اسم المستخدم سناب شات'.tr,
                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                 ),
                 SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -235,6 +240,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   nextFocus: _instagramFocus,
                   inputType: TextInputType.name,
                   capitalization: TextCapitalization.words,
+                  showBorder: true,
                 ),
 
 
@@ -252,6 +258,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   nextFocus: _websiteFocus,
                   inputType: TextInputType.name,
                   capitalization: TextCapitalization.words,
+                  showBorder: true,
                 ),
 
 
@@ -268,6 +275,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   focusNode: _websiteFocus,
                   nextFocus: _tiktokFocus,
                   inputType: TextInputType.name,
+                  showBorder: true,
                   capitalization: TextCapitalization.words,
                 ),
 
@@ -275,16 +283,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
                 SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                 Text(
-                  'tiktok'.tr,
+                  'اسم المستخدم في tiktok'.tr,
                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                 ),
                 SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                 MyTextField(
-                  hintText: 'tiktok'.tr,
+                  hintText: 'ادخل المستخدم'.tr,
                   controller: _tiktokController,
                   focusNode: _tiktokFocus,
                   nextFocus: _twitterFocus,
                   inputType: TextInputType.name,
+                  showBorder: true,
                   capitalization: TextCapitalization.words,
                 ),
 
@@ -301,6 +310,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   controller: _twitterController,
                   focusNode: _twitterFocus,
                   nextFocus: _twitterFocus,
+                  showBorder: true,
+
                   inputType: TextInputType.name,
                   capitalization: TextCapitalization.words,
                 ),
@@ -355,7 +366,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           phone: _phoneNumber,
           snapchat: _snapchatController.text.trim(),
         youtube: _youtubeController.text.trim(),
-        tiktok: _twitterController.text.trim(),
+        tiktok: _tiktokController.text.trim(),
         instagram: _instagramController.text.trim(),
         website: _websiteController.text.trim(),
           twitter: _twitterController.text.trim()

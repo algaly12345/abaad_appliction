@@ -9,6 +9,7 @@ import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/localization_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
@@ -598,7 +599,7 @@ class _MapViewScreenState extends State<MapScreen> {
                         left: 15.0,
                         child: FlipCard(
                           front: Container(
-                            height: 250.0,
+                            height: 180.0,
                             width: 175.0,
                             decoration: const BoxDecoration(
                                 color: Colors.white,
@@ -607,7 +608,7 @@ class _MapViewScreenState extends State<MapScreen> {
                             child: SingleChildScrollView(
                               child: Column(children: [
                                 Container(
-                                  height: 150.0,
+                                  height: 110.0,
                                   width: 175.0,
                                   decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -629,7 +630,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                       SizedBox(
                                         width: 150,
                                         child: Text(
-                                          "يتضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 11),
+                                          "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 10),
                                         ),
                                       ),
                                     ],
@@ -646,9 +647,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                   borderRadius: BorderRadius.circular(8.0)),
                               child:Column(
                                 children: [
-                                  // for (int i = 0; i < _products.length; i++)
-                                  //   ServiceProviderItem(estate:_products[i],serviceOffers:_products[i].serviceOffers,
-                                  //   ),
+                                  ServiceProviderItem(estate:estate),
                                 ],
                               )
 
@@ -987,7 +986,7 @@ class _MapViewScreenState extends State<MapScreen> {
                         left: 15.0,
                         child: FlipCard(
                           front: Container(
-                            height: 250.0,
+                            height: 180.0,
                             width: 175.0,
                             decoration: const BoxDecoration(
                                 color: Colors.white,
@@ -996,7 +995,7 @@ class _MapViewScreenState extends State<MapScreen> {
                             child: SingleChildScrollView(
                               child: Column(children: [
                                 Container(
-                                  height: 150.0,
+                                  height: 110.0,
                                   width: 175.0,
                                   decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -1018,7 +1017,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                       SizedBox(
                                         width: 150,
                                         child: Text(
-                                          "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 11),
+                                          "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 10),
                                         ),
                                       ),
                                     ],
@@ -1289,91 +1288,88 @@ if(cardTapped==true){
 
 
               },
-              child: Column(
+              child:      Column(
                 children: [
-                  Column(
-                    children: [
-                      Container(
+                  Container(
 
-                        width: context.width,
-                        child: _products[index].serviceOffers.length>0? SizedBox(
-                          height: 35,
+                    width: context.width,
+                    child: _products[index].serviceOffers.length>0? SizedBox(
+                      height: 35,
 
-                          child: Container(
+                      child: Container(
 
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              border: Border.all(width: 2, color: Colors.orangeAccent),
-                              color: Colors.white,
-                            ),
-                            child: GestureDetector(
-                              onTap: () async {
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 2, color: Colors.orangeAccent),
+                          color: Colors.white,
+                        ),
+                        child: GestureDetector(
+                          onTap: () async {
 
-                              },
+                          },
 
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Image.asset(Images.offer_icon, height: 35, width: 40),
-                                      Text("يتضمن عرض ",style: robotoBlack.copyWith(fontSize: 11)),
-                                    ],
-                                  ),
-                                  Center(
-                                    child:      SizedBox(
-
-                                      child: Row(
-                                        children: [
-                                          for (var i = 0; i < 1; i++)
-
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(width: 1, color: Theme.of(context).primaryColor),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              alignment: Alignment.topRight,
-                                              child: ClipOval(child: CustomImage(
-                                                image: '${Get.find<SplashController>().configModel.baseUrls.provider}'
-                                                    '/${(_products[index].serviceOffers[i].image!=null)? _products[index].serviceOffers[i].image:Images.image}',
-                                                height: 27, width: 27, fit: BoxFit.cover,
-                                              )),
-                                            ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Theme.of(context).primaryColor),
-                              shape: BoxShape.circle,
-                            ),
-                          child: Center(child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: (Text("${ _products[index].serviceOffers.length}+")),
-                          ),),)
-
-
-
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
+                                  Image.asset(Images.offer_icon, height: 35, width: 40),
+                                  Text("يتضمن عرض ",style: robotoBlack.copyWith(fontSize: 11)),
                                 ],
                               ),
-                            ),
+                              Center(
+                                child:      SizedBox(
+
+                                  child: Row(
+                                    children: [
+                                      for (var i = 0; i < 1; i++)
+
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(width: 1, color: Theme.of(context).primaryColor),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          alignment: Alignment.topRight,
+                                          child: ClipOval(child: CustomImage(
+                                            image: '${Get.find<SplashController>().configModel.baseUrls.provider}'
+                                                '/${(_products[index].serviceOffers[i].image!=null)? _products[index].serviceOffers[i].image:Images.image}',
+                                            height: 27, width: 27, fit: BoxFit.cover,
+                                          )),
+                                        ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(width: 1, color: Theme.of(context).primaryColor),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Center(child: Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: (Text("${ _products[index].serviceOffers.length}+")),
+                                        ),),)
+
+
+
+
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                            ],
                           ),
-                        ):SizedBox(
-                          height: 35,
                         ),
                       ),
-                      Center(
-                        child:   EstateItem(estate: _products[index],onPressed: (){
-                          // showCustomSnackBar("${ _products[index].title}");
-                          Get.dialog(DettailsDilog(estate:_products[index]));
-                          // Get.toNamed(RouteHelper.getDetailsRoute( _products[index].id,_products[index].userId));
-                        },fav: false,),
-                      ),
-                    ],
-                  )
+                    ):SizedBox(
+                      height: 20,
+                    ),
+                  ),
+                  Center(
+                    child:   EstateItem(estate: _products[index],onPressed: (){
+                      Get.find<UserController>().getUserInfoByID(_products[index].userId );
+                      Get.find<UserController>().getEstateByUser(1, false,_products[index].userId );
+                      Get.dialog(DettailsDilog(estate:_products[index]));
+                      // Get.toNamed(RouteHelper.getDetailsRoute( _products[index].id,_products[index].userId));
+                    },fav: false,isMyProfile: 0),
+                  ),
                 ],
               ),
             ),

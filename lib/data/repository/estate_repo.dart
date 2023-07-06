@@ -76,6 +76,14 @@ class EstateRepo {
 
 
 
+  Future<Response> deleteEstate(int id) async {
+    return await apiClient.deleteData('${AppConstants.DELETE_ESTATE_URI}?id=$id');
+  }
+  Future<Response> getCategoryList() async {
+    return await apiClient.getData(AppConstants.CATEGORIES);
+  }
+
+
 
 
 }

@@ -916,7 +916,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                       SizedBox(height: 6),
                       GestureDetector(
                         onTap: () async{
-                          await Get.toNamed(RouteHelper.getProfileAgentRoute(estateController.estate.userId));
+                          await Get.toNamed(RouteHelper.getProfileAgentRoute(estateController.estate.userId,0));
                         },
                         child: Container(
                           margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
@@ -947,15 +947,15 @@ class _EstateDetailsState extends State<EstateDetails> {
                               Row(children: [
 
                                 Container(
-                                  height: 25, width: 70, alignment: Alignment.center,
+                                  height: 25, alignment: Alignment.center,
+                                  padding:  EdgeInsets.only(right: 4,left: 4),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).primaryColor,
                                     borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                                   ),
                                   child: Center(
-                                    child: Text(estateController.estate.ownershipType, style: robotoBold.copyWith(
-                                      color: Theme.of(context).cardColor,
-                                      fontSize: Dimensions.fontSizeLarge,
+                                    child: Text(userController.userInfoModel.membershipType, style: robotoBold.copyWith(
+                                      color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeDefault,
                                     )),
                                   ),
                                 ),
@@ -974,10 +974,10 @@ class _EstateDetailsState extends State<EstateDetails> {
                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                                  ),
                                  SizedBox(width: 20),
-                                 // Text(
-                                 //   userController.agentInfoModel.agent.advertiserNo==null?"":userController.agentInfoModel.agent.advertiserNo,
-                                 //   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                                 // ),
+                                 Text(
+                                   userController.userInfoModel.advertiserNo==null?"":  userController.userInfoModel.advertiserNo,
+                                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                 ),
                                ],
                              ),
                               Row(

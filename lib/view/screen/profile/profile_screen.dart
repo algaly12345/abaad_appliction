@@ -46,10 +46,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
 
-    List<Widget> array = [];
-    var filled = Colors.blue;
-    var empty = Colors.black;
-
     return Scaffold(
       appBar:  CustomAppBar(title: 'profile'.tr),
       backgroundColor: Theme.of(context).cardColor,
@@ -95,21 +91,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
           mainWidget: SingleChildScrollView(physics: BouncingScrollPhysics(), child: Center(child: Container(
-
             width: Dimensions.WEB_MAX_WIDTH, color: Theme.of(context).cardColor,
             padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
             child: Column(children: [
 
-
               SizedBox(height: 10),
-
               _isLoggedIn ? Column(children: [
 
-
                 Row(children: [
-                  ProfileCard(title: 'setting_profile'.tr, image: Images.setting_profile),
+                  ProfileCard(title: 'setting_profile'.tr, image: Images.setting_profile,index: 1),
                   SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                  ProfileCard(title: 'wallet'.tr, image: Images.property_profile),
+                  ProfileCard(title: 'wallet'.tr, image: Images.property_profile,index:2),
                 ]),
               ]) : SizedBox(),
               SizedBox(height: _isLoggedIn ? 30 : 0),
@@ -125,9 +117,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ProfileButton(icon: Icons.generating_tokens, title: 'your_rating'.tr, isButtonActive: Get.isDarkMode, onTap: () {
                 LaunchReview.launch(
                     androidAppId: "sa.pdm.abaad.abaad", iOSAppId: '33443434');
-
-
-
               }),
 
 
@@ -139,11 +128,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // }),
 
 
-              SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
-              ProfileButton(icon: Icons.subscriptions_outlined, title: 'subscribe_type'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                showCustomSnackBar("الإشتراك غير متاح حاليا");
+              _isLoggedIn ? SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5):Container(),
+              _isLoggedIn ? ProfileButton(icon: Icons.ads_click, title: 'إعلاناتي'.tr, isButtonActive: Get.isDarkMode, onTap: ()async {
+                Get.find<UserController>().getUserInfoByID(userController.userInfoModel.id );
+                 Get.toNamed(RouteHelper.getProfileAgentRoute(userController.userInfoModel.id ,1));
                 // Get.find<ThemeController>().toggleTheme();
-              }),
+              }):Container(),
+
+              // SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
+              // ProfileButton(icon: Icons.subscriptions_outlined, title: 'subscribe_type'.tr, isButtonActive: Get.isDarkMode, onTap: () {
+              //   showCustomSnackBar("الإشتراك غير متاح حاليا");
+              //   // Get.find<ThemeController>().toggleTheme();
+              // }),
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
               ProfileButton(icon: Icons.share, title: 'share_app'.tr, isButtonActive: Get.isDarkMode, onTap: () {
                 if (Platform.isIOS) {

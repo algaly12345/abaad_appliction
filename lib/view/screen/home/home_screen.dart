@@ -50,9 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Get.find<BannerController>().getBannerList(true,1);
    // Get.find<ZoneController>().geZonesList();
     scrollController?.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent
-          && Get.find<CategoryController>().categoryProductList != null
-          && !Get.find<CategoryController>().isLoading) {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent && Get.find<CategoryController>().categoryProductList != null && !Get.find<CategoryController>().isLoading) {
         int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
         if (offset < pageSize) {
           offset++;
@@ -96,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return (categoryController.subCategoryList != null) ? SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(right: 10, left: 10),
+            padding: const EdgeInsets.only(right: 5, left: 5),
             child:  Column(
               children: [
                 Row(

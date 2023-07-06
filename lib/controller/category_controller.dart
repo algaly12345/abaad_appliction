@@ -1,3 +1,4 @@
+import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
 import 'package:abaad/data/model/body/filter_body.dart';
 import 'package:abaad/data/model/response/category_model.dart';
@@ -232,6 +233,7 @@ class CategoryController extends GetxController implements GetxService {
       _categoryProductList.addAll(EstateModel.fromJson(response.body).estates);
       _pageSize = EstateModel.fromJson(response.body).totalSize;
       _estateModel = EstateModel.fromJson(response.body);
+      Get.find<EstateController>() .getCategoryList(response.body);
       _isLoading = false;
     } else {
       ApiChecker.checkApi(response);

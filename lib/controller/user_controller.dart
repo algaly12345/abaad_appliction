@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
 import 'package:abaad/data/model/response/conversation_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
@@ -236,6 +237,7 @@ class UserController extends GetxController implements GetxService {
         _estateModel.estates.addAll(EstateModel
             .fromJson(response.body)
             .estates);
+        Get.find<EstateController>() .getCategoryList(response.body);
       }
       update();
     } else {

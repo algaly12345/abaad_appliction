@@ -1,4 +1,5 @@
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
@@ -6,9 +7,11 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/screen/estate/widgets/estate_image_view.dart';
+import 'package:abaad/view/screen/profile/edit_dilog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/get_utils.dart';
@@ -17,14 +20,16 @@ import 'package:image_stack/image_stack.dart';
 class EstateItem extends StatelessWidget {
  final  Estate estate;
  final  bool fav;
+ final int  isMyProfile;
  final void Function() onPressed;
 
 
-  const EstateItem({@required this.estate,this.onPressed,this.fav});
+  const EstateItem({@required this.estate,this.onPressed,this.fav,this.isMyProfile});
 
   @override
   Widget build(BuildContext context) {
 
+    print("-------------------------------------------$isMyProfile");
     return  InkWell(
       onTap:onPressed,
       child: Container(
@@ -139,7 +144,42 @@ class EstateItem extends StatelessWidget {
                                               );
                                             }),
                                           ):Container(),
-                                          Container(
+
+                                          isMyProfile==1?Column(
+                                            children: [
+                                              ElevatedButton(
+                                                onPressed: () {
+                            Get.dialog(ConfirmationDialog(icon: Images.support,
+                            title: 'are_you_sure_to_delete_account'.tr,
+                            description: 'it_will_remove_your_all_information'.tr, isLogOut: true,
+                            onYesPressed: () => Get.find<EstateController>().deleteProduct(estate.id),
+                          ), useSafeArea: false);
+        },
+                                                child: Icon(Icons.delete_forever, color: Colors.white),
+                                                style: ElevatedButton.styleFrom(
+                                                  shape: CircleBorder(),
+                                                  backgroundColor: Colors.blue, // <-- Button color
+                                                  foregroundColor: Colors.red, // <-- Splash color
+
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: ()async {
+                                                  Get.find<EstateController>().currentIndex==0;
+                                                  Get.find<EstateController>().categoryIndex==0;
+                                              await    Get.dialog(EditDialog(estate:estate));
+                                                },
+                                                child: Icon(Icons.edit_note_rounded, color: Colors.white),
+                                                style: ElevatedButton.styleFrom(
+                                                  shape: CircleBorder(),
+                                                  backgroundColor: Colors.blue, // <-- Button color
+                                                  foregroundColor: Colors.red, // <-- Splash color
+
+                                                ),
+                                              ),
+                                            ],
+
+                                          ): Container(
                                             width: 40,
                                             margin: const EdgeInsets.only(top: 10),
                                             decoration:  BoxDecoration(
@@ -172,6 +212,22 @@ class EstateItem extends StatelessWidget {
                                         style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
                                   ],
 
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      Text("رقم الإعلان :",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                                      SizedBox(
+                                        width: 4.0,
+                                      ),
+                                      Text("${estate.adNumber}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                                      // IconButton(onPressed:(){
+                                      //   FlutterClipboard.copy(estate.adNumber.toString()).then(( value ) {
+                                      //     showCustomSnackBar('تم النسخ'.tr, isError: false);
+                                      //   });
+                                      // }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,size: 11,)),
+                                    ],
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 7.0,

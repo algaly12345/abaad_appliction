@@ -305,6 +305,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               underline: SizedBox(),
                             ),
                           ),
+
+
+
                         ])),
                         SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 

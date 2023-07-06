@@ -9,6 +9,7 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/details_dilog.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
@@ -98,27 +99,43 @@ class PropertyCard extends StatelessWidget {
                               padding: const EdgeInsets.only(right: 4,left: 4),
                               child: Text("يتصمن عرض", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).backgroundColor),),
                             ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 4,left: 4),
-                            child: Image.asset(Images.vt_offer, height: 14, width: 14),
-                          ),
+
                           ],
                         ),
                       ),
                     ):Container() ,
-                    estate.serviceOffers.length >0?   Positioned(
-                      bottom: -15.0,
+
+                    estate.arPath !=null?   Positioned(
+                      bottom: 1.0,
                       left: 10.0,
                       child:    Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 1, color: Theme.of(context).primaryColor),
-                            shape: BoxShape.circle,
-                          ),
-                          alignment: Alignment.topRight,
-                          child: ClipOval(child:
-                          Image.asset(estate.serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 20, width: 20),),
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1, color: Theme.of(context).primaryColor),
+                                shape: BoxShape.circle,
+                              ),
+                              alignment: Alignment.topRight,
+                              child: ClipOval(child:
+                              Image.asset(estate.serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 20, width: 20),),
+                            ),
+                            Container(
+
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: Colors.orange),
+                              child: Row(
+                                children: [
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4,left: 4),
+                                    child: Text("3D", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).backgroundColor),),
+                                  ),
+
+                                ],
+                              ),
+                            )
+                          ],
                         ),
                       ),
 
@@ -128,7 +145,7 @@ class PropertyCard extends StatelessWidget {
               ),
               SizedBox(height: 6),
               Container(
-                padding: EdgeInsets.symmetric(vertical: 6.0),
+
                 child: Column(
                   crossAxisAlignment:
                   CrossAxisAlignment.start,
@@ -181,8 +198,29 @@ class PropertyCard extends StatelessWidget {
                           "${estate.title}",
                           style: robotoBlack.copyWith(fontSize: 12),
                         ),
+                        SizedBox(
+                          width: 20.0,
+                        ),
+
+                        Container(
+                          child: Row(
+                            children: [
+                              Text("رقم الإعلان :",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                              SizedBox(
+                                width: 4.0,
+                              ),
+                              Text("${estate.adNumber}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                              // IconButton(onPressed:(){
+                              //   FlutterClipboard.copy(estate.adNumber.toString()).then(( value ) {
+                              //     showCustomSnackBar('تم النسخ'.tr, isError: false);
+                              //   });
+                              // }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,size: 11,)),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
+
                     estate.category=="5"?     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text("${estate.shortDescription}", style: robotoBlack.copyWith(fontSize: 12)),
@@ -386,7 +424,8 @@ class PropertyCard extends StatelessWidget {
                     },
                   ),
                 ),
-              ):Container():   Container()
+              ):Container():   Container(),
+
             ],
           ),
         ),

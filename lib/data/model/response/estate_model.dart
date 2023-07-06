@@ -485,8 +485,10 @@ class Users {
   String email;
   String phone;
   String image;
+  String membershipType;
+  String advertiserNo;
 
-  Users({this.name, this.email, this.phone, this.image});
+  Users({this.name, this.email, this.phone, this.image,this.membershipType,this.advertiserNo});
 
   Users.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -494,6 +496,9 @@ class Users {
     email = json['email'];
     phone = json['phone'];
     image = json['image'];
+    membershipType = json['membership_type'];
+    advertiserNo=json['advertiser_no'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -503,6 +508,8 @@ class Users {
     data['email'] = this.email;
     data['phone'] = this.phone;
     data['image'] = this.image;
+    data['membership_type'] = this.membershipType;
+    data['advertiser_no']=this.advertiserNo;
     return data;
   }
 }

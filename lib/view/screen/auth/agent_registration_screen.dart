@@ -62,7 +62,7 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
       body: Get.find<AuthController>().isLoggedIn() ? GetBuilder<AuthController>(builder: (authController) {
     return  GetBuilder<UserController>(builder: (userController) {
     return (_isLoggedIn && userController.userInfoModel == null) ? Center(child: CircularProgressIndicator()) :
-    userController.userInfoModel.userType=="agent" ? Column(children: [
+  Column(children: [
 
           Expanded(child: SingleChildScrollView(
             padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
@@ -112,7 +112,6 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
                             items: <String>[
                               'هوية وطنية',
                               'سجل تجاري',
-                              'هوية وطنية '
                             ].map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -134,56 +133,6 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
                           ),
                         ),
                       ]),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                  _documentTypeValue != "سجل تجاري" ? Container() : Row(children: [
-                    Expanded(child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'membership_type'.tr,
-                            style: robotoRegular.copyWith(
-                                fontSize: Dimensions.fontSizeSmall),
-                          ),
-                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimensions.PADDING_SIZE_SMALL),
-                            decoration: BoxDecoration(
-                              color: Theme
-                                  .of(context)
-                                  .cardColor,
-                              borderRadius: BorderRadius.circular(
-                                  Dimensions.RADIUS_SMALL),
-                              boxShadow: [
-                                BoxShadow(color: Colors.grey[Get.isDarkMode
-                                    ? 800
-                                    : 200],
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 5))
-                              ],
-                            ),
-                            child: DropdownButton<String>(
-                              value: authController.dmTypeList[authController
-                                  .dmTypeIndex],
-                              items: authController.dmTypeList.map((
-                                  String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value.tr),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                authController.setDMTypeIndex(value, true);
-                                _membershipType=value;
-                              },
-                              isExpanded: true,
-                              underline: SizedBox(),
-                            ),
-                          ),
-                        ])),
-
-                  ]),
                   SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                   Row(children: [
@@ -227,7 +176,7 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
             onPressed: () => _addAgent(authController),
           ) : Center(child: CircularProgressIndicator()),
 
-        ]):Center(child: Text("تواصل مع الدعم الفني"),);
+        ]);
       });
       }): NotLoggedInScreen(),
     );

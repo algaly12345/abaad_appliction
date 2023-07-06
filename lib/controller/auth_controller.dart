@@ -41,7 +41,7 @@ class AuthController extends GetxController implements GetxService {
 
   final List<String> _identityTypeList = ['هوية وطنية', 'سجل تجاري', 'هوية وطنية '];
   int _identityTypeIndex = 0;
-  final List<String> _dmTypeList = ['مكتب عقاري', 'شركة'];
+  final List<String> _dmTypeList = ['مالك عقار', 'وسيط عقاري'];
   bool isFirstTime = true;
   int _dmTypeIndex = 0;
 

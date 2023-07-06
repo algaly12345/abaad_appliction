@@ -41,11 +41,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _referCodeController = TextEditingController();
   String _countryDialCode;
+  String _membershipType;
 
   @override
   void initState() {
     super.initState();
-
+   // Get.find<AuthController>().zoneList.;
     _countryDialCode = CountryCode.fromCountryCode(Get.find<SplashController>().configModel.country).dialCode;
   }
 
@@ -70,11 +71,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 return Column(children: [
 
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-                  Image.asset(Images.logo, width: 140),
+                  Image.asset(Images.logo, width: 130),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                   const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
 
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
 
                   Container(
                     decoration: BoxDecoration(
@@ -89,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           Text(
                             'full_name'.tr,
-                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
                           ),
                           CustomTextField(
                             hintText: 'ali'.tr,
@@ -119,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           Text(
                             'email'.tr,
-                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
                           ),
                           CustomTextField(
                             hintText: 'ali4322@hostmail.com(إختياري)',
@@ -137,7 +138,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           Text(
                             'phone'.tr,
-                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
                           ),
                           SizedBox(height: 4),
                           Directionality(
@@ -233,33 +234,90 @@ class _SignUpScreenState extends State<SignUpScreen> {
                return    Container(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(
                       'zone'.tr,
-                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                     authController.zoneList != null ? Container(
                       padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                       decoration: BoxDecoration(
+
                         color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+
                         boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
+
                       ),
                       child: DropdownButton<int>(
                         value: authController.selectedZoneIndex,
+                        hint: const Text("اختر المنطقة"),
                         items: _zoneIndexList.map((int value) {
                           return DropdownMenuItem<int>(
+
                             value: value,
-                            child: Text(authController.zoneList[value].name),
+                            child: Text(value != 0 ? authController.zoneList[value].name: 'اختر المنطقة'),
+                            // child: Text(authController.zoneList[value].name),
+
                           );
                         }).toList(),
                         onChanged: (value) {
                           authController.setZoneIndex(value);
                         },
+
                         isExpanded: true,
+
                         underline: SizedBox(),
                       ),
                     ) : Center(child: CircularProgressIndicator()),
+
+
                   ]));
     }),
-
+                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'membership_type'.tr,
+                          style: robotoRegular.copyWith(
+                              fontSize: Dimensions.fontSizeSmall),
+                        ),
+                        SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimensions.PADDING_SIZE_SMALL),
+                          decoration: BoxDecoration(
+                            color: Theme
+                                .of(context)
+                                .cardColor,
+                            borderRadius: BorderRadius.circular(
+                                Dimensions.RADIUS_SMALL),
+                            boxShadow: [
+                              BoxShadow(color: Colors.grey[Get.isDarkMode
+                                  ? 800
+                                  : 200],
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 5))
+                            ],
+                          ),
+                          child: DropdownButton<String>(
+                            value: authController.dmTypeList[authController
+                                .dmTypeIndex],
+                            items: authController.dmTypeList.map((
+                                String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value.tr),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              authController.setDMTypeIndex(value, true);
+                              _membershipType=value;
+                            },
+                            isExpanded: true,
+                            underline: SizedBox(),
+                          ),
+                        ),
+                      ]),
                   ConditionCheckBox(authController: authController),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
@@ -325,7 +383,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }else {
       SignUpBody signUpBody = SignUpBody(
         fName: _fullName, email: _email, phone: _numberWithCountryCode, password: "1234567",
-        refCode: _referCode,zone_id:  authController.zoneList[authController.selectedZoneIndex].id
+        refCode: _referCode,zone_id:  authController.zoneList[authController.selectedZoneIndex].id,membershipType: authController.dmTypeList[authController.dmTypeIndex]
       );
       authController.registration(signUpBody).then((status) async {
         if (status.isSuccess) {

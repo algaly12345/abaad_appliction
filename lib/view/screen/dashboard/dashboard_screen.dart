@@ -119,7 +119,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // Get.find<UserController>().getUserInfo();
     // bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
-    return WillPopScope(
+    return
+      GetBuilder<UserController>(builder: (userController) {
+
+        return
+      WillPopScope(
       onWillPop: () async {
         if (_pageIndex != 0) {
           _setPage(0);
@@ -146,7 +150,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         appBar: WebMenuBar(ontop:()=>     _key.currentState.openDrawer(),),
         drawer: DrawerMenu(),
 
-        floatingActionButton: Padding(
+        floatingActionButton:
+
+       Padding(
           padding: EdgeInsets.only(top: 20),
           child: SizedBox(
             height: 70,
@@ -155,7 +161,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               onPressed: () {
-                Get.toNamed(RouteHelper.getAddEstateRoute());
+
+                if(userController.userInfoModel.accountVerification != "0") {
+                  Get.toNamed(RouteHelper.getAddEstateRoute());
+                }else{
+                  Get.toNamed(RouteHelper.getAgentRegister());
+                }
+
               },
               child: Container(
                 height: 70,
@@ -177,6 +189,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ),
+
+
+
+
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
 
@@ -214,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
 
-
+      });
 
 
   }

@@ -13,39 +13,43 @@ class ProfileBgWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Container(
 
-      Stack(clipBehavior: Clip.none, children: [
+      child: Column(
+          children: [
 
-        SizedBox(
-          width: context.width, height: 100,
-         // child: Center(child: Image.asset(Images.profile_bg, height: 260, width: Dimensions.WEB_MAX_WIDTH, fit: BoxFit.fill)),
-        ),
+        Stack(clipBehavior: Clip.none, children: [
 
-        Positioned(
-          top: 20, left: 0, right: 0, bottom: 0,
-          child: Center(
-            child: Container(
-              width: Dimensions.WEB_MAX_WIDTH,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
-                color: Theme.of(context).cardColor,
+          SizedBox(
+            width: context.width, height: 100,
+           // child: Center(child: Image.asset(Images.profile_bg, height: 260, width: Dimensions.WEB_MAX_WIDTH, fit: BoxFit.fill)),
+          ),
+
+          Positioned(
+            top: 20, left: 0, right: 0, bottom: 0,
+            child: Center(
+              child: Container(
+                width: Dimensions.WEB_MAX_WIDTH,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
+                  color: Theme.of(context).cardColor,
+                ),
               ),
             ),
           ),
-        ),
 
-        Align(
-          alignment: Alignment.topLeft,
-          child: circularImage,
+          Align(
+            alignment: Alignment.topLeft,
+            child: circularImage,
+          ),
+
+        ]),
+
+        Expanded(
+          child: mainWidget,
         ),
 
       ]),
-
-      Expanded(
-        child: mainWidget,
-      ),
-
-    ]);
+    );
   }
 }

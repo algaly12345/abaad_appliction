@@ -894,7 +894,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
             GestureDetector(
               onTap: () async{
                 print("-------------------------------");
-            await    Get.toNamed(RouteHelper.getProfileAgentRoute(widget.estate.users.id));
+                Get.toNamed(RouteHelper.getProfileAgentRoute(widget.estate.users.id,0));
 
               },
               child:
@@ -928,15 +928,15 @@ class _DettailsDilogState extends State<DettailsDilog> {
                         Row(children: [
 
                           Container(
-                            height: 25, width: 70, alignment: Alignment.center,
+                            height: 25, alignment: Alignment.center,
+                            padding:  EdgeInsets.only(right: 4,left: 4),
                             decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor,
                               borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                             ),
                             child: Center(
-                              child: Text(widget.estate.ownershipType, style: robotoBold.copyWith(
-                                color: Theme.of(context).cardColor,
-                                fontSize: Dimensions.fontSizeLarge,
+                              child: Text(widget.estate.users.membershipType, style: robotoBold.copyWith(
+                                color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeDefault,
                               )),
                             ),
                           ),
@@ -955,10 +955,10 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                             ),
                             SizedBox(width: 20),
-                            // Text(
-                            //   userController.agentInfoModel.agent.advertiserNo==null?"":userController.agentInfoModel.agent.advertiserNo,
-                            //   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                            // ),
+                            Text(
+                              widget.estate.users.advertiserNo==null?"":widget.estate.users.advertiserNo,
+                              style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                            ),
                           ],
                         ),
                         Row(

@@ -49,7 +49,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> with SingleTickerProv
             //    Get.dialog(DettailsDilog(estate:wishController.wishRestList[index]));
                //   showCustomSnackBar("${wishController.wishRestList[index].estate_id}");
               Get.toNamed(RouteHelper.getDetailsRoute( int.parse(wishController.wishRestList[index].estate_id)));
-                },fav: true,);
+                },fav: true,isMyProfile: 0);
               });
             },
           ),

@@ -183,7 +183,7 @@ class _NearByViewState extends State<NearByView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  CustomAppBar(title: 'المرافق'.tr),
+      appBar:  CustomAppBar(title: 'المرافق المجاورة'.tr),
       body: Stack(
         children: [
           GoogleMap(

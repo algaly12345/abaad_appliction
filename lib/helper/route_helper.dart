@@ -133,7 +133,7 @@ class RouteHelper {
     }
     return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index&estate_id=$estate_id&link=$link';
   }
-  static String getProfileAgentRoute(int id) => '$marketer?id=$id';
+  static String getProfileAgentRoute(int id,int isMyProfile) => '$marketer?id=$id&isMyProfile=$isMyProfile';
   static List<GetPage> routes = [
      GetPage(name: initial, page: () => DashboardScreen(pageIndex: 0)),
     GetPage(name: splash, page: () {
@@ -226,10 +226,9 @@ class RouteHelper {
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
 
     GetPage(name: marketer, page: () {
-      return Get.arguments ?? AgentProfileScreen(userInfo: Userinfo(id: int.parse(Get.parameters['id'])) ,);
+      return Get.arguments ?? AgentProfileScreen(userInfo: Userinfo(id: int.parse(Get.parameters['id'])) ,isMyProfile:int.parse(Get.parameters['isMyProfile']));
     }),
   ];
-
 
 
   static String getUpdateRoute(bool isUpdate) => '$update?update=${isUpdate.toString()}';

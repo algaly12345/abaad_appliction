@@ -25,6 +25,9 @@ class UserInfoModel {
   String twitter;
 
   Userinfo agent;
+  String membershipType;
+  String accountVerification;
+  String advertiserNo;
 
   UserInfoModel(
       {this.id,
@@ -50,7 +53,10 @@ class UserInfoModel {
         this.instagram,
         this.website,
         this.tiktok,
-        this.twitter});
+        this.twitter,
+      this.membershipType,
+      this.accountVerification,
+      this.advertiserNo});
 
   UserInfoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -66,6 +72,8 @@ class UserInfoModel {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     image = json['image'];
+
+
     userinfo = json['userinfo'] != null
         ? new Userinfo.fromJson(json['userinfo'])
         : null;
@@ -80,6 +88,9 @@ class UserInfoModel {
     website = json['website'];
     tiktok = json['tiktok'];
     twitter = json['twitter'];
+    membershipType = json['membership_type'];
+    accountVerification=json['account_verification'];
+    advertiserNo=json['advertiser_no'];
   }
 
   Map<String, dynamic> toJson() {
@@ -105,7 +116,9 @@ class UserInfoModel {
     data['website'] = this.website;
     data['tiktok'] = this.tiktok;
     data['twitter'] = this.twitter;
-
+    data['membership_type'] = this.membershipType;
+    data['account_verification']=this.accountVerification;
+    data['advertiser_no']=this.advertiserNo;
 
     if (this.userinfo != null) {
       data['userinfo'] = this.userinfo.toJson();

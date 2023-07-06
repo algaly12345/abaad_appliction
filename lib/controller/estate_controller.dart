@@ -8,6 +8,7 @@ import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/repository/estate_repo.dart';
 import 'package:abaad/helper/route_helper.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -52,7 +53,7 @@ class EstateController extends GetxController implements GetxService {
   int _currentIndex = 0;
   String _address;
 
-
+  List<int> _categoryIds = [];
 
   List<String> _tagList = [];
   List<String> options = [
@@ -109,7 +110,7 @@ class EstateController extends GetxController implements GetxService {
   String get address => _address;
 
   List<bool> get advantagesSelectedList => _advantagesSelectedList;
-
+  List<int> get categoryIds => _categoryIds;
   Estate get restaurant => _restaurant;
 
 
@@ -325,7 +326,7 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
-  Future<void> registerRestaurant(EstateBody restaurantBody) async {
+  Future<void> registerEstate(EstateBody restaurantBody) async {
     _isLoading = true;
     update();
     List<MultipartBody> _multiParts = [];
@@ -355,6 +356,21 @@ class EstateController extends GetxController implements GetxService {
 
 
 
+  Future<void> deleteProduct(int estate_id) async {
+    _isLoading = true;
+    update();
+    Response response = await estateRepo.deleteEstate(estate_id);
+    if(response.statusCode == 200) {
+      Get.back();
+      showCustomSnackBar('estate deleted successfully'.tr, isError: false);
+      Get.toNamed(RouteHelper.getProfileRoute());
+
+    }else {
+      ApiChecker.checkApi(response);
+    }
+    _isLoading = false;
+    update();
+  }
   @override
   void onInit() {
     super.onInit();
@@ -381,5 +397,31 @@ class EstateController extends GetxController implements GetxService {
     update();
   }
 
+
+  Future<void> getCategoryList(Estate product) async {
+    _categoryIds = [];
+  //  _subCategoryIds = [];
+    _categoryIds.add(0);
+ //   _subCategoryIds.add(0);
+    _isLoading = true;
+    Response response = await estateRepo.getCategoryList();
+    if (response.statusCode == 200) {
+      _categoryList = [];
+      _isLoading = false;
+      response.body.forEach((category) => _categoryList.add(CategoryModel.fromJson(category)));
+      if(_categoryList != null) {
+        for(int index=0; index<_categoryList.length; index++) {
+          _categoryIds.add(_categoryList[index].id);
+        }
+        if(product != null) {
+          setCategoryIndex(_categoryIds.indexOf(product.categoryId));
+        //  await getSubCategoryList(int.parse(product.categoryIds[0].id), product);
+        }
+      }
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
 
 }

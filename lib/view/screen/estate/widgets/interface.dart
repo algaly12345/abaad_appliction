@@ -19,7 +19,7 @@ class InterfaceItem extends StatelessWidget {
       _length = restaurants.length;
     return
       !_isNull ? _length > 0 ?Container(
-      height: 50,
+        height: estate.interface .length==1?50:estate.interface .length==2?100:0,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4.0),
@@ -34,51 +34,39 @@ class InterfaceItem extends StatelessWidget {
         ],
 
       ),
-      child: Row(
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: estate.interface .length,
+        itemBuilder: (context, index) {
+          return  Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).backgroundColor,
+                  spreadRadius: 1,
+                  blurRadius: 2,
+                  offset: Offset(0, 0.5), // changes position of shadow
+                ),
 
-        children: [
-          Expanded(child: Container(
-              padding: EdgeInsets.all(10),child:  Text(" الواجهة"))),
-          VerticalDivider(width: 1.0),
-          Expanded(child: Container(
-              padding: EdgeInsets.all(10),child:  Container(
-            height: 30,
+              ],
 
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: estate.interface .length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.all(0),
-                  decoration:  BoxDecoration(
-                    color: Colors.blue.shade200,
-                    shape: BoxShape.rectangle,
-                    borderRadius:const BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      bottomLeft: Radius.circular(4.0),
-                    ),),
-                  padding: const EdgeInsets.all(5.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        "${estate.interface[index].name}",
-                        style: robotoMedium.copyWith(
-                          fontSize: Dimensions.fontSizeSmall,
-                          color: Theme.of(context).textTheme.bodyText1.color,
-                        ), ),
-                      Text(
-                          "${estate.interface[index].space} م ",
-                          style: robotoMedium.copyWith(
-                            fontSize: Dimensions.fontSizeSmall,
-                            color: Theme.of(context).textTheme.bodyText1.color,
-                          ), ),
-                    ],
-                  ),
-                );
-              },
             ),
-          ))),
-        ],
+            child: Row(
+
+              children: [
+                Expanded(flex: 1,
+                    child: Container(
+                        padding: EdgeInsets.all(10),child:  Text("${estate.interface[index].name}"))),
+                VerticalDivider(width: 1.0),
+                Expanded(flex: 1,child: Container(
+                    padding: EdgeInsets.all(10),child: Text("${estate.interface[index].space} م ",  style: robotoBlack.copyWith(fontSize: 14)))),
+              ],
+            ),
+          );
+        },
       ),
     ):Text(""):Text("");
   }

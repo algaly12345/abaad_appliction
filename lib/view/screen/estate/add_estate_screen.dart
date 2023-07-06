@@ -1179,7 +1179,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       // ignore: missing_return
-                                      itemCount:  _loungeList.length, itemBuilder: (context, index) {
+                                      itemCount:  _kitchenList.length, itemBuilder: (context, index) {
 
 
                                     return   InkWell(
@@ -1469,7 +1469,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                                           Flexible(child: Text(
                                                             categoryController.facilitiesList[index].name,
                                                             style: robotoMedium.copyWith(
-                                                              fontSize: Dimensions.fontSizeSmall,
+                                                              fontSize: Dimensions.fontSizeExtraSmall,
                                                               color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
                                                                   : Theme.of(context).textTheme.bodyText1.color,
                                                             ),
@@ -1531,7 +1531,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                                             Flexible(child: Text(
                                                               categoryController.advanList[index].name,
                                                               style: robotoMedium.copyWith(
-                                                                fontSize: Dimensions.fontSizeLarge,
+                                                                fontSize: Dimensions.fontSizeSmall,
                                                                 color: categoryController.advanSelectedList[index] ? Theme.of(context).cardColor
                                                                     : Theme.of(context).textTheme.bodyText1.color,
                                                               ),
@@ -1594,7 +1594,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                         color: Colors.black),
                                     iconEnabledColor: Colors.black,
                                     items: <String>[
-                                      'اقل من سنة',
+                                      'جديد',
                                       'سنة',
                                       'سنتين',
                                       '3 سنوات',
@@ -2191,7 +2191,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
 
-                            restController.registerRestaurant(
+                            restController.registerEstate(
                               EstateBody(
                                   type_add:_typeProperties==0?"for_sell":"for_rent" ,
                                   address: "${locationController.address}",

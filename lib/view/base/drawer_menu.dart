@@ -56,6 +56,8 @@ class DrawerMenu extends StatelessWidget {
                 )),
               ),
               listItem(1,Icons.manage_accounts_outlined, 'my_account'.tr, Colors.blueAccent,(){
+                Get.find<UserController>().getUserInfoByID(userController.userInfoModel.id );
+                Get.find<UserController>().getEstateByUser(1, false,userController.userInfoModel.id );
                 Get.toNamed(RouteHelper.getProfileRoute());
               }),
               listItem(1,Icons.language, 'language'.tr, Colors.green,(){
