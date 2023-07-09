@@ -19,7 +19,7 @@ class InterfaceItem extends StatelessWidget {
       _length = restaurants.length;
     return
       !_isNull ? _length > 0 ?Container(
-        height: estate.interface .length==1?50:estate.interface .length==2?100:0,
+        height: estate.interface .length==1?50:estate.interface .length==2?100:estate.interface .length==3?150:estate.interface .length==4?200:0,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4.0),

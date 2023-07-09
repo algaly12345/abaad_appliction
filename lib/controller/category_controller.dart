@@ -233,7 +233,7 @@ class CategoryController extends GetxController implements GetxService {
       _categoryProductList.addAll(EstateModel.fromJson(response.body).estates);
       _pageSize = EstateModel.fromJson(response.body).totalSize;
       _estateModel = EstateModel.fromJson(response.body);
-      Get.find<EstateController>() .getCategoryList(response.body);
+     // Get.find<EstateController>() .getCategoryList(response.body);
       _isLoading = false;
     } else {
       ApiChecker.checkApi(response);

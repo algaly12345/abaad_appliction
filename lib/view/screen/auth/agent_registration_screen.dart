@@ -4,6 +4,7 @@ import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
+import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
@@ -135,36 +136,40 @@ class _AgentRegistrationScreenState extends State<AgentRegistrationScreen> {
                       ]),
                   SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-                  Row(children: [
-
-
-                    Expanded(child: Material(
-
-                      child: CustomTextField(
-                        hintText: _documentTypeValue == "سجل تجاري"
-                            ? 'commercial_registration_no'.tr
-                            : 'id_number'.tr,
-                        controller: _identityNumberController,
-                        focusNode: _identityNumberNode,
-                        nextFocus: _advertiserNoNode,
-                        inputAction: TextInputAction.done,
-                        showTitle: true,
-                        boarder: true,
-
-                      ),
-                    )),
-
-
-                  ]),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                   CustomTextField(
-                    hintText: 'advertiser_no'.tr,
+                    hintText: _documentTypeValue == "سجل تجاري"
+                        ? 'commercial_registration_no'.tr
+                        : 'id_number'.tr,
+                    controller: _identityNumberController,
+                    focusNode: _identityNumberNode,
+                    nextFocus: _advertiserNoNode,
+                    capitalization: TextCapitalization.words,
+                    prefixIcon: Icons.person,
+                    showTitle: ResponsiveHelper.isDesktop(context),
+                    // boarder: true,
+
+                  ),
+                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                  CustomTextField(
+                    hintText: 'رقم المعلن في هيئة العقار'.tr,
                     controller: _advertiserNoController,
                     focusNode: _advertiserNoNode,
                     inputType: TextInputType.emailAddress,
-                    showTitle: true,
-                    boarder: true,
-                  ),
+                    capitalization: TextCapitalization.words,
+                    prefixIcon: Icons.person,
+                    showTitle: ResponsiveHelper.isDesktop(context),
+                  )
+
+                  // CustomTextField(
+                  //   hintText: 'advertiser_no'.tr,
+                  //   controller: _advertiserNoController,
+                  //   focusNode: _advertiserNoNode,
+                  //   inputType: TextInputType.emailAddress,
+                  //   capitalization: TextCapitalization.words,
+                  //   prefixIcon: Icons.person,
+                  //   showTitle: ResponsiveHelper.isDesktop(context),
+                  // )
 
                 ]))),
           )),

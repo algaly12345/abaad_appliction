@@ -152,6 +152,8 @@ class _EditDialogState extends State<EditDialog> {
   int _selectedBathroomsIndex = 0;
   int _selectedLounge=0;
   int _selectedkitchen=0;
+
+  String _ageValue;
   _onSelected(int index) {
     setState(() => _selectedRoomIndex = index);
   }
@@ -173,6 +175,16 @@ class _EditDialogState extends State<EditDialog> {
 
   int _selection = 0;
 
+
+
+  final List<String> _interfaceist = [   "الواجهة الشمالية",
+    "الواجهة الشرقية",
+    "الواجهة الغربية",
+    "الواجهة الجنوبية",];
+  int east, west,north,south=0;
+  String east_st, west_st,north_st,south_st;
+  final List<String> _selectedInterfaceistItems = [];
+
   selectTime(int timeSelected) {
     setState(() {
       _selection = timeSelected;
@@ -183,9 +195,10 @@ class _EditDialogState extends State<EditDialog> {
     // TODO: implement initState
     super.initState();
     _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+    Get.find<CategoryController>().getAdvantages(true);
     _typeProperties= widget.estate.type_add=="for_rent"?1:0;
     category_id=widget.estate.categoryId;
-     print("----------------------------c${widget.estate.priceNegotiation}");
+
    // widget.estate.priceNegotiation=="غير قابل للتفاوض"?   isSelected2.first=false: isSelected2.first=false;
     Get.find<EstateController>() .getCategoryList(widget.estate);
     if( widget.estate.priceNegotiation=="غير قابل للتفاوض"){
@@ -194,9 +207,9 @@ class _EditDialogState extends State<EditDialog> {
       _selection=1;
     }
 
+    Get.find<AuthController>().getZoneList();
 
-
-
+    Get.find<LocationController>().getCategoryList();
 
     _initialPosition = LatLng(
       double.parse(widget.estate.latitude ?? '0'),
@@ -206,11 +219,22 @@ class _EditDialogState extends State<EditDialog> {
     _selectedRoomIndex=int.parse(widget.estate.property[1].number);
     _selectedLounge=int.parse(widget.estate.property[2].number);
     _selectedkitchen=int.parse(widget.estate.property[3].number);
+    ;
 
-    _value1=widget.estate.zoneId;
+
+
+
+    north_st=widget.estate.interface[0].name;
+    west_st=widget.estate.interface[1].name;
+
+    // input.split('').forEach((ch) => print(ch));
+
+    print("----------------------------categore${widget.estate.ageEstate}");
+  // _value1=widget.estate.zoneId;
    // widget.estate.priceNegotiation=="غير قابل للتفاوض"?   isSelected2.first=false: widget.estate.priceNegotiation=="قابل للتفاوض"? isSelected2.first=true:true;
 
     Get.find<UserController>().getUserInfoByID(widget.estate.userId);
+
   }
   @override
   Widget build(BuildContext context) {
@@ -229,10 +253,13 @@ class _EditDialogState extends State<EditDialog> {
       _spaceController.text =  widget.estate.space ?? '';
       _documentNumberController.text =  widget.estate.documentNumber?? '';
       images=widget.estate.images;
+
+
       // _websiteController.text = userController.userInfoModel.website ?? '';
       // _instagramController.text = userController.userInfoModel.instagram?? '';
 
       //_typeProperties==0?"for_rent".tr:"for_sell".tr;
+
 
     }
     return Scaffold(
@@ -240,7 +267,11 @@ class _EditDialogState extends State<EditDialog> {
       body: SingleChildScrollView(
         child: (widget.estate != null) ?
     GetBuilder<AuthController>(builder: (authController) {
-      return Column(
+      return
+        GetBuilder<CategoryController>(
+            builder: (categoryController) {
+
+      return   Column(
 
                 children: [
                   // EstateView(fromView: true,estate:widget.estate ) ,
@@ -542,7 +573,7 @@ class _EditDialogState extends State<EditDialog> {
                    children: [
                      Expanded(
                        child: MyTextField(
-                         hintText:restController.getCategoryPostion()==1?"ادخل مساحة الارض (بامتر مربع)": 'enter_the_area'.tr,
+                         hintText: widget.estate.category=="1"?"ادخل مساحة الارض (بامتر مربع)": 'enter_the_area'.tr,
                          size: 17,
                          controller: _spaceController,
                          focusNode: _firstNameFocus,
@@ -553,7 +584,7 @@ class _EditDialogState extends State<EditDialog> {
                        ),
                      ),
                      SizedBox(width: 3,),
-                     restController.getCategoryPostion()==1? Expanded(child:  MyTextField(
+                     widget.estate.category=="1"? Expanded(child:  MyTextField(
                        hintText: 'ادخل مساحة البناء(بامتر مربع)'.tr,
                        size: 17,
                        controller: _buildSpaceController,
@@ -886,7 +917,8 @@ class _EditDialogState extends State<EditDialog> {
                                     fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
                                     route: null, canRoute: false,
                                   ),
-                                );}
+                                );
+                            }
                             },
                             child: Container(
                               width: 30, height: 30,
@@ -1321,6 +1353,7 @@ class _EditDialogState extends State<EditDialog> {
                           //
 
 
+
                           Text(
                             'age_of_the_property'.tr,
                             style: robotoRegular.copyWith(
@@ -1328,6 +1361,68 @@ class _EditDialogState extends State<EditDialog> {
                           ),
                           const SizedBox(
                               height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: Dimensions.PADDING_SIZE_SMALL),
+                            decoration: BoxDecoration(
+                              color: Theme
+                                  .of(context)
+                                  .cardColor,
+                              borderRadius: BorderRadius.circular(
+                                  Dimensions.RADIUS_SMALL),
+                              boxShadow: [
+                                BoxShadow(color: Colors.grey[Get.isDarkMode
+                                    ? 800
+                                    : 200],
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 5))
+                              ],
+                            ),
+                            child: DropdownButton<String>(
+                              focusColor: Colors.white,
+                              value: _ageValue,
+                              isExpanded: true,
+                              underline: SizedBox(),
+                              //elevation: 5,
+                              style: robotoRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeLarge,
+                                  color: Colors.black),
+                              iconEnabledColor: Colors.black,
+                              items: <String>[
+                                'جديد',
+                                'سنة',
+                                'سنتين',
+                                '3 سنوات',
+                                '4 سنوات',
+                                '5 سنوات',
+                                '6 سنوات',
+                                '7 سنوات',
+                                '8 سنوات',
+                                '9 سنوات',
+                                '10 سنوات',
+                                'اكثر من 10',
+                                'اكثر من 20'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value, style: const TextStyle(
+                                      color: Colors.black),),
+                                );
+                              }).toList(),
+                              hint: Text(
+                                widget.estate.ageEstate??  "select_age_of_the_property".tr,
+                                style: robotoRegular.copyWith(
+                                    fontSize: Dimensions.fontSizeLarge,
+                                    color: Colors.black),
+                              ),
+                              onChanged: (String value) {
+                                setState(() {
+                                  _ageValue = value;
+                                });
+                              },
+                            ),
+                          ),
                           const SizedBox(
                               height: Dimensions.PADDING_SIZE_LARGE),
 
@@ -1338,8 +1433,208 @@ class _EditDialogState extends State<EditDialog> {
 
 
 
+                      /// interface
+                      ///
+                      /// //////
+                      Text(
+                        " الواجهة".tr,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _interfaceist.length,
+                          itemBuilder: (context, index) {
+                            final item = _interfaceist[index];
+
+                            return  Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: TextButton(
+                                  style:  ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(4),
+
+                                          side: BorderSide(color:Theme.of(context).primaryColor)
+                                      ),),),
+                                  onPressed: (){
+                                    setState(() {
+                                      if (_selectedInterfaceistItems.contains(item)) {
+                                        _selectedInterfaceistItems.remove(item);
+                                        if(item=="الواجهة الشمالية") {
+                                          north = 0;
+                                          _northController.clear();
+                                        }else if(item=="الواجهة الشرقية"){
+                                          east=0;
+                                          _eastController.clear();
+
+                                        }
+                                        else if(item=="الواجهة الغربية"){
+                                          west=0;
+                                          _westController.clear();
+
+                                        }
+                                        else if(item=="الواجهة الجنوبية"){
+                                          south=0;
+                                          _southController.clear();
+
+                                        }
+                                      } else {
+                                        _selectedInterfaceistItems.add(item);
+                                        if(item=="الواجهة الشمالية") {
+                                          north = 1;
+                                        }else if(item=="الواجهة الشرقية"){
+                                          east=1;
+
+                                        }
+                                        else if(item=="الواجهة الغربية"){
+                                          west=1;
+
+                                        }
+                                        else if(item=="الواجهة الجنوبية"){
+                                          south=1;
+
+                                        }
+                                      }
+                                    });
+                                  },
+                                  child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor :Theme.of(context).primaryColor,fontSize: 15.0),)
+                              ),
+                            );
+
+                          },
+                        ),
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          north==1?   Expanded( // Place `Expanded` inside `Row`
+                            child: MyTextField(
+                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                              controller: _northController,
+                              focusNode: _northFocus,
+                              maxLines: 1,
+                              inputType: TextInputType.number,
+                              capitalization: TextCapitalization.sentences,
+                              showBorder: true,
+                            ),
+                          ):SizedBox(),
+                          SizedBox(width: 3,),
+                          east==1?  Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                            child: MyTextField(
+                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                              controller: _eastController,
+                              focusNode: _eastFocus,
+                              nextFocus: _westDesFocus,
+                              maxLines: 1,
+                              inputType: TextInputType.number,
+                              capitalization: TextCapitalization.sentences,
+                              showBorder: true,
+                            ),
+                          ):SizedBox(),
+                          SizedBox(width: 3,),
+                          west==1? Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                            child: MyTextField(
+                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                              controller: _westController,
+                              focusNode: _westDesFocus,
+                              nextFocus: _southFocus,
+                              maxLines: 1,
+                              inputType: TextInputType.number,
+                              capitalization: TextCapitalization.sentences,
+                              showBorder: true,
+                            ),
+                          ):SizedBox(),
+                          SizedBox(width: 3,),
+                          south==1?   Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                            child: MyTextField(
+                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                              controller: _southController ,
+                              focusNode: _southFocus,
+                              nextFocus: _vatFocus,
+                              maxLines: 1,
+                              inputType: TextInputType.number,
+                              capitalization: TextCapitalization.sentences,
+                              showBorder: true,
+                            ),
+                          ):SizedBox(),
+                        ],
+                      ),
 
 
+
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+
+                          categoryController.advanList.length!=null?    Column(
+                            children: [
+                              ExpansionTile(
+                                title:Text("other_advantages".tr), //add icon//children padding
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      height: 240,
+                                      child:GridView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        itemCount: categoryController.advanList.length,
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 3 ,
+                                          childAspectRatio: (1/0.50),
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: () => categoryController.addAdvantSelection(index),
+                                            child: Container(
+                                              margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: categoryController.advanSelectedList[index] || widget.estate.otherAdvantages[index]!=index ? Theme.of(context).primaryColor
+                                                    : Theme.of(context).cardColor,
+                                                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                              ),
+                                              alignment: Alignment.center,
+                                              child:   Row(
+
+                                                children: [
+                                                  Flexible(child: Text(
+                                                    categoryController.advanList[index].name,
+                                                    style: robotoMedium.copyWith(
+                                                      fontSize: Dimensions.fontSizeSmall,
+                                                      color: categoryController.advanSelectedList[index] || widget.estate.otherAdvantages[index]!=index ? Theme.of(context).cardColor
+                                                          : Theme.of(context).textTheme.bodyText1.color,
+                                                    ),
+                                                    maxLines: 2, overflow: TextOverflow.ellipsis,
+                                                  )),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+
+
+                                ],
+                              ),
+
+                            ],
+                          ):Container(),
+
+                        ],
+                      ),
 
 
                     ]),
@@ -1355,7 +1650,10 @@ class _EditDialogState extends State<EditDialog> {
 
                 ],
 
-              ) ;   })
+              );
+
+            })
+      ;   })
                   : const SizedBox()
 
 

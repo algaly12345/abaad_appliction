@@ -222,7 +222,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                                     backgroundColor: MaterialStateProperty.all(Colors.blue),
                                   ),
                                   onPressed: () async{
-                                    final urlScheme = 'tel:${userController.userInfoModel.phone}';
+                                    final urlScheme = 'tel:${userController.agentInfoModel.phone}';
 
                                     if (await canLaunch(urlScheme)) {
                                     await launch(urlScheme);

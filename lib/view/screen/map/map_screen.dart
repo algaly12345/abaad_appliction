@@ -1232,6 +1232,7 @@ class _MapViewScreenState extends State<MapScreen> {
               tilt: 45.0)));
 
 
+
           if(_products[selectedIndex].serviceOffers.length >0){
            estate= _products[selectedIndex];
             cardTapped=true;
@@ -1260,6 +1261,10 @@ class _MapViewScreenState extends State<MapScreen> {
                 value = (1 - (value.abs() * 0.3) + 0.06).clamp(0.0, 1.0);
 
               }
+              Timer(Duration(seconds: 2), () {
+                cardTapped=false ;
+              });
+
 
 
               return Center(
