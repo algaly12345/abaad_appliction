@@ -1,15 +1,12 @@
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/notification_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/helper/date_converter.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
-import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
-import 'package:abaad/view/screen/notification/widget/notification_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -26,7 +26,7 @@ class SplashController extends GetxController implements GetxService {
     Response response = await splashRepo.getConfigData();
     bool _isSuccess = false;
     if(response.statusCode == 200) {
-      Get.offAllNamed(RouteHelper.getAccessLocationRoute('verification'));
+    //  Get.offAllNamed(RouteHelper.getAccessLocationRoute('verification'));
       _configModel = ConfigModel.fromJson(response.body);
 
       _isSuccess = true;

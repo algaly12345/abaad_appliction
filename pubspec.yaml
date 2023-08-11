@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.10.0 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -35,11 +35,10 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-#  get: ^4.6.5
+  #  get: ^4.6.5
   get: ^4.1.4
   shared_preferences: ^2.0.16
   connectivity: ^3.0.6
-#  firebase_core: ^2.4.1
   cupertino_icons: ^1.0.5
   firebase_messaging: ^14.2.1
   flutter_local_notifications: ^9.6.0
@@ -52,13 +51,14 @@ dependencies:
   geolocator: ^9.0.2
   google_maps_flutter: ^2.1.10
   google_maps_flutter_web: ^0.4.0+4
+
   flutter_typeahead: ^4.1.1
   pin_code_fields: ^7.4.0
   firebase_core_platform_interface: ^4.5.2
   custom_map_markers: ^0.0.2+1
   flutter_hex_color: ^2.0.0
   cached_network_image: ^3.2.3
-  flip_card:
+  flip_card: ^0.7.0
   flutter_riverpod:
   image_stack: ^2.1.1
   custom_info_window: ^1.0.1
@@ -67,7 +67,7 @@ dependencies:
   carousel_slider: ^4.0.0
   shimmer_animation: ^2.1.0+1
   intl: ^0.15.7
-#  flutter_plugin_android_lifecycle: ^2.0.7
+  #  flutter_plugin_android_lifecycle: ^2.0.7
   url_launcher: ^6.0.17
   pointer_interceptor: ^0.9.0+1
   card_swiper: ^2.0.4
@@ -86,13 +86,17 @@ dependencies:
   universal_html: ^2.0.8
   universal_ui: ^0.0.8
   flutter_widget_from_html_core: ^0.8.5+3
-  webview_flutter: ^3.0.0
   share_plus: ^4.0.9
   firebase_dynamic_links: ^0.5.0+11
   share:
   marker_icon: any
   launch_review: ^3.0.1
   any_link_preview: ^3.0.0
+  tutorial_coach_mark: ^1.2.4
+  file_picker: ^4.6.1
+  webview_flutter: ^2.0.9
+
+
 
 
 

@@ -9,7 +9,6 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
@@ -19,13 +18,10 @@ import 'package:abaad/view/screen/estate/widgets/estate_view.dart';
 import 'package:abaad/view/screen/estate/widgets/interface.dart';
 import 'package:abaad/view/screen/estate/widgets/near_by_view.dart';
 import 'package:abaad/view/screen/estate/widgets/network_type.dart';
-import 'package:abaad/view/screen/map/widget/service_offer.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DettailsDilog extends StatefulWidget {
   Estate estate;
@@ -83,14 +79,14 @@ class _DettailsDilogState extends State<DettailsDilog> {
                       children: [
 
                         Text(
-                          'العنوان'.tr,
+                          'title'.tr,
                           style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
                         ),
                         Text("${widget.estate.title}",
                             style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
 
                         Text(
-                          'وصف مختصر'.tr,
+                          'shot_description'.tr,
                           style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                         ),
                         Row(
@@ -100,22 +96,37 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                 style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
                             Align(
                               alignment: Alignment.topLeft,
-                              child: Container(
-                                width: 40,
-                                margin: const EdgeInsets.only(bottom: 10),
+                              child:  Container(
+                                padding: const EdgeInsets.only(right: 4,left: 4),
                                 decoration:  BoxDecoration(
-                                    color:widget.estate.type_add==1?Colors.blue:Colors.orange),
-                                child:    Text( widget.estate.type_add=="for_sell"?"للبيع":"للإجار",
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      color: Colors.white,)
+                                    borderRadius: BorderRadius.circular(
+                                        4),
+                                    color:  Colors.blue),
+                                child:  Row(
+                                  children: [
+
+                                    Text(
+                                        "price".tr,
+                                        style: robotoRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).cardColor,
+                                        )),
+                                    SizedBox(width: 2,),
+                                    Text(
+                                        "${widget.estate.price}",
+                                        style: robotoRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).cardColor,
+                                        )
+                                    ),
+
+
+                                  ],
                                 ),
                               ),
                             ),
                           ],
                         ),
                         Text(
-                          'وصف كامل '.tr,
+                          'long_description'.tr,
                           style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                         ),
 
@@ -152,7 +163,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               // )
 
                               Text(
-                                'تحتوي علي ',
+                                'it_contains'.tr,
                                 style: robotoRegular.copyWith(
                                     fontSize: Dimensions.fontSizeSmall),
                               ),
@@ -393,7 +404,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                           SizedBox(height: 5,),
                           Text(
-                            'التفاصيل',
+                            'details'.tr,
                             style: robotoBlack.copyWith(fontSize: 14),
                           ),
                           SizedBox(height: 10,),
@@ -418,7 +429,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               children: [
                                 Expanded( flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("نوع العقار"))),
+                                        padding: EdgeInsets.all(10),child:  Text("type_property".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
@@ -447,7 +458,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               children: [
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("المساحة"))),
+                                        padding: EdgeInsets.all(10),child:  Text("space".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
@@ -477,7 +488,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               children: [
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("عرض الشارع"))),
+                                        padding: EdgeInsets.all(10),child:  Text("width_street".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
@@ -506,7 +517,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               children: [
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("رقم الوثيقة"))),
+                                        padding: EdgeInsets.all(10),child:  Text("document_type".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
@@ -515,7 +526,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             ),
                           ):Container(),
 
-                          widget.estate.interface!=null? InterfaceItem(estate: widget.estate,restaurants:   widget.estate.interface)   :Container(),
+
                           widget.estate.priceNegotiation!=null?    Container(
                             height: 50,
                             decoration: BoxDecoration(
@@ -537,7 +548,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               children: [
                                 Expanded(
                                     flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text("السعر"))),
+                                    padding: EdgeInsets.all(10),child:  Text("price".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
@@ -568,7 +579,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               children: [
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("مساحة البناء"))),
+                                        padding: EdgeInsets.all(10),child:  Text("build_space".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,child: Container(
                                     padding: EdgeInsets.all(10),child: Text("${ widget.estate.buildSpace}",  style: robotoBlack.copyWith(fontSize: 14)))),
@@ -598,10 +609,10 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                                   children: [
                                     Expanded(flex: 1,child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("عمر العقار"))),
+                                        padding: EdgeInsets.all(10),child:  Text("age_of_the_property".tr))),
                                     VerticalDivider(width: 1.0),
                                     Expanded(flex: 1,child: Container(
-                                        padding: EdgeInsets.all(10),child: Text("${widget.estate.ageEstate} سنة",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                        padding: EdgeInsets.all(10),child: Text("${widget.estate.ageEstate}",  style: robotoBlack.copyWith(fontSize: 14)))),
                                   ],
                                 ),
                               ):Container(),
@@ -627,7 +638,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                               children: [
                                 Expanded(flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text("المعلن"))),
+                                    padding: EdgeInsets.all(10),child:  Text("advertiser".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,child: Container(
                                     padding: EdgeInsets.all(10),child: Text("${ widget.estate.users.phone}",  style: robotoBlack.copyWith(fontSize: 14)))),
@@ -655,7 +666,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                               children: [
                                 Expanded(flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text("الرمز الوطني المختصر"))),
+                                    padding: EdgeInsets.all(10),child:  Text("short_national_code".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,child: Container(
                                     padding: EdgeInsets.all(10),child: Row(
@@ -663,7 +674,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                     Text("${ widget.estate.nationalAddress}",  style: robotoBlack.copyWith(fontSize: 14)),
                                     IconButton(onPressed:(){
                                       FlutterClipboard.copy(widget.estate.nationalAddress.toString()).then(( value ) {
-                                        showCustomSnackBar('تم النسخ'.tr, isError: false);
+                                        showCustomSnackBar('copied'.tr, isError: false);
                                       });
                                     }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,size: 15,)),
                                   ],
@@ -674,7 +685,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
 
                           widget.estate.networkType. length >0&& widget.estate.networkType  == null?    NetworkTypeItem(estate: widget.estate,restaurants: widget.estate.networkType):Container(),
-
+                          widget.estate.interface!=null? InterfaceItem(estate: widget.estate,restaurants:   widget.estate.interface)   :Container(),
                           const MapDetailsView(
                               fromView: true),
                          widget.estate.otherAdvantages  == null?  Container:SizedBox(
@@ -725,7 +736,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
 
                           Divider(height: 1,),
-                          Text("معلومات اخرى",
+                          Text("other_information".tr,
                               style: robotoBlack.copyWith(fontSize: 14)),
                           Container   (
                             padding: EdgeInsets.all(10),
@@ -755,7 +766,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                                       child: Column(children: <Widget>[
                                         Image.asset(Images.estate_type,height: 70,width: 70,),
-                                        Text('المرافق',style: robotoBlack.copyWith(fontSize: 13)),
+                                        Text('near_by'.tr,style: robotoBlack.copyWith(fontSize: 13)),
 
                                       ]),
                                     ),
@@ -783,7 +794,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                                       child: Column(children: <Widget>[
                                         Image.asset(Images.space,height: 70,width: 70,),
-                                        Text('عروض مع العقار',style: robotoBlack.copyWith(fontSize: 12)),
+                                        Text('deals_with_the_property'.tr,style: robotoBlack.copyWith(fontSize: 12)),
                                       ]),
                                     ),
                                   ),
@@ -806,7 +817,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                                     child:Column(children: <Widget>[
                                       Image.asset(Images.age_estate,height: 70,width: 70,),
-                                      Text('عمر العقار'),
+                                      Text('age'.tr),
                                        Text(widget.estate.ageEstate),
                                     ]),
                                   ):Container(
@@ -839,13 +850,13 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children:  <Widget>[
-                                  Text('رقم الإعلان'),
+                                  Text('ad_number'.tr),
                                   SizedBox(width: 20),
                                   Text(widget.estate.adNumber.toString()),
 
                                   IconButton(onPressed:(){
                                     FlutterClipboard.copy(widget.estate.adNumber.toString()).then(( value ) {
-                                      showCustomSnackBar('تم النسخ'.tr, isError: false);
+                                      showCustomSnackBar('copied'.tr, isError: false);
                                     });
                                   }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,)),
                                 ]),
@@ -874,12 +885,12 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children:  <Widget>[
-                                  Text('الرمز الوطني المختصر'),
+                                  Text('short_national_code'.tr),
 
                                   Text('${widget.estate.nationalAddress}'),
                                   IconButton(onPressed:(){
                                     FlutterClipboard.copy(widget.estate.nationalAddress).then(( value ) {
-                                      showCustomSnackBar('تم النسخ'.tr, isError: false);
+                                      showCustomSnackBar('copied'.tr, isError: false);
                                     });
                                   }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,)),
                                 ]),
@@ -951,12 +962,12 @@ class _DettailsDilogState extends State<DettailsDilog> {
                         Row(
                           children: [
                             Text(
-                              "رقم المعلن",
+                              "advertiser_no".tr,
                               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                             ),
                             SizedBox(width: 20),
                             Text(
-                              widget.estate.users.advertiserNo==null?"":widget.estate.users.advertiserNo,
+                              "${widget.estate.users.advertiserNo==null?"":widget.estate.users.advertiserNo}",
                               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                             ),
                           ],
@@ -964,7 +975,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                         Row(
                           children: [
                             Text(
-                              "تاريخ النشر",
+                              "date_of_publication".tr,
                               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                             ),
                             // SizedBox(width: 20),
@@ -1010,7 +1021,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                 ));
               },
-              buttonText: 'تواصل مع المعلن',
+              buttonText: 'contact_the_advertiser'.tr,
             ),
           ],
         ),

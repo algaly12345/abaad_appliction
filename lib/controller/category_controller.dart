@@ -1,11 +1,9 @@
-import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
 import 'package:abaad/data/model/body/filter_body.dart';
 import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/facilities_model.dart';
 import 'package:abaad/data/repository/category_repo.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -209,20 +207,20 @@ class CategoryController extends GetxController implements GetxService {
 
   }
 
-  void setFilterIndex(int zone_id, int index,String cityName,String districts,int  space,String add_type) {
-    _subCategoryIndex = index;
-    getCategoryProductList(zone_id,_subCategoryList[index].id.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0",add_type.toString() ?? "0","1");
+  void setFilterIndex(int zoneId, int index,String cityName,String districts,int  space) {
+
+    getCategoryProductList(zoneId,index.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0","0","1");
     update();
 
   }
 
-  void getCategoryProductList(int zone_id,String categoryID,int user_id,String city,String districts, String space,String type_add,String offset) async {
+  void getCategoryProductList(int zoneId,String categoryID,int userId,String city,String districts, String space,String typeAdd,String offset) async {
     if(offset == '1') {
       _categoryProductList = null;
 
       _isSearching = false;
     }
-    Response response = await categoryRepo.getCategoryProductList(zone_id,categoryID,user_id,city,districts,space,type_add, offset);
+    Response response = await categoryRepo.getCategoryProductList(zoneId,categoryID,userId,city,districts,space,typeAdd, offset);
     if (response.statusCode == 200) {
       if (offset == '1') {
         _categoryProductList = [];

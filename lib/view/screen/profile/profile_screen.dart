@@ -4,7 +4,6 @@ import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/theme_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
-import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/dimensions.dart';
@@ -12,9 +11,6 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/rating_bar.dart';
-import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/profile/widget/profile_button.dart';
 import 'package:abaad/view/screen/profile/widget/profile_card.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
               _isLoggedIn ? SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5):Container(),
-              _isLoggedIn ? ProfileButton(icon: Icons.ads_click, title: 'إعلاناتي'.tr, isButtonActive: Get.isDarkMode, onTap: ()async {
+              _isLoggedIn ? ProfileButton(icon: Icons.ads_click, title: 'my_ads'.tr, isButtonActive: Get.isDarkMode, onTap: ()async {
                 Get.find<UserController>().getUserInfoByID(userController.userInfoModel.id );
                  Get.toNamed(RouteHelper.getProfileAgentRoute(userController.userInfoModel.id ,1));
                 // Get.find<ThemeController>().toggleTheme();

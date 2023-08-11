@@ -1,46 +1,21 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:abaad/controller/auth_controller.dart';
-import 'package:abaad/controller/estate_controller.dart';
-import 'package:abaad/controller/location_controller.dart';
-import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
-import 'package:abaad/view/base/custom_button.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/custom_text_field.dart';
-import 'package:abaad/view/screen/map/widget/location_search_dialog.dart';
-import 'package:abaad/view/screen/map/widget/permission_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:abaad/data/repository/nearbyplacesmodel.dart';
-import 'package:abaad/util/images.dart';
 import 'package:custom_info_window/custom_info_window.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'dart:ui' as ui;
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:marker_icon/marker_icon.dart';
 
 class NearByView extends StatefulWidget {
   Estate esate;

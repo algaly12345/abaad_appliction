@@ -1,10 +1,8 @@
 import 'package:abaad/data/api/api_checker.dart';
-import 'package:abaad/data/model/response/banner_model.dart';
 import 'package:abaad/data/model/response/city_model.dart';
 import 'package:abaad/data/model/response/district_model.dart';
 import 'package:abaad/data/model/response/land_service.dart';
 import 'package:abaad/data/model/response/region_model.dart';
-import 'package:abaad/data/repository/banner_repo.dart';
 import 'package:abaad/data/repository/zone_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

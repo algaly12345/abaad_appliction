@@ -1,8 +1,7 @@
+import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
-import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
 import 'package:abaad/data/api/api_client.dart';
-import 'package:abaad/data/model/auto_complete_result.dart';
 import 'package:abaad/data/model/body/estate_body.dart';
 import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
@@ -11,12 +10,7 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EstateController extends GetxController implements GetxService {
@@ -32,6 +26,9 @@ class EstateController extends GetxController implements GetxService {
   Estate _estate;
   int _categoryIndex = 0;
   int _categoryPostion = 0;
+
+  int _categoryName = 0;
+
   List<CategoryModel> _categoryList;
   bool _isLoading = false;
   String _estateType = 'all';
@@ -99,6 +96,8 @@ class EstateController extends GetxController implements GetxService {
 
   int get categoryPostion => _categoryPostion;
 
+  int get categoryName => _categoryName;
+
   XFile get pickedImage => _pickedImage;
   XFile get pickedPlanedImage => _pickedPlanedImage;
 
@@ -114,7 +113,7 @@ class EstateController extends GetxController implements GetxService {
   Estate get restaurant => _restaurant;
 
 
-  Future<void> getEstateList(int offset, bool reload ,int category_id) async {
+  Future<void> getEstateList(int offset, bool reload ,int categoryId) async {
     if (reload) {
       _estateModel = null;
       update();
@@ -136,57 +135,13 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
-  // Future<void> getCategoriesEstateList(int estateId, int offset, String type,
-  //     bool notify) async {
-  //   _foodOffset = offset;
-  //   if (offset == 1 || _estateList == null) {
-  //     _type = type;
-  //
-  //     _estateList = null;
-  //     if (notify) {
-  //       update();
-  //     }
-  //   }
-  //
-  //
-  //   Response response = await estateRepo.getCategorisEstateList(1, 3, type);
-  //   if (response.statusCode == 200) {
-  //     if (offset == 1) {
-  //       _estateList = [];
-  //     }
-  //     // print("awad-------------------------------${response.body}");
-  //     _estateModel1.estates.addAll(EstateModel.fromJson(response.body).estates);
-  //     update();
-  //   } else {
-  //     // print("awad-------------------------------${response.body}");
-  //     ApiChecker.checkApi(response);
-  //   }
-  // }
+
 
   void setRestaurantType(String type) {
     _estateType = type;
     update();
   }
 
-
-  // void setCategoryList() {
-  //   if (Get
-  //       .find<CategoryController>()
-  //       .categoryList != null) {
-  //     _categoryList = [];
-  //     _categoryList.add(CategoryModel());
-  //
-  //     Get
-  //         .find<CategoryController>()
-  //         .categoryList
-  //         .forEach((category) {
-  //       // if(_restaurant.categoryIds.contains(category.id)) {
-  //       _categoryList.add(category);
-  //       print("list_cate${category.name}");
-  //       // }
-  //     });
-  //   }
-  // }
 
 
   void setCategoryList() {
@@ -221,11 +176,22 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
+  void setCategoryName(int index) {
+    _categoryName = index;
+    update();
+  }
+
+
   int getCategoryIndex() {
     return _categoryIndex;
   }
 
   int getCategoryPostion() {
+    return _categoryPostion;
+  }
+
+
+  int getCategoryName() {
     return _categoryPostion;
   }
 
@@ -326,7 +292,7 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
-  Future<void> registerEstate(EstateBody restaurantBody) async {
+  Future<void> addEstate(EstateBody estateBody) async {
     _isLoading = true;
     update();
     List<MultipartBody> _multiParts = [];
@@ -340,10 +306,38 @@ class EstateController extends GetxController implements GetxService {
       _multiParts.add(MultipartBody('planed_image[]', file));
     }
     Response response = await estateRepo.createEstate(
-        restaurantBody, _multiParts);
+        estateBody, _multiParts);
     print("save estate---------------------------------------------------${response
         .body}");
     if (response.statusCode == 200) {
+      _isLoading=false;
+      Get.offNamed(RouteHelper.getPaymentRoute(161));
+   //   Get.offAllNamed(RouteHelper.getSuccess());
+    } else {
+      ApiChecker.checkApi(response);
+      print("error estate---------------------------------------------------${response.body}");
+    }
+    _isLoading = false;
+    update();
+  }
+  Future<void> updatEstate(EstateBody estatetBody) async {
+    _isLoading = true;
+    update();
+    // List<MultipartBody> _multiParts = [];
+    // _multiParts.add(MultipartBody('image', _pickedImage));
+    // for (XFile file in _pickedIdentities) {
+    //   _multiParts.add(MultipartBody('identity_image[]', file));
+    // }
+    //
+    // _multiParts.add(MultipartBody('image', _pickedPlanedImage));
+    // for (XFile file in _pickPlaned) {
+    //   _multiParts.add(MultipartBody('planed_image[]', file));
+    // }
+    Response response = await estateRepo.updateEstate(estatetBody);
+
+    if (response.statusCode == 200) {
+      print("save estate---------------------------------------------------${response
+          .body}");
       _isLoading=false;
       Get.offAllNamed(RouteHelper.getSuccess());
     } else {
@@ -356,10 +350,11 @@ class EstateController extends GetxController implements GetxService {
 
 
 
-  Future<void> deleteProduct(int estate_id) async {
+
+  Future<void> deleteEstate(int estateId) async {
     _isLoading = true;
     update();
-    Response response = await estateRepo.deleteEstate(estate_id);
+    Response response = await estateRepo.deleteEstate(estateId);
     if(response.statusCode == 200) {
       Get.back();
       showCustomSnackBar('estate deleted successfully'.tr, isError: false);

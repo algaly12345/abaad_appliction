@@ -4,7 +4,6 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
-import 'package:clipboard/clipboard.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

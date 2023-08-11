@@ -16,9 +16,9 @@ class BannerController extends GetxController implements GetxService {
   List<dynamic> get bannerDataList => _bannerDataList;
   int get currentIndex => _currentIndex;
 
-  Future<void> getBannerList(bool reload,int zone_id) async {
+  Future<void> getBannerList(bool reload,int zoneId) async {
     if(_bannerImageList == null || reload) {
-      Response response = await bannerRepo.getBannerList(zone_id);
+      Response response = await bannerRepo.getBannerList(zoneId);
       if (response.statusCode == 200) {
         _bannerImageList = [];
         _bannerDataList = [];

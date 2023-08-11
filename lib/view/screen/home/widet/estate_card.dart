@@ -2,17 +2,14 @@ import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/details_dilog.dart';
-import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 
 class PropertyCard extends StatelessWidget {
@@ -52,7 +49,7 @@ class PropertyCard extends StatelessWidget {
                   clipBehavior: Clip.none,
                   children: [
                     CustomImage(
-                      image:estate.images.length ==0?1:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${estate.images[0]}",
+                      image:estate.images.length > 0?"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${estate.images[0]}":'',
                       fit:  BoxFit.cover,
                       width: MediaQuery.of(context).size.width,
 
@@ -97,7 +94,7 @@ class PropertyCard extends StatelessWidget {
 
                             Padding(
                               padding: const EdgeInsets.only(right: 4,left: 4),
-                              child: Text("يتصمن عرض", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).backgroundColor),),
+                              child: Text("it_includes_offers".tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).backgroundColor),),
                             ),
 
                           ],
@@ -163,17 +160,23 @@ class PropertyCard extends StatelessWidget {
 
 
                         Container(
-                          width: 30,
-                          margin: const EdgeInsets.only(right: 10,left: 10),
+                          padding: const EdgeInsets.only(right: 4,left: 4),
                           decoration:  BoxDecoration(
                               borderRadius: BorderRadius.circular(
                                   4),
-                              color: estate.type_add=="for_sell"?Colors.blue:Colors.orange),
-                          child:  Text(estate.type_add=="for_sell"?"للبيع":"للإجار",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,)
-                          ),
+                              color:  Colors.blue),
+                          child:  Row(
+                            children: [
+                              Text(
+                                  "${estate.view}",
+                                  style: robotoRegular.copyWith(
+                                    fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor,
+                                  )
+                              ),
+                              SizedBox(width: 2,),
+                              Icon(Icons.remove_red_eye_outlined,color:Colors.white,size: 20,),
+                            ],
+                        ),
                         )
                       ],
                     ),
@@ -205,7 +208,7 @@ class PropertyCard extends StatelessWidget {
                         Container(
                           child: Row(
                             children: [
-                              Text("رقم الإعلان :",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                              Text("ad_number".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
                               SizedBox(
                                 width: 4.0,
                               ),

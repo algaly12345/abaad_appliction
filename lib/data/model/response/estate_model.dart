@@ -69,7 +69,7 @@ class Estate {
   int advertiserNo;
   String nationalAddress;
   int userId;
-  String estate_id;
+  int  estate_id;
   String city;
   String category;
   List<OtherAdvantages> otherAdvantages;
@@ -310,21 +310,21 @@ class EstateImages {
 
 
 class ServiceOffers {
-  String  id;
+  int  id;
   String title;
   String expiryDate;
-  String  servicePrice;
+  int   servicePrice;
   String description;
-  String  discount;
+  int  discount;
   String sendedAt;
-  String serviceTypeId;
+  int  serviceTypeId;
   String offerType;
   String createdAt;
   String updatedAt;
   String image;
   String phoneProvider;
-  String  category_id;
-  String  offer_id;
+  int  category_id;
+  int   offer_id;
 
   ServiceOffers(
       {this.id,
@@ -486,7 +486,7 @@ class Users {
   String phone;
   String image;
   String membershipType;
-  String advertiserNo;
+  int advertiserNo;
 
   Users({this.name, this.email, this.phone, this.image,this.membershipType,this.advertiserNo});
 

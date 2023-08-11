@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
@@ -7,9 +6,7 @@ import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/body/estate_body.dart';
-import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/package_model.dart';
-import 'package:abaad/data/model/response/region_model.dart';
 import 'package:abaad/helper/color_coverter.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
@@ -17,30 +14,20 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_button.dart';
-import 'package:abaad/view/base/custom_dialog.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/custom_text_field.dart';
 import 'package:abaad/view/base/data_view.dart';
 import 'package:abaad/view/base/header_widget.dart';
-import 'package:abaad/view/base/map_details_view.dart';
 import 'package:abaad/view/base/my_text_field.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/stepper.dart';
-import 'package:abaad/view/screen/auth/widget/registration_stepper_widget.dart';
-import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
-import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
 import 'package:abaad/view/screen/estate/business_plan/widgets/subscription_card.dart';
 import 'package:abaad/view/screen/estate/business_plan/widgets/success_widget.dart';
 import 'package:abaad/view/screen/estate/widgets/confiram_location_view.dart';
 import 'package:abaad/view/screen/estate/widgets/estate_bg_widget.dart';
-import 'package:abaad/view/screen/estate/widgets/menu_option.dart';
 import 'package:abaad/view/screen/map/pick_map_screen.dart';
 import 'package:abaad/view/screen/map/widget/permission_dialog.dart';
-import 'package:abaad/view/screen/profile/widget/profile_bg_widget_update.dart';
-import 'package:abaad/view/screen/profile/widget/profile_card.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -51,7 +38,6 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:multiselect/multiselect.dart';
 
 
 
@@ -88,6 +74,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     }
   }
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _addNumberController = TextEditingController();
 
   final TextEditingController _shortDescController = TextEditingController();
   final TextEditingController _longDescController = TextEditingController();
@@ -100,6 +87,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   final FocusNode _spaceFocus = FocusNode();
   final FocusNode _buildSpaceFocus = FocusNode();
   final FocusNode _documentNumberFocus = FocusNode();
+
+  final FocusNode _AdNumberFocus = FocusNode();
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -296,6 +285,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
              _phoneController.text = userController.userInfoModel.phone ?? '';
          //    _userTypeController.text = userController.userInfoModel.userType ?? '';
            }
+
+
     return    GetBuilder<LocationController>(builder: (locationController) {
 
 
@@ -322,76 +313,6 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                 padding: const EdgeInsets.only(right: 7.0,left: 7.0),
                 child:  Column(
                     crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("ad_typ".tr, style: robotoRegular.copyWith(
-                          fontSize: Dimensions.fontSizeDefault, color: Theme
-                          .of(context)
-                          .hintColor),),
-                      SizedBox(height: 7),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded( // Place `Expanded` inside `Row`
-                            child: InkWell(
-                              onTap: () {
-                                setState(() => _typeProperties = 0);
-                              },
-                              child: Container(
-                                height: 39,
-                                decoration: BoxDecoration(
-                                    color: _typeProperties == 0 ? Theme
-                                        .of(context)
-                                        .secondaryHeaderColor : Colors
-                                        .transparent,
-                                    border: Border.all(
-                                      width: 1, color: Colors.blue[500],),
-                                    borderRadius: BorderRadius.circular(2,)
-                                ),
-
-                                child: Center(child: Text('for_rent'.tr,
-                                  style: robotoBlack.copyWith(fontSize: 16,
-                                      color: _typeProperties == 0
-                                          ? Colors.white
-                                          : Colors.blue),)),
-
-
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 3,),
-                          Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
-                            child: InkWell(
-                              onTap: () {
-                                setState(() => _typeProperties = 1);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: _typeProperties == 1 ? Theme
-                                        .of(context)
-                                        .secondaryHeaderColor : Colors
-                                        .transparent,
-                                    border: Border.all(
-                                      width: 1, color: Colors.blue[500],),
-                                    borderRadius: BorderRadius.circular(2,)
-                                ),
-                                height: 39,
-                                // color: _value == 1 ? Colors.grey : Colors.transparent,
-                                child: Center(child: Text('for_sell'.tr,
-                                  style: robotoBlack.copyWith(fontSize: 16,
-                                      color: _typeProperties == 1
-                                          ? Colors.white
-                                          : Colors.blue),)),
-
-
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
                   SizedBox(
                       height: 35),
                   Column(
@@ -428,10 +349,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                               right: 5, left: 5),
                                           child: InkWell(
                                             onTap: () {
-                                              restController
-                                                  .setCategoryIndex(categoryController.categoryList[index].id);
-                                              restController
-                                                  .setCategoryPostion(int.parse(categoryController.categoryList[index].position));
+                                              restController.setCategoryIndex(categoryController.categoryList[index].id);
+                                              restController.setCategoryPostion(int.parse(categoryController.categoryList[index].position));
                                               setState(() {
                                                 type_properties=categoryController.categoryList[index].name;
                                               });
@@ -551,6 +470,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       border: Border.all(width: 2, color: Theme.of(context).primaryColor),
                     ),
                     child: ClipRRect(
+
                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                       child: Stack(clipBehavior: Clip.none, children: [
                         GoogleMap(
@@ -1687,7 +1607,6 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
 
-
                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                     MyTextField(
                       hintText: 'phone'.tr,
@@ -1805,7 +1724,17 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       controller: _documentNumberController,
                       focusNode: _documentNumberFocus,
 
-                      inputType: TextInputType.text,
+                      inputType: TextInputType.number,
+                      size: 17,
+                      capitalization: TextCapitalization.sentences,
+                      showBorder: true,
+                    ),
+                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                         MyTextField(
+                      hintText: 'ادخل رقم الإعلان'.tr,
+                      controller: _addNumberController,
+
+                      inputType: TextInputType.number,
                       size: 17,
                       capitalization: TextCapitalization.sentences,
                       showBorder: true,
@@ -1975,10 +1904,10 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                   child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
                     child: Column(children: [
-                      Container(
-                        height: 200,
-                        child: HeaderWidget(200, true), //let's create a common header widget
-                      ),
+                      // Container(
+                      //   height: 200,
+                      //   child: HeaderWidget(200, true), //let's create a common header widget
+                      // ),
 
                       SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
                       Padding(
@@ -2078,21 +2007,22 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   Expanded(
                     child:  !restController.isLoading ?  CustomButton(
                       onPressed: () {
-                        showCustomSnackBar(_northController.text.toString());
 
                         String _price;
                         String _shortDesc;
                         String _space;
                         String _authorized;
+                        String _adNumber;
                         _authorized=_authorizedController.text.trim();
                         _price = _priceController.text.trim();
                         _shortDesc = _shortDescController.text.trim();
                         _space = _spaceController.text.trim();
+                        _adNumber= _addNumberController.text.trim();
                      //   print("----------------------lat${authController.estateLocation}");
                    //    showCustomSnackBar("----------------------lat${authController.estateLocation.longitude}");
 
                    //     String property = '{"room": "44", "bathroom": 30}';
-                        String  property ='[{"name":"حمام", "number":"${_selectedBathroomsIndex}"},{"name":"غرف نوم", "number":"${_selectedRoomIndex}"},{"name":"صلات", "number":"${_selectedLounge}"},{"name":"مطبخ", "number":"${_selectedkitchen}"}]';
+                        String  property ='[{"name":"حمام", "number":"$_selectedBathroomsIndex"},{"name":"غرف نوم", "number":"$_selectedRoomIndex"},{"name":"صلات", "number":"$_selectedLounge"},{"name":"مطبخ", "number":"$_selectedkitchen"}]';
 
                         if(currentStep==1) {
 
@@ -2139,7 +2069,10 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                           if(_djectivePresenter==0&&_authorized.isEmpty){
                             showCustomSnackBar('ادخل رقم التفويض');
-                          }else{
+                          }else if(_adNumber.isEmpty){
+                            showCustomSnackBar('ادخل رقم الإعلان'.tr);
+                          }
+                          else{
                             List<Map<String, dynamic >> _interests = [];
                             for(int index=0; index<categoryController.facilitiesList.length; index++) {
                               if(categoryController.interestSelectedList[index]) {
@@ -2191,9 +2124,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
 
-                            restController.registerEstate(
+                            restController.addEstate(
                               EstateBody(
-                                  type_add:_typeProperties==0?"for_sell":"for_rent" ,
                                   address: "${locationController.address}",
                                   space: _space,
                                   longDescription: _longDescController.text,
@@ -2206,23 +2138,24 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   latitude: locationController.pickPosition.latitude.toString(),
                                   longitude: locationController.pickPosition.longitude.toString(),
                                   near: "near",
-                                  networkType:"${_interests}",
+                                  networkType:"$_interests",
                                   ownershipType: _djectivePresenter==1?"مالك":'مفوض',
                                   property: property,
                                   serviceOffers: "serviceOffers",
-                                  facilities: "${_interests}",
+                                  facilities: "$_interests",
                                   territoryId: "1",
                                   zoneId: locationController.categoryList[locationController.categoryIndex-1].id.toString(),
                                   nationalAddress: "234234",
                                   user_id: userController.userInfoModel.id.toString(),
                                   city: city,
-                                  otherAdvantages: "${_advan}",
-                                  interface: "${_interface}",
+                                  otherAdvantages: "$_advan",
+                                  interface: "$_interface",
                                   streetSpace: "${_widthStreetController.text.toString()}",
 
                                   price: _priceController.text.toString(),
                                 buildSpace: _buildSpaceController.text.toString(),
                                 documentNumber: _documentNumberController.text.toString(),
+                                adNumber: _adNumber,
                                 priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ));
                          // authController.submitBusinessPlan(restaurantId: 1);
                          //  next();

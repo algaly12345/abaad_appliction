@@ -14,7 +14,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetPlatform.isDesktop ? WebMenuBar() : AppBar(
+    return AppBar(
       title: Text(title, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color)),
       centerTitle: true,
       leading: isBackButtonExist ? IconButton(

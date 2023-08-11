@@ -4,8 +4,6 @@ import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/controller/wishlist_controller.dart';
-import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/helper/route_helper.dart';
@@ -14,14 +12,10 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/no_internet_screen.dart';
-import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
-import 'package:abaad/view/screen/estate/estate_details.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:share/share.dart';
 
 class SplashScreen extends StatefulWidget {
   final NotificationBody body;

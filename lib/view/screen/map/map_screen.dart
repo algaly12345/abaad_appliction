@@ -1,55 +1,38 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
-import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/localization_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
-import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
-import 'package:abaad/helper/responsive_helper.dart';
-import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'dart:ui' as ui;
 import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/cached_img.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/details_dilog.dart';
-import 'package:abaad/view/base/discount_tag.dart';
 import 'package:abaad/view/base/drawer_menu.dart';
 import 'package:abaad/view/base/estate_item.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:abaad/view/screen/fillter/fillter_estate_sheet.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
-import 'package:abaad/view/screen/map/widget/estate_by_category.dart';
-import 'package:abaad/view/screen/map/widget/zone_sheet.dart';
-import 'package:abaad/view/screen/test.dart';
 import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_hex_color/flutter_hex_color.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:abaad/util/images.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_stack/image_stack.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'widget/location_search_dialog.dart';
 import 'widget/permission_dialog.dart';
-import 'widget/service_offer.dart';
 import 'widget/service_provider.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class MapScreen extends StatefulWidget {
   ZoneModel mainCategory;
@@ -72,7 +55,7 @@ class _MapViewScreenState extends State<MapScreen> {
   final ScrollController scrollController = ScrollController();
   Uint8List imageDataBytes;
   var markerIcon;
-  GlobalKey iconKey = GlobalKey();
+  // GlobalKey iconKey = GlobalKey();
 
 
   int _reload = 0;
@@ -82,6 +65,7 @@ class _MapViewScreenState extends State<MapScreen> {
   bool searchToggle = false;
   Set<Circle> _circles = Set<Circle>();
   bool radiusSlider = false;
+  bool backProider= false;
 
   LatLng _initialPosition;
   var photoGalleryIndex = 0;
@@ -90,6 +74,12 @@ class _MapViewScreenState extends State<MapScreen> {
   // Set<Marker> _markers = Set<Marker>();
 
   var tappedPoint;
+
+
+
+  // final GlobalKey _floatingButtonKey = GlobalKey();
+  // final GlobalKey _editButtonKey = GlobalKey();
+  // final GlobalKey _settingsButtonKey = GlobalKey();
   void _onMapTypeButtonPressed() {
     setState(() {
       _currentMapType = _currentMapType == MapType.normal
@@ -145,8 +135,10 @@ class _MapViewScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+
     _pageController = PageController(initialPage: 1, viewportFraction: 0.85)
       ..addListener(_onScroll);
+
     // Get.find<AuthController>().getZoneList();
     // if(Get.find<CategoryController>().categoryList == null) {
     //   Get.find<CategoryController>().getCategoryList(true);
@@ -216,7 +208,7 @@ class _MapViewScreenState extends State<MapScreen> {
   }
 
   final GlobalKey<ScaffoldState> _key = GlobalKey();
-
+  final cardKey = GlobalKey<FlipCardState>();
   @override
   Widget build(BuildContext context) {
     bool _isNull = true;
@@ -261,7 +253,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
 
 
-            return         !_isNull ?_products.length>0?    CustomGoogleMapMarkerBuilder (
+            return       CustomGoogleMapMarkerBuilder (
               customMarkers: _customMarkers,
               builder: (context, markers) {
 
@@ -478,7 +470,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                                     borderRadius:
                                                     BorderRadius
                                                         .circular(
-                                                        2.0),
+                                                        8.0),
                                                     color: Colors.white,
                                                   ),
 
@@ -487,8 +479,8 @@ class _MapViewScreenState extends State<MapScreen> {
                                                     Text(
                                                       categoryController.subCategoryList[index].name,
                                                       style: index == categoryController.subCategoryIndex
-                                                          ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)
-                                                          : robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                                          ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)
+                                                          : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
                                                     ),
 
                                                     SizedBox(width: 5),
@@ -630,7 +622,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                       SizedBox(
                                         width: 150,
                                         child: Text(
-                                          "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 10),
+                                          "يتضمن هذا العرض عروض وخصومات من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 10),
                                         ),
                                       ),
                                     ],
@@ -658,7 +650,7 @@ class _MapViewScreenState extends State<MapScreen> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child:
-                      Container(
+                      !_isNull ?_products.length>0?            Container(
                         height: 200,
                         child: GetBuilder<SplashController>(builder: (splashController) {
                           for (int i = 0; i < _products.length; i++) {
@@ -669,7 +661,7 @@ class _MapViewScreenState extends State<MapScreen> {
                           }
                           return nearbyPlacesList(_products);
                         }),
-                      ),
+                      ):Text(""):Text(""),
                     ),
 
                   ]);
@@ -882,7 +874,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                                     borderRadius:
                                                     BorderRadius
                                                         .circular(
-                                                        2.0),
+                                                        8.0),
                                                     color: Colors.white,
                                                   ),
 
@@ -891,8 +883,8 @@ class _MapViewScreenState extends State<MapScreen> {
                                                     Text(
                                                       categoryController.subCategoryList[index].name,
                                                       style: index == categoryController.subCategoryIndex
-                                                          ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)
-                                                          : robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                                          ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)
+                                                          : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
                                                     ),
 
                                                     SizedBox(width: 5),
@@ -985,6 +977,7 @@ class _MapViewScreenState extends State<MapScreen> {
                         top: 100.0,
                         left: 15.0,
                         child: FlipCard(
+                           key: cardKey,
                           front: Container(
                             height: 180.0,
                             width: 175.0,
@@ -1039,10 +1032,13 @@ class _MapViewScreenState extends State<MapScreen> {
                               )
 
                           ),
+                          autoFlipDuration: const Duration(seconds: 1),
+
+
                         ))
                         : Container(),
 
-                    Align(
+                    !_isNull ?_products.length>0?        Align(
                       alignment: Alignment.bottomCenter,
                       child:
                       Container(
@@ -1058,12 +1054,12 @@ class _MapViewScreenState extends State<MapScreen> {
 
                         }),
                       ),
-                    ),
+                    ):Text(""):Text(""),
 
                   ]);
 
               },
-            ):Center(child: Text("looding"),):Container();
+            );
 
 
 
@@ -1103,7 +1099,6 @@ class _MapViewScreenState extends State<MapScreen> {
     ));
     for (int i = 0; i < estate.length; i++) {
       Estate currentCoordinate = estate[i];
-      print('Coordinate ${i+1}: (${currentCoordinate.id}, ${currentCoordinate.title})');
       LatLng _latLng = LatLng(double.parse(currentCoordinate.latitude), double.parse(currentCoordinate.longitude));
       _latLngs.add(_latLng);
 
@@ -1154,7 +1149,7 @@ class _MapViewScreenState extends State<MapScreen> {
                       Text(currentCoordinate.price.length ==5? '${currentCoordinate.price } الف':currentCoordinate.price.length ==4? '${currentCoordinate.price } الف':currentCoordinate.price.length ==7? '${currentCoordinate.price } الف':currentCoordinate.price.length ==6? '${currentCoordinate.price } الف':currentCoordinate.price.length >=9? '${currentCoordinate.price } مليون':currentCoordinate.price,
                           style:robotoBlack.copyWith(fontSize: 9)
                       ),
-                      Image.asset(currentCoordinate.serviceOffers.isEmpty?Images.vt:Images.vt_offer, height: 8, width: 8),
+                      Image.asset(currentCoordinate.serviceOffers.isEmpty?Images.image:Images.vt_offer, height: 8, width: 8),
                     ],
 
                   ),
@@ -1165,14 +1160,14 @@ class _MapViewScreenState extends State<MapScreen> {
                 children: [
                   Image.asset(Images.location_marker, height: 40, width: 40,color:currentCoordinate.serviceOffers.length==0?Colors.red:Colors.orange),
                   Positioned(top: 3, left: 0, right: 0, child: Center(
-                    child: ClipOval(child: CustomImage(image:currentCoordinate.images.length ==0?1:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${currentCoordinate.images[0]}", placeholder: Images.placeholder, height: 20, width: 20, fit: BoxFit.cover)),
+                    child: ClipOval(child: CustomImage(image:currentCoordinate.images.length > 0?"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${currentCoordinate.images[0]}":Images.estate_type, placeholder: Images.placeholder, height: 20, width: 20, fit: BoxFit.cover)),
                   )),
                 ],
               ): Stack(
                 children: [
                   Image.asset(Images.location_marker, height: 35, width: 35,color:currentCoordinate.serviceOffers.length==0?Theme.of(context).primaryColor:Colors.orange),
                   Positioned(top: 3, left: 0, right: 0, child: Center(
-                    child: ClipOval(child: CustomImage(  image:currentCoordinate.images.length ==0?1:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${currentCoordinate.images[0]}", placeholder: Images.placeholder, height: 18, width: 18, fit: BoxFit.cover)),
+                    child: ClipOval(child: CustomImage(  image:currentCoordinate.images.length > 0?"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${currentCoordinate.images[0]}":Images.estate_type, placeholder: Images.placeholder, height: 18, width: 18, fit: BoxFit.cover)),
                   )),
                 ],
               ),
@@ -1204,6 +1199,70 @@ class _MapViewScreenState extends State<MapScreen> {
 
 
 
+  // Future<void> _createTutorial() async {
+  //   final targets = [
+  //     TargetFocus(
+  //       identify: 'floatingButton',
+  //       keyTarget: _floatingButtonKey,
+  //       alignSkip: Alignment.topCenter,
+  //       contents: [
+  //         TargetContent(
+  //           align: ContentAlign.top,
+  //           builder: (context, controller) => Text(
+  //             'Use this button to add new elements to the list',
+  //             style: Theme.of(context)
+  //                 .textTheme
+  //                 .titleLarge
+  //                 ?.copyWith(color: Colors.white),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //     TargetFocus(
+  //       identify: 'editButton',
+  //       keyTarget: _editButtonKey,
+  //       alignSkip: Alignment.bottomCenter,
+  //       contents: [
+  //         TargetContent(
+  //           align: ContentAlign.bottom,
+  //           builder: (context, controller) => Text(
+  //             'You can edit the entries by pressing on the edit button',
+  //             style: Theme.of(context)
+  //                 .textTheme
+  //                 .titleLarge
+  //                 ?.copyWith(color: Colors.white),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //     TargetFocus(
+  //       identify: 'settingsButton',
+  //       keyTarget: _settingsButtonKey,
+  //       alignSkip: Alignment.bottomCenter,
+  //       contents: [
+  //         TargetContent(
+  //           align: ContentAlign.bottom,
+  //           builder: (context, controller) => Text(
+  //             'Configure the app in the settings screen',
+  //             style: Theme.of(context)
+  //                 .textTheme
+  //                 .titleLarge
+  //                 ?.copyWith(color: Colors.white),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   ];
+  //   final tutorial = TutorialCoachMark(
+  //     targets: targets,
+  //   );
+  //
+  //   Future.delayed(const Duration(milliseconds: 500), () {
+  //     tutorial.show(context: context);
+  //   });
+  // }
+
+
   Future<Position> getUserCurrentLocation() async {
     await Geolocator.requestPermission().then((value) {
       print(value);
@@ -1221,7 +1280,6 @@ class _MapViewScreenState extends State<MapScreen> {
         itemCount: _products.length,
         onPageChanged:(int value) {
           _setMarkers(_products);
-
           selectedIndex = value;
           _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
               target: LatLng(
@@ -1235,6 +1293,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
           if(_products[selectedIndex].serviceOffers.length >0){
            estate= _products[selectedIndex];
+          // _createTutorial();
             cardTapped=true;
             setState(() {
 
@@ -1261,9 +1320,15 @@ class _MapViewScreenState extends State<MapScreen> {
                 value = (1 - (value.abs() * 0.3) + 0.06).clamp(0.0, 1.0);
 
               }
-              Timer(Duration(seconds: 2), () {
-                cardTapped=false ;
+
+
+
+              Timer(Duration(seconds: 4), () {
+
+                cardKey.currentState.toggleCard();
+             //  cardTapped=false ;
               });
+
 
 
 
@@ -1280,6 +1345,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
 
 if(cardTapped==true){
+
   cardTapped=false;
 }else if(cardTapped==false){
   cardTapped=true;
@@ -1314,12 +1380,14 @@ if(cardTapped==true){
                           },
 
                           child: Row(
+
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
                                   Image.asset(Images.offer_icon, height: 35, width: 40),
-                                  Text("يتضمن عرض ",style: robotoBlack.copyWith(fontSize: 11)),
+                                  Text(
+                                      "يتضمن عرض ",style: robotoBlack.copyWith(fontSize: 11)),
                                 ],
                               ),
                               Center(
@@ -1336,6 +1404,7 @@ if(cardTapped==true){
                                           ),
                                           alignment: Alignment.topRight,
                                           child: ClipOval(child: CustomImage(
+
                                             image: '${Get.find<SplashController>().configModel.baseUrls.provider}'
                                                 '/${(_products[index].serviceOffers[i].image!=null)? _products[index].serviceOffers[i].image:Images.image}',
                                             height: 27, width: 27, fit: BoxFit.cover,
@@ -1382,6 +1451,8 @@ if(cardTapped==true){
 
         });
   }
+
+
 
 
 }

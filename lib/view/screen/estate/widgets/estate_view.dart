@@ -1,7 +1,5 @@
-import 'dart:collection';
 
 import 'package:abaad/controller/auth_controller.dart';
-import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
@@ -11,13 +9,10 @@ import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/custom_text_field.dart';
 import 'package:abaad/view/screen/estate/widgets/button_view.dart';
 import 'package:abaad/view/screen/estate/widgets/estate_image_view.dart';
 import 'package:abaad/view/screen/estate/widgets/service%20_provider_view.dart';
-import 'package:abaad/view/screen/map/widget/location_search_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:share/share.dart';
@@ -37,7 +32,7 @@ class _EstateViewState extends State<EstateView> {
 
 
 
-  List<RadioModel> sampleData = new List<RadioModel>();
+  List<RadioModel> sampleData = [];
   @override
   void initState() {
     // TODO: implement initState

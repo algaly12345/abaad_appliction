@@ -1,9 +1,7 @@
-import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class DiscountTagWithoutImage extends StatelessWidget {
   final double discount;

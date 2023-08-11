@@ -3,28 +3,20 @@ import 'dart:async';
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/banner_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
-import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
-import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/confirmation_dialog.dart';
-import 'package:abaad/view/base/custom_image.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/details_dilog.dart';
 import 'package:abaad/view/base/drawer_menu.dart';
+import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
-import 'package:abaad/view/screen/chat/chat_screen.dart';
 import 'package:abaad/view/screen/chat/conversation_screen.dart';
 import 'package:abaad/view/screen/dashboard/widget/bottom_nav_item.dart';
 import 'package:abaad/view/screen/favourite/favourite_screen.dart';
-import 'package:abaad/view/screen/draw.dart';
 import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:abaad/view/screen/map/map_view_screen.dart';
-import 'package:abaad/view/screen/old.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -100,7 +92,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
 
     Future.delayed(Duration(seconds: 5), () async{
-     await _initDynamicLinks(context);
+     _initDynamicLinks(context);
 
       setState(() {});
     });
@@ -162,12 +154,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               elevation: 0,
               onPressed: () {
 
-                if(userController.userInfoModel.accountVerification != "0") {
-                  Get.toNamed(RouteHelper.getAddEstateRoute());
+                if(userController.userInfoModel != null) {
+                  if (userController.userInfoModel.accountVerification != "0") {
+                    Get.toNamed(RouteHelper.getAddEstateRoute());
+                  } else {
+                    Get.toNamed(RouteHelper.getAgentRegister());
+                  }
                 }else{
-                  Get.toNamed(RouteHelper.getAgentRegister());
+                  Get.dialog(Container(
+                    color: Colors.white,
+                      child: NotLoggedInScreen()));
                 }
-
               },
               child: Container(
                 height: 70,
@@ -207,11 +204,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Padding(
               padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
               child: Row(children: [
-                BottomNavItem(iconData: Images.home,name: "الرئسية",isSelected: _pageIndex == 0, onTap: () => _setPage(0)),
-                BottomNavItem(iconData: Images.menu, name:"القائمة",isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
+                BottomNavItem(iconData: Images.home,name: "home".tr,isSelected: _pageIndex == 0, onTap: () => _setPage(0)),
+                BottomNavItem(iconData: Images.menu, name:"menu".tr,isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
                 Expanded(child: SizedBox()),
-                BottomNavItem(iconData: Images.messageText,name: "المحادثة", isSelected: _pageIndex == 2, onTap: () => _setPage(2)),
-                BottomNavItem(iconData: Images.heart, name: "المفضلة",isSelected: _pageIndex == 3, onTap: () => _setPage(3),),
+                BottomNavItem(iconData: Images.messageText,name: "chat".tr, isSelected: _pageIndex == 2, onTap: () => _setPage(2)),
+                BottomNavItem(iconData: Images.heart, name: "favorite".tr,isSelected: _pageIndex == 3, onTap: () => _setPage(3),),
               ]),
             ),
 

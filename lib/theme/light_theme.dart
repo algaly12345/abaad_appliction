@@ -11,5 +11,5 @@ ThemeData light = ThemeData(
   hintColor: Color(0xFF9F9F9F),
   cardColor: Colors.white,
   colorScheme: ColorScheme.light(primary: Color(0xFFEF7822), secondary: Color(0xFFEF7822)),
-  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(primary: Color(0xFFEF7822))),
+  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: Color(0xFFEF7822))),
 );

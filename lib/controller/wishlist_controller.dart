@@ -65,11 +65,11 @@ class WishListController extends GetxController implements GetxService {
         try{
           _restaurant = Estate.fromJson(restaurant);
         }catch(e){
-          showCustomSnackBar("${e}");
+          showCustomSnackBar("$e");
 
         }
         _wishRestList.add(_restaurant);
-        _wishRestIdList.add(int.parse(_restaurant.estate_id));
+        _wishRestIdList.add(_restaurant.estate_id);
 
       });
     } else {

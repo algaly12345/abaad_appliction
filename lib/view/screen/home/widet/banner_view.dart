@@ -36,7 +36,7 @@ class BannerView extends StatelessWidget {
                 itemCount: bannerController.bannerImageList.length == 0 ? 1 : bannerController.bannerImageList.length,
                 itemBuilder: (context, index, _) {
                   String _baseUrl = Get.find<SplashController>().configModel.baseUrls.banners;
-                  print("---------------anner----------${_baseUrl}");
+                  print("---------------anner----------$_baseUrl");
                   return InkWell(
                     onTap: (){
 

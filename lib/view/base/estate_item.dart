@@ -3,19 +3,15 @@ import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/screen/estate/widgets/estate_image_view.dart';
 import 'package:abaad/view/screen/profile/edit_dilog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/get_utils.dart';
-import 'package:image_stack/image_stack.dart';
 
 class EstateItem extends StatelessWidget {
  final  Estate estate;
@@ -81,9 +77,9 @@ class EstateItem extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                                 child:  GetBuilder<SplashController>(builder: (splashController) {
-                                  String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+                                  String _baseUrl = Get.find<SplashController>().configModel.baseUrls.estateImageUrl;
                                   return         CustomImage(
-                                    image:estate.images.length ==0?1:"${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${estate.images[0]}",
+                                    image:estate.images.length > 0?"${_baseUrl}/${estate.images[0]}":Images.estate_type,
                                     fit:  BoxFit.cover,
                                     width: MediaQuery.of(context).size.width,
 
@@ -129,7 +125,7 @@ class EstateItem extends StatelessWidget {
                                               return InkWell(
                                                 onTap: () {
                                                   if(Get.find<AuthController>().isLoggedIn()) {
-                                                    _isWished ? wishController.removeFromWishList(int.parse(estate.estate_id)) : wishController.addToWishList(estate, true);
+                                                    _isWished ? wishController.removeFromWishList(estate.estate_id) : wishController.addToWishList(estate, true);
                                                   }else {
                                                     showCustomSnackBar('you_are_not_logged_in'.tr);
                                                   }
@@ -152,7 +148,7 @@ class EstateItem extends StatelessWidget {
                             Get.dialog(ConfirmationDialog(icon: Images.support,
                             title: 'are_you_sure_to_delete_account'.tr,
                             description: 'it_will_remove_your_all_information'.tr, isLogOut: true,
-                            onYesPressed: () => Get.find<EstateController>().deleteProduct(estate.id),
+                            onYesPressed: () => Get.find<EstateController>().deleteEstate(estate.id),
                           ), useSafeArea: false);
         },
                                                 child: Icon(Icons.delete_forever, color: Colors.white),
@@ -179,15 +175,23 @@ class EstateItem extends StatelessWidget {
                                               ),
                                             ],
 
-                                          ): Container(
-                                            width: 40,
-                                            margin: const EdgeInsets.only(top: 10),
+                                          ):       Container(
+                                            padding: const EdgeInsets.only(right: 4,left: 4),
                                             decoration:  BoxDecoration(
-                                                color: estate.type_add=="for_rent"?Colors.blue:Colors.orange),
-                                            child:  Text(estate.type_add=="for_sell"?"للبيع":"للإجار",
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                  color: Colors.white,)
+                                                borderRadius: BorderRadius.circular(
+                                                    4),
+                                                color:  Colors.blue),
+                                            child:  Row(
+                                              children: [
+                                                Text(
+                                                    "${estate.view}",
+                                                    style: robotoRegular.copyWith(
+                                                      fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor,
+                                                    )
+                                                ),
+                                                SizedBox(width: 2,),
+                                                Icon(Icons.remove_red_eye_outlined,color:Colors.white,size: 20,),
+                                              ],
                                             ),
                                           ),
 
@@ -206,9 +210,9 @@ class EstateItem extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Text(" العنوان الوطني : ",
+                                    Text("national_address".tr,
                                         style: robotoBlack.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.black26)),
-                                    Text("${estate.nationalAddress}",
+                                    Text(": ${estate.nationalAddress}",
                                         style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
                                   ],
 
@@ -216,11 +220,11 @@ class EstateItem extends StatelessWidget {
                                 Container(
                                   child: Row(
                                     children: [
-                                      Text("رقم الإعلان :",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                                      Text("ad_number".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
                                       SizedBox(
                                         width: 4.0,
                                       ),
-                                      Text("${estate.adNumber}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                                      Text(": ${estate.adNumber}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
                                       // IconButton(onPressed:(){
                                       //   FlutterClipboard.copy(estate.adNumber.toString()).then(( value ) {
                                       //     showCustomSnackBar('تم النسخ'.tr, isError: false);

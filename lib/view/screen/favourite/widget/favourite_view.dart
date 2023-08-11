@@ -1,10 +1,7 @@
-import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

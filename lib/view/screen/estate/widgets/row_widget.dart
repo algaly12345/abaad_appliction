@@ -1,5 +1,4 @@
 import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 

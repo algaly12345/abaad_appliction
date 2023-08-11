@@ -27,14 +27,14 @@ class LocationRepo {
     return await apiClient.postData(AppConstants.ADD_ADDRESS_URI, addressModel.toJson());
   }
 
-  Future<Response> updateAddress(AddressModel addressModel, int addressId) async {
+  Future<Response> updateAddress(AddressModel addressModel, int addressId,) async {
     return await apiClient.putData('${AppConstants.UPDATE_ADDRESS_URI}$addressId', addressModel.toJson());
   }
 
-  Future<bool> saveUserAddress(String address, List<int> zoneIDs) async {
+  Future<bool> saveUserAddress(String address, List<int> zoneIDs, String latitude, String longitude) async {
     apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.TOKEN), zoneIDs,
-      sharedPreferences.getString(AppConstants.LANGUAGE_CODE),
+        sharedPreferences.getString(AppConstants.TOKEN), zoneIDs,
+        sharedPreferences.getString(AppConstants.LANGUAGE_CODE)
     );
     return await sharedPreferences.setString(AppConstants.USER_ADDRESS, address);
   }

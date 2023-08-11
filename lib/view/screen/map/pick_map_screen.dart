@@ -67,9 +67,9 @@ class _PickMapScreenState extends State<PickMapScreen> {
              _zoneIndexList.add(index);
            }
          }
-          /*print('--------------${'${locationController.pickPlaceMark.name ?? ''} '
-              '${locationController.pickPlaceMark.locality ?? ''} '
-              '${locationController.pickPlaceMark.postalCode ?? ''} ${locationController.pickPlaceMark.country ?? ''}'}');*/
+          // print('--------------${'${locationController.pickPlaceMark.name ?? ''} '
+          //     '${locationController.address. ?? ''} '
+          //     '${locationController.pickPlaceMark.postalCode ?? ''} ${locationController.pickPlaceMark.country ?? ''}'}');
 
           return Stack(children: [
 
@@ -152,7 +152,9 @@ class _PickMapScreenState extends State<PickMapScreen> {
                         ), zoom: 17)));
                         locationController.setAddAddressData();
                       }
-     showCustomSnackBar("${                 locationController.categoryList[locationController.categoryIndex-1].longitude}");
+
+                      locationController. fetchLocationData(locationController.pickPosition.latitude,locationController.pickPosition.longitude);
+     showCustomSnackBar("${                 locationController.district}");
            Get.back();
                     }else {
                       // AddressModel _address = AddressModel(

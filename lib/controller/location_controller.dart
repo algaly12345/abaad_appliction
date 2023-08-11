@@ -8,15 +8,14 @@ import 'package:abaad/data/model/response/address_model.dart';
 import 'package:abaad/data/model/response/location_repo.dart';
 import 'package:abaad/data/model/response/place_details_model.dart';
 import 'package:abaad/data/model/response/prediction_model.dart';
-import 'package:abaad/data/model/response/region_model.dart';
 import 'package:abaad/data/model/response/response_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/data/model/response/zone_response_model.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -46,6 +45,9 @@ class LocationController extends GetxController implements GetxService {
   List<int> _cityIds = [];
   List<ZoneModel> _categoryList;
   int _categoryIndex = 0;
+
+  RxString city = RxString("");
+  RxString district = RxString("");
 
 
   List<PredictionModel> get predictionList => _predictionList;
@@ -244,7 +246,7 @@ class LocationController extends GetxController implements GetxService {
 
   Future<bool> saveUserAddress(AddressModel address) async {
     String userAddress = jsonEncode(address.toJson());
-    return await locationRepo.saveUserAddress(userAddress, address.zoneIds);
+    return await locationRepo.saveUserAddress(userAddress, address.zoneIds, address.latitude, address.longitude);
   }
 
   AddressModel getUserAddress() {
@@ -463,4 +465,24 @@ class LocationController extends GetxController implements GetxService {
       update();
     }
   }
+
+
+  Future<void> fetchLocationData(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        Placemark placemark = placemarks[0];
+        city.value = placemark.locality ?? "";
+        district.value = placemark.subLocality ?? "";
+      } else {
+        city.value = "City Not Found";
+        district.value = "District Not Found";
+      }
+    } catch (e) {
+      print("Error fetching location data: $e");
+      city.value = "Error";
+      district.value = "Error";
+    }
+  }
+
 }

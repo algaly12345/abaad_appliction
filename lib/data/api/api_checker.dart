@@ -12,7 +12,7 @@ class ApiChecker {
      Get.find<WishListController>().removeWishes();
        Get.offAllNamed(RouteHelper.getSignInRoute(RouteHelper.splash));
     }else {
-      //showCustomSnackBar(response.statusText);
+     showCustomSnackBar(response.statusText);
     }
   }
 }

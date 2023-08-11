@@ -5,15 +5,8 @@ import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
 import 'package:abaad/helper/route_helper.dart';
-import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/custom_image.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/web_menu_bar.dart';
-import 'package:abaad/view/screen/map/widget/zone_sheet.dart';
-import 'package:clippy_flutter/arc.dart';
 import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,7 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key key}) : super(key: key);
   static Future<void> loadData(bool reload) async {
-
+    int offset = 1;
+    Get.find<AuthController>().getZoneList();
     if(Get.find<EstateController>().estateModel == null) {
       Get.find<EstateController>().getEstateList(1, false,0);
     }
@@ -78,7 +72,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
       //appBar:  WebMenuBar(ontop:()=>   _key.currentState.openDrawer(),),
 
       body: GetBuilder<AuthController>(builder: (authController) {
-        // print("zone_list${authController.zoneList}");
+
         // List<int> _zoneIndexList = [];
         // if (authController.zoneList != null) {
         //   //  print("zone_list${authController.zoneModel.name}");
@@ -201,15 +195,15 @@ class _MapViewScreenState extends State<MapViewScreen> {
             position: _latLng,
             onTap: () async {
               await prefs.setInt("visible", 1);
-              _controller.animateCamera(
-                  CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-                    double.parse(zone[index].latitude),
-                    double.parse(zone[index].longitude),
-
-                  ), zoom: 11)));
+              // _controller.animateCamera(
+              //     CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
+              //       double.parse(zone[index].latitude),
+              //       double.parse(zone[index].longitude),
+              //
+              //     ), zoom: 11)));
               // Future.delayed(Duration(seconds: 1), () {
               // Get.offNamed(RouteHelper.getAccessLocationRoute('verification'));
-              Get.find<CategoryController>().setFilterIndex(zone[index].id,0,"0","0",0,"0");
+              Get.find<CategoryController>().setFilterIndex(zone[index].id,0,"0","0",0,);
               Get.toNamed(RouteHelper.getCategoryRoute(zone[index].id,zone[index].latitude,zone[index].longitude));
               // });
 

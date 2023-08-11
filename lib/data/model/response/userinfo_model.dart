@@ -26,8 +26,8 @@ class UserInfoModel {
 
   Userinfo agent;
   String membershipType;
-  String accountVerification;
-  String advertiserNo;
+  int accountVerification;
+  int  advertiserNo;
 
   UserInfoModel(
       {this.id,
@@ -139,7 +139,7 @@ class Userinfo {
   String identityType;
   String image;
   String commercialRegisterionNo;
-  String     userId;
+  int     userId;
   String name;
   String phone;
   String createdAt;

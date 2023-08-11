@@ -9,7 +9,7 @@ class ZoneModel {
   String longitude;
   String createdAt;
   int  territory_id;
-  String    estate_count;
+  int    estate_count;
   String updatedAt;
 
 
@@ -33,9 +33,9 @@ class ZoneModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    if (this.coordinates != null) {
-      data['coordinates'] = this.coordinates.toJson();
-    }
+    // if (this.coordinates != null) {
+    //   data['coordinates'] = this.coordinates.toJson();
+    // }
     data['status'] = this.status;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

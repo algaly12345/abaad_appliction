@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class NotifIconWidget extends StatelessWidget {
   final Color color;

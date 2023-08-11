@@ -27,7 +27,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
       PopularFilterListData.popularFList;
   List<PopularFilterListData> accomodationListData =
       PopularFilterListData.accomodationList;
-  int _typeProperties = 0;
   String type_properties;
   String ctiy_name;
   String districts;
@@ -91,71 +90,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("ad_typ".tr, style: robotoRegular.copyWith(
-                                fontSize: Dimensions.fontSizeDefault, color: Theme
-                                .of(context)
-                                .hintColor),),
-                            SizedBox(height: 7),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded( // Place `Expanded` inside `Row`
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() => _typeProperties = 0);
-                                    },
-                                    child: Container(
-                                      height: 39,
-                                      decoration: BoxDecoration(
-                                          color: _typeProperties == 0 ? Theme
-                                              .of(context)
-                                              .secondaryHeaderColor : Colors
-                                              .transparent,
-                                          border: Border.all(
-                                            width: 1, color: Colors.blue[500],),
-                                          borderRadius: BorderRadius.circular(2,)
-                                      ),
 
-                                      child: Center(child: Text('for_rent'.tr,
-                                        style: robotoBlack.copyWith(fontSize: 16,
-                                            color: _typeProperties == 0
-                                                ? Colors.white
-                                                : Colors.blue),)),
-
-
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 3,),
-                                Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() => _typeProperties = 1);
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: _typeProperties == 1 ? Theme
-                                              .of(context)
-                                              .secondaryHeaderColor : Colors
-                                              .transparent,
-                                          border: Border.all(
-                                            width: 1, color: Colors.blue[500],),
-                                          borderRadius: BorderRadius.circular(2,)
-                                      ),
-                                      height: 39,
-                                      // color: _value == 1 ? Colors.grey : Colors.transparent,
-                                      child: Center(child: Text('for_sell'.tr,
-                                        style: robotoBlack.copyWith(fontSize: 16,
-                                            color: _typeProperties == 1
-                                                ? Colors.white
-                                                : Colors.blue),)),
-
-
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                             SizedBox(height: 7),
                             Text("type_property".tr, style: robotoRegular.copyWith(
                                 fontSize: Dimensions.fontSizeDefault, color: Theme
@@ -421,9 +356,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                       borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                       highlightColor: Colors.transparent,
                       onTap: () {
-                       showCustomSnackBar("${_typeProperties}");
-                       String type_estate= _typeProperties==0?"for_sell":"for_rent";
-                    categoryController.setFilterIndex(0,restController.getCategoryIndex(),ctiy_name,districts,(distValue/10).toInt(),type_estate);
+                    categoryController.setFilterIndex(0,restController.getCategoryIndex(),ctiy_name,districts,distValue~/10);
                     Navigator.pop(context);
                       },
                       child: const Center(

@@ -32,6 +32,7 @@ Future<void> main() async {
   setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   if(GetPlatform.isWeb) {
+
     await Firebase.initializeApp(options: FirebaseOptions(
       apiKey: 'AIzaSyCeaw_gVN0iQwFHyuF8pQ6PbVDmSVQw8AY',
       appId: '1:1049699819506:web:a4b5e3bedc729aab89956b',
@@ -87,8 +88,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     if(GetPlatform.isWeb) {
       Get.find<SplashController>().initSharedData();
-      if(Get.find<LocationController>().getUserAddress() != null && (Get.find<LocationController>().getUserAddress().zoneIds == null
-          || Get.find<LocationController>().getUserAddress().zoneData == null)) {
+      if(Get.find<LocationController>().getUserAddress() != null && (Get.find<LocationController>().getUserAddress().zoneIds == null|| Get.find<LocationController>().getUserAddress().zoneData == null)) {
         Get.find<AuthController>().clearSharedAddress();
       }
       _route();

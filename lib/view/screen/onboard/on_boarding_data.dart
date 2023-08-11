@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:abaad/util/images.dart';
 import 'package:get/get.dart';
-import 'package:abaad/helper/responsive_helper.dart';
-import 'package:abaad/util/dimensions.dart';
-import 'package:abaad/util/images.dart';
-import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/screen/onboard/on_boarding_data.dart';
-import 'package:abaad/view/screen/test.dart';
 
 class OnboardingModel {
   const OnboardingModel({

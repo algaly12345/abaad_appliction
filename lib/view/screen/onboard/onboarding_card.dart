@@ -5,7 +5,6 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/screen/onboard/on_boarding_data.dart';
 import 'package:abaad/view/screen/test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hex_color/flutter_hex_color.dart';
 
 class OnBoardingCard extends StatelessWidget {
   const OnBoardingCard({

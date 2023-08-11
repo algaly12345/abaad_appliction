@@ -1,6 +1,5 @@
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/controller/theme_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
@@ -10,7 +9,6 @@ import 'package:abaad/view/screen/map/widget/service_offer.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 
 class ServiceProivderView extends StatefulWidget {

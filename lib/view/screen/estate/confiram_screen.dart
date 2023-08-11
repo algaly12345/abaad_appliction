@@ -1,8 +1,6 @@
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
-import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/helper/route_helper.dart';
 
 import 'package:abaad/util/dimensions.dart';
@@ -10,16 +8,12 @@ import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_button.dart';
-import 'package:abaad/view/base/custom_image.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
 import 'package:abaad/view/screen/auth/widget/registration_stepper_widget.dart';
-import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart';
 
 class AddEstateScreenTow extends StatefulWidget {
   @override

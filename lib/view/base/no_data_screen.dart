@@ -4,8 +4,6 @@ import 'package:abaad/util/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class NoDataScreen extends StatelessWidget {
   final bool isCart;

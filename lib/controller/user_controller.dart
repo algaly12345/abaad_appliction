@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
-import 'package:abaad/data/model/response/conversation_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/response_model.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
@@ -203,26 +202,26 @@ class UserController extends GetxController implements GetxService {
           latitude.value = '${position.latitude}';
           longitude.value = '${position.longitude}';
           print("addressssssssssss");
-          getAddressFromLatLang(position);
+          // getAddressFromLatLang(position);
         });
     print("addressssssssssss");
   }
 
-  Future<void> getAddressFromLatLang(Position position) async {
-    List<Placemark> placemark =
-    await placemarkFromCoordinates(position.latitude, position.longitude);
-    Placemark place = placemark[0];
-    address.value = ' ${place.subLocality}, ${place.locality},${place.country}';
-    print("adress-------------------------------------${place.locality},${place.country}");
-  }
+  // Future<void> getAddressFromLatLang(Position position) async {
+  //   List<Placemark> placemark =
+  //   await placemarkFromCoordinates(position.latitude, position.longitude);
+  //   Placemark place = placemark[0];
+  //   address.value = ' ${place.subLocality}, ${place.locality},${place.country}';
+  //   print("adress-------------------------------------${place.locality},${place.country}");
+  // }
 
 
-  Future<void> getEstateByUser(int offset, bool reload,int user_id) async {
+  Future<void> getEstateByUser(int offset, bool reload,int userId) async {
     if (reload) {
       _estateModel = null;
       update();
     }
-    Response response = await userRepo.getEstateList(offset, _estateType,user_id);
+    Response response = await userRepo.getEstateList(offset, _estateType,userId);
     if (response.statusCode == 200) {
       if (offset == 1) {
         _estateModel = EstateModel.fromJson(response.body);

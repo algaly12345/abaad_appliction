@@ -1,19 +1,10 @@
-import 'dart:collection';
 import 'dart:typed_data';
 
-import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
-import 'package:abaad/controller/location_controller.dart';
-import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/dimensions.dart';
-import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
-import 'package:abaad/view/base/custom_text_field.dart';
-import 'package:abaad/view/screen/map/widget/location_search_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 

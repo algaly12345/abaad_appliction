@@ -1,19 +1,14 @@
 
 import 'dart:convert';
 
-import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
-import 'package:abaad/data/model/response/conversation_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:abaad/data/model/response/land_service.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/data/model/response/zone_model.dart';
-import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/html_type.dart';
 import 'package:abaad/view/base/custom_dialog_box.dart';
 import 'package:abaad/view/base/not_found.dart';
-import 'package:abaad/view/screen/access_location_screen.dart';
 import 'package:abaad/view/screen/agent/agent_profile_screen.dart';
 import 'package:abaad/view/screen/auth/agent_registration_screen.dart';
 import 'package:abaad/view/screen/auth/sign_in_screen.dart';
@@ -33,18 +28,17 @@ import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
 import 'package:abaad/view/screen/map/map_screen.dart';
 import 'package:abaad/view/screen/map/pick_map_screen.dart';
 import 'package:abaad/view/screen/notification/notification_screen.dart';
-import 'package:abaad/view/screen/onboard/old/onboarding_screen.dart';
 import 'package:abaad/view/screen/onboard/on_boarding_page.dart';
 import 'package:abaad/view/screen/profile/profile_screen.dart';
 import 'package:abaad/view/screen/profile/update_profile_screen.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
 import 'package:abaad/view/screen/support/support_screen.dart';
-import 'package:abaad/view/screen/test.dart';
 import 'package:abaad/view/screen/update/update_screen.dart';
 import 'package:abaad/view/screen/wallet/wallet_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get.dart';
+
+import '../view/screen/estate/success_screen.dart';
 class RouteHelper {
   static const String initial = '/';
   static const String splash = '/splash';
@@ -76,6 +70,7 @@ class RouteHelper {
   static const String html = '/html';
   static const String webview = '/webview';
   static const String support = '/help-and-support';
+  static const String payment = '/payment';
 
 
 
@@ -112,7 +107,7 @@ class RouteHelper {
   static String getDetailsRoute(int id) => '$estate?id=$id';
   // static String getWebViewRoute(String ar_path) => 'ar_path=$webview';
   static String getWebViewRoute(String page) => '$webview?url=$page';
-  static String getFeatureRoute(int id,String  feature_id ,String path, String latitude, String longitude ) => '$feature?id=$id&feature_id=$feature_id&path=$path&latitude=$latitude&longitude=$longitude';
+  static String getFeatureRoute(int id,String  featureId ,String path, String latitude, String longitude ) => '$feature?id=$id&feature_id=$featureId&path=$path&latitude=$latitude&longitude=$longitude';
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
   static String getAddEstateRoute() => '$addEstate';
@@ -120,7 +115,7 @@ class RouteHelper {
   static String getAgentRegister() => '$agent';
   static String getBusinessPlanRoute(int restaurantId) => '$businessPlan?id=$restaurantId';
 
-
+  static String getPaymentRoute(int id) => '$payment?id=$id';
 
   static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id,String link}) {
     String _notificationBody = 'null';
@@ -190,7 +185,7 @@ class RouteHelper {
           : Get.parameters['page'] == 'cancellation-policy' ? HtmlType.CANCELLATION_POLICY
           : Get.parameters['page'] == 'refund-policy' ? HtmlType.REFUND_POLICY : HtmlType.ABOUT_US,
     )),
-    GetPage(name: webview, page: () => WebViewScreen(url: Get.parameters['url'])),
+   // GetPage(name: webview, page: () => WebViewScreen(url: Get.parameters['url'])),
     GetPage(name: pickMap, page: () {
       PickMapScreen _pickMapScreen = Get.arguments;
       bool _fromAddress = Get.parameters['page'] == 'add-address';
@@ -228,6 +223,8 @@ class RouteHelper {
     GetPage(name: marketer, page: () {
       return Get.arguments ?? AgentProfileScreen(userInfo: Userinfo(id: int.parse(Get.parameters['id'])) ,isMyProfile:int.parse(Get.parameters['isMyProfile']));
     }),
+
+    GetPage(name: payment, page: () => SuccessScreen(orderModel: Estate(id: int.parse(Get.parameters['id'])))),
   ];
 
 

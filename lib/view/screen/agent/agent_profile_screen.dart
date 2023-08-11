@@ -1,12 +1,9 @@
 import 'package:abaad/controller/auth_controller.dart';
-import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/controller/theme_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
-import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/dimensions.dart';
@@ -15,11 +12,6 @@ import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/estate_item.dart';
-import 'package:abaad/view/base/not_logged_in_screen.dart';
-import 'package:abaad/view/base/rating_bar.dart';
-import 'package:abaad/view/base/web_menu_bar.dart';
-import 'package:abaad/view/screen/profile/widget/profile_button.dart';
-import 'package:abaad/view/screen/profile/widget/profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -126,7 +118,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                               Column(
                                 children: [
                                   Text(
-                                    "نوع المعلن",
+                                    "advertiser_type".tr,
                                     style:   robotoMedium.copyWith(
                                         fontSize: Dimensions.fontSizeSmall),
                                   ),
@@ -140,7 +132,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                               Column(
                                 children: [
                                   Text(
-                                    "عدد الإعلانات",
+                                    "number_of_ads".tr,
                                       style:  robotoRegular.copyWith(
                                           fontSize: Dimensions.fontSizeSmall),
                                   ),
@@ -179,13 +171,13 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                         Row(
                           children: [
                             Text(
-                              "رقم المعلن في هية العقار",
+                              "number_estate_authority".tr,
                               style:  robotoRegular.copyWith(
                                   fontSize: Dimensions.fontSizeSmall),
                             ),
                             SizedBox(width: 7,),
                             Text(
-                                '${userController.userInfoModel.advertiserNo}' ,
+                                '${userController.agentInfoModel.advertiserNo}' ,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
                           ],
                         ),
@@ -199,7 +191,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                                     ),
                                     onPressed: (){
                                       __launchWhatsapp(userController.agentInfoModel.phone,userController.agentInfoModel.name);
-                                    }, icon: Icon(Icons.whatsapp), label: Text("واتساب",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall))),
+                                    }, icon: Icon(Icons.whatsapp), label: Text("whatsapp".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall))),
                             ),
                             const SizedBox(width:5),
                             Expanded(
@@ -213,7 +205,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                                         user: Userinfo(id: userController.agentInfoModel.id, name: userController.agentInfoModel.name,  image: userController.agentInfoModel.image,),estate_id: 0
 
                                     ));
-                                  }, icon: Icon(Icons.chat), label: Text("محادثة",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall))),
+                                  }, icon: Icon(Icons.chat), label: Text("conversation".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall))),
                             ),
                              SizedBox(width:5),
                             Expanded(
@@ -230,7 +222,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                                     throw 'Could not make a phone call.';
                                     }
 
-                              }, icon: Icon(Icons.call), label: Text("اتصال",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall))),
+                              }, icon: Icon(Icons.call), label: Text("call".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall))),
                             ),
                           ],
                         ),
@@ -268,7 +260,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                               onPressed: () async{
 
 
-                                String tiktokProfileUrl = '${userController.userInfoModel.snapchat}'; // Replace 'username' with the desired username
+                                String tiktokProfileUrl = '${userController.agentInfoModel.snapchat}'; // Replace 'username' with the desired username
 
                                 if (await canLaunch(tiktokProfileUrl)) {
                                   await launch(tiktokProfileUrl);
@@ -361,8 +353,8 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
   }
 
   __launchWhatsapp(String  number,String name) async {
-    var whatsapp = "${number}";
-    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=مرحبا  ${name}");
+    var whatsapp = "$number";
+    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=مرحبا  $name");
     if (await canLaunchUrl(whatsappAndroid)) {
       await launchUrl(whatsappAndroid);
     } else {

@@ -11,9 +11,9 @@ class CategoryRepo {
     return await apiClient.getData(AppConstants.CATEGORIES);
   }
 
-  Future<Response> getCategoryProductList(int zone_id,String categoryID,int user_id,String city,String districts,String space,type_add, String offset) async {
+  Future<Response> getCategoryProductList(int zoneId,String categoryID,int userId,String city,String districts,String space,typeAdd, String offset) async {
     return await apiClient.getData(
-      '${AppConstants.CATEGORY_ESTATEURI}/all?zone_id=$zone_id&category_id=$categoryID&user_id=$user_id&city=$city&districts=$districts&space=$space&type_add=$type_add&offset=$offset',
+      '${AppConstants.CATEGORY_ESTATEURI}/all?zone_id=$zoneId&category_id=$categoryID&user_id=$userId&city=$city&districts=$districts&space=$space&type_add=$typeAdd&offset=$offset',
     );
   }
 

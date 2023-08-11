@@ -2,7 +2,6 @@
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/dimensions.dart';
-import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
@@ -10,7 +9,6 @@ import 'package:abaad/view/screen/map/widget/service_offer.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OfferList extends StatefulWidget {
@@ -254,7 +252,7 @@ flex: 1,
     String desc = '${dynamicUrl.shortUrl.toString()}';
 
     var whatsapp = "$phone";
-    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=${desc} \n مرحبا لديك عرض في  تطبيق ابعاد ");
+    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=$desc \n مرحبا لديك عرض في  تطبيق ابعاد ");
     if (await canLaunchUrl(whatsappAndroid)) {
       await launchUrl(whatsappAndroid);
     } else {
@@ -268,7 +266,7 @@ flex: 1,
 
   }
   __launchWhatsapp(String  number) async {
-    var whatsapp = "${number}";
+    var whatsapp = "$number";
     var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=مرحبا  لديك عرض  في تطبيق ابعاد");
     if (await canLaunchUrl(whatsappAndroid)) {
       await launchUrl(whatsappAndroid);

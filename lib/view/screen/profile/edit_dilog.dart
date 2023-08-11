@@ -7,38 +7,26 @@ import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
-import 'package:abaad/data/model/body/notification_body.dart';
+import 'package:abaad/data/model/body/estate_body.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:abaad/view/base/map_details_view.dart';
+import 'package:abaad/view/base/data_view.dart';
 import 'package:abaad/view/base/my_text_field.dart';
-import 'package:abaad/view/base/offer_list.dart';
-import 'package:abaad/view/screen/auth/widget/select_location_view.dart';
-import 'package:abaad/view/screen/estate/widgets/estate_view.dart';
-import 'package:abaad/view/screen/estate/widgets/interface.dart';
-import 'package:abaad/view/screen/estate/widgets/near_by_view.dart';
-import 'package:abaad/view/screen/estate/widgets/network_type.dart';
 import 'package:abaad/view/screen/map/pick_map_screen.dart';
 import 'package:abaad/view/screen/map/widget/permission_dialog.dart';
-import 'package:abaad/view/screen/map/widget/service_offer.dart';
-import 'package:clipboard/clipboard.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class EditDialog extends StatefulWidget {
   Estate estate;
@@ -54,9 +42,10 @@ class EditDialog extends StatefulWidget {
 class _EditDialogState extends State<EditDialog> {
   bool _isLoggedIn;
   String like;
-  int _value1=0;
+  int zone_id=0;
+
+  int zone_value=0;
   var isSelected2 = [true, false];
-  bool negotiation;
   LatLng _initialPosition;
   CameraPosition _cameraPosition;
   final TextEditingController _firstNameController = TextEditingController();
@@ -76,6 +65,7 @@ class _EditDialogState extends State<EditDialog> {
   final TextEditingController _westController = TextEditingController();
   final TextEditingController _eastController = TextEditingController();
   final TextEditingController _southController = TextEditingController();
+
 
 
   final FocusNode _northFocus = FocusNode();
@@ -101,6 +91,13 @@ class _EditDialogState extends State<EditDialog> {
   final FocusNode _minTimeFocus = FocusNode();
   int _typeProperties ;
   int category_id;
+
+
+  String district;
+  String city;
+
+
+
   static const _locale = 'en';
   String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(double.parse(s));
   String get _currency => NumberFormat.compactSimpleCurrency(locale: _locale).currencySymbol;
@@ -152,6 +149,7 @@ class _EditDialogState extends State<EditDialog> {
   int _selectedBathroomsIndex = 0;
   int _selectedLounge=0;
   int _selectedkitchen=0;
+  int _djectivePresenter=0;
 
   String _ageValue;
   _onSelected(int index) {
@@ -159,7 +157,6 @@ class _EditDialogState extends State<EditDialog> {
   }
   String item;
   List<String> images;
-  int zone_id;
    String initialValue;
   _onSelectedBathrooms(int index) {
     setState(() => _selectedBathroomsIndex = index);
@@ -190,14 +187,18 @@ class _EditDialogState extends State<EditDialog> {
       _selection = timeSelected;
     });
   }
+  String network_type;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+    Get.find<CategoryController>().getFacilitiesList(true);
+    Get.find<UserController>().getEstateByUser(1, false,widget.estate.userId );
     Get.find<CategoryController>().getAdvantages(true);
     _typeProperties= widget.estate.type_add=="for_rent"?1:0;
     category_id=widget.estate.categoryId;
+
 
    // widget.estate.priceNegotiation=="غير قابل للتفاوض"?   isSelected2.first=false: isSelected2.first=false;
     Get.find<EstateController>() .getCategoryList(widget.estate);
@@ -205,6 +206,12 @@ class _EditDialogState extends State<EditDialog> {
       _selection=2;
     }else if( widget.estate.priceNegotiation=="قابل للتفاوض"){
       _selection=1;
+    }
+
+    if(widget.estate.ownershipType=="مفوض"){
+      _djectivePresenter==0;
+    }else if(widget.estate.ownershipType=="مالك"){
+      _djectivePresenter==1;
     }
 
     Get.find<AuthController>().getZoneList();
@@ -219,26 +226,25 @@ class _EditDialogState extends State<EditDialog> {
     _selectedRoomIndex=int.parse(widget.estate.property[1].number);
     _selectedLounge=int.parse(widget.estate.property[2].number);
     _selectedkitchen=int.parse(widget.estate.property[3].number);
-    ;
 
 
 
+    if(widget.estate.interface.length > 0){
+      north_st=widget.estate.interface[0].name;
+      west_st=widget.estate.interface[1].name;
+    }
 
-    north_st=widget.estate.interface[0].name;
-    west_st=widget.estate.interface[1].name;
+
+    // north_st=widget.estate.interface[0].name;
+    // west_st=widget.estate.interface[1].name;
 
     // input.split('').forEach((ch) => print(ch));
 
     print("----------------------------categore${widget.estate.ageEstate}");
-  // _value1=widget.estate.zoneId;
+    // zone_id=widget.estate.zoneId;
    // widget.estate.priceNegotiation=="غير قابل للتفاوض"?   isSelected2.first=false: widget.estate.priceNegotiation=="قابل للتفاوض"? isSelected2.first=true:true;
 
     Get.find<UserController>().getUserInfoByID(widget.estate.userId);
-
-  }
-  @override
-  Widget build(BuildContext context) {
-    bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
 
     if(widget.estate.users.phone != null) {
@@ -253,6 +259,9 @@ class _EditDialogState extends State<EditDialog> {
       _spaceController.text =  widget.estate.space ?? '';
       _documentNumberController.text =  widget.estate.documentNumber?? '';
       images=widget.estate.images;
+      city=widget.estate.city;
+      district=widget.estate.districts;
+
 
 
       // _websiteController.text = userController.userInfoModel.website ?? '';
@@ -262,6 +271,13 @@ class _EditDialogState extends State<EditDialog> {
 
 
     }
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+
+
     return Scaffold(
 
       body: SingleChildScrollView(
@@ -392,6 +408,7 @@ class _EditDialogState extends State<EditDialog> {
                            }).toList(),
                            onChanged: (int value) {
                              restController.setCategoryIndex(value);
+                             category_id=restController.categoryList[value-1].id;
                              //  restController.getSubCategoryList(value != 0 ? restController.categoryList[value-1].id : 0, null);
                            },
                            isExpanded: true,
@@ -811,7 +828,7 @@ class _EditDialogState extends State<EditDialog> {
                     boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
                   ),
                   child: DropdownButton<int>(
-                    value: _value1,
+                    value: zone_id,
                     items: locationController.zoneIds==null?Container():locationController.zoneIds.map((int value) {
                       return DropdownMenuItem<int>(
                         value: locationController.zoneIds.indexOf(value),
@@ -819,9 +836,13 @@ class _EditDialogState extends State<EditDialog> {
                       );
                     }).toList(),
                     onChanged: (int value) {
-                      setState(() {
-                        _value1 = value;
-                      });
+                      // setState(() {
+                         zone_id = value;
+                      //   showCustomSnackBar(   locationController.categoryList[value-1].id.toString());
+                      //
+                      // });
+
+                     zone_value=locationController.categoryList[value-1].id;
                       locationController.setCategoryIndex(value, true);
                       //      restController.getSubCategoryList(value != 0 ? restController.categoryList[value-1].id : 0, null);
                     },
@@ -846,7 +867,7 @@ class _EditDialogState extends State<EditDialog> {
                           onTap: (latLng) {
 
 
-                            if( _value1==0){
+                            if( zone_id==0){
                               showCustomSnackBar('حدد المنطقة'.tr);
                             }else{
                               Get.toNamed(
@@ -870,7 +891,7 @@ class _EditDialogState extends State<EditDialog> {
                           onMapCreated: (GoogleMapController controller) {
                             locationController.setMapController(controller);
 
-                            if( _value1==0){
+                            if( zone_id==0){
                               showCustomSnackBar('حدد المنطقة'.tr);
                             }else{
                               Get.toNamed(
@@ -908,7 +929,7 @@ class _EditDialogState extends State<EditDialog> {
                           top: 10, right: 0,
                           child: InkWell(
                             onTap: () {
-                              if( _value1==0){
+                              if( zone_id==0){
                                 showCustomSnackBar('حدد المنطقة'.tr);
                               }else{
                                 Get.toNamed(
@@ -1569,8 +1590,72 @@ class _EditDialogState extends State<EditDialog> {
                         ],
                       ),
 
+                      Container(
+
+                        child:     categoryController.facilitiesList.length!=null?    Column(
+                          children: [
+                            ExpansionTile(
+                              title: const Text("إضافة تغطية"), //add icon//children padding
+                              children: [
+                                Center(
+                                  child: Container(
+                                    height: 240,
+                                    child:GridView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      itemCount: categoryController.facilitiesList.length,
+                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3 ,
+                                        childAspectRatio: (1/0.50),
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () => categoryController.addInterestSelection(index),
+                                          child: Container(
+                                            margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: categoryController.interestSelectedList[index] ? Theme.of(context).primaryColor
+                                                  : Theme.of(context).cardColor,
+                                              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                            ),
+                                            alignment: Alignment.center,
+                                            child:   Row(
+
+                                              children: [
+                                                CustomImage(
+                                                  image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                                                      '/${categoryController.facilitiesList[index].image}',
+                                                  height: 30, width: 30,
+                                                ),
+                                                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                Flexible(child: Text(
+                                                  categoryController.facilitiesList[index].name,
+                                                  style: robotoMedium.copyWith(
+                                                    fontSize: Dimensions.fontSizeExtraSmall,
+                                                    color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
+                                                        : Theme.of(context).textTheme.bodyText1.color,
+                                                  ),
+                                                  maxLines: 2, overflow: TextOverflow.ellipsis,
+                                                )),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
 
 
+                              ],
+                            ),
+
+                          ],
+                        ):Container(),
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -1599,7 +1684,7 @@ class _EditDialogState extends State<EditDialog> {
                                                 vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: categoryController.advanSelectedList[index] || widget.estate.otherAdvantages[index]!=index ? Theme.of(context).primaryColor
+                                                color: categoryController.advanSelectedList[index] ? Theme.of(context).primaryColor
                                                     : Theme.of(context).cardColor,
                                                 borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                                                 boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
@@ -1612,7 +1697,7 @@ class _EditDialogState extends State<EditDialog> {
                                                     categoryController.advanList[index].name,
                                                     style: robotoMedium.copyWith(
                                                       fontSize: Dimensions.fontSizeSmall,
-                                                      color: categoryController.advanSelectedList[index] || widget.estate.otherAdvantages[index]!=index ? Theme.of(context).cardColor
+                                                      color: categoryController.advanSelectedList[index] ? Theme.of(context).cardColor
                                                           : Theme.of(context).textTheme.bodyText1.color,
                                                     ),
                                                     maxLines: 2, overflow: TextOverflow.ellipsis,
@@ -1634,6 +1719,164 @@ class _EditDialogState extends State<EditDialog> {
                           ):Container(),
 
                         ],
+                      ),
+
+
+
+
+
+
+
+
+
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded( // Place `Expanded` inside `Row`
+                            child: InkWell(
+                              onTap: () {
+                                setState(() => _djectivePresenter = 0);
+                              },
+                              child: Container(
+                                height: 41,
+                                decoration: BoxDecoration(
+                                    color: _djectivePresenter == 0 ? Theme
+                                        .of(context)
+                                        .secondaryHeaderColor : Colors
+                                        .transparent,
+                                    border: Border.all(
+                                      width: 1, color: Colors.blue[500],),
+                                    borderRadius: BorderRadius.circular(2,)
+                                ),
+
+                                child: Center(child: Text('authorized'.tr,
+                                  style: robotoBlack.copyWith(fontSize: 16,
+                                      color: _djectivePresenter == 0
+                                          ? Colors.white
+                                          : Colors.blue),)),
+
+
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3,),
+                          Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                            child: InkWell(
+                              onTap: () {
+                                setState(() => _djectivePresenter = 1);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: _djectivePresenter == 1 ? Theme
+                                        .of(context)
+                                        .secondaryHeaderColor : Colors
+                                        .transparent,
+                                    border: Border.all(
+                                      width: 1, color: Colors.blue[500],),
+                                    borderRadius: BorderRadius.circular(2,)
+                                ),
+                                height: 39,
+                                // color: _value == 1 ? Colors.grey : Colors.transparent,
+                                child: Center(child: Text('owner'.tr,
+                                  style: robotoBlack.copyWith(
+                                      fontSize: 16,
+                                      color: _djectivePresenter == 1
+                                          ? Colors.white
+                                          : Colors.blue),)),
+
+
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      CustomButton(
+                        onPressed: () async {
+
+                          String _price;
+                          String _shortDesc;
+                          String _space;
+                          String _authorized;
+                          String _adNumber;
+                          _authorized=_authorizedController.text.trim();
+                          _price = _priceController.text.trim();
+                          _shortDesc = _shortDescController.text.trim();
+                          _space = _spaceController.text.trim();
+                          String  property ='[{"name":"حمام", "number":"$_selectedBathroomsIndex"},{"name":"غرف نوم", "number":"$_selectedRoomIndex"},{"name":"صلات", "number":"$_selectedLounge"},{"name":"مطبخ", "number":"$_selectedkitchen"}]';
+                          List<Map<String, dynamic >> _interface= [];
+
+                            setState(() {
+                              for (final item in _selectedInterfaceistItems) {
+                                _interface.add({'"' + "name" + '"':'"' + item + '"','"' + "space" + '"':   item=="الواجهة الشمالية"? '"${_northController.text.toString()}"':  item=="الواجهة الشرقية"? '"${_eastController.text.toString()}"': item=="الواجهة الغربية"?'"${_westController.text.toString()}"':item=="الواجهة الجنوبية"?'"${_southController.text.toString()}"':""  });
+
+                              }
+                            });
+
+
+
+                          List<Map<String, dynamic >> _interests = [];
+                          for(int index=0; index<categoryController.facilitiesList.length; index++) {
+                            if(categoryController.interestSelectedList[index]) {
+
+                              _interests.add ({'"' + "name" + '"':'"' + categoryController.facilitiesList[index].name + '"','"' + "image" + '"':'"' + categoryController.facilitiesList[index].image + '"'});
+                            }
+                          }
+
+
+
+
+                          List<Map<String, dynamic >> _advan= [];
+                          for(int index=0; index<categoryController.advanList.length; index++) {
+                            if(categoryController.advanSelectedList[index]) {
+
+                              _advan.add ({'"' + "name" + '"':'"' + categoryController.advanList[index].name + '"'});
+                            }
+                          }
+
+                          restController.updatEstate(
+                              EstateBody(
+
+                                 id: widget.estate.id.toString(),
+                                  address: "${locationController.address}",
+                                  space: _space,
+                                  longDescription: _longDescController.text,
+                                  shortDescription: _shortDesc,
+                                  categoryId:category_id.toString(),
+                                  ageEstate: _ageValue,
+                                  arPath: "",
+                                   districts:  locationController.pickPosition.longitude==0.0?widget.estate.districts:locationController.district.toString(),
+                                  floors: "4545",
+                                  latitude: locationController.pickPosition.latitude==0.0?widget.estate.latitude:locationController.pickPosition.latitude.toString(),
+                                  longitude: locationController.pickPosition.longitude==0.0?widget.estate.longitude:locationController.pickPosition.longitude.toString(),
+                                  near: "near",
+                                  networkType:"$_interests",
+                                  ownershipType: _djectivePresenter==1?"مالك":'مفوض',
+                                  property: property,
+                                  serviceOffers: "serviceOffers",
+                                  // facilities: "$_interests",
+                                  territoryId: "1",
+                                  zoneId:zone_value==0?widget.estate.zoneId.toString():zone_value.toString(),
+                                  nationalAddress: "234234",
+                                  user_id: widget.estate.userId.toString(),
+                                  city: locationController.pickPosition.longitude==0.0?widget.estate.city.toString():locationController.city.toString(),
+                                  otherAdvantages: "$_advan",
+                                  interface:widget.estate.interface.map((v) => v.toJson()).toList().toString(),
+                                  streetSpace: "${_widthStreetController.text.toString()}",
+
+                                  price: _priceController.text.toString(),
+                                  buildSpace: _buildSpaceController.text.toString(),
+                                  documentNumber: _documentNumberController.text.toString(),
+                                  adNumber: _adNumber,
+
+                              //    priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" )
+                             priceNegotiation: _selection==0?widget.estate.priceNegotiation: _selection!=1?"غير قابل للتفاوض":"قابل للتفاوض",
+                              )
+                              );
+
+
+                        },
+                        margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                        buttonText: 'update'.tr,
                       ),
 
 

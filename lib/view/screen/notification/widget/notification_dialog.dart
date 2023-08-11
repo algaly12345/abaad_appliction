@@ -1,10 +1,7 @@
-import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/notification_model.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/custom_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class NotificationDialog extends StatelessWidget {
   final NotificationModel notificationModel;

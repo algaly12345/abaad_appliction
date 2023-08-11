@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/controller/theme_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
-import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/image_view_dialog.dart';
@@ -17,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/get_utils.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -167,7 +162,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
             ):widget.featureId=="تجوال افتراضي"?Center(
               child: Container(
                 width: Dimensions.WEB_MAX_WIDTH,
-                child: WebViewScreen(  url: widget.estate.arPath),
+                // child: WebViewScreen(  url: widget.estate.arPath),
               ),
             ):widget.featureId=="منظور الشارع"?SafeArea(
               child: Center(

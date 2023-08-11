@@ -1,4 +1,5 @@
 class EstateBody {
+  String id ;
   String address;
   String   property;
   String space;
@@ -12,7 +13,6 @@ class EstateBody {
   String latitude;
   String longitude;
   String  zoneId;
-  String type_add;
   String territoryId;
   String ageEstate;
   String shortDescription;
@@ -35,6 +35,7 @@ class EstateBody {
 
   EstateBody(
       {
+        this.id,
         this.address,
         this.property,
         this.space,
@@ -48,7 +49,6 @@ class EstateBody {
         this.latitude,
         this.longitude,
         this.zoneId,
-        this.type_add,
         this.territoryId,
         this.ageEstate,
         this.shortDescription,
@@ -70,6 +70,8 @@ class EstateBody {
         });
 
   EstateBody.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+
     address = json['address'];
     property = json['property'];
 
@@ -86,7 +88,6 @@ class EstateBody {
     latitude = json['latitude'];
     longitude = json['longitude'];
     zoneId = json['zone_id'];
-    type_add = json['type_add'];
     territoryId = json['territory_id'];
     ageEstate = json['age_estate'];
     shortDescription = json['short_description'];
@@ -111,6 +112,7 @@ class EstateBody {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['address'] = this.address;
 
     data['property'] = this.property;
@@ -127,7 +129,6 @@ class EstateBody {
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     data['zone_id'] = this.zoneId;
-    data['type_add'] = this.type_add;
     data['territory_id'] = this.territoryId;
     data['age_estate'] = this.ageEstate;
     data['short_description'] = this.shortDescription;

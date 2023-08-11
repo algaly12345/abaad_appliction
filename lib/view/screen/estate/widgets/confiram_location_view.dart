@@ -1,19 +1,10 @@
-import 'dart:collection';
 import 'dart:typed_data';
 
-import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
-import 'package:abaad/controller/location_controller.dart';
-import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/dimensions.dart';
-import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
-import 'package:abaad/view/base/custom_text_field.dart';
-import 'package:abaad/view/screen/map/widget/location_search_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -62,59 +53,56 @@ class _ConfirmMapViewState extends State<ConfirmMapView> {
                 borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                 border: Border.all(width: 2, color: Theme.of(context).primaryColor),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                child: Stack(clipBehavior: Clip.none, children: [
-                  GoogleMap(
-                    initialCameraPosition:  CameraPosition(
-                      target: LatLng(
-                        widget.lat,
-                        widget.lot,
-                      ), zoom: 16,
-                    ),
-                    markers: <Marker>{
-                      Marker(
-                          draggable: false,
-                          markerId: MarkerId("1"),
-                          position:LatLng(
-                            widget.lat,
-                            widget.lot,
-                          ),
-                          // icon: currentLocationIcon,
-                          icon: markerIcon ?? BitmapDescriptor.defaultMarker),
-                    },
-
-                    minMaxZoomPreference: MinMaxZoomPreference(0, 20),
-                    zoomControlsEnabled: true,
-                    compassEnabled: false,
-                    indoorViewEnabled: true,
-                    mapToolbarEnabled: false,
-                    myLocationEnabled: true,
-                    zoomGesturesEnabled: true,
-                    onCameraIdle: () {
-                      if(!widget.fromView) {
-                        widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
-                      }
-                    },
-                    onCameraMove: ((position) => _cameraPosition = position),
-                    onMapCreated: (GoogleMapController controller) {
-                      if(widget.fromView) {
-                        _mapController = controller;
-                      }else {
-                      }
-                    },
+              child:  Stack(clipBehavior: Clip.none, children: [
+                GoogleMap(
+                  initialCameraPosition:  CameraPosition(
+                    target: LatLng(
+                      widget.lat,
+                      widget.lot,
+                    ), zoom: 16,
                   ),
-                  widget.fromView ? Positioned(
-                    top: 10, right: 0,
-                    child: InkWell(
-                      onTap: () {
-                        Get.to(ConfirmMapView(fromView: false, mapController: _mapController));
-                      },
+                  markers: <Marker>{
+                    Marker(
+                        draggable: false,
+                        markerId: MarkerId("1"),
+                        position:LatLng(
+                          widget.lat,
+                          widget.lot,
+                        ),
+                        // icon: currentLocationIcon,
+                        icon: markerIcon ?? BitmapDescriptor.defaultMarker),
+                  },
 
-                    ),
-                  ) : SizedBox(),
-                ]),
-              ),
+                  minMaxZoomPreference: MinMaxZoomPreference(0, 20),
+                  zoomControlsEnabled: true,
+                  compassEnabled: false,
+                  indoorViewEnabled: true,
+                  mapToolbarEnabled: false,
+                  myLocationEnabled: true,
+                  zoomGesturesEnabled: true,
+                  onCameraIdle: () {
+                    if(!widget.fromView) {
+                      widget.mapController.moveCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+                    }
+                  },
+                  onCameraMove: ((position) => _cameraPosition = position),
+                  onMapCreated: (GoogleMapController controller) {
+                    if(widget.fromView) {
+                      _mapController = controller;
+                    }else {
+                    }
+                  },
+                ),
+                widget.fromView ? Positioned(
+                  top: 10, right: 0,
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(ConfirmMapView(fromView: false, mapController: _mapController));
+                    },
+
+                  ),
+                ) : SizedBox(),
+              ]),
             ) ,
 
             SizedBox(height: 10),

@@ -17,7 +17,6 @@ import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'widget/profile_bg_widget.dart';
 import 'widget/profile_bg_widget_update.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -334,7 +333,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   void _updateProfile(UserController userController) async {
     String _firstName = _firstNameController.text.trim();
-    String _lastName = _lastNameController.text.trim();
+
     String _email = _emailController.text.trim();
     String _phoneNumber = _phoneController.text.trim();
 

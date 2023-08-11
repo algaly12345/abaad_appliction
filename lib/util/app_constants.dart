@@ -9,7 +9,7 @@ class AppConstants {
   static const String LOGIN_URI = '/api/v1/auth/login';
    static const String BASE_URL = 'https://abaad.iaspl.net';
   static const String LAND_SERVICE_URL = 'https://geoportal-st.gasgi.gov.sa/hosting/rest/services/Hosted/MOT_Layer04_View/FeatureServer/0/query?where=1%3D1&outFields=&outSR=4326&f=json';
-  // static const String BASE_URL = 'http://192.168.53.37/abbaadRepo';
+ //static const String BASE_URL = 'http://192.168.196.37/abbaadRepo';
    static const String REGISTER_URI = '/api/v1/auth/register';
   static const String THEME = 'theme';
   static const String TOKEN = 'abaad_token';
@@ -17,6 +17,9 @@ class AppConstants {
   static const String LANGUAGE_CODE = 'language_code';
   // static const String ZONE_ID = 'zoneId';
   static const String LOCALIZATION_KEY = 'X-localization';
+  static const String LATITUDE = 'latitude';
+  static const String LONGITUDE = 'longitude';
+  static const String ZONE_ID = 'zoneId';
   static const String USER_ADDRESS = 'user_address';
   static const String TOKEN_URI = '/api/v1/customer/cm-firebase-token';
   static const String TOPIC = 'all_zone_customer';
@@ -57,6 +60,7 @@ class AppConstants {
   static const String empty_box = 'assets/image/empty_box.png';
   static const String FACILITIES="/api/v1/estate/get-facilities";
   static const String CREATE_ESATE_URI="/api/v1/estate/create";
+  static const String UPDATE_ESATE_URI="/api/v1/estate/update";
   static const String AGENT_INFO = '/api/v1/estate/agent-info';
   static const String CONVERSATION_LIST_URI = '/api/v1/message/list';
   static const String SEARCH_CONVERSATION_LIST_URI = '/api/v1/customer/message/search-list';

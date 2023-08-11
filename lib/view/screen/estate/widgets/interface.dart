@@ -1,7 +1,5 @@
 import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
-import 'package:clipboard/clipboard.dart';
 
 import 'package:flutter/material.dart';
 class InterfaceItem extends StatelessWidget {
@@ -19,7 +17,7 @@ class InterfaceItem extends StatelessWidget {
       _length = restaurants.length;
     return
       !_isNull ? _length > 0 ?Container(
-        height: estate.interface .length==1?50:estate.interface .length==2?100:estate.interface .length==3?150:estate.interface .length==4?200:0,
+        height: estate.interface .length==0?0:100,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4.0),
@@ -38,7 +36,7 @@ class InterfaceItem extends StatelessWidget {
         scrollDirection: Axis.vertical,
         itemCount: estate.interface .length,
         itemBuilder: (context, index) {
-          return  Container(
+          return  estate.interface[index].space != null?Container(
             height: 50,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -65,7 +63,7 @@ class InterfaceItem extends StatelessWidget {
                     padding: EdgeInsets.all(10),child: Text("${estate.interface[index].space} م ",  style: robotoBlack.copyWith(fontSize: 14)))),
               ],
             ),
-          );
+          ):Container();
         },
       ),
     ):Text(""):Text("");

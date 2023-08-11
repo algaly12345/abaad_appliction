@@ -34,7 +34,6 @@ import 'package:abaad/data/repository/zone_repo.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 Future<Map<String, Map<String, String>>> init() async {

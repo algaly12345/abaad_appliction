@@ -1,5 +1,4 @@
 
-import 'dart:math';
 
 import 'package:abaad/controller/onboarding_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
@@ -9,8 +8,6 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
-import 'package:abaad/view/screen/draw.dart';
-import 'package:abaad/view/screen/test.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 class OnBoardingScreen extends StatelessWidget {

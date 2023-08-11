@@ -1,9 +1,5 @@
-import 'package:abaad/controller/estate_controller.dart';
-import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/controller/notification_controller.dart';
-import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
-import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
@@ -18,9 +14,9 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: Container(
-        width: Dimensions.WEB_MAX_WIDTH,
+        // width: Dimensions.WEB_MAX_WIDTH,
         color: Theme.of(context).cardColor,
-        padding: EdgeInsets.only(top: 32 ,right: 7,left: 7,),
+        padding: EdgeInsets.only(top: 46 ,right: 7,left: 7,),
         child:     GetBuilder<UserController>(builder: (estateController) {
           return Row(
             children: [
@@ -33,10 +29,10 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                 child:  Column(
                   children: [
                     Text(
-                        'موقعك',style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)
+                        'your_location'.tr,style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)
                     ),
                     Text(
-                        '${estateController.address  }',style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)
+                        '${estateController.address  }',style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)
                     ),
                   ],
                 ),

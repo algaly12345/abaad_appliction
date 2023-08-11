@@ -1,4 +1,3 @@
-import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/images.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

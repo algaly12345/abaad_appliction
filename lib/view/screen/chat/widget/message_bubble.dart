@@ -1,7 +1,6 @@
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/response/config_model.dart';
-import 'package:abaad/data/model/response/conversation_model.dart';
 import 'package:abaad/data/model/response/message_model.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/helper/date_converter.dart';

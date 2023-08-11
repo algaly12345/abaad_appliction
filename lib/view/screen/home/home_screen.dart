@@ -1,27 +1,19 @@
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/banner_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
-import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/localization_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/response/config_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
-import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/util/dimensions.dart';
-import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
-import 'package:abaad/view/base/cached_img.dart';
-import 'package:abaad/view/base/custom_card.dart';
 import 'package:abaad/view/base/custom_image.dart';
-import 'package:abaad/view/base/custom_input.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
-import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/fillter/fillter_estate_sheet.dart';
 import 'package:abaad/view/screen/home/widet/estate_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hex_color/flutter_hex_color.dart';
 import 'package:get/get.dart';
 
 import 'widet/banner_view.dart';
@@ -48,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Get.find<CategoryController>().getSubCategoryList("0");
     int offset = 1;
     Get.find<BannerController>().getBannerList(true,1);
-   // Get.find<ZoneController>().geZonesList();
+    Get.find<AuthController>().getZoneList();
     scrollController?.addListener(() {
       if (scrollController.position.pixels == scrollController.position.maxScrollExtent && Get.find<CategoryController>().categoryProductList != null && !Get.find<CategoryController>().isLoading) {
         int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
@@ -217,14 +209,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
 
                               padding: EdgeInsets.only(
-                                left: index == 0 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
+                                left:  index == categoryController.subCategoryList.length-1 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
                                 right: index == categoryController.subCategoryList.length-1 ? Dimensions.PADDING_SIZE_LARGE : Dimensions.PADDING_SIZE_SMALL,
                              //   top: Dimensions.PADDING_SIZE_SMALL,
                               ),
 
 
-                              decoration:
-                              BoxDecoration(
+                              decoration: BoxDecoration(
                                 border: Border.all(
                                     color:index == categoryController.subCategoryIndex ? Theme.of(
                                         context)
@@ -235,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius:
                                 BorderRadius
                                     .circular(
-                                    2.0),
+                                    8.0),
                                 color: Colors.white30,
                               ),
 
@@ -244,11 +235,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Text(
                                   categoryController.subCategoryList[index].name,
                                   style: index == categoryController.subCategoryIndex
-                                      ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)
-                                      : robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                      ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)
+                                      : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
                                 ),
 
-                                SizedBox(width: 5),
+                                SizedBox(width: 10),
                                index==0?Container():  CustomImage(
                                     image:
                                     '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}/${categoryController.subCategoryList[index].image}',
