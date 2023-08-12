@@ -224,7 +224,7 @@ class RouteHelper {
       return Get.arguments ?? AgentProfileScreen(userInfo: Userinfo(id: int.parse(Get.parameters['id'])) ,isMyProfile:int.parse(Get.parameters['isMyProfile']));
     }),
 
-    GetPage(name: payment, page: () => SuccessScreen(orderModel: Estate(id: int.parse(Get.parameters['id'])))),
+    GetPage(name: payment, page: () => SuccessScreen(estate_id: int.parse(Get.parameters['id']),)),
   ];
 
 

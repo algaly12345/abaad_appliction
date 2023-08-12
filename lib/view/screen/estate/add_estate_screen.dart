@@ -471,6 +471,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     ),
                     child: ClipRRect(
 
+
+
                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                       child: Stack(clipBehavior: Clip.none, children: [
                         GoogleMap(

@@ -92,6 +92,7 @@ class Images {
   static const String mark_pharmcy = 'assets/image/mark_pharmcy.png';
 
   static const String background_gray = 'assets/image/background_gray.png';
+  static const String video_place = 'assets/image/video-place.png';
 
 
 

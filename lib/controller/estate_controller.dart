@@ -12,6 +12,7 @@ import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EstateController extends GetxController implements GetxService {
   final EstateRepo estateRepo;
@@ -293,6 +294,7 @@ class EstateController extends GetxController implements GetxService {
 
 
   Future<void> addEstate(EstateBody estateBody) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     _isLoading = true;
     update();
     List<MultipartBody> _multiParts = [];
@@ -307,10 +309,11 @@ class EstateController extends GetxController implements GetxService {
     }
     Response response = await estateRepo.createEstate(
         estateBody, _multiParts);
-    print("save estate---------------------------------------------------${response
-        .body}");
+   // prefs.setInt('estate_id', response.body["message"]);
+
     if (response.statusCode == 200) {
       _isLoading=false;
+
       Get.offNamed(RouteHelper.getPaymentRoute(161));
    //   Get.offAllNamed(RouteHelper.getSuccess());
     } else {
@@ -336,8 +339,7 @@ class EstateController extends GetxController implements GetxService {
     Response response = await estateRepo.updateEstate(estatetBody);
 
     if (response.statusCode == 200) {
-      print("save estate---------------------------------------------------${response
-          .body}");
+      print("save estate---------------------------------------------------${response.body}");
       _isLoading=false;
       Get.offAllNamed(RouteHelper.getSuccess());
     } else {
