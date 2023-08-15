@@ -107,7 +107,7 @@ class RouteHelper {
   static String getDetailsRoute(int id) => '$estate?id=$id';
   // static String getWebViewRoute(String ar_path) => 'ar_path=$webview';
   static String getWebViewRoute(String page) => '$webview?url=$page';
-  static String getFeatureRoute(int id,String  featureId ,String path, String latitude, String longitude ) => '$feature?id=$id&feature_id=$featureId&path=$path&latitude=$latitude&longitude=$longitude';
+  static String getFeatureRoute(int id,String  featureId ,String path,String video_path, String latitude, String longitude ) => '$feature?id=$id&feature_id=$featureId&path=$path&path_video=$video_path&latitude=$latitude&longitude=$longitude';
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
   static String getAddEstateRoute() => '$addEstate';
@@ -185,7 +185,7 @@ class RouteHelper {
           : Get.parameters['page'] == 'cancellation-policy' ? HtmlType.CANCELLATION_POLICY
           : Get.parameters['page'] == 'refund-policy' ? HtmlType.REFUND_POLICY : HtmlType.ABOUT_US,
     )),
-   // GetPage(name: webview, page: () => WebViewScreen(url: Get.parameters['url'])),
+   GetPage(name: webview, page: () => WebViewScreen(url: Get.parameters['url'])),
     GetPage(name: pickMap, page: () {
       PickMapScreen _pickMapScreen = Get.arguments;
       bool _fromAddress = Get.parameters['page'] == 'add-address';
@@ -215,7 +215,7 @@ class RouteHelper {
     }),
 
     GetPage(name: feature, page: () {
-      return Get.arguments ?? FeatureScreen(estate: Estate(id: int.parse(Get.parameters['id']),latitude:Get.parameters['latitude'],longitude: Get.parameters['longitude']),featureId:Get.parameters['feature_id'],path:Get.parameters['path'] );
+      return Get.arguments ?? FeatureScreen(estate: Estate(id: int.parse(Get.parameters['id']),latitude:Get.parameters['latitude'],longitude: Get.parameters['longitude']),featureId:Get.parameters['feature_id'],path:Get.parameters['path'] ,pathVideo:Get.parameters['path_video']);
     }),
     GetPage(name: businessPlan, page: () => BusinessPlanScreen(estateId: int.parse(Get.parameters['id']))),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),

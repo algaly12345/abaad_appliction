@@ -1,117 +1,75 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
+
 
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:video_player/video_player.dart';
+import 'package:image_picker/image_picker.dart';
 
-class VideoUploadScreen extends StatefulWidget {
+class ImageUploadScreen extends StatefulWidget {
   @override
-  _VideoUploadScreenState createState() => _VideoUploadScreenState();
+  _ImageUploadScreenState createState() => _ImageUploadScreenState();
 }
 
-class _VideoUploadScreenState extends State<VideoUploadScreen> {
-  VideoPlayerController _videoController;
-  FilePickerResult _filePickerResult;
-  double _uploadProgress = 0.0;
-  bool _uploading = false;
+class _ImageUploadScreenState extends State<ImageUploadScreen> {
+  List<XFile> _selectedImages = [];
 
-  @override
-  void dispose() {
-    _videoController?.dispose();
-    super.dispose();
-  }
-
-  Future<void> pickAndPreviewVideo() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.video);
-
-    if (result != null) {
+  Future<void> _pickImages() async {
+    List<XFile> images = await ImagePicker().pickMultiImage();
+    if (images != null && images.isNotEmpty) {
       setState(() {
-        _filePickerResult = result;
-        _videoController = VideoPlayerController.file(File(result.files.single.path))
-          ..initialize().then((_) {
-            setState(() {});
-          });
+        _selectedImages.addAll(images);
       });
     }
   }
 
-  Future<void> uploadVideo() async {
-    if (_filePickerResult != null) {
-      String filePath = _filePickerResult.files.single.path;
-      var request = http.MultipartRequest('POST', Uri.parse('http://192.168.43.55/abbaadRepo/api/v1/estate/upload-video'));
-      request.fields['id'] = "147";
-      request.files.add(await http.MultipartFile.fromPath('video', filePath));
+  void _uploadImages() {
+    // Implement the code to upload images to the server using the http package
+  }
 
-      setState(() {
-        _uploading = true;
-        _uploadProgress = 0.0;
-      });
-
-      var response = await request.send();
-      response.stream.listen((event) {
-        setState(() {
-          _uploadProgress = response.contentLength != null
-              ? event.length / response.contentLength
-              : 0;
-        });
-      }).onDone(() {
-        setState(() {
-          _uploadProgress = 1.0;
-          _uploading = false;
-        });
-      });
-
-      if (response.statusCode == 200) {
-        print('Video uploaded successfully');
-      } else {
-        print('Failed to upload video');
-      }
-    } else {
-      print('No video file selected');
-    }
+  void _deleteImage(int index) {
+    setState(() {
+      _selectedImages.removeAt(index);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video Upload and Preview'),
+        title: Text('Image Upload'),
       ),
       body: Column(
         children: [
-          if (_videoController != null && _videoController.value.isInitialized)
-            Container(
-              height: 500,
-              child: AspectRatio(
-                aspectRatio: _videoController.value.aspectRatio,
-                child: VideoPlayer(_videoController),
-              ),
-            ),
           ElevatedButton(
-            onPressed: pickAndPreviewVideo,
-            child: Text('Pick and Preview Video'),
+            onPressed: _pickImages,
+            child: Text('Select Images'),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _selectedImages.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Image.file(File(_selectedImages[index].path)),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => _deleteImage(index),
+                  ),
+                );
+              },
+            ),
           ),
           ElevatedButton(
-            onPressed: _uploading ? null : uploadVideo,
-            child: Text('Upload Video'),
+            onPressed: _uploadImages,
+            child: Text('Upload Images'),
           ),
-          if (_uploading)
-            Column(
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 8),
-                Text('Uploading...'),
-              ],
-            ),
-          if (_uploadProgress > 0 && _uploadProgress < 1)
-            LinearProgressIndicator(value: _uploadProgress),
         ],
       ),
     );
   }
 }
-
-
-
 

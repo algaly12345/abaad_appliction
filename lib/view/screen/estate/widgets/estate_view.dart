@@ -43,7 +43,7 @@ class _EstateViewState extends State<EstateView> {
     sampleData.add( RadioModel(false, 'منظور الشارع',Images.street_view));
     sampleData.add( RadioModel(false, 'المخطط', Images.planed));
     sampleData.add( RadioModel(false, 'منظور جوي', Images.street_view));
-    sampleData.add( RadioModel(false, 'فيديو', Images.video));
+    sampleData.add( RadioModel(false, 'فبديو', Images.video));
   }
 
   @override
@@ -218,7 +218,7 @@ class _EstateViewState extends State<EstateView> {
                           }else {
                             Get.toNamed(RouteHelper.getFeatureRoute(
                                 widget.estate.id, sampleData[index].buttonText,
-                                widget.estate.arPath, widget.estate.latitude,
+                                widget.estate.arPath,widget.estate.videoUrl, widget.estate.latitude,
                                 widget.estate.longitude));
                           }
                         });

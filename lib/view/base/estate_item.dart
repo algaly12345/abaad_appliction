@@ -9,6 +9,7 @@ import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/confirmation_dialog.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/base/view_image_dilog.dart';
 import 'package:abaad/view/screen/profile/edit_dilog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,6 +38,7 @@ class EstateItem extends StatelessWidget {
         // ),
         child: Container(
           alignment: Alignment.bottomCenter,
+          padding:  isMyProfile==1? const EdgeInsets.all(8 ):const EdgeInsets.all(0),
           child:Container(
             // height:fav?150: 155,
             decoration: BoxDecoration(
@@ -68,6 +70,7 @@ class EstateItem extends StatelessWidget {
                           Container(
                             width: 155,
                             height: 155,
+
                             child:   Container(child:   Container(
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
@@ -91,6 +94,38 @@ class EstateItem extends StatelessWidget {
                             )),
                           ),
                           SizedBox(width: 11.0),
+
+                          isMyProfile==1?Column(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Get.dialog(ConfirmationDialog(icon: Images.support,
+                                    title: 'are_you_sure_to_delete_account'.tr,
+                                    description: 'it_will_remove_your_all_information'.tr, isLogOut: true,
+                                    onYesPressed: () => Get.find<EstateController>().deleteEstate(estate.id),
+                                  ), useSafeArea: false);
+                                },
+                                icon: Icon(Icons.delete_forever, color: Colors.red ,size: 20,),
+                              ),
+                              IconButton(
+                                onPressed: ()async {
+                                  Get.find<EstateController>().currentIndex==0;
+                                  Get.find<EstateController>().categoryIndex==0;
+                                  await    Get.dialog(EditDialog(estate:estate));
+                                },
+                                icon: Icon(Icons.edit_note_rounded, color: Colors.orange),
+                              ),
+                              IconButton(
+                                onPressed: ()async {
+                                  Get.find<EstateController>().currentIndex==0;
+                                  Get.find<EstateController>().categoryIndex==0;
+                                  await    Get.dialog(ViewImageUploadScreen(estate));
+                                },
+                                icon: Icon(Icons.image_sharp, color: Colors.blue),
+                              ),
+                            ],
+
+                          ):       Container( ),
                           Flexible(
                             flex: 5,
                             child: Column(
@@ -141,41 +176,7 @@ class EstateItem extends StatelessWidget {
                                             }),
                                           ):Container(),
 
-                                          isMyProfile==1?Column(
-                                            children: [
-                                              ElevatedButton(
-                                                onPressed: () {
-                            Get.dialog(ConfirmationDialog(icon: Images.support,
-                            title: 'are_you_sure_to_delete_account'.tr,
-                            description: 'it_will_remove_your_all_information'.tr, isLogOut: true,
-                            onYesPressed: () => Get.find<EstateController>().deleteEstate(estate.id),
-                          ), useSafeArea: false);
-        },
-                                                child: Icon(Icons.delete_forever, color: Colors.white),
-                                                style: ElevatedButton.styleFrom(
-                                                  shape: CircleBorder(),
-                                                  backgroundColor: Colors.blue, // <-- Button color
-                                                  foregroundColor: Colors.red, // <-- Splash color
-
-                                                ),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: ()async {
-                                                  Get.find<EstateController>().currentIndex==0;
-                                                  Get.find<EstateController>().categoryIndex==0;
-                                              await    Get.dialog(EditDialog(estate:estate));
-                                                },
-                                                child: Icon(Icons.edit_note_rounded, color: Colors.white),
-                                                style: ElevatedButton.styleFrom(
-                                                  shape: CircleBorder(),
-                                                  backgroundColor: Colors.blue, // <-- Button color
-                                                  foregroundColor: Colors.red, // <-- Splash color
-
-                                                ),
-                                              ),
-                                            ],
-
-                                          ):       Container(
+                                          Container(
                                             padding: const EdgeInsets.only(right: 4,left: 4),
                                             decoration:  BoxDecoration(
                                                 borderRadius: BorderRadius.circular(
@@ -194,7 +195,6 @@ class EstateItem extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-
                                         ],
                                       ),
                                     ),

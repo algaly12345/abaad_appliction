@@ -684,7 +684,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                           ):Container(),
 
 
-                          widget.estate.networkType. length >0&& widget.estate.networkType  == null?    NetworkTypeItem(estate: widget.estate,restaurants: widget.estate.networkType):Container(),
+                          widget.estate.networkType. length >0?    NetworkTypeItem(estate: widget.estate,restaurants: widget.estate.networkType):Container(),
                           widget.estate.interface!=null? InterfaceItem(estate: widget.estate,restaurants:   widget.estate.interface)   :Container(),
                           const MapDetailsView(
                               fromView: true),

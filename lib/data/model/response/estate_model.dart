@@ -77,6 +77,7 @@ class Estate {
   String streetSpace;
   String buildSpace;
   String documentNumber;
+  String videoUrl;
   Users users;
 
 
@@ -126,6 +127,7 @@ class Estate {
     this.streetSpace,
     this.buildSpace,
     this.documentNumber,
+    this.videoUrl,
     this.users
   });
 
@@ -204,6 +206,7 @@ class Estate {
     streetSpace=json["street_space"];
     buildSpace=json["build_space"];
     documentNumber=json["document_number"];
+    videoUrl=json['video_url'];
     users = json['users'] != null ? new Users.fromJson(json['users']) : null;
 
 
@@ -257,6 +260,7 @@ class Estate {
     data['category']=this.category;
     data["build_space"]=this.buildSpace;
     data["document_number"]=this.documentNumber;
+    data["video_url"]=this.videoUrl;
 
     if (this.networkType != null) {
       data['network_type'] = this.networkType.map((v) => v.toJson()).toList();

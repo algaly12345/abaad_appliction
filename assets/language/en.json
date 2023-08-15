@@ -146,8 +146,18 @@
   "age": " age",
   "date_of_publication": "date of publication",
   "contact_the_advertiser": "Contact the advertiser",
-
   "application_provides_optimal": "ABAAD application provides optimal marketing of real estate from different dimensions by providing: \n 3D virtual tours, 3D street view and the sky view of the property. ",
   "application_allows_companies": "ABAAD application allows companies and institutions to present their offers and services in professional ways through real estate offers in the application",
-  "you_can_tour_the_property_with": "You can tour the property with high quality through the virtual tour feature, as it shows you the 3D perspective and the street view.\nLet the vision be from the inside and the outside.You can tour the property with high quality through the virtual tour feature, as it shows you the 3D perspective and the street view.\nLet the vision be from the inside and the outside."
+  "you_can_tour_the_property_with": "You can tour the property with high quality through the virtual tour feature, as it shows you the 3D perspective and the street view.\nLet the vision be from the inside and the outside.You can tour the property with high quality through the virtual tour feature, as it shows you the 3D perspective and the street view.\nLet the vision be from the inside and the outside.",
+  "complete_the_process": "Complete the process",
+  "thanks": "Thanks",
+  "added_successfully": "The property has been added successfully",
+  "attach_video": "You can attach a video of the show",
+  "download_video": "download_video",
+  "i_don_t_want_upload": "I don't want to upload a video",
+  "loading_video": "Loading video ...",
+  "browse_and_add_photos": "Browse and add photos",
+  "upload_images": "Upload Images",
+  "pictures_property": "Pictures of the property"
+
 }

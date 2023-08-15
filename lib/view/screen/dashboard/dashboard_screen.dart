@@ -11,6 +11,7 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/view/base/drawer_menu.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
+import 'package:abaad/view/base/view_image_dilog.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:abaad/view/screen/chat/conversation_screen.dart';
 import 'package:abaad/view/screen/dashboard/widget/bottom_nav_item.dart';
@@ -81,8 +82,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
     _screens = [
-      VideoUploadScreen(),
-    //  MapViewScreen(),
+      MapViewScreen(),
       HomeScreen(),
       ConversationScreen(),
       FavouriteScreen(),

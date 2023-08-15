@@ -3,6 +3,7 @@ import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/theme_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/dimensions.dart';
+import 'package:abaad/util/images.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _EstateImageViewState extends State<EstateImageView> {
 
     return GetBuilder<EstateController>(builder: (estateController) {
     return  (estateController.estate != null && estateController.estate.shortDescription != null) ?
-      Container(
+     Container(
 
 
       padding: EdgeInsets.only(top: 2),
@@ -74,16 +75,19 @@ class _EstateImageViewState extends State<EstateImageView> {
                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                       boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 5)],
                     ),
-                    child: ClipRRect(
+                    child:   estateController.estate.images.length  >0?ClipRRect(
                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                       child:  GetBuilder<SplashController>(builder: (splashController) {
                         return  CustomImage(
-                          image: '$_baseUrl/${estateController.estate.images[index]}',
+                          image: '$_baseUrl/${estateController.estate.images[index]}'??'',
                           fit: BoxFit.cover,
                         );
                       },
                       ),
-                    ),
+                    ): CustomImage(
+                    image: Images.image ,
+                    fit: BoxFit.cover,
+                  ),
                   ),
                 );
               },
@@ -117,7 +121,14 @@ class _EstateImageViewState extends State<EstateImageView> {
           color: Colors.grey[Get.find<ThemeController>().darkTheme ? 700 : 300],
         )),
       ),
-    ) : const Center(child: CircularProgressIndicator());
+    )
+
+
+
+
+
+
+        : const Center(child: CircularProgressIndicator());
     });
   }
 }

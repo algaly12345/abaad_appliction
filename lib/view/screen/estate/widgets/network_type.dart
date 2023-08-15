@@ -41,7 +41,7 @@ class NetworkTypeItem extends StatelessWidget {
 
         children: [
           Expanded(child: Container(
-              padding: EdgeInsets.all(10),child:  Text(" التغطية"))),
+              padding: EdgeInsets.all(10),child:  Text("network".tr))),
           VerticalDivider(width: 1.0),
           Expanded(child: Container(
               padding: EdgeInsets.all(10),child:  Container(
@@ -49,7 +49,7 @@ class NetworkTypeItem extends StatelessWidget {
 
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: estate.interface .length,
+              itemCount: estate.networkType .length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(5.0),

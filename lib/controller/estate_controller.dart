@@ -241,6 +241,8 @@ class EstateController extends GetxController implements GetxService {
     }
   }
 
+
+
   void pickDmImage(bool isLogo, bool isRemove) async {
     if (isRemove) {
       _pickedImage = null;
@@ -309,7 +311,7 @@ class EstateController extends GetxController implements GetxService {
     }
     Response response = await estateRepo.createEstate(
         estateBody, _multiParts);
-   // prefs.setInt('estate_id', response.body["message"]);
+   prefs.setString('estate_id', response.body["message"].toString());
 
     if (response.statusCode == 200) {
       _isLoading=false;

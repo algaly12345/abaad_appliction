@@ -9,6 +9,7 @@ import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_button.dart';
+import 'package:abaad/view/base/custom_dialog.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/dot.dart';
 import 'package:flutter/material.dart';
@@ -55,9 +56,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
   }
 
   Future<void> pickAndPreviewVideo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var index_value = prefs.getInt('estate_id');
-    print("------------------------value${index_value}");
+
     FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.video);
 
     if (result != null) {
@@ -72,17 +71,19 @@ class _SuccessScreenState extends State<SuccessScreen> {
   }
 
   Future<void> uploadVideo() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String  index_value = prefs.getString('estate_id');
     if (_filePickerResult != null) {
       String filePath = _filePickerResult.files.single.path;
-      var request = http.MultipartRequest('POST', Uri.parse('http://192.168.43.55/abbaadRepo/api/v1/estate/upload-video'));
-      request.fields['id'] = "147";
+      var request = http.MultipartRequest('POST', Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/upload-video'));
+      request.fields['id'] = "${index_value}";
       request.files.add(await http.MultipartFile.fromPath('video', filePath));
 
       setState(() {
         _uploading = true;
         _uploadProgress = 0.0;
       });
-
       var response = await request.send();
       response.stream.listen((event) {
         setState(() {
@@ -98,7 +99,26 @@ class _SuccessScreenState extends State<SuccessScreen> {
       });
 
       if (response.statusCode == 200) {
-        print('Video uploaded successfully');
+        // ignore: use_build_context_synchronously
+        showAnimatedDialog(context, Center(
+          child: Container(
+            width: 300,
+            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_LARGE),
+            decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_EXTRA_LARGE)),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Image.asset(Images.checked, width: 100, height: 100),
+              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+              Text('ok'.tr, style: robotoBold.copyWith(
+                fontSize: 30, color: Theme.of(context).textTheme.bodyText1.color,
+                decoration: TextDecoration.none,
+              )),
+            ]),
+          ),
+        ), dismissible: false);
+        Future.delayed(Duration(seconds: 2), () {
+          Get.offAllNamed(RouteHelper.getInitialRoute());
+          // Get.offNamed(RouteHelper.getInitialRoute());
+        });
       } else {
         print('Failed to upload video');
       }
@@ -106,10 +126,11 @@ class _SuccessScreenState extends State<SuccessScreen> {
       print('No video file selected');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'إكمال العملية'.tr, onBackPressed: () => Get.back()),
+      appBar: CustomAppBar(title: 'complete_the_process'.tr, onBackPressed: () => Get.back()),
       body: Scaffold(
     body: Center(
     child: Column(
@@ -131,14 +152,14 @@ class _SuccessScreenState extends State<SuccessScreen> {
         ),
 
         Text(
-          "شكرا",
+          "thanks".tr,
           style:  robotoBold.copyWith(
             fontSize: 14,
             color: Theme.of(context).primaryColor,
           ),
         ),
         Text(
-          "تمت عملية اضافة العقار بنجاح",
+          "added_successfully".tr,
           style: robotoBold.copyWith(
               fontSize: 20,
               color: Theme.of(context).primaryColor),
@@ -146,12 +167,13 @@ class _SuccessScreenState extends State<SuccessScreen> {
 
         SizedBox(height: screenHeight * 0.01),
         Text(
-          "بإمكانك إرفاق فيديو للعرض ",
+          "attach_video".tr,
           textAlign: TextAlign.center,
           style: robotoBold.copyWith(
               fontSize: 15,
               color: Theme.of(context).primaryColor),
         ),
+        SizedBox(height: 4,),
         Column(
           children: [
 
@@ -197,37 +219,41 @@ class _SuccessScreenState extends State<SuccessScreen> {
       ),
     ),
             ),
-            ElevatedButton(
-              onPressed: pickAndPreviewVideo,
-              child: Text('Pick and Preview Video'),
+            // ElevatedButton(
+            //   onPressed: pickAndPreviewVideo,
+            //   child: Text('Pick and Preview Video'),
+            // ),
+
+            ElevatedButton.icon(
+                onPressed: _uploading ? null : uploadVideo,
+              icon: Icon(Icons.upload_file),  //icon data for elevated button
+              label: Text("download_video".tr), //label text
+              style: ElevatedButton.styleFrom(
+                  primary:Theme.of(context).primaryColor //elevated btton background color
+              ),
             ),
             ElevatedButton(
-
-              onPressed: _uploading ? null : uploadVideo,
-              child: Text('Upload Video'),
+              onPressed: (){
+                Get.offAllNamed(RouteHelper.getInitialRoute());
+              }, //icon data for elevated button
+              child: Text("i_don_t_want_upload".tr), //label text
+              style: ElevatedButton.styleFrom(
+                  primary:Theme.of(context).primaryColor //elevated btton background color
+              ),
             ),
             if (_uploading)
               Column(
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 8),
-                  Text('Uploading...'),
+                  Text('loading_video'.tr),
                 ],
               ),
             if (_uploadProgress > 0 && _uploadProgress < 1)
               LinearProgressIndicator(value: _uploadProgress),
           ],
         ),
-        Container(
-          height: 45,
-          margin: EdgeInsets.symmetric(horizontal: 40),
-          child: CustomButton(
-            onPressed: () {
-              Get.offAllNamed(RouteHelper.getInitialRoute());
-            },
-            buttonText: 'ok'.tr,
-          ),
-        ),
+
 
       ],
     ),

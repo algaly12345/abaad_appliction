@@ -95,6 +95,7 @@ dependencies:
   tutorial_coach_mark: ^1.2.4
   file_picker: ^4.6.1
   webview_flutter: ^2.0.9
+  progress_dialog_null_safe: ^1.0.7
 
 
 
