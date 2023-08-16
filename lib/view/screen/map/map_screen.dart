@@ -1387,7 +1387,7 @@ if(cardTapped==true){
                                 children: [
                                   Image.asset(Images.offer_icon, height: 35, width: 40),
                                   Text(
-                                      "يتضمن عرض ",style: robotoBlack.copyWith(fontSize: 11)),
+                                      "offer_included".tr,style: robotoBlack.copyWith(fontSize: 11)),
                                 ],
                               ),
                               Center(

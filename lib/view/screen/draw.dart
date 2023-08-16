@@ -1,75 +1,52 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:collection';
+
+import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/category_controller.dart';
+import 'package:abaad/controller/estate_controller.dart';
+import 'package:abaad/controller/splash_controller.dart';
+import 'package:abaad/data/model/response/zone_model.dart';
+import 'package:abaad/helper/route_helper.dart';
+import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
-import 'package:image/image.dart' as img;
+import 'package:get/get.dart';
+import 'package:abaad/util/images.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
-class ImageUploadScreen extends StatefulWidget {
-  @override
-  _ImageUploadScreenState createState() => _ImageUploadScreenState();
-}
-
-class _ImageUploadScreenState extends State<ImageUploadScreen> {
-  List<XFile> _selectedImages = [];
-
-  Future<void> _pickImages() async {
-    List<XFile> images = await ImagePicker().pickMultiImage();
-    if (images != null && images.isNotEmpty) {
-      setState(() {
-        _selectedImages.addAll(images);
-      });
-    }
-  }
-
-  void _uploadImages() {
-    // Implement the code to upload images to the server using the http package
-  }
-
-  void _deleteImage(int index) {
-    setState(() {
-      _selectedImages.removeAt(index);
-    });
-  }
+class MapViewScreen extends StatefulWidget {
+  late GoogleMapController mapController;
+  List<LatLng> polygonLatLngs = [
+    LatLng(24.7136, 46.6753), // Riyadh, Saudi Arabia
+    LatLng(24.7743, 46.7381),
+    LatLng(24.7345, 46.8350),
+    LatLng(24.6893, 46.7939),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Image Upload'),
+        title: Text('Google Maps App with Polygon'),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: _pickImages,
-            child: Text('Select Images'),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _selectedImages.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Image.file(File(_selectedImages[index].path)),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () => _deleteImage(index),
-                  ),
-                );
-              },
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _uploadImages,
-            child: Text('Upload Images'),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: LatLng(24.7136, 46.6753), // Center the map on Riyadh
+          zoom: 12.0,
+        ),
+        onMapCreated: (controller) {
+          mapController = controller;
+        },
+        polygons: <Polygon>[
+          Polygon(
+            polygonId: PolygonId('zone_polygon'),
+            points: polygonLatLngs,
+            strokeWidth: 2,
+            strokeColor: Colors.blue,
+            fillColor: Colors.blue.withOpacity(0.3),
           ),
         ],
       ),
     );
   }
 }
-
