@@ -1,52 +1,150 @@
-import 'dart:async';
-import 'dart:collection';
+import 'dart:io';
 
-import 'package:abaad/controller/auth_controller.dart';
-import 'package:abaad/controller/category_controller.dart';
-import 'package:abaad/controller/estate_controller.dart';
-import 'package:abaad/controller/splash_controller.dart';
-import 'package:abaad/data/model/response/zone_model.dart';
-import 'package:abaad/helper/route_helper.dart';
-import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:abaad/util/images.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
+import 'package:http/http.dart' as http;
 
-class MapViewScreen extends StatefulWidget {
-  late GoogleMapController mapController;
-  List<LatLng> polygonLatLngs = [
-    LatLng(24.7136, 46.6753), // Riyadh, Saudi Arabia
-    LatLng(24.7743, 46.7381),
-    LatLng(24.7345, 46.8350),
-    LatLng(24.6893, 46.7939),
-  ];
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Video Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: ItemDetailScreen(),
+    );
+  }
+}
+
+class ItemDetailScreen extends StatefulWidget {
+  @override
+  _ItemDetailScreenState createState() => _ItemDetailScreenState();
+}
+
+class _ItemDetailScreenState extends State<ItemDetailScreen> {
+   String videoUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    // Replace with initial video URL or empty string
+    videoUrl = '';
+  }
+
+  Future<void> pickVideo() async {
+    final pickedFile = await ImagePicker().getVideo(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        videoUrl = pickedFile.path;
+      });
+    }
+  }
+
+  Future<void> updateVideo() async {
+    if (videoUrl.isNotEmpty) {
+      final response = await http.put(
+        Uri.parse('YOUR_LARAVEL_API_ENDPOINT/updateVideo'),
+        body: {'video_url': videoUrl},
+      );
+
+      if (response.statusCode == 200) {
+        // Video URL updated successfully.
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Video updated successfully!')),
+        );
+      } else {
+        // Handle error.
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google Maps App with Polygon'),
+        title: Text('Video Detail'),
       ),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: LatLng(24.7136, 46.6753), // Center the map on Riyadh
-          zoom: 12.0,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 5.0,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: videoUrl.isNotEmpty
+                      ? VideoPlayerWidget(videoUrl: videoUrl)
+                      : Container(),
+                ),
+              ),
+            ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: pickVideo,
+              child: Text('Pick Video'),
+            ),
+            SizedBox(height: 10.0),
+            ElevatedButton(
+              onPressed: updateVideo,
+              child: Text('Update'),
+            ),
+          ],
         ),
-        onMapCreated: (controller) {
-          mapController = controller;
-        },
-        polygons: <Polygon>[
-          Polygon(
-            polygonId: PolygonId('zone_polygon'),
-            points: polygonLatLngs,
-            strokeWidth: 2,
-            strokeColor: Colors.blue,
-            fillColor: Colors.blue.withOpacity(0.3),
-          ),
-        ],
       ),
     );
+  }
+}
+
+class VideoPlayerWidget extends StatefulWidget {
+  final String videoUrl;
+
+  VideoPlayerWidget({@required this.videoUrl});
+
+  @override
+  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
+}
+
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
+   VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.file(
+      File(widget.videoUrl),
+    )..initialize().then((_) {
+      setState(() {});
+      _controller.play();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _controller.value.isInitialized
+        ? VideoPlayer(_controller)
+        : CircularProgressIndicator();
   }
 }

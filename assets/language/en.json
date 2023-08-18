@@ -159,6 +159,9 @@
   "browse_and_add_photos": "Browse and add photos",
   "upload_images": "Upload Images",
   "pictures_property": "Pictures of the property",
-  "offer_included": "Offer included"
+  "offer_included": "Offer included",
+  "planned": "planned",
+  "photo": "photo",
+  "video": "video"
 
 }
