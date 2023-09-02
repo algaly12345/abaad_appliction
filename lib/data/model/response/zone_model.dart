@@ -5,6 +5,7 @@ class ZoneModel {
   String name;
   Coordinates coordinates;
   String  status;
+  String nameAr;
   String latitude;
   String longitude;
   String createdAt;
@@ -13,7 +14,7 @@ class ZoneModel {
   String updatedAt;
 
 
-  ZoneModel({this.id, this.name, this.coordinates, this.status, this.createdAt, this.updatedAt ,this.latitude,
+  ZoneModel({this.id, this.name,this.nameAr, this.coordinates, this.status, this.createdAt, this.updatedAt ,this.latitude,
     this.longitude});
 
   ZoneModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +28,7 @@ class ZoneModel {
     latitude = json['latitude'];
     longitude = json['longitude'];
     estate_count = json['estate_count'];
+    nameAr=json['name_ar'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,7 +45,7 @@ class ZoneModel {
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     data['estate_count'] = this.estate_count;
-
+    data['name'] = this.name;
     return data;
   }
 }

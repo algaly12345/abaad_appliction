@@ -9,6 +9,7 @@ class RadioItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Container(
+      padding: EdgeInsets.all(4.0),
       decoration:  BoxDecoration(
         color: _item.isSelected
             ?  Theme.of(context).primaryColor
@@ -20,11 +21,18 @@ class RadioItem extends StatelessWidget {
                 : Colors.grey),
         borderRadius: const BorderRadius.all(const Radius.circular(2.0)),
       ),
-      margin:  EdgeInsets.all(5.0),
+      margin:  EdgeInsets.all(2.0),
       child:  Row(
-        mainAxisSize: MainAxisSize.max,
+     mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+
            Container(
+
+            child:  Text(_item.buttonText,style: robotoBlack.copyWith(fontSize: 13, color: _item.isSelected
+                ? Theme.of(context).backgroundColor
+                : Colors.grey)),
+          ),
+          Container(
             height: 50.0,
             width: 50.0,
 
@@ -32,12 +40,6 @@ class RadioItem extends StatelessWidget {
               child:  Image.asset(_item.text,height: 24,width: 24),
             ),
           ),
-           Container(
-            margin: new EdgeInsets.only(left: 10.0),
-            child:  Text(_item.buttonText,style: robotoBlack.copyWith(fontSize: 11, color: _item.isSelected
-                ? Theme.of(context).backgroundColor
-                : Colors.grey)),
-          )
         ],
       ),
     );

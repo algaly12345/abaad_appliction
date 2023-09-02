@@ -211,6 +211,8 @@ class _MapViewScreenState extends State<MapScreen> {
   final cardKey = GlobalKey<FlipCardState>();
   @override
   Widget build(BuildContext context) {
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     bool _isNull = true;
     int _length = 0;
     var width = MediaQuery
@@ -477,7 +479,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
                                                   child: Row(children: [
                                                     Text(
-                                                      categoryController.subCategoryList[index].name,
+                                                     isArabic? "${categoryController.subCategoryList[index].nameAr}":"${categoryController.subCategoryList[index].name ??"all"}",
                                                       style: index == categoryController.subCategoryIndex
                                                           ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)
                                                           : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
@@ -600,7 +602,7 @@ class _MapViewScreenState extends State<MapScreen> {
                             child: SingleChildScrollView(
                               child: Column(children: [
                                 Container(
-                                  height: 110.0,
+                                  height: 100.0,
                                   width: 175.0,
                                   decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -622,7 +624,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                       SizedBox(
                                         width: 150,
                                         child: Text(
-                                          "يتضمن هذا العرض عروض وخصومات من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 10),
+                                          "this_offer_includes_offers_and_discounts".tr,style: robotoBlack.copyWith(fontSize: 10),
                                         ),
                                       ),
                                     ],
@@ -881,7 +883,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
                                                   child: Row(children: [
                                                     Text(
-                                                      categoryController.subCategoryList[index].name,
+                                                      isArabic? "${categoryController.subCategoryList[index].nameAr}":"${categoryController.subCategoryList[index].name??"all"}",
                                                       style: index == categoryController.subCategoryIndex
                                                           ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)
                                                           : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
@@ -988,7 +990,7 @@ class _MapViewScreenState extends State<MapScreen> {
                             child: SingleChildScrollView(
                               child: Column(children: [
                                 Container(
-                                  height: 110.0,
+                                  height: 100.0,
                                   width: 175.0,
                                   decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -1010,7 +1012,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                       SizedBox(
                                         width: 150,
                                         child: Text(
-                                          "يضمن هذا العرض عروض وخصومانت من مقدمين خدمة في عدد من الخدمات موفرة داخل العرض",style: robotoBlack.copyWith(fontSize: 10),
+                                          "this_offer_includes_offers_and_discounts".tr,style: robotoBlack.copyWith(fontSize: 10),
                                         ),
                                       ),
                                     ],

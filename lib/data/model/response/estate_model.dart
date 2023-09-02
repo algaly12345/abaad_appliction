@@ -79,6 +79,11 @@ class Estate {
   String documentNumber;
   String videoUrl;
   Users users;
+  String categoryName;
+  String  zoneName;
+  String categoryNameAr;
+  String  zoneNameAr;
+  String property_type;
 
 
 
@@ -128,7 +133,12 @@ class Estate {
     this.buildSpace,
     this.documentNumber,
     this.videoUrl,
-    this.users
+    this.users,
+    this.categoryName,
+    this.categoryNameAr,
+    this.zoneName,
+    this.zoneNameAr,
+    this.property_type
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -210,6 +220,13 @@ class Estate {
     users = json['users'] != null ? new Users.fromJson(json['users']) : null;
 
 
+    zoneName=json["zone_name"];
+    zoneNameAr=json["zone_name_ar"];
+    categoryNameAr=json["category_name_ar"];
+    categoryName=json['category_name'];
+    property_type= json['property_type'];
+
+
 
   }
 
@@ -279,6 +296,14 @@ class Estate {
     if (this.users != null) {
       data['users'] = this.users.toJson();
     }
+
+
+    data['category_name']=this.categoryName;
+    data["zone_name"]=this.zoneName;
+    data["category_name_ar"]=this.categoryNameAr;
+    data["zone_name_ar"]=this.zoneNameAr;
+    data['property_type']=this.property_type;
+
     return data;
   }
 }

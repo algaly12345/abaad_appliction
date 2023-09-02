@@ -38,7 +38,7 @@ class _MapDetailsViewState extends State<MapDetailsView> {
           padding: EdgeInsets.all(widget.fromView ? 0 : Dimensions.PADDING_SIZE_SMALL),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-            Text("الموقع ",
+            Text("location  ".tr,
                 style: robotoBlack.copyWith(fontSize: 14)),
             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 

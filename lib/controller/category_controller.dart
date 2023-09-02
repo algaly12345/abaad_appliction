@@ -184,6 +184,8 @@ class CategoryController extends GetxController implements GetxService {
 
 
   void getSubCategoryList(String categoryID) async {
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     _subCategoryIndex = 0;
     _subCategoryList = null;
     _categoryProductList = null;
@@ -191,7 +193,7 @@ class CategoryController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       _isLoading = false;
       _subCategoryList= [];
-      _subCategoryList.add(CategoryModel(id: int.parse(categoryID), name: 'الكل'.tr));
+      _subCategoryList.add(CategoryModel(id: int.parse(categoryID),nameAr: 'الكل'));
       _isLoading=false;
       response.body.forEach((category) => _subCategoryList.add(CategoryModel.fromJson(category)));
       getCategoryProductList(0,categoryID, 0 ,'0',"0","0","0","1");

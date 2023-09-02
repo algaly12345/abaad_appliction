@@ -16,6 +16,8 @@ class HtmlViewerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     String _data = htmlType == HtmlType.TERMS_AND_CONDITION ? Get.find<SplashController>().configModel.termsAndConditions
         : htmlType == HtmlType.ABOUT_US ? Get.find<SplashController>().configModel.aboutUs
         : htmlType == HtmlType.PRIVACY_POLICY ? Get.find<SplashController>().configModel.privacyPolicy
@@ -65,19 +67,62 @@ class HtmlViewerScreen extends StatelessWidget {
               ),
               Expanded(child: IgnorePointer(child: HtmlElementView(viewType: _viewID, key: Key(htmlType.toString())))),
             ],
-          ) : SingleChildScrollView(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-            physics: BouncingScrollPhysics(),
-            child: HtmlWidget(
-              _data ?? '',
-              key: Key(htmlType.toString()),
-              onTapUrl: (String url) {
-                return launchUrlString(url, mode: LaunchMode.externalApplication);
-              },
+          ) :  htmlType == HtmlType.TERMS_AND_CONDITION ?  DefaultTabController(
+            length: 2, // Number of tabs
+            child:
+            Scaffold(
+              body: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColor],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6),
+                      ],
+                    ),
+                    child: SafeArea(
+                      child: TabBar(
+                        indicator: UnderlineTabIndicator(
+                          borderSide: BorderSide(width: 4, color: Colors.white),
+                        ),
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        unselectedLabelStyle: TextStyle(fontSize: 16),
+                        tabs: [
+                          Tab(text: 'advertising_terms'.tr),
+                          Tab(text: 'terms_use'.tr),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        buildTabContent(isArabic ?"${Get.find<SplashController>().configModel.termsConditionsAr}":"${Get.find<SplashController>().configModel.termsConditions}"),
+                        buildTabContent(""),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ):htmlType == HtmlType.ABOUT_US ?   buildTabContent(isArabic ?"${Get.find<SplashController>().configModel.aboutUsAr}":"${Get.find<SplashController>().configModel.aboutUs}") :Text("about"),
         ),
       ),
+    );
+  }
+
+
+  Widget buildTabContent(String text) {
+    return  SingleChildScrollView(
+      child: HtmlWidget(text),
     );
   }
 }

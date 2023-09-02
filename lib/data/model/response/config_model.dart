@@ -17,8 +17,10 @@ class ConfigModel {
   double marketingCommission;
   int agentRegistration;
   String aboutUs;
+  String aboutUsAr;
   String privacyPolicy;
   String termsConditions;
+  String termsConditionsAr;
   int appMinimumVersionAndroid;
   int appMinimumVersionIos;
   bool demo;
@@ -34,6 +36,8 @@ class ConfigModel {
   String currencySymbol;
   int digitAfterDecimalPoint;
   String termsAndConditions;
+  String featureAr;
+  String feature;
 
 
 
@@ -69,7 +73,10 @@ class ConfigModel {
         this.currencySymbol,
         this.digitAfterDecimalPoint,
         this.termsAndConditions,
-      });
+        this.termsConditionsAr,
+this.aboutUsAr,
+      this.feature,
+      this.featureAr});
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
     businessName = json['business_name'];
@@ -106,6 +113,11 @@ class ConfigModel {
     currencySymbol = json['currency_symbol'];
     digitAfterDecimalPoint = json['digit_after_decimal_point'];
     termsAndConditions = json['terms_and_conditions'];
+    termsConditionsAr = json['terms_condition_ar'];
+    termsAndConditions = json['terms_and_conditions'];
+    aboutUsAr = json['about_us_ar'];
+    feature= json['feature'];
+    featureAr= json['feature_ar'];
 
   }
 
@@ -144,6 +156,10 @@ class ConfigModel {
     data['currency_symbol'] = this.currencySymbol;
     data['digit_after_decimal_point'] = this.digitAfterDecimalPoint;
     data['terms_and_conditions']=this.termsAndConditions;
+    data['terms_condition_ar']=this.termsConditionsAr;
+    data['about_us_ar']=this.aboutUsAr;
+    data['feature']=this.feature;
+    data['feature_ar']=this.featureAr;
 
 
 

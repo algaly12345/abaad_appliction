@@ -20,7 +20,6 @@ class AppConstants {
   static const String LATITUDE = 'latitude';
   static const String LONGITUDE = 'longitude';
   static const String ZONE_ID = 'zoneId';
-  static const String USER_ADDRESS = 'user_address';
   static const String TOKEN_URI = '/api/v1/customer/cm-firebase-token';
   static const String TOPIC = 'all_zone_customer';
   static const String USER_PASSWORD = 'user_password';
@@ -77,13 +76,23 @@ class AppConstants {
   static const String DISTRICT_BY_CITY = '/api/v1/zones/get-districts-by-cities/';
   static const String CITIES_BY_REGIONS = '/api/v1/zones/get-cities-by-regions/';
   static const String DELETE_ESTATE_URI='/api/v1/customer/delete';
-
-
+  static const String countryCode = 'country_code';
+  static const String languageCode = 'language_code';
+  static const String userAddress = 'user_address';
+  static const String userNumber = 'user_number';
+  static const String userCountryCode = 'user_country_code';
+  static const String zoneId = 'zoneId';
+  static const String localizationKey = 'X-localization';
+  static const String latitude = 'latitude';
+  static const String longitude = 'longitude';
+  static const String createReport = 'estate/create-report';
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];
 
 
+  /// Languages
   static List<LanguageModel> languages = [
     LanguageModel(imageUrl: Images.english, languageName: 'English', countryCode: 'US', languageCode: 'en'),
     LanguageModel(imageUrl: Images.arabic, languageName: 'عربى', countryCode: 'SA', languageCode: 'ar'),
+
   ];
 }

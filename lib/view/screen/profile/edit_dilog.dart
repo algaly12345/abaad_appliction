@@ -231,7 +231,7 @@ class _EditDialogState extends State<EditDialog> {
 
     if(widget.estate.interface.length > 0){
       north_st=widget.estate.interface[0].name;
-      west_st=widget.estate.interface[1].name;
+      // west_st=widget.estate.interface[1].name??'';
     }
 
 

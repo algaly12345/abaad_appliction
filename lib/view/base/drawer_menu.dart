@@ -87,7 +87,7 @@ class DrawerMenu extends StatelessWidget {
 
               listItem(5,Icons.list_alt, 'terms_conditions'.tr, Colors.grey,(){
 
-                     Get.toNamed(RouteHelper.getHtmlRoute("terms_conditions"));
+                     Get.toNamed(RouteHelper.getHtmlRoute("terms-and-condition"));
               }),
               Divider(height: 1),
 

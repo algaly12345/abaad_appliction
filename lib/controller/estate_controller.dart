@@ -7,13 +7,14 @@ import 'package:abaad/data/model/response/category_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/repository/estate_repo.dart';
 import 'package:abaad/helper/route_helper.dart';
+import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 class EstateController extends GetxController implements GetxService {
   final EstateRepo estateRepo;
 
@@ -62,9 +63,13 @@ class EstateController extends GetxController implements GetxService {
     "الدخول الزكي",
     "التحكم بالتكيف"
   ];
+  final List<String> _reportList = ['مالك عقار', 'وسيط عقاري'];
+
   Rx<List<String>> selectedOptionList = Rx<List<String>>([]);
   var selectedOption = ''.obs;
   List<bool> _advantagesSelectedList;
+
+  int _reportIndex = 0;
 
   EstateModel get estateModel => _estateModel;
   EstateModel get estateModel1 => _estateModel1;
@@ -108,12 +113,11 @@ class EstateController extends GetxController implements GetxService {
   int get currentIndex => _currentIndex;
 
   String get address => _address;
-
   List<bool> get advantagesSelectedList => _advantagesSelectedList;
   List<int> get categoryIds => _categoryIds;
   Estate get restaurant => _restaurant;
-
-
+  List<String> get reportList => _reportList;
+  RxBool isLoading2 = false.obs;
   Future<void> getEstateList(int offset, bool reload ,int categoryId) async {
     if (reload) {
       _estateModel = null;
@@ -136,7 +140,12 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
-
+  void setReportIndex(String dmType, bool notify) {
+    _reportIndex = _reportList.indexOf(dmType);
+    if(notify) {
+      update();
+    }
+  }
 
   void setRestaurantType(String type) {
     _estateType = type;
@@ -421,6 +430,48 @@ class EstateController extends GetxController implements GetxService {
       ApiChecker.checkApi(response);
     }
     update();
+  }
+
+
+
+  Future<void> insertEstate(String title, String description, int estateId ,BuildContext ctx) async {
+    _isLoading = true;
+
+    try {
+      final response = await http.post(
+        Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/create-report'), // Replace with your Laravel API endpoint
+        body: {
+          'title': title,
+          'description': description,
+          'estate_id': estateId.toString(),
+        },
+      );
+
+
+
+      if (response.statusCode == 200) {
+        _isLoading = false;
+        Get.snackbar(
+          'Thanks'.tr,
+          'operation_accomplished_successfully'.tr,
+          backgroundColor: Colors.green, // Customize snackbar color
+          colorText: Colors.white, // Customize text color
+          duration: Duration(seconds: 3), // Set duration in seconds
+          snackPosition: SnackPosition.BOTTOM, // Set snackbar position
+          margin: EdgeInsets.all(10), // Set margin around the snackbar
+          isDismissible: true, // Allow dismissing the snackbar with a tap// Dismiss direction
+        );
+        Navigator.pop(ctx);// Show success snackbar
+      } else {
+        Get.snackbar('Error', 'Error inserting estate'); // Show error snackbar
+      }
+      // Handle response here
+
+    } catch (error) {
+      print("--------------------------------${error}");
+    } finally {
+      _isLoading = false;
+    }
   }
 
 }

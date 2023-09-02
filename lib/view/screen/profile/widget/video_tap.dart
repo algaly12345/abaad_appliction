@@ -40,6 +40,12 @@ class _VideoTabState extends State<VideoTab> {
           _controller.play();
         }
       });
+
+    _controller = VideoPlayerController.network(
+      '${AppConstants.BASE_URL}/storage/app/public/videos/${widget.estate.videoUrl}',
+    )..initialize().then((_) {
+      setState(() {});
+    });
   }
 
   Future<void> pickVideo() async {
@@ -96,70 +102,108 @@ class _VideoTabState extends State<VideoTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-     
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return WillPopScope(
+      onWillPop: () async {
+          _controller.pause();
 
-          children: [
-            Container(
-                child: Center(
-                  child: widget.estate.videoUrl == ""
-                      ? Text("No video available") // Display a message when video path is null
-                      : _controller.value.isInitialized
-                      ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                      : CircularProgressIndicator(),
-                )
-            ),
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 5.0,
+        return true;
+      },
+      child: Scaffold(
+
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 5.0,
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: videoUrl.isNotEmpty
+                        ? VideoPlayerWidget(
+                      videoUrl: videoUrl,
+                      controller: _controller,
+                      isPlaying: isPlaying,
+                    )
+                        : Center(
+                      child: Text('No video'),
                     ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: videoUrl.isNotEmpty
-                      ? VideoPlayerWidget(
-                    videoUrl: videoUrl,
-                    controller: _controller,
-                    isPlaying: isPlaying,
-                  )
-                      : Center(
-                    child: Text('No video'),
                   ),
                 ),
               ),
+
+              Container(
+                padding:  EdgeInsets.all(4.0),
+                width: double.infinity,
+                color: Colors.transparent,
+                child: OutlinedButton.icon(
+                    onPressed: pickVideo,
+                    icon:Icon(Icons.drive_folder_upload,color:Theme.of(context).primaryColor ),
+                    label:  Text("upload_images".tr)),
+              ),
+              Padding(
+                padding:  EdgeInsets.all(4.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      onPressed: updateVideo,
+                      style: ElevatedButton.styleFrom(
+                      primary:Theme.of(context).primaryColor),
+                      child:  Text('browse_and_add_photos'.tr)),),
+              ),
+              ElevatedButton(
+                onPressed: toggleVideoPlayback,
+                child: Text(isPlaying ? 'Pause' : 'Play'),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  if (_controller.value.isPlaying) {
+                    _controller.pause();
+                  } else {
+                    _controller.play();
+                  }
+                });
+              },
+              child: Icon(
+                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+              ),
             ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: pickVideo,
-              child: Text('Pick Video'),
+            SizedBox(height: 16),
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  if (_controller.value.isPlaying) {
+                    _controller.pause();
+                  }
+                  _controller.seekTo(Duration.zero);
+                });
+              },
+              child: Icon(Icons.stop),
             ),
-            SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: updateVideo,
-              child: Text('Update'),
-            ),
-            SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: toggleVideoPlayback,
-              child: Text(isPlaying ? 'Pause' : 'Play'),
-            ),
+
+
           ],
         ),
       ),
     );
+
   }
 }
 

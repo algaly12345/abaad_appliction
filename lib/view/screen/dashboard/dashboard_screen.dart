@@ -19,6 +19,7 @@ import 'package:abaad/view/screen/draw.dart';
 import 'package:abaad/view/screen/favourite/favourite_screen.dart';
 import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:abaad/view/screen/map/map_view_screen.dart';
+import 'package:abaad/view/screen/qr.dart';
 // import 'package:abaad/view/screen/map/map_view_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -32,7 +33,19 @@ class DashboardScreen extends StatefulWidget {
   final String route;
   final int pageIndex;
   DashboardScreen({@required this.fromSignUp, @required this.fromHome, @required this.route,@required this.pageIndex});
+  static Future<void> loadData(bool reload) async {
+    if(Get.find<CategoryController>().categoryList == null) {
+      Get.find<CategoryController>().getCategoryList(reload);
 
+    }
+
+    Get.find<UserController>().getUserInfo();
+    Get.find<CategoryController>().getSubCategoryList("0");
+    Get.find<ZoneController>().getCategoryList();
+
+    Get.find<AuthController>().getZoneList();
+    Get.find<BannerController>().getBannerList(true,1);
+  }
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
@@ -52,18 +65,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-
-    if(Get.find<CategoryController>().categoryList == null) {
-      Get.find<CategoryController>().getCategoryList(true);
-
-    }
-
-     Get.find<UserController>().getUserInfo();
-    Get.find<CategoryController>().getSubCategoryList("0");
-    Get.find<ZoneController>().getCategoryList();
+    DashboardScreen.loadData(true);
     int offset = 1;
-    Get.find<AuthController>().getZoneList();
-    Get.find<BannerController>().getBannerList(true,1);
     scrollController?.addListener(() {
       if (scrollController.position.pixels == scrollController.position.maxScrollExtent
           && Get.find<CategoryController>().categoryProductList != null
@@ -83,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
     _screens = [
-      MapViewScreen(),
+      QRCodeScannerWidget(),
       HomeScreen(),
       ConversationScreen(),
       FavouriteScreen(),

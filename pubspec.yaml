@@ -96,6 +96,7 @@ dependencies:
   file_picker: ^4.6.1
   webview_flutter: ^2.0.9
   progress_dialog_null_safe: ^1.0.7
+  barcode_scan2: ^4.2.4
 
 
 

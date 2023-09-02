@@ -30,6 +30,7 @@ import 'package:abaad/view/screen/map/pick_map_screen.dart';
 import 'package:abaad/view/screen/map/widget/permission_dialog.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -53,6 +54,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   bool _isLoggedIn;
   String type_properties;
   String network_type;
+  bool isCheckBoxChecked = false;
 
 
   next() {
@@ -268,7 +270,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   Widget build(BuildContext context) {
     bool _isNull = true;
     int _length = 0;
-
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     return Scaffold(
 
 
@@ -476,6 +479,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                       child: Stack(clipBehavior: Clip.none, children: [
                         GoogleMap(
+                          mapType: MapType.satellite,
                           initialCameraPosition: CameraPosition(target: _initialPosition, zoom: 17),
                           minMaxZoomPreference: MinMaxZoomPreference(0, 30),
                           onTap: (latLng) {
@@ -1749,114 +1753,258 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
               ):currentStep==4?
               Container(
-                padding: EdgeInsets.only(right: 10 ,left: 10),
+
                 child:   Container(
                     child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
                       child: Column(children: [
-                        Column(children: [
-
-
-                          Column(children: [
-
-                            Center(child: Text('choose_your_business_plan'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault))),
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-                              child: Row(children: [
-                                Get.find<SplashController>().configModel.businessPlan.commission != 0 ? Expanded(
-                                  child: baseCardWidget(authController, context, title: 'commission'.tr,
-                                      index: 0, onTap: ()=> authController.setBusiness(0)),
-                                ) : SizedBox(),
-                                SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
-
-                                Get.find<SplashController>().configModel.businessPlan.subscription != 0 ? Expanded(
-                                  child: baseCardWidget(authController, context, title: 'subscription_base'.tr,
-                                      index: 1, onTap: ()=> authController.setBusiness(1)),
-                                ) : SizedBox(),
-                              ]),
-                            ),
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-
-                            authController.businessIndex == 0 ? Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-                              child: Text(
-                                "${'يتم اخذ عمولة من تطبيق'.tr}  ${Get.find<SplashController>().configModel.businessName} ${'من سعر العقار  من خلال تسويق عقارك وهي'.tr} ${Get.find<SplashController>().configModel.adminCommission}% ",
-                                style: robotoRegular, textAlign: TextAlign.start, textScaleFactor: 1.1,
-                              ),
-                            ) : Container(
-                              child: Column(children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-                                  child: Text(
-                                    'subscription_package'.tr,
-                                    style: robotoRegular, textAlign: TextAlign.start,
-                                  ),
-                                ),
-
-                                authController.packageModel != null ? SizedBox(
-                                  height: ResponsiveHelper.isDesktop(context) ? 700 : 600,
-                                  child: (authController.packageModel.packages.isNotEmpty && authController.packageModel.packages.length != 0) ? Swiper(
-
-                                    itemCount: authController.packageModel.packages.length,
-                                    itemWidth: ResponsiveHelper.isDesktop(context) ? 400 : context.width * 0.8,
-                                    itemHeight: 600.0,
-                                    layout: SwiperLayout.STACK,
-                                    onIndexChanged: (index){
-                                      authController.selectSubscriptionCard(index);
-                                    },
-                                    itemBuilder: (BuildContext context, int index){
-                                      Packages _package = authController.packageModel.packages[index];
-
-                                      Color _color = ColorConverter.stringToColor(_package.color);
-
-                                      return GetBuilder<AuthController>(
-                                          builder: (authController) {
-
-                                            return Stack(clipBehavior: Clip.none, children: [
-
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: Theme.of(context).cardColor,
-                                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_EXTRA_LARGE),
-                                                  boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 10)],
-                                                ),
-                                                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                                margin: EdgeInsets.only(top: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                                child: SubscriptionCard(index: index, authController: authController, package: _package, color: _color),
-                                              ),
-
-                                              authController.activeSubscriptionIndex == index ? Positioned(
-                                                top: 5, right: -10,
-                                                child: Container(
-                                                  height: 40, width: 40,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(50),
-                                                    color: _color, border: Border.all(color: Theme.of(context).cardColor, width: 2),
-                                                  ),
-                                                  child: Icon(Icons.check, color: Theme.of(context).cardColor),
-                                                ),
-                                              ) : SizedBox(),
-
-                                            ]);
-                                          }
-                                      );
-                                    },
-                                  ) : Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(Images.empty_box, height: 150),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                        Text('no_package_available'.tr),
-                                      ]),
-                                  ),
-                                ) : CircularProgressIndicator(),
-
-                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                              ]),
-                            ),
-                          ])
-                        ]),
+//                         Column(children: [
+//
+//
+//                           Column(children: [
+//
+//                             Center(child: Text('choose_your_business_plan'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault))),
+//                             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+//
+//                             Padding(
+//                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+//                               child: Row(children: [
+//                                 Get.find<SplashController>().configModel.businessPlan.commission != 0 ? Expanded(
+//                                   child: baseCardWidget(authController, context, title: 'commission'.tr,
+//                                       index: 0, onTap: ()=> authController.setBusiness(0)),
+//                                 ) : SizedBox(),
+//                                 SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+//
+//                                 Get.find<SplashController>().configModel.businessPlan.subscription != 0 ? Expanded(
+//                                   child: baseCardWidget(authController, context, title: 'subscription_base'.tr,
+//                                       index: 1, onTap: ()=> authController.setBusiness(1)),
+//                                 ) : SizedBox(),
+//                               ]),
+//                             ),
+//                             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+//
+//                             authController.businessIndex == 0 ? Padding(
+//                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+//                               child: Text(
+//                                 "${'يتم اخذ عمولة من تطبيق'.tr}  ${Get.find<SplashController>().configModel.businessName} ${'من سعر العقار  من خلال تسويق عقارك وهي'.tr} ${Get.find<SplashController>().configModel.adminCommission}% ",
+//                                 style: robotoRegular, textAlign: TextAlign.start, textScaleFactor: 1.1,
+//                               ),
+//                             ) : Container(
+//                               child: Column(children: [
+//
+//
+//
+//                                 Container(
+//                                   width: 300,
+//                                   decoration: BoxDecoration(
+//                                     borderRadius: BorderRadius.circular(20),
+//                                   ),
+//                                   child: Column(
+//                                     mainAxisSize: MainAxisSize.min,
+//                                     children: [
+//                                       Container(
+//                                         height: 120,
+//                                         decoration: BoxDecoration(
+//                                           borderRadius: BorderRadius.vertical(
+//                                             top: Radius.circular(20),
+//                                           ),
+//                                           gradient: LinearGradient(
+//                                             begin: Alignment.topCenter,
+//                                             end: Alignment.bottomCenter,
+//                                             colors: [Colors.blue.shade700, Colors.blue.shade400],
+//                                           ),
+//                                         ),
+//                                         child: Center(
+//                                           child: Column(
+//                                             mainAxisAlignment: MainAxisAlignment.center,
+//                                             children: [
+//                                               Icon(
+//                                                 Icons.check_circle,
+//                                                 size: 64,
+//                                                 color: Colors.white,
+//                                               ),
+//                                               SizedBox(height: 10),
+//                                               Text(
+//                                                 'Welcome to My App',
+//                                                 style: TextStyle(
+//                                                   fontSize: 24,
+//                                                   fontWeight: FontWeight.bold,
+//                                                   color: Colors.white,
+//                                                 ),
+//                                               ),
+//                                             ],
+//                                           ),
+//                                         ),
+//                                       ),
+//                                       Padding(
+//                                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+//                                         child: Column(
+//                                           children: [
+//                                             Text(
+//                                               'Description:',
+//                                               style: TextStyle(
+//                                                 fontSize: 18,
+//                                                 fontWeight: FontWeight.bold,
+//                                               ),
+//                                             ),
+//                                             SizedBox(height: 10),
+//                                             Text(
+//                                               'This is a longer description of what the app does. You can use this app to accomplish various tasks and manage your daily activities. It provides a user-friendly interface and a range of features designed to enhance your productivity and organization. Whether you\'re a student, professional, or anyone looking to streamline your tasks, this app has got you covered.',
+//                                               style: TextStyle(
+//                                                 fontSize: 16,
+//                                                 color: Colors.grey[600],
+//                                               ),
+//                                               textAlign: TextAlign.center,
+//                                             ),
+//                                             SizedBox(height: 15),
+//                                             Row(
+//                                               mainAxisAlignment: MainAxisAlignment.center,
+//                                               children: [
+//                                                 Checkbox(
+//                                                   value: isCheckBoxChecked,
+//                                                   onChanged: (value) {
+//                                                     setState(() {
+//                                                       isCheckBoxChecked = value;
+//                                                     });
+//                                                   },
+//                                                 ),
+//                                                 Text('I agree to the terms.'),
+//                                               ],
+//                                             ),
+//                                             SizedBox(height: 15),
+//                                             Row(
+//                                               mainAxisAlignment: MainAxisAlignment.center,
+//                                               children: [
+//                                                 ElevatedButton(
+//                                                   onPressed: isCheckBoxChecked
+//                                                       ? () {
+//                                                     Navigator.pop(context); // Close the dialog
+//                                                   }
+//                                                       : null,
+//                                                   style: ElevatedButton.styleFrom(
+//                                                     primary: Colors.green,
+//                                                     padding: EdgeInsets.symmetric(horizontal: 30),
+//                                                     shape: RoundedRectangleBorder(
+//                                                       borderRadius: BorderRadius.circular(10),
+//                                                     ),
+//                                                   ),
+//                                                   child: Text(
+//                                                     'Yes',
+//                                                     style: TextStyle(fontSize: 16),
+//                                                   ),
+//                                                 ),
+//                                                 SizedBox(width: 20),
+//                                                 ElevatedButton(
+//                                                   onPressed: () {
+//                                                     Navigator.pop(context); // Close the dialog
+//                                                   },
+//                                                   style: ElevatedButton.styleFrom(
+//                                                     primary: Colors.red,
+//                                                     padding: EdgeInsets.symmetric(horizontal: 30),
+//                                                     shape: RoundedRectangleBorder(
+//                                                       borderRadius: BorderRadius.circular(10),
+//                                                     ),
+//                                                   ),
+//                                                   child: Text(
+//                                                     'No',
+//                                                     style: TextStyle(fontSize: 16),
+//                                                   ),
+//                                                 ),
+//                                               ],
+//                                             ),
+//                                             SizedBox(height: 20), // Added spacing
+//                                             ElevatedButton(
+//                                               onPressed: () {
+//                                                 Navigator.pop(context); // Close the dialog
+//                                               },
+//                                               style: ElevatedButton.styleFrom(
+//                                                 primary: Colors.grey[200],
+//                                                 padding: EdgeInsets.symmetric(horizontal: 30),
+//                                                 shape: RoundedRectangleBorder(
+//                                                   borderRadius: BorderRadius.circular(10),
+//                                                 ),
+//                                               ),
+//                                               child: Text(
+//                                                 'Cancel',
+//                                                 style: TextStyle(fontSize: 16, color: Colors.black),
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 )
+//                                 // Padding(
+//                                 //   padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+//                                 //   child: Text(
+//                                 //     'subscription_package'.tr,
+//                                 //     style: robotoRegular, textAlign: TextAlign.start,
+//                                 //   ),
+//                                 // ),
+//                                 //
+//                                 // authController.packageModel != null ? SizedBox(
+//                                 //   height: ResponsiveHelper.isDesktop(context) ? 700 : 600,
+//                                 //   child: (authController.packageModel.packages.isNotEmpty && authController.packageModel.packages.length != 0) ? Swiper(
+//                                 //
+//                                 //     itemCount: authController.packageModel.packages.length,
+//                                 //     itemWidth: ResponsiveHelper.isDesktop(context) ? 400 : context.width * 0.8,
+//                                 //     itemHeight: 600.0,
+//                                 //     layout: SwiperLayout.STACK,
+//                                 //     onIndexChanged: (index){
+//                                 //       authController.selectSubscriptionCard(index);
+//                                 //     },
+//                                 //     itemBuilder: (BuildContext context, int index){
+//                                 //       Packages _package = authController.packageModel.packages[index];
+//                                 //
+//                                 //       Color _color = ColorConverter.stringToColor(_package.color);
+//                                 //
+//                                 //       return GetBuilder<AuthController>(
+//                                 //           builder: (authController) {
+//                                 //
+//                                 //             return Stack(clipBehavior: Clip.none, children: [
+//                                 //
+//                                 //               Container(
+//                                 //                 decoration: BoxDecoration(
+//                                 //                   color: Theme.of(context).cardColor,
+//                                 //                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_EXTRA_LARGE),
+//                                 //                   boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 10)],
+//                                 //                 ),
+//                                 //                 padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+//                                 //                 margin: EdgeInsets.only(top: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+//                                 //                 child: SubscriptionCard(index: index, authController: authController, package: _package, color: _color),
+//                                 //               ),
+//                                 //
+//                                 //               authController.activeSubscriptionIndex == index ? Positioned(
+//                                 //                 top: 5, right: -10,
+//                                 //                 child: Container(
+//                                 //                   height: 40, width: 40,
+//                                 //                   decoration: BoxDecoration(
+//                                 //                     borderRadius: BorderRadius.circular(50),
+//                                 //                     color: _color, border: Border.all(color: Theme.of(context).cardColor, width: 2),
+//                                 //                   ),
+//                                 //                   child: Icon(Icons.check, color: Theme.of(context).cardColor),
+//                                 //                 ),
+//                                 //               ) : SizedBox(),
+//                                 //
+//                                 //             ]);
+//                                 //           }
+//                                 //       );
+//                                 //     },
+//                                 //   ) : Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
+//                                 //       children: [
+//                                 //         Image.asset(Images.empty_box, height: 150),
+//                                 //         SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+//                                 //         Text('no_package_available'.tr),
+//                                 //       ]),
+//                                 //   ),
+//                                 // ) : CircularProgressIndicator(),
+// ,
+//                                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+//
+//                               ]),
+//                             ),
+//                           ])
+//                         ]),
 
 
 
@@ -1898,6 +2046,124 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                         //     ]),
                         //   ),
                         // )
+
+                        SizedBox(height: 20,),
+                        Container(
+                          padding: EdgeInsets.only(right: 10 ,left: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [Colors.blue.shade700, Colors.blue.shade400],
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.question_mark    ,
+                                        size: 64,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'dimension_services_request'.tr,
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                child: Column(
+                                  children: [
+
+                                    buildTabContent(
+                                      isArabic ?"${Get.find<SplashController>().configModel.featureAr}":"${Get.find<SplashController>().configModel.feature}",
+                                    ),
+                                    SizedBox(height: 15),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Checkbox(
+                                          value: isCheckBoxChecked,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              isCheckBoxChecked = value;
+                                            });
+                                          },
+                                        ),
+                                        Text('i_agree_with'.tr),
+                                      ],
+                                    ),
+                                    SizedBox(height: 15),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: isCheckBoxChecked
+                                              ? () {
+                                            next(); // Close the dialog
+                                          }
+                                              : null,
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.green,
+                                            padding: EdgeInsets.symmetric(horizontal: 30),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'yes_want'.tr,
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ),
+                                        SizedBox(width: 20),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            next();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.red,
+                                            padding: EdgeInsets.symmetric(horizontal: 30),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'i_dont_want'.tr,
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 20), // Added spacing
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+
+
+
                       ]),
                     ))
 
@@ -2158,7 +2424,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                 buildSpace: _buildSpaceController.text.toString(),
                                 documentNumber: _documentNumberController.text.toString(),
                                 adNumber: _adNumber,
-                                priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ));
+                                priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ,
+                                  feature:"$isCheckBoxChecked"));
                          // authController.submitBusinessPlan(restaurantId: 1);
                          //  next();
                         }
@@ -2269,6 +2536,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
           ),
         ) : SizedBox()
       ]),
+    );
+  }
+  Widget buildTabContent(String text) {
+    return  SingleChildScrollView(
+      child: HtmlWidget(text),
     );
   }
 

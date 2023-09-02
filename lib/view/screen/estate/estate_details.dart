@@ -15,6 +15,7 @@ import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/map_details_view.dart';
+import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/offer_list.dart';
 import 'package:abaad/view/screen/estate/widgets/interface.dart';
 import 'package:abaad/view/screen/estate/widgets/near_by_view.dart';
@@ -27,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'widgets/estate_view.dart';
+import 'widgets/report_widget.dart';
 class EstateDetails extends StatefulWidget {
 final Estate estate;
 
@@ -60,7 +62,8 @@ class _EstateDetailsState extends State<EstateDetails> {
      bool _isNull = true;
      int _length = 0;
 
-
+     final currentLocale = Get.locale;
+     bool isArabic = currentLocale?.languageCode == 'ar';
     return  Scaffold(
       body: SingleChildScrollView(
         child: GetBuilder<EstateController>(builder: (estateController) {
@@ -102,12 +105,34 @@ class _EstateDetailsState extends State<EstateDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      Text(
-                        'title'.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                      Container(
+
+                        child:  Row(
+                          children: [
+                            Text(
+                                "price".tr,
+                                style: robotoRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeDefault,
+                                )),
+                            SizedBox(width: 2,),
+                            Text(
+                                "${estateController.estate.price}",
+                                style: robotoRegular.copyWith(
+                                  fontSize: Dimensions.fontSizeDefault,
+                                )
+                            ),
+                          ],
+                        ),
+
                       ),
-                      Text("${estateController.estate.title}",
-                          style: robotoBlack.copyWith(fontSize: 14)),
+                      SizedBox(height: 6,),
+                      Row(
+                        children: [
+                          Text(isArabic ? "${estateController.estate.categoryNameAr} -${estateController.estate.zoneNameAr} -${estateController.estate.districts}":"${estateController.estate.categoryName} -${estateController.estate.zoneName} -${estateController.estate.districts}",
+                              style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
+                        ],
+                      ),
+
 
                       Text(
                         'shot_description'.tr,
@@ -118,32 +143,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                         children: [
                           Text("${estateController.estate.shortDescription}",
                               style: robotoBlack.copyWith(fontSize: 14)),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child:   Container(
-                              padding: const EdgeInsets.only(right: 4,left: 4),
-                              decoration:  BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      4),
-                                  color:  Colors.blue),
-                              child:  Row(
-                                children: [
-                                  Text(
-                                      "price".tr,
-                                      style: robotoRegular.copyWith(
-                                        fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).cardColor,
-                                      )),
-                                  SizedBox(width: 2,),
-                                  Text(
-                                      "${estateController.estate.price}",
-                                      style: robotoRegular.copyWith(
-                                        fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).cardColor,
-                                      )
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+
                         ],
                       ),
                       Text(
@@ -193,7 +193,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                       ),
                       SizedBox(height: 10)
 ,                      Divider(height: 1,),
-              estateController.estate.property  != null ?Center(
+              estateController.estate.category!="5" ?Center(
                         child: Container(
                           height: 35,
 
@@ -234,9 +234,14 @@ class _EstateDetailsState extends State<EstateDetails> {
                                               width: 24),
                                         ),
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 10.0),
-                                        child: Text(" ${estateController.estate.property[index].number ?? ""}  حمام"),
+                                      Row(
+                                        children: [
+                                          Text("bathroom".tr),
+                                          Container(
+                                            margin: const EdgeInsets.only(left: 10.0),
+                                            child: Text(" ${estateController.estate.property[index].number ?? ""}"),
+                                          ),
+                                        ],
                                       )
                                     ],
                                   ),
@@ -270,9 +275,13 @@ class _EstateDetailsState extends State<EstateDetails> {
                            width: 24),
                      ),
                    ),
-                   Container(
-                     margin: EdgeInsets.only(left: 8.0),
-                     child: Text(" ${  estateController.estate.property[index].number ?? ""}  مطبخ"),
+                   Row(
+                     children: [
+                       Text("kitchen".tr),
+                       Container(
+                         child: Text(" ${  estateController.estate.property[index].number ?? ""}"),
+                       ),
+                     ],
                    )
                  ],
                ),
@@ -303,11 +312,16 @@ class _EstateDetailsState extends State<EstateDetails> {
                            width: 24),
                      ),
                    ),
-                   Container(
-                     margin: const EdgeInsets.only(left: 10.0),
-                     child: Text(" ${ estateController.estate
-                         .property[index]
-                         .number}  غرف النوم"),
+                   Row(
+                     children: [
+                       Text("bedrooms".tr),
+                       Container(
+                         margin: const EdgeInsets.only(left: 10.0),
+                         child: Text(" ${estateController.estate
+                             .property[index]
+                             .number}"),
+                       ),
+                     ],
                    )
                  ],
                ),):estateController.estate.property[index].name=="مطبخ"?Container(decoration: BoxDecoration(color: Theme
@@ -337,11 +351,16 @@ class _EstateDetailsState extends State<EstateDetails> {
                                           width: 24),
                                     ),
                                   ),
-                                  Container(
-                                    margin: const EdgeInsets.only(left: 10.0),
-                                    child: Text(" ${ estateController.estate
-                                        .property[index]
-                                        .number} مطبخ "),
+                                  Row(
+                                    children: [
+
+                                      Text("kitchen".tr),
+                                      Container(
+                                        child: Text(" ${ estateController.estate
+                                            .property[index]
+                                            .number} "),
+                                      ),
+                                    ],
                                   )
                                 ],
                               ),):estateController.estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
@@ -371,11 +390,15 @@ class _EstateDetailsState extends State<EstateDetails> {
                                           width: 24),
                                     ),
                                   ),
-                                  Container(
-                                    margin: const EdgeInsets.only(left: 10.0),
-                                    child: Text(" ${ estateController.estate
-                                        .property[index]
-                                        .number} صالات"),
+                                  Row(
+                                    children: [
+                                      Text("lounges".tr),
+                                      Container(
+                                        child: Text(" ${ estateController.estate
+                                            .property[index]
+                                            .number}"),
+                                      ),
+                                    ],
                                   )
                                 ],
                               ),):estateController.estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
@@ -454,7 +477,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                             VerticalDivider(width: 1.0),
                             Expanded(flex: 1,
                                 child: Container(
-                                padding: EdgeInsets.all(10),child: Text("سكني",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                padding: EdgeInsets.all(10),child: Text( estateController.estate.property_type=="سكني"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
                       ),
@@ -487,6 +510,39 @@ class _EstateDetailsState extends State<EstateDetails> {
                           ],
                         ),
                       ):Container(),
+
+
+
+                      estateController.estate.space!=null?  Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).backgroundColor,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset(0, 0.5), // changes position of shadow
+                            ),
+
+                          ],
+
+                        ),
+                        child: Row(
+
+                          children: [
+                            Expanded(flex: 1,
+                                child: Container(
+                                    padding: EdgeInsets.all(10),child:    Text("space".tr))),
+                            VerticalDivider(width: 1.0),
+                            Expanded(flex: 1,
+                                child: Container(
+                                    padding: EdgeInsets.all(10),child: Text("${estateController.estate.space}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                          ],
+                        ),
+                      ):Container(),
+
 
                       estateController.estate.streetSpace!=null?    Container(
                         height: 50,
@@ -573,13 +629,13 @@ class _EstateDetailsState extends State<EstateDetails> {
                             VerticalDivider(width: 1.0),
                             Expanded(flex: 1,
                                 child: Container(
-                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.priceNegotiation}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                padding: EdgeInsets.all(10),child: Text(widget.estate.priceNegotiation=="قابل للتفاوض"?"negotiate".tr:"non_negotiable".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
                       ):Container(),
 
 
-                      estateController.estate.buildSpace!=""?    Container(
+                      estateController.estate.buildSpace!=null?    Container(
                         height: 50,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -608,37 +664,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                         ),
                       ):Container(),
 
-                      estateController.estate.category!="5"? Column(
-                        children: [
-                          estateController.estate.ageEstate!=null?    Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).backgroundColor,
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 0.5), // changes position of shadow
-                                ),
 
-                              ],
-
-                            ),
-                            child: Row(
-
-                              children: [
-                                Expanded(flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text("age_of_the_property".tr))),
-                                VerticalDivider(width: 1.0),
-                                Expanded(flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child: Text("${estateController.estate.ageEstate}",  style: robotoBlack.copyWith(fontSize: 14)))),
-                              ],
-                            ),
-                          ):Container(),
-                        ],
-                      ):Container(),
                       estateController.estate.ownershipType!=null?    Container(
                         height: 50,
                         decoration: BoxDecoration(
@@ -764,6 +790,41 @@ class _EstateDetailsState extends State<EstateDetails> {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
+
+                                GestureDetector(
+                                  onTap: (){
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Get.find<AuthController>().isLoggedIn() ? Container(child:      GetBuilder<EstateController>(builder: (wishController) {
+                                          return   ReportWidget();
+                                        })) : NotLoggedInScreen();
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).primaryColor,
+                                          spreadRadius: 1,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 0.5), // changes position of shadow
+                                        ),
+
+                                      ],
+
+                                    ),
+
+                                    child: Column(children: <Widget>[
+                                      Image.asset(Images.space,height: 70,width: 70,),
+                                      Text('report_the_ad'.tr,style: robotoBlack.copyWith(fontSize: 12)),
+                                    ]),
+                                  ),
+                                ),
                                 GestureDetector(
                                   onTap: (){
                                     Get.dialog(NearByView(esate: _estate,));
@@ -818,30 +879,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           Text('deals_with_the_property'.tr,style: robotoBlack.copyWith(fontSize: 12)),
                         ]),
                     ),
-                           ),
-                        Container(
-                          padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-            BoxShadow(
-            color: Theme.of(context).primaryColor,
-            spreadRadius: 1,
-            blurRadius: 2,
-            offset: Offset(0, 0.5), // changes position of shadow
-            ),
-
-            ],
-
-            ),
-
-            child: Column(children: <Widget>[
-            Image.asset(Images.age_estate,height: 70,width: 70,),
-            Text('age'.tr),
-              estateController.estate.ageEstate!=null? Text(estateController.estate.ageEstate):Container(),
-            ]),
-            ),
+                           )
                               ]
                           ),
                         ),

@@ -4,7 +4,10 @@ import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/data/api/api_client.dart';
 import 'package:abaad/data/model/response/address_model.dart';
 import 'package:abaad/data/model/response/language_model.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/app_constants.dart';
+import 'package:abaad/view/screen/dashboard/dashboard_screen.dart';
+import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,24 +36,27 @@ class LocalizationController extends GetxController implements GetxService {
     }else {
       _isLtr = true;
     }
-    AddressModel _addressModel;
+    AddressModel addressModel;
     try {
-      _addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.USER_ADDRESS)));
-    }catch(e) {}
+      addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)));
+    }catch(_) {}
     apiClient.updateHeader(
-      sharedPreferences.getString(AppConstants.TOKEN), _addressModel == null ? null : _addressModel.zoneIds,
-      locale.languageCode,
+      sharedPreferences.getString(AppConstants.TOKEN), addressModel?.zoneIds,
+      locale.languageCode,   "24.263867",
+      "45.033284",
     );
     saveLanguage(_locale);
-    if(Get.find<LocationController>().getUserAddress() != null) {
 
-    }
+
+
     update();
+
+    Get.offNamed(RouteHelper.getInitialRoute());
   }
 
   void loadCurrentLanguage() async {
-    _locale = Locale(sharedPreferences.getString(AppConstants.LANGUAGE_CODE) ?? AppConstants.languages[0].languageCode,
-        sharedPreferences.getString(AppConstants.COUNTRY_CODE) ?? AppConstants.languages[0].countryCode);
+    _locale = Locale(sharedPreferences.getString(AppConstants.languageCode) ?? AppConstants.languages[0].languageCode,
+        sharedPreferences.getString(AppConstants.countryCode) ?? AppConstants.languages[0].countryCode);
     _isLtr = _locale.languageCode != 'ar';
     for(int index = 0; index<AppConstants.languages.length; index++) {
       if(AppConstants.languages[index].languageCode == _locale.languageCode) {
@@ -64,8 +70,8 @@ class LocalizationController extends GetxController implements GetxService {
   }
 
   void saveLanguage(Locale locale) async {
-    sharedPreferences.setString(AppConstants.LANGUAGE_CODE, locale.languageCode);
-    sharedPreferences.setString(AppConstants.COUNTRY_CODE, locale.countryCode);
+    sharedPreferences.setString(AppConstants.languageCode, locale.languageCode);
+    sharedPreferences.setString(AppConstants.countryCode, locale.countryCode);
   }
 
   int _selectedIndex = 0;
@@ -84,11 +90,11 @@ class LocalizationController extends GetxController implements GetxService {
     } else {
       _selectedIndex = -1;
       _languages = [];
-      AppConstants.languages.forEach((language) async {
+      for (var language in AppConstants.languages) {
         if (language.languageName.toLowerCase().contains(query.toLowerCase())) {
           _languages.add(language);
         }
-      });
+      }
     }
     update();
   }

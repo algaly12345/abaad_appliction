@@ -17,7 +17,7 @@ import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/api/api_client.dart';
 import 'package:abaad/data/model/response/language_model.dart';
-import 'package:abaad/data/model/response/location_repo.dart';
+
 import 'package:abaad/data/model/response/splash_repo.dart';
 import 'package:abaad/data/repository/auth_repo.dart';
 import 'package:abaad/data/repository/banner_repo.dart';
@@ -25,6 +25,7 @@ import 'package:abaad/data/repository/category_repo.dart';
 import 'package:abaad/data/repository/chat_repo.dart';
 import 'package:abaad/data/repository/estate_repo.dart';
 import 'package:abaad/data/repository/language_repo.dart';
+import 'package:abaad/data/repository/location_repo.dart';
 import 'package:abaad/data/repository/notification_repo.dart';
 import 'package:abaad/data/repository/onboarding_repo.dart';
 import 'package:abaad/data/repository/user_repo.dart';

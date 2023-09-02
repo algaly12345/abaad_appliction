@@ -88,6 +88,7 @@ class _PickMapScreenState extends State<PickMapScreen> {
                   Get.find<LocationController>().getCurrentLocation(false, mapController: mapController);
                 }
               },
+              mapType: MapType.satellite,
               zoomControlsEnabled: false,
               onCameraMove: (CameraPosition cameraPosition) {
                 _cameraPosition = cameraPosition;

@@ -51,7 +51,6 @@ class AuthController extends GetxController implements GetxService {
   String _businessPlanStatus = 'business';
   String _secondStep= 'second_step';
   int _paymentIndex = 0;
-  // int _restaurantId;
   int _businessIndex = 0;
 
   bool get isLoading => _isLoading;

@@ -58,7 +58,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
     Get.find<EstateController>().getEstateDetails(Estate(id:widget.estate.id));
    // selectedUrl = '${AppConstants.BASE_URL}/payment-mobile/pyment?order_id=${widget.orderModel.id}&customer_id=${widget.orderModel.userId}';
 
-
+     print("-------------------------------${widget.featureId}");
     _controller1=VideoPlayerController.network("${ Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/skey3.mp4")
       ..initialize().then((_){
         setState(() {
@@ -77,12 +77,12 @@ class _FeatureScreenState extends State<FeatureScreen> {
     )..initialize().then((_) {
       setState(() {});
     });
-    if(widget.featureId=="فبديو"){
+    if(widget.featureId=="6"){
 
-    }else if(widget.featureId=="منظور جوي"){
+    }else if(widget.featureId=="5"){
       _controller2.value.isPlaying?_controller2.pause():_controller2.play();
     }
-    else if(widget.featureId=="تجوال افتراضي"){
+    else if(widget.featureId=="2"){
 
       _initData();
     }
@@ -124,17 +124,17 @@ class _FeatureScreenState extends State<FeatureScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-      if(widget.featureId=="فبديو") {
+      if(widget.featureId=="6") {
         _controller.pause();
       }
         return true;
       },
       child: Scaffold(
-        appBar: CustomAppBar(title: widget.featureId=="صور" ? 'صور'.tr :widget.featureId=="تجوال افتراضي"?"تجوال افتراضي":widget.featureId=="منظور الشارع"?"منظور الشارع":widget.featureId=="المخطط"?"المخطط":widget.featureId=="فبديو"?"فبديو":widget.featureId=="منظور جوي"?"منظور جوي":""),
+        appBar: CustomAppBar(title: widget.featureId=="1" ? 'images'.tr :widget.featureId=="2"?"virtual_ture".tr:widget.featureId=="3"?"street_view".tr:widget.featureId=="4"?"planned".tr:widget.featureId=="6"?"video".tr:widget.featureId=="5"?"sky_view".tr:""),
         body: SafeArea(
           child:  GetBuilder<EstateController>(builder: (estateController) {
             return !estateController.isLoading    ? Center(
-              child:  widget.featureId=="صور" ? Container(
+              child:  widget.featureId=="1" ? Container(
                 width: Dimensions.WEB_MAX_WIDTH,
                 padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -180,12 +180,12 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
 
                 ]),
-              ):widget.featureId=="تجوال افتراضي"?Center(
+              ):widget.featureId=="2"?Center(
                 child: Container(
                   width: Dimensions.WEB_MAX_WIDTH,
-                  child: WebViewScreen(  url: widget.estate.arPath),
+                  child:WebViewScreen(  url: widget.estate.arPath),
                 ),
-              ):widget.featureId=="منظور الشارع"?SafeArea(
+              ):widget.featureId=="3"?SafeArea(
                 child: Center(
                   child: FlutterGoogleStreetView(
                       initSource: StreetViewSource.outdoor,
@@ -206,7 +206,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
                       }
                   ),
                 ),
-              ):widget.featureId=="المخطط"?Container(
+              ):widget.featureId=="4"?Container(
                 width: Dimensions.WEB_MAX_WIDTH,
                 padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -254,10 +254,12 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
 
                 ]),
-              ):widget.featureId=="فبديو"?Container(
+              ):widget.featureId=="6"?Container(
                 child: Center(
-                  child: widget.pathVideo == ""
-                      ? Text("No video available") // Display a message when video path is null
+                  child: widget.pathVideo == ""||widget.pathVideo ==null
+                    ? NoDataScreen(
+                    text: 'no_data_available',
+                  )// Display a message when video path is null
                       : _controller.value.isInitialized
                       ? AspectRatio(
                     aspectRatio: _controller.value.aspectRatio,
@@ -265,23 +267,26 @@ class _FeatureScreenState extends State<FeatureScreen> {
                   )
                       : CircularProgressIndicator(),
                 )
-              ):widget.featureId=="منظور جوي"? Container(
-            child: Center(
-            child: Container(
-                child:Container(
-                  child:OrientationBuilder(
-                    builder: (context, orientation) {
-                      return VideoPlayerWidgetState(videoPath: 'https://abaad.iaspl.net/storage/app/public/videos/video_1691885542.mp4');
-                    },
-                  ),
-                ),
+              ):widget.featureId=="5"? Container(
+            child:Center(
+              child: widget.pathVideo == ""
+                  ? NoDataScreen(
+                text: 'no_data_available',
+              ) // Display a message when video path is null
+                  : _controller.value.isInitialized
+                  ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              )
+                  : CircularProgressIndicator(),
             ),
+            ):NoDataScreen(
+              text: 'no_data_available',
             ),
-            ):Container(),
             )  : Center(child: CircularProgressIndicator());
           }),
         ),
-        floatingActionButton: widget.featureId=="فبديو"?Column(
+        floatingActionButton: widget.featureId=="6"?Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FloatingActionButton(

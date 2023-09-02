@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
+
 
     <queries>
         <intent>
@@ -28,6 +32,9 @@
        android:requestLegacyExternalStorage="true"
        android:usesCleartextTraffic="true"
        android:icon="@mipmap/ic_launcher">
+
+
+
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyDa4Ng7nNB5EkPqvcI1yaxcl8QE1Ja-tPA"/>
 
@@ -81,5 +88,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+
     </application>
 </manifest>

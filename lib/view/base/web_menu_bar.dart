@@ -16,7 +16,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
     return Center(child: Container(
         // width: Dimensions.WEB_MAX_WIDTH,
         color: Theme.of(context).cardColor,
-        padding: EdgeInsets.only(top: 46 ,right: 7,left: 7,),
+        padding: EdgeInsets.only(top:38,right: 7,left: 7,),
         child:     GetBuilder<UserController>(builder: (estateController) {
           return Row(
             children: [

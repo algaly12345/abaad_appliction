@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:abaad/controller/location_controller.dart';
 import 'package:abaad/data/api/api_client.dart';
 import 'package:abaad/data/model/body/business_plan_body.dart';
 import 'package:abaad/data/model/body/signup_body.dart';
+import 'package:abaad/data/model/response/address_model.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/util/app_constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -80,11 +82,21 @@ class AuthRepo {
   }
 
   // for  user token
-  Future<bool> saveUserToken(String token) async {
+  Future<bool> saveUserToken(String token, {bool alreadyInApp = false}) async {
     apiClient.token = token;
-    apiClient.updateHeader(token, null, sharedPreferences.getString(AppConstants.LANGUAGE_CODE));
+    if(alreadyInApp){
+      AddressModel addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)));
+      apiClient.updateHeader(
+        token, addressModel.zoneIds, sharedPreferences.getString(AppConstants.languageCode),
+        addressModel.latitude, addressModel.longitude,
+      );
+    }else{
+      apiClient.updateHeader(token, null, sharedPreferences.getString(AppConstants.languageCode),null, null);
+    }
+
     return await sharedPreferences.setString(AppConstants.TOKEN, token);
   }
+
 
   String getUserToken() {
     return sharedPreferences.getString(AppConstants.TOKEN) ?? "";
@@ -100,9 +112,9 @@ class AuthRepo {
       apiClient.postData(AppConstants.TOKEN_URI, {"_method": "put", "cm_firebase_token": '@'});
     }
     sharedPreferences.remove(AppConstants.TOKEN);
-    sharedPreferences.remove(AppConstants.USER_ADDRESS);
+    sharedPreferences.remove(AppConstants.userAddress);
     apiClient.token = null;
-    apiClient.updateHeader(null, null, null);
+    apiClient.updateHeader(null, null, null,null, null);
     return true;
   }
 
@@ -154,7 +166,7 @@ class AuthRepo {
   }
 
   bool clearSharedAddress(){
-    sharedPreferences.remove(AppConstants.USER_ADDRESS);
+    sharedPreferences.remove(AppConstants.userAddress);
     return true;
   }
 

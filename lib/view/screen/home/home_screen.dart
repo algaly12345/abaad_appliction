@@ -15,50 +15,73 @@ import 'package:abaad/view/screen/fillter/fillter_estate_sheet.dart';
 import 'package:abaad/view/screen/home/widet/estate_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'widet/banner_view.dart';
 
 class HomeScreen extends StatefulWidget {
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
 
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   final ScrollController scrollController = ScrollController();
   final bool _ltr = Get.find<LocalizationController>().isLtr;
 
   final ScrollController _scrollController = ScrollController();
   ConfigModel _configModel = Get.find<SplashController>().configModel;
 
-  @override
-  void initState() {
-    super.initState();
+
+  static Future<void> loadData(bool reload) async {
+    Get.find<CategoryController>().showBottomLoader();
+          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", "0");
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
     }
     // Get.find<CategoryController>().getSubCategoryList("0");
     int offset = 1;
-    Get.find<BannerController>().getBannerList(true,1);
+    Get.find<BannerController>().getBannerList(reload,1);
     Get.find<AuthController>().getZoneList();
-    scrollController?.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent && Get.find<CategoryController>().categoryProductList != null && !Get.find<CategoryController>().isLoading) {
-        int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
-        if (offset < pageSize) {
-          offset++;
-          print('end of the page');
-          Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
-        }
-      }
-    });
+    // scrollController?.addListener(() {
+    //   if (scrollController.position.pixels == scrollController.position.maxScrollExtent && Get.find<CategoryController>().categoryProductList != null && !Get.find<CategoryController>().isLoading) {
+    //     int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
+    //     if (offset < pageSize) {
+    //       offset++;
+    //       print('end of the page');
+    //       Get.find<CategoryController>().showBottomLoader();
+    //       Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
+    //     }
+    //   }
+    // });
 
-  }
 
+    int pageSize = (Get.find<CategoryController>().pageSize / 10).ceil();
+    if (offset < pageSize) {
+      offset++;
+      print('end of the page');
+      Get.find<CategoryController>().showBottomLoader();
+      Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
+  }}
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+
+}
+
+class _HomeScreenState extends State<HomeScreen> {
 
 
   @override
+  void initState() {
+    super.initState();
+
+
+  }
+
+  static const _locale = 'en';
+  String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(double.parse(s));
+  String get _currency => NumberFormat.compactSimpleCurrency(locale: _locale).currencySymbol;
+
+  @override
   Widget build(BuildContext context) {
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     bool _isNull = true;
     int _length = 0;
 
@@ -233,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               child: Row(children: [
                                 Text(
-                                  categoryController.subCategoryList[index].name,
+                             isArabic?  "${categoryController.subCategoryList[index].nameAr}":"${categoryController.subCategoryList[index].name??'all'}",
                                   style: index == categoryController.subCategoryIndex
                                       ? robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor)
                                       : robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),

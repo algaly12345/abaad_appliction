@@ -67,7 +67,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
         .of(context)
         .size
         .height;
-
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     return Scaffold(
       //appBar:  WebMenuBar(ontop:()=>   _key.currentState.openDrawer(),),
 
@@ -154,6 +155,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
 
   void _setMarkersZone(List<ZoneModel> zone) async {
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<LatLng> _latLngs = [];
     _customMarkersZone = [];
@@ -236,7 +239,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   child: Container(
                     alignment: Alignment.bottomRight,
                     padding: EdgeInsets.only(right: 3,left: 3,bottom: 2),
-                    child: Text(zone[index].name, textAlign: TextAlign.left, style: TextStyle(
+                    child: Text(isArabic?"${zone[index].nameAr}":"${zone[index].name}", textAlign: TextAlign.left, style: TextStyle(
                         color: Color.fromRGBO(255, 255, 255, 1),
                         fontFamily: 'Cairo',
                         fontSize: 8,

@@ -1,5 +1,6 @@
 
 import 'package:abaad/controller/auth_controller.dart';
+import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
@@ -13,11 +14,13 @@ import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/map_details_view.dart';
+import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/offer_list.dart';
 import 'package:abaad/view/screen/estate/widgets/estate_view.dart';
 import 'package:abaad/view/screen/estate/widgets/interface.dart';
 import 'package:abaad/view/screen/estate/widgets/near_by_view.dart';
 import 'package:abaad/view/screen/estate/widgets/network_type.dart';
+import 'package:abaad/view/screen/estate/widgets/report_widget.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +57,8 @@ class _DettailsDilogState extends State<DettailsDilog> {
   @override
   Widget build(BuildContext context) {
     bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     return Scaffold(
 
       body: SingleChildScrollView(
@@ -78,22 +83,27 @@ class _DettailsDilogState extends State<DettailsDilog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
 
-                        Text(
-                          'title'.tr,
-                          style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
+                        // Text(
+                        //   'title'.tr,
+                        //   style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
+                        // ),
+                        Row(
+                          children: [
+                            Text(isArabic ? "${widget.estate.categoryNameAr} -${widget.estate.zoneNameAr} -${widget.estate.districts}":"${widget.estate.categoryName} -${widget.estate.zoneName} -${widget.estate.districts}",
+                                style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
+                          ],
                         ),
-                        Text("${widget.estate.title}",
-                            style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
 
                         Text(
                           'shot_description'.tr,
                           style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                         ),
+                        Text("${widget.estate.shortDescription}",
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("${widget.estate.shortDescription}",
-                                style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
+
                             Align(
                               alignment: Alignment.topLeft,
                               child:  Container(
@@ -172,7 +182,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                           ),
                           SizedBox(height: 10)
                           ,                      Divider(height: 1,),
-                          widget.estate.property  != null ?Center(
+                          widget.estate.category!="5" ?Center(
                             child: Container(
                               height: 35,
 
@@ -213,9 +223,14 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                                 width: 24),
                                           ),
                                         ),
-                                        Container(
-                                          margin: const EdgeInsets.only(left: 10.0),
-                                          child: Text(" ${widget.estate.property[index].number ?? ""}  حمام"),
+                                        Row(
+                                          children: [
+                                            Text("bathroom".tr),
+                                            Container(
+                                              margin: const EdgeInsets.only(left: 10.0),
+                                              child: Text(" ${widget.estate.property[index].number ?? ""}"),
+                                            ),
+                                          ],
                                         )
                                       ],
                                     ),
@@ -249,9 +264,13 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                                 width: 24),
                                           ),
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.only(left: 8.0),
-                                          child: Text(" ${  widget.estate.property[index].number ?? ""}  مطبخ"),
+                                        Row(
+                                          children: [
+                                            Text("kitchen".tr),
+                                            Container(
+                                              child: Text(" ${  widget.estate.property[index].number ?? ""}"),
+                                            ),
+                                          ],
                                         )
                                       ],
                                     ),
@@ -282,11 +301,16 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                               width: 24),
                                         ),
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 10.0),
-                                        child: Text(" ${widget.estate
-                                            .property[index]
-                                            .number}  غرف النوم"),
+                                      Row(
+                                        children: [
+                                          Text("bedrooms".tr),
+                                          Container(
+                                            margin: const EdgeInsets.only(left: 10.0),
+                                            child: Text(" ${widget.estate
+                                                .property[index]
+                                                .number}"),
+                                          ),
+                                        ],
                                       )
                                     ],
                                   ),):widget.estate.property[index].name=="مطبخ"?Container(decoration: BoxDecoration(color: Theme
@@ -316,11 +340,16 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                               width: 24),
                                         ),
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 10.0),
-                                        child: Text(" ${ widget.estate
-                                            .property[index]
-                                            .number} مطبخ "),
+                                      Row(
+                                        children: [
+
+                                          Text("kitchen".tr),
+                                          Container(
+                                            child: Text(" ${ widget.estate
+                                                .property[index]
+                                                .number} "),
+                                          ),
+                                        ],
                                       )
                                     ],
                                   ),):widget.estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
@@ -350,11 +379,15 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                               width: 24),
                                         ),
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 10.0),
-                                        child: Text(" ${ widget.estate
-                                            .property[index]
-                                            .number} صالات"),
+                                      Row(
+                                        children: [
+                                          Text("lounges".tr),
+                                          Container(
+                                            child: Text(" ${ widget.estate
+                                                .property[index]
+                                                .number}"),
+                                          ),
+                                        ],
                                       )
                                     ],
                                   ),):widget.estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
@@ -433,7 +466,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child: Text("سكني",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                        padding: EdgeInsets.all(10),child:  Text( widget.estate.property_type=="سكني"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
                               ],
                             ),
                           ),
@@ -552,13 +585,13 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child: Text("${ widget.estate.priceNegotiation}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                        padding: EdgeInsets.all(10),child: Text(widget.estate.priceNegotiation=="قابل للتفاوض"?"negotiate".tr:"non_negotiable".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
                               ],
                             ),
                           ):Container(),
 
 
-                          widget.estate.buildSpace!=""?    Container(
+                          widget.estate.buildSpace!=null?    Container(
                             height: 50,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -743,6 +776,43 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
+
+
+
+                                  GestureDetector(
+                                    onTap: (){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Get.find<AuthController>().isLoggedIn() ? Container(child:      GetBuilder<EstateController>(builder: (wishController) {
+                                            return   ReportWidget(estate_id: widget.estate.id,);
+                                          })) : NotLoggedInScreen();
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Theme.of(context).primaryColor,
+                                            spreadRadius: 1,
+                                            blurRadius: 2,
+                                            offset: Offset(0, 0.5), // changes position of shadow
+                                          ),
+
+                                        ],
+
+                                      ),
+
+                                      child: Column(children: <Widget>[
+                                        Image.asset(Images.space,height: 70,width: 70,),
+                                        Text('report_the_ad'.tr,style: robotoBlack.copyWith(fontSize: 12)),
+                                      ]),
+                                    ),
+                                  ),
                                   GestureDetector(
                                     onTap: (){
                                       Get.dialog(NearByView(esate: widget.estate,));
@@ -771,6 +841,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                       ]),
                                     ),
                                   ),
+
                                   GestureDetector(
                                     onTap: (){
                                       Get.dialog(OfferList(estate: widget.estate));
@@ -797,31 +868,6 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                         Text('deals_with_the_property'.tr,style: robotoBlack.copyWith(fontSize: 12)),
                                       ]),
                                     ),
-                                  ),
-                                  widget.estate.ageEstate!=null?Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Theme.of(context).primaryColor,
-                                          spreadRadius: 1,
-                                          blurRadius: 2,
-                                          offset: Offset(0, 0.5), // changes position of shadow
-                                        ),
-
-                                      ],
-
-                                    ),
-
-                                    child:Column(children: <Widget>[
-                                      Image.asset(Images.age_estate,height: 70,width: 70,),
-                                      Text('age'.tr),
-                                       Text(widget.estate.ageEstate),
-                                    ]),
-                                  ):Container(
-                                      height: 70,width: 70
                                   ),
                                 ]
                             ),

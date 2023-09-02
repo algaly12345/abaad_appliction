@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
-import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,138 +9,72 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Video Example',
+      title: 'Button Color Change Example',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ItemDetailScreen(),
+      home: MyHomePage(),
     );
   }
 }
 
-class ItemDetailScreen extends StatefulWidget {
+class MyHomePage extends StatefulWidget {
   @override
-  _ItemDetailScreenState createState() => _ItemDetailScreenState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _ItemDetailScreenState extends State<ItemDetailScreen> {
-   String videoUrl;
-
-  @override
-  void initState() {
-    super.initState();
-    // Replace with initial video URL or empty string
-    videoUrl = '';
-  }
-
-  Future<void> pickVideo() async {
-    final pickedFile = await ImagePicker().getVideo(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        videoUrl = pickedFile.path;
-      });
-    }
-  }
-
-  Future<void> updateVideo() async {
-    if (videoUrl.isNotEmpty) {
-      final response = await http.put(
-        Uri.parse('YOUR_LARAVEL_API_ENDPOINT/updateVideo'),
-        body: {'video_url': videoUrl},
-      );
-
-      if (response.statusCode == 200) {
-        // Video URL updated successfully.
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Video updated successfully!')),
-        );
-      } else {
-        // Handle error.
-      }
-    }
-  }
+class _MyHomePageState extends State<MyHomePage> {
+  String selectedButton = 'سكني'; // Initialize with default value
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video Detail'),
+        title: Text('Button Color Change Example'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 5.0,
-                    ),
-                  ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    selectedButton = 'سكني';
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: selectedButton == 'سكني'
+                      ? Colors.green
+                      : Theme.of(context).buttonColor,
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: videoUrl.isNotEmpty
-                      ? VideoPlayerWidget(videoUrl: videoUrl)
-                      : Container(),
-                ),
+                child: Text('residential'.tr),
               ),
-            ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: pickVideo,
-              child: Text('Pick Video'),
-            ),
-            SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: updateVideo,
-              child: Text('Update'),
-            ),
-          ],
-        ),
+              SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    selectedButton = 'تجاري';
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: selectedButton == 'تجاري'
+                      ? Colors.green
+                      : Theme.of(context).buttonColor,
+                ),
+                child: Text('commercial'.tr),
+              ),
+            ],
+          ),
+          SizedBox(height: 40),
+          Text(
+            'Selected Value: $selectedButton',
+            style: TextStyle(fontSize: 18),
+          ),
+        ],
       ),
     );
-  }
-}
-
-class VideoPlayerWidget extends StatefulWidget {
-  final String videoUrl;
-
-  VideoPlayerWidget({@required this.videoUrl});
-
-  @override
-  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
-}
-
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-   VideoPlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.file(
-      File(widget.videoUrl),
-    )..initialize().then((_) {
-      setState(() {});
-      _controller.play();
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _controller.value.isInitialized
-        ? VideoPlayer(_controller)
-        : CircularProgressIndicator();
   }
 }

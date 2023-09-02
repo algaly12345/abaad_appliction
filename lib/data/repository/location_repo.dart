@@ -15,8 +15,8 @@ class LocationRepo {
     return await apiClient.getData(AppConstants.ADDRESS_LIST_URI);
   }
 
-  Future<Response> getZone(String lat, String lng) async {
-    return await apiClient.getData('${AppConstants.ZONE_URI}?lat=$lat&lng=$lng');
+  Future<Response> getZone(String lat, String lng,String address) async {
+    return await apiClient.getData('${AppConstants.ZONE_URI}?lat=$lat&lng=$lng&address=$address');
   }
 
   Future<Response> removeAddressByID(int id) async {
@@ -27,16 +27,16 @@ class LocationRepo {
     return await apiClient.postData(AppConstants.ADD_ADDRESS_URI, addressModel.toJson());
   }
 
-  Future<Response> updateAddress(AddressModel addressModel, int addressId,) async {
+  Future<Response> updateAddress(AddressModel addressModel, int addressId) async {
     return await apiClient.putData('${AppConstants.UPDATE_ADDRESS_URI}$addressId', addressModel.toJson());
   }
 
   Future<bool> saveUserAddress(String address, List<int> zoneIDs, String latitude, String longitude) async {
     apiClient.updateHeader(
         sharedPreferences.getString(AppConstants.TOKEN), zoneIDs,
-        sharedPreferences.getString(AppConstants.LANGUAGE_CODE)
+        sharedPreferences.getString(AppConstants.languageCode), latitude, longitude
     );
-    return await sharedPreferences.setString(AppConstants.USER_ADDRESS, address);
+    return await sharedPreferences.setString(AppConstants.userAddress, address);
   }
 
   Future<Response> getAddressFromGeocode(LatLng latLng) async {
@@ -44,7 +44,7 @@ class LocationRepo {
   }
 
   String getUserAddress() {
-    return sharedPreferences.getString(AppConstants.USER_ADDRESS);
+    return sharedPreferences.getString(AppConstants.userAddress);
   }
 
   Future<Response> searchLocation(String text) async {
@@ -53,6 +53,14 @@ class LocationRepo {
 
   Future<Response> getPlaceDetails(String placeID) async {
     return await apiClient.getData('${AppConstants.PLACE_DETAILS_URI}?placeid=$placeID');
+  }
+
+
+  Future<Response> getRegionList() async {
+    return await apiClient.getData(AppConstants.REGIONS);
+  }
+  Future<Response> getZoneList() async {
+    return await apiClient.getData(AppConstants.ZONE_ALL);
   }
 
 }

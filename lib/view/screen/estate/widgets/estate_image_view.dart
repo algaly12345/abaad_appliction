@@ -42,7 +42,7 @@ class _EstateImageViewState extends State<EstateImageView> {
      Container(
 
 
-      padding: EdgeInsets.only(top: 2),
+      padding: const EdgeInsets.only(top: 2),
       child: (estateController.estate != null && estateController.estate.images != null)  != null ? Stack(
 
         children: [

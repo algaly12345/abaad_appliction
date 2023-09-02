@@ -136,8 +136,10 @@ class _SelectLocationViewState extends State<SelectLocationView> {
                       mapToolbarEnabled: false,
                       myLocationEnabled: false,
                       zoomGesturesEnabled: true,
+
+
                       polygons: _polygons,
-                      mapType: _currentMapType,
+                      mapType: MapType.satellite,
 
                       onCameraIdle: () {
 

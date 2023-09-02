@@ -38,12 +38,12 @@ class _EstateViewState extends State<EstateView> {
     // TODO: implement initState
     super.initState();
 
-    sampleData.add( RadioModel(false, 'صور', Images.estate_images));
-    sampleData.add( RadioModel(false, 'تجوال افتراضي', Images.vt));
-    sampleData.add( RadioModel(false, 'منظور الشارع',Images.street_view));
-    sampleData.add( RadioModel(false, 'المخطط', Images.planed));
-    sampleData.add( RadioModel(false, 'منظور جوي', Images.street_view));
-    sampleData.add( RadioModel(false, 'فبديو', Images.video));
+    sampleData.add( RadioModel(1,false, 'images'.tr, Images.estate_images));
+    sampleData.add( RadioModel(2,false, 'virtual_ture'.tr, Images.vt));
+    sampleData.add( RadioModel(3,false, 'street_view'.tr,Images.street_view));
+    sampleData.add( RadioModel(4,false, 'planned'.tr, Images.planed));
+    sampleData.add( RadioModel(5,false, 'sky_view'.tr, Images.street_view));
+    sampleData.add( RadioModel(6,false, 'video'.tr, Images.video));
   }
 
   @override
@@ -112,7 +112,7 @@ class _EstateViewState extends State<EstateView> {
                                   SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                   Text("${widget.estate.view}",style: robotoBlack.copyWith(fontSize: 11),),
 
-                                  Text(" مشاهدة",style: robotoBlack.copyWith(fontSize: 11),),
+                                  Text("views".tr,style: robotoBlack.copyWith(fontSize: 11),),
                                 ],
                               ),
                               SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
@@ -213,14 +213,14 @@ class _EstateViewState extends State<EstateView> {
                         setState(() {
                           sampleData.forEach((element) => element.isSelected = false);
                           sampleData[index].isSelected = true;
-                          if(sampleData[index].buttonText=="تجوال افتراضي"){
-                            Get.toNamed(RouteHelper.getWebViewRoute(widget.estate.arPath));
-                          }else {
+                          // if(sampleData[index].buttonText=="تجوال افتراضي"){
+                          //   Get.toNamed(RouteHelper.getWebViewRoute(widget.estate.arPath));
+                          // }else {
                             Get.toNamed(RouteHelper.getFeatureRoute(
-                                widget.estate.id, sampleData[index].buttonText,
+                                widget.estate.id, "${sampleData[index].id}",
                                 widget.estate.arPath,widget.estate.videoUrl, widget.estate.latitude,
                                 widget.estate.longitude));
-                          }
+                          // }
                         });
                       },
                       child:RadioItem(sampleData[index]),
@@ -278,7 +278,8 @@ class _EstateViewState extends State<EstateView> {
 class RadioModel {
   bool isSelected;
   final String buttonText;
+  final int id ;
   final String text;
 
-  RadioModel(this.isSelected, this.buttonText, this.text);
+  RadioModel(this.id,this.isSelected, this.buttonText, this.text);
 }

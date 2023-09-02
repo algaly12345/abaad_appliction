@@ -25,7 +25,8 @@ class EstateItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     print("-------------------------------------------$isMyProfile");
     return  InkWell(
       onTap:onPressed,
@@ -203,7 +204,7 @@ class EstateItem extends StatelessWidget {
                                 const SizedBox(
                                   height: 3.0,
                                 ),
-                                Text("${estate.title}",
+                                Text(   isArabic ? "${estate.categoryNameAr} -${estate.zoneNameAr} -${estate.districts}":"${estate.categoryName} -${estate.zoneName} -${estate.districts}",
                                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                                 const SizedBox(
                                   height: 3.0,
@@ -277,9 +278,18 @@ estate.category!="5"?     estate.property  != null ?Center(
                       width: 15),
                 ),
               ),
+
               Container(
-                margin: const EdgeInsets.only(left: 7.0),
-                child: Text(" ${estate.property[index].number ?? ""}حمام",style: robotoBlack.copyWith(fontSize: 9,)),
+
+                child: Row(
+                  children: [
+                    Text("bathroom".tr,style: robotoBlack.copyWith(fontSize: 9,)),
+
+                    Container(
+                      child: Text(" ${estate.property[index].number ?? ""}",style: robotoBlack.copyWith(fontSize: 9,)),
+                    ),
+                  ],
+                ),
               )
             ],
           ),
@@ -313,9 +323,14 @@ estate.category!="5"?     estate.property  != null ?Center(
                       width: 15),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 7.0),
-                child: Text(" ${estate.property[index].number ?? ""}حمام",style: robotoBlack.copyWith(fontSize: 9,)),
+              Row(
+                children: [
+                  Text("kitchen".tr,style: robotoBlack.copyWith(fontSize: 9,)),
+                  Container(
+
+                    child: Text(" ${estate.property[index].number ?? ""}",style: robotoBlack.copyWith(fontSize: 9,)),
+                  ),
+                ],
               )
             ],
           ),
@@ -349,9 +364,13 @@ estate.category!="5"?     estate.property  != null ?Center(
                       width: 20),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(left: 10.0),
-                child: Text(" ${ estate.property[index].number ?? ""}مطبخ",style: robotoBlack.copyWith(fontSize: 9,)),
+              Row(
+                children: [
+              Text("kitchen".tr,style: robotoBlack.copyWith(fontSize: 9,)),
+                  Container(
+                    child: Text(" ${ estate.property[index].number ?? ""}",style: robotoBlack.copyWith(fontSize: 9,)),
+                  ),
+                ],
               )
             ],
           ),
@@ -382,11 +401,13 @@ estate.category!="5"?     estate.property  != null ?Center(
                     width: 22),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(left: 7.0),
-              child: Text(" ${ estate
-                  .property[index]
-                  .number} غرف النوم",style: robotoBlack.copyWith(fontSize: 9,)),
+            Row(
+              children: [
+                Text("bedrooms".tr,style: robotoBlack.copyWith(fontSize: 9,)),
+                Container(
+                  child: Text(" ${ estate.property[index].number}",style: robotoBlack.copyWith(fontSize: 9,)),
+                ),
+              ],
             )
           ],
         ),):estate.property[index].name=="صلات"?Container(decoration: BoxDecoration(color: Theme
@@ -416,13 +437,18 @@ estate.category!="5"?     estate.property  != null ?Center(
                     width: 20),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(left: 10.0),
-              child: estate
-                  .property[index]
-                  .number!=0?Text("${estate
-                  .property[index]
-                  .number}الصالات",style: robotoBlack.copyWith(fontSize: 9,)):Text("الصالات 0",style: robotoBlack.copyWith(fontSize: 9,)),
+            Row(
+              children: [
+                Text("lounges".tr,style: robotoBlack.copyWith(fontSize: 9,)),
+                Container(
+
+                  child: estate
+                      .property[index]
+                      .number!=0?Text("${estate
+                      .property[index]
+                      .number}",style: robotoBlack.copyWith(fontSize: 9,)):Text("0",style: robotoBlack.copyWith(fontSize: 9,)),
+                ),
+              ],
             )
           ],
         ),):Container();

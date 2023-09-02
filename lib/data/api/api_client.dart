@@ -22,22 +22,26 @@ class ApiClient extends GetxService {
   ApiClient({@required this.appBaseUrl, @required this.sharedPreferences}) {
     token = sharedPreferences.getString(AppConstants.TOKEN);
     debugPrint('Token: $token');
-    AddressModel _addressModel;
+    AddressModel addressModel;
     try {
-      _addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.USER_ADDRESS)));
-      print( _addressModel.toJson());
+      addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)));
+      print( addressModel.toJson());
     }catch(e) {}
     updateHeader(
-      token, _addressModel == null ? null : _addressModel.zoneIds,
-      sharedPreferences.getString(AppConstants.LANGUAGE_CODE),
+        token, addressModel?.zoneIds,
+        sharedPreferences.getString(AppConstants.languageCode), addressModel?.latitude,
+        addressModel?.longitude
     );
   }
 
-  void updateHeader(String token, List<int> zoneIDs, String languageCode) {
+
+  void updateHeader(String token, List<int> zoneIDs, String languageCode, String latitude, String longitude) {
     _mainHeaders = {
       'Content-Type': 'application/json; charset=UTF-8',
-      // AppConstants.ZONE_ID: zoneIDs != null ? jsonEncode(zoneIDs) : null,
-      AppConstants.LOCALIZATION_KEY: languageCode ?? AppConstants.languages[0].languageCode,
+      AppConstants.zoneId: zoneIDs != null ? jsonEncode(zoneIDs) : '',
+      AppConstants.localizationKey: languageCode ?? AppConstants.languages[0].languageCode,
+      AppConstants.latitude: latitude != null ? jsonEncode(latitude) : '',
+      AppConstants.longitude: longitude != null ? jsonEncode(longitude) : '',
       'Authorization': 'Bearer $token'
     };
   }

@@ -56,7 +56,8 @@ class EstateRepo {
       "street_space":estate.streetSpace,
       "build_space":estate.buildSpace,
       "document_number":estate.documentNumber,
-      "ad_number":estate.adNumber
+      "ad_number":estate.adNumber,
+      "feature":estate.feature
 
 
 
@@ -103,6 +104,42 @@ class EstateRepo {
   }
 
 
+
+  Future<Response> Report( estate) async {
+    Map<String, String> _body = Map();
+    _body.addAll(<String, String>{
+      'id':estate.id,
+      'address': estate.address,
+      'property': estate.property,
+      'space': estate.space,
+      'category_id': estate.categoryId,
+      'price': estate.price,
+      'long_description':estate.longDescription,
+      'national_address':estate.nationalAddress,
+      "zone_id":estate.zoneId,
+      "districts":estate.districts,
+      "network_type":estate.networkType,
+      "latitude":estate.latitude,
+      "longitude":estate.longitude,
+      "short_description":estate.shortDescription,
+      "ownership_type":estate.ownershipType,
+      "user_id":estate.user_id,
+      'price_negotiation':estate.priceNegotiation,
+      "facilities":estate.facilities,
+      "city":estate.city,
+      "other_advantages":estate.otherAdvantages,
+      "interface":estate.interface,
+      "street_space":estate.streetSpace,
+      "build_space":estate.buildSpace,
+      "document_number":estate.documentNumber,
+      "ad_number":estate.adNumber
+
+
+
+    });
+
+    return apiClient.postData(AppConstants.UPDATE_ESATE_URI, _body);
+  }
 
   Future<Response> getZoneList() async {
     return await apiClient.getData(AppConstants.ZONE_ALL);

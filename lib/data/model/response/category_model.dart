@@ -1,6 +1,7 @@
 class CategoryModel {
   int id;
   String name;
+  String nameAr;
   String slug;
   String   position;
   String statusHome;
@@ -11,6 +12,7 @@ class CategoryModel {
   CategoryModel(
       {this.id,
         this.name,
+        this.nameAr,
         this.slug,
         this.position,
         this.statusHome,
@@ -21,6 +23,7 @@ class CategoryModel {
   CategoryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    nameAr=json['name_ar'];
     slug = json['slug'];
     position = json['position'];
     statusHome = json['status_home'];
@@ -33,6 +36,7 @@ class CategoryModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
+    data['name_ar'] = this.nameAr;
     data['slug'] = this.slug;
     data['position'] = this.position;
     data['status_home'] = this.statusHome;
