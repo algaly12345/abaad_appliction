@@ -184,5 +184,19 @@
   "residential": "سكني",
   "commercial": "تجاري",
   "views": "المشاهدات",
-  "location": "الموقع"
+  "location": "الموقع",
+  "restaurant": "مطعم",
+  "mosque": "مسجد",
+  "pharmacies": "صيدليات",
+  "hospital": "مستشفى",
+  "schools": "مدارس",
+  "neighboring_facilities": "المرافق المجاورة",
+  "city": "المدينة",
+  "district": "حي",
+
+  "search_properties": "خصائض البحث",
+  "filter": "بحث متقدم",
+
+  "all": "الكل ",
+  "there_is_no_virtual_tour": "لاتوجد جولة إفتراضية"
 }

@@ -9,6 +9,7 @@ import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
 import 'package:abaad/view/base/custom_image.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/image_view_dialog.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
 import 'package:abaad/view/screen/estate/web_view_screen.dart';
@@ -19,7 +20,7 @@ import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 import 'package:webview_flutter/webview_flutter.dart';
-
+import 'package:http/http.dart' as http;
 import 'video_view.dart';
 class FeatureScreen extends StatefulWidget {
   final featureId;
@@ -45,8 +46,8 @@ class _FeatureScreenState extends State<FeatureScreen> {
   StreetViewController streetViewController;
   VideoPlayerController _controller1;
   VideoPlayerController _controller2;
-  
 
+  bool streetViewAvailable = true;
 
 
 
@@ -120,6 +121,25 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
   }
 
+
+
+
+
+  Future<bool> isStreetViewAvailable(double latitude, double longitude) async {
+    final apiKey = 'IzaSyDa4Ng7nNB5EkPqvcI1yaxcl8QE1Ja-tPA'; // Replace with your Google Maps API key
+    final url = 'https://maps.googleapis.com/maps/api/streetview/metadata?location=$latitude,$longitude&key=$apiKey';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      // If Street View metadata is available, Street View is likely available
+      return true;
+    } else {
+
+      showCustomSnackBar("not aviale");
+      return false;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -183,29 +203,39 @@ class _FeatureScreenState extends State<FeatureScreen> {
               ):widget.featureId=="2"?Center(
                 child: Container(
                   width: Dimensions.WEB_MAX_WIDTH,
-                  child:WebViewScreen(  url: widget.estate.arPath),
+                  child:WebViewScreen(  url: widget.path),
                 ),
-              ):widget.featureId=="3"?SafeArea(
-                child: Center(
-                  child: FlutterGoogleStreetView(
-                      initSource: StreetViewSource.outdoor,
-                      // initBearing: 30,
-                      zoomGesturesEnabled: false,
-                      initPos:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)),
-                      onStreetViewCreated: (StreetViewController controller) async {
-                        //save controller for late using
-                        streetViewController = controller;
-                        controller.animateTo(
+              ):widget.featureId=="3"?Column(
+                children: [
+                  Expanded(
+                    child: streetViewAvailable
+                        ?  FlutterGoogleStreetView(
+              initSource: StreetViewSource.outdoor,
+                  // initBearing: 30,
+                  zoomGesturesEnabled: false,
+                  initPos:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)),
+                  onStreetViewCreated: (StreetViewController controller) async {
+                    //save controller for late using
+                    streetViewController = controller;
+                    controller.animateTo(
                         duration: 3000,
                         camera: StreetViewPanoramaCamera(
                             bearing: 200, tilt: 3));
 
 
-                        //change position by controller
-                        controller.setPosition(position:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)));
-                      }
+                    //change position by controller
+                    controller.setPosition(position:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)));
+                  }
+              )
+
+                        : Center(
+                      child: Text(
+                        "Street View is not available for this location.",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ):widget.featureId=="4"?Container(
                 width: Dimensions.WEB_MAX_WIDTH,
                 padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),

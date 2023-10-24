@@ -88,9 +88,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     if(GetPlatform.isWeb) {
       Get.find<SplashController>().initSharedData();
-      if(Get.find<LocationController>().getUserAddress() != null && (Get.find<LocationController>().getUserAddress().zoneIds == null|| Get.find<LocationController>().getUserAddress().zoneData == null)) {
-        Get.find<AuthController>().clearSharedAddress();
-      }
+      // if(Get.find<LocationController>().getUserAddress() != null && (Get.find<LocationController>().getUserAddress().zoneIds == null|| Get.find<LocationController>().getUserAddress().zoneData == null)) {
+      //   Get.find<AuthController>().clearSharedAddress();
+      // }
       _route();
     }
 

@@ -43,7 +43,7 @@ class DashboardScreen extends StatefulWidget {
     Get.find<CategoryController>().getSubCategoryList("0");
     Get.find<ZoneController>().getCategoryList();
 
-    Get.find<AuthController>().getZoneList();
+    // Get.find<AuthController>().getZoneList();
     Get.find<BannerController>().getBannerList(true,1);
   }
   @override
@@ -86,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 
     _screens = [
-      QRCodeScannerWidget(),
+      MapViewScreen(),
       HomeScreen(),
       ConversationScreen(),
       FavouriteScreen(),

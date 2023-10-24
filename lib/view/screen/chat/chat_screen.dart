@@ -44,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
   var data;
   final String _errorImage =
       "https://i.ytimg.com/vi/z8wrRRR7_qU/maxresdefault.jpg";
-
+  Timer _timer;
   @override
   void initState() {
     super.initState();
@@ -59,8 +59,6 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     }
 
-   // _getMetadata(widget.link);
-
     if(widget.link=="null"){
 
       _inputMessageController.text="";
@@ -72,6 +70,13 @@ class _ChatScreenState extends State<ChatScreen> {
       Get.find<ChatController>().toggleSendButtonActivity();
       _inputMessageController.text=widget.link;
     }
+
+    _timer = Timer.periodic(Duration(seconds: 5), (timer){
+      Get.find<ChatController>().getMessages(1, widget.notificationBody, widget.user, widget.conversationID, firstLoad: true);
+
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    });
 
   }
 

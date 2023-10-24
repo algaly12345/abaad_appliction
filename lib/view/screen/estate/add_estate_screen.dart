@@ -214,6 +214,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   String district;
   String city;
 
+
+
   Future<void> getAddressFromLatLang(double lat, double log) async {
     print("omeromer");
     List<Placemark> placemark =
@@ -385,9 +387,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                                     height: 26,
                                                     color: Colors.white,
                                                     child: Text(
-                                                      categoryController
-                                                          .categoryList[index]
-                                                          .name,
+                                                    isArabic?  categoryController.categoryList[index].nameAr:categoryController.categoryList[index].name,
                                                       style: categoryController.categoryList[index].id ==
                                                           restController
                                                               .categoryIndex
@@ -450,7 +450,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       items: locationController.zoneIds==null?Container():locationController.zoneIds.map((int value) {
                         return DropdownMenuItem<int>(
                           value: locationController.zoneIds.indexOf(value),
-                          child: Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name : 'حدد المنطقة'),
+                          child: isArabic?Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].nameAr : 'حدد المنطقة'):Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name   : 'select zone'),
                         );
                       }).toList(),
                       onChanged: (int value) {

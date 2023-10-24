@@ -1052,11 +1052,11 @@ class _DettailsDilogState extends State<DettailsDilog> {
                     bundleId: "Bundle-ID",
                     minimumVersion: '0',
                   ),
-                  socialMetaTagParameters: SocialMetaTagParameters(
-                      description: '',
-                      imageUrl:
-                      Uri.parse("${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}"),
-                      title: widget.estate.title),
+                  // socialMetaTagParameters: SocialMetaTagParameters(
+                  //     description: '',
+                  //     imageUrl:
+                  //     Uri.parse("${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}"),
+                  //     title: widget.estate.title),
                 );
                 final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
 

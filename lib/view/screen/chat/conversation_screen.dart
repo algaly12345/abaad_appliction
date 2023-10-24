@@ -36,8 +36,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
     if(Get.find<AuthController>().isLoggedIn()) {
       Get.find<UserController>().getUserInfo();
+
       Get.find<ChatController>().getConversationList(1);
+      Get.find<UserController>().getUserInfo();
     }
+
   }
 
   @override
@@ -59,7 +62,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         //     notificationType: NotificationType.message, adminId: 0,
         //   ),estate_id: 3)),
         // ) : null,
-        body: Padding(
+        body:GetBuilder<UserController>(builder: (userController) { return Padding(
           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
           child: Column(children: [
 
@@ -113,8 +116,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     itemBuilder: (context, index) {
                       Userinfo _user;
                       String _type;
-                      if(_conversation.conversations[index].senderType == UserType.user.name
-                          || _conversation.conversations[index].senderType == UserType.customer.name) {
+                      if(_conversation.conversations[index].senderType == UserType.user.name || _conversation.conversations[index].senderType == UserType.customer.name) {
                         _user = _conversation.conversations[index].receiver;
                         _type = _conversation.conversations[index].receiverType;
                       }else {
@@ -131,6 +133,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         _baseUrl = Get.find<SplashController>().configModel.baseUrls.customerImageUrl;
                       }
 
+                      // showCustomSnackBar(UserType.vendor.name);
+
                       return Container(
                         margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
 
@@ -140,6 +144,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         ),
                         child: CustomInkWell(
                           onTap: () {
+
                             if(_user != null) {
                               Get.toNamed(RouteHelper.getChatRoute(
                                 notificationBody: NotificationBody(
@@ -172,7 +177,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 Expanded(child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                                   _user != null ? Text(
-                                    '${_user.name}', style: robotoMedium,
+                                   userController.userInfoModel.name==_user.name? '${_conversation.conversations[index].sender.name}':_user.name, style: robotoMedium,
                                   ) : Text('user_deleted'.tr, style: robotoMedium),
                                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                   Text(
@@ -222,7 +227,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ) : Center(child: Text('no_conversation_found'.tr)) : Center(child: CircularProgressIndicator()) : NotLoggedInScreen()),
 
           ]),
-        ),
+        );      }),
       );
     });
   }

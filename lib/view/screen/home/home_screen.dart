@@ -6,6 +6,7 @@ import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/zone_controller.dart';
 import 'package:abaad/data/model/response/config_model.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
@@ -16,7 +17,7 @@ import 'package:abaad/view/screen/home/widet/estate_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'widet/banner_view.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 
   static Future<void> loadData(bool reload) async {
     Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", "0");
+          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", "0",0,0);
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
     }
@@ -56,7 +57,7 @@ class HomeScreen extends StatefulWidget {
       offset++;
       print('end of the page');
       Get.find<CategoryController>().showBottomLoader();
-      Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
+      Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString(),0,0);
   }}
 
   @override
@@ -75,8 +76,33 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   static const _locale = 'en';
-  String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(double.parse(s));
-  String get _currency => NumberFormat.compactSimpleCurrency(locale: _locale).currencySymbol;
+  String result = "Scan a QR Code"; // Initialize with a default message
+  bool isFlashOn = false;
+
+  Future<void> scanQRCode() async {
+    try {
+      final ScanResult scanResult = await BarcodeScanner.scan(
+        options: ScanOptions(
+          useCamera: -1, // Use the back camera by default
+          autoEnableFlash: isFlashOn,
+        ),
+      );
+      setState(() {
+        result = scanResult.rawContent;
+        Get.toNamed(RouteHelper.getDetailsRoute( 162));
+      });
+    } catch (e) {
+      setState(() {
+        result = "Error: $e";
+      });
+    }
+  }
+
+  void toggleFlash() {
+    setState(() {
+      isFlashOn = !isFlashOn;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,9 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         }),
                                     SizedBox(width: 3,),
                                     GestureDetector(
-                                      onTap: (){
-                                        Get.dialog(FiltersScreen());
-                                      },
+                                      onTap: scanQRCode,
                                       child: Container(
                                         // margin: const EdgeInsets.only(
                                         //     left: 4.0, right: 4.0),

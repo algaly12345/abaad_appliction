@@ -19,7 +19,7 @@ class RadioItem extends StatelessWidget {
             color: _item.isSelected
                 ? Theme.of(context).primaryColor
                 : Colors.grey),
-        borderRadius: const BorderRadius.all(const Radius.circular(2.0)),
+        borderRadius: const BorderRadius.all(const Radius.circular(5.0)),
       ),
       margin:  EdgeInsets.all(2.0),
       child:  Row(

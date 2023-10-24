@@ -7,6 +7,7 @@ class ConversationsModel {
   int totalSize;
   int limit;
   int offset;
+//  String categoryNmae
   List<Conversation> conversations;
 
   ConversationsModel({this.totalSize, this.limit, this.offset, this.conversations});

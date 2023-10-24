@@ -196,7 +196,7 @@ class CategoryController extends GetxController implements GetxService {
       _subCategoryList.add(CategoryModel(id: int.parse(categoryID),nameAr: 'الكل'));
       _isLoading=false;
       response.body.forEach((category) => _subCategoryList.add(CategoryModel.fromJson(category)));
-      getCategoryProductList(0,categoryID, 0 ,'0',"0","0","0","1");
+      getCategoryProductList(0,categoryID, 0 ,'0',"0","0","0","1",0,0);
     } else {
       ApiChecker.checkApi(response);
     }
@@ -204,25 +204,25 @@ class CategoryController extends GetxController implements GetxService {
 
   void setSubCategoryIndex(int index) {
     _subCategoryIndex = index;
-    getCategoryProductList(0,_subCategoryList[index].id.toString(),  0,'0',"0","0","0","1");
+    getCategoryProductList(0,_subCategoryList[index].id.toString(),  0,'0',"0","0","0","1",0,0);
     update();
 
   }
 
-  void setFilterIndex(int zoneId, int index,String cityName,String districts,int  space) {
+  void setFilterIndex(int zoneId, int index,String cityName,String districts,int  space,int ar_path,int sv) {
 
-    getCategoryProductList(zoneId,index.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0","0","1");
+    getCategoryProductList(zoneId,index.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0","0","1",ar_path,sv);
     update();
 
   }
 
-  void getCategoryProductList(int zoneId,String categoryID,int userId,String city,String districts, String space,String typeAdd,String offset) async {
+  void getCategoryProductList(int zoneId,String categoryID,int userId,String city,String districts, String space,String typeAdd,String offset,int arPath,int sv) async {
     if(offset == '1') {
       _categoryProductList = null;
 
       _isSearching = false;
     }
-    Response response = await categoryRepo.getCategoryProductList(zoneId,categoryID,userId,city,districts,space,typeAdd, offset);
+    Response response = await categoryRepo.getCategoryProductList(zoneId,categoryID,userId,city,districts,space,typeAdd, offset,arPath,sv);
     if (response.statusCode == 200) {
       if (offset == '1') {
         _categoryProductList = [];

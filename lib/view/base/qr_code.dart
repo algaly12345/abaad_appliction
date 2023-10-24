@@ -4,27 +4,6 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:get/get.dart';
-
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  runApp(MyApp(cameras: cameras));
-}
-
-class MyApp extends StatelessWidget {
-  final List<CameraDescription> cameras;
-
-  MyApp({@required this.cameras});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: QRCodeScannerWidget(cameras: cameras),
-    );
-  }
-}
-
 class QRCodeScannerWidget extends StatefulWidget {
   final List<CameraDescription> cameras;
 
@@ -33,7 +12,6 @@ class QRCodeScannerWidget extends StatefulWidget {
   @override
   _QRCodeScannerWidgetState createState() => _QRCodeScannerWidgetState();
 }
-
 
 class _QRCodeScannerWidgetState extends State<QRCodeScannerWidget> {
   String result = "Scan a QR Code"; // Initialize with a default message
@@ -110,4 +88,3 @@ class _QRCodeScannerWidgetState extends State<QRCodeScannerWidget> {
     );
   }
 }
-

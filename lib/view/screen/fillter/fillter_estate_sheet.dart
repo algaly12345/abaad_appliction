@@ -7,6 +7,7 @@ import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/screen/draw.dart';
 import 'package:abaad/view/screen/fillter/widgets/slider_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +24,8 @@ class FiltersScreen extends StatefulWidget {
 class _FiltersScreenState extends State<FiltersScreen> {
   final ScrollController scrollController = ScrollController();
   final bool _ltr = Get.find<LocalizationController>().isLtr;
-  List<PopularFilterListData> popularFilterListData =
-      PopularFilterListData.popularFList;
-  List<PopularFilterListData> accomodationListData =
-      PopularFilterListData.accomodationList;
+
+  List<PopularFilterListData> accomodationListData = PopularFilterListData.accomodationList;
   String type_properties;
   String ctiy_name;
   String districts;
@@ -36,7 +35,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   final ScrollController _scrollController = ScrollController();
   int _value1=0;
 
-
+  List<String> selectedFilters = [];
 
 
   @override
@@ -55,7 +54,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           offset++;
           print('end of the page');
           Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString());
+          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString(),0,0);
         }
       }
     });
@@ -64,6 +63,10 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> filters = ['it_includes_offers'.tr, 'virtual_ture'.tr,];
+
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
      return GetBuilder<EstateController>(builder: (restController) {
       return GetBuilder<ZoneController>(builder: (zoneController) {
 
@@ -157,9 +160,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                                           height: 26,
                                                           color: Colors.white,
                                                           child: Text(
-                                                            categoryController
-                                                                .categoryList[index]
-                                                                .name,
+                                                            isArabic?  categoryController.categoryList[index].nameAr:categoryController.categoryList[index].name,
                                                             style: categoryController.categoryList[index].id ==
                                                                 restController
                                                                     .categoryIndex
@@ -210,7 +211,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(
-                            'المنطقة'.tr,
+                            'zone'.tr,
                             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                           ),
                           SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -226,7 +227,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               items: zoneController.zoneIds.map((int value) {
                                 return DropdownMenuItem<int>(
                                   value: zoneController.zoneIds.indexOf(value),
-                                  child: Text(value != 0 ? zoneController.categoryList[(zoneController.zoneIds.indexOf(value)-1)].nameAr : 'اختر المنطقة'),
+                                  child: isArabic? Text(value != 0 ? zoneController.categoryList[(zoneController.zoneIds.indexOf(value)-1)].nameAr : 'اختر المنطقة'): Text(value != 0 ? zoneController.categoryList[(zoneController.zoneIds.indexOf(value)-1)].nameEn : 'select zone'),
                                 );
                               }).toList(),
                               onChanged: (int value) {
@@ -248,7 +249,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(
-                            'المدينة'.tr,
+                            'city'.tr,
                             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                           ),
                           SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -263,7 +264,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               items: zoneController.cityIds.map((int value) {
                                 return DropdownMenuItem<int>(
                                   value: zoneController.cityIds.indexOf(value),
-                                  child: Text(value != 0 ? zoneController.subCategoryList[(zoneController.cityIds.indexOf(value)-1)].nameAr : 'اختر المدينة'),
+                                  child: isArabic? Text(value != 0 ? zoneController.subCategoryList[(zoneController.cityIds.indexOf(value)-1)].nameAr : 'اختر المدينة'):Text(value != 0 ? zoneController.subCategoryList[(zoneController.cityIds.indexOf(value)-1)].nameEn : 'select city'),
                                 );
                               }).toList(),
                               onChanged: (int value) {
@@ -287,7 +288,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(
-                            'الحي'.tr,
+                            'district '.tr,
                             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
                           ),
                           SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -302,7 +303,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                               items: zoneController.subSubCategoryIds.map((int value) {
                                 return DropdownMenuItem<int>(
                                   value: zoneController.subSubCategoryIds.indexOf(value),
-                                  child: Text(value != 0 ? zoneController.subSubCategoryList[(zoneController.subSubCategoryIds.indexOf(value)-1)].nameAr : 'اختر الحي'),
+                                  child: isArabic? Text(value != 0 ? zoneController.subSubCategoryList[(zoneController.subSubCategoryIds.indexOf(value)-1)].nameAr : 'اختر الحي'):Text(value != 0 ? zoneController.subSubCategoryList[(zoneController.subSubCategoryIds.indexOf(value)-1)].nameEn : 'select district'),
                                 );
                               }).toList(),
                               onChanged: (int value) {
@@ -322,11 +323,30 @@ class _FiltersScreenState extends State<FiltersScreen> {
                         height: 1,
                       ),
                       SizedBox(height: 30,),
-                      distanceViewUI(),
+                      spaceViewUI(),
                       const Divider(
                         height: 1,
                       ),
-                      allAccommodationUI()
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: filters.map((filter) {
+                          final isSelected = selectedFilters.contains(filter);
+
+                          return FilterSwitch(
+                            label: filter,
+                            initialValue: isSelected,
+                            onChanged: (bool newValue) {
+                              setState(() {
+                                if (newValue) {
+                                  selectedFilters.add(filter);
+                                } else {
+                                  selectedFilters.remove(filter);
+                                }
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
                     ],
                   ),
                 ),
@@ -356,7 +376,16 @@ class _FiltersScreenState extends State<FiltersScreen> {
                       borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                       highlightColor: Colors.transparent,
                       onTap: () {
-                    categoryController.setFilterIndex(0,restController.getCategoryIndex(),ctiy_name,districts,distValue~/10);
+                     //
+                     //    String value;
+                     //    for (int i = 0; i < accomodationListData.length; i++) {
+                     //      final PopularFilterListData date = accomodationListData[i];
+                     // showCustomSnackBar(date.titleTxt);
+                     //    }
+
+                        showCustomSnackBar(selectedFilters.join(', '));
+
+                    categoryController.setFilterIndex(0,restController.getCategoryIndex(),ctiy_name,districts,distValue~/10,selectedFilters.join(', ')=='it_includes_offers'.tr?1:0,selectedFilters.join(', ')=='virtual_ture'.tr?1:0);
                     Navigator.pop(context);
                       },
                       child: const Center(
@@ -392,7 +421,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           padding:
           const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
-            'خصائض البحث',
+            'search_properties'.tr,
             textAlign: TextAlign.left,
             style: TextStyle(
                 color: Colors.grey,
@@ -403,7 +432,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 16, left: 16),
           child: Column(
-            children: getAccomodationListUI(),
+            // children: getAccomodationListUI(),
           ),
         ),
         const SizedBox(
@@ -413,55 +442,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
     );
   }
 
-  List<Widget> getAccomodationListUI() {
-    final List<Widget> noList = <Widget>[];
-    for (int i = 0; i < accomodationListData.length; i++) {
-      final PopularFilterListData date = accomodationListData[i];
-      noList.add(
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-            onTap: () {
-              setState(() {
-                checkAppPosition(i);
-              });
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      date.titleTxt,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  CupertinoSwitch(
-                    activeColor: date.isSelected
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey.withOpacity(0.6),
-                    onChanged: (bool value) {
-                      setState(() {
-                        checkAppPosition(i);
-                      });
-                    },
-                    value: date.isSelected,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-      if (i == 0) {
-        noList.add(const Divider(
-          height: 1,
-        ));
-      }
-    }
-    return noList;
-  }
+
 
   void checkAppPosition(int index) {
     if (index == 0) {
@@ -494,9 +475,10 @@ class _FiltersScreenState extends State<FiltersScreen> {
         accomodationListData[0].isSelected = false;
       }
     }
+    showCustomSnackBar(accomodationListData[index].titleTxt);
   }
 
-  Widget distanceViewUI() {
+  Widget spaceViewUI() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -505,7 +487,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           padding:
           const EdgeInsets.only(left: 16, right: 16),
           child: Text(
-            'المساحة',
+            'space'.tr,
             textAlign: TextAlign.left,
             style: TextStyle(
                 color: Colors.grey,
@@ -522,132 +504,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
         const SizedBox(
           height: 8,
         ),
-      ],
-    );
-  }
-
-  Widget popularFilter() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding:
-          const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
-          child: Text(
-            'Popular filters',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16, left: 16),
-          child: Column(
-            children: getPList(),
-          ),
-        ),
-        const SizedBox(
-          height: 8,
-        )
-      ],
-    );
-  }
-
-  List<Widget> getPList() {
-    final List<Widget> noList = <Widget>[];
-    int count = 0;
-    const int columnCount = 2;
-    for (int i = 0; i < popularFilterListData.length / columnCount; i++) {
-      final List<Widget> listUI = <Widget>[];
-      for (int i = 0; i < columnCount; i++) {
-        try {
-          final PopularFilterListData date = popularFilterListData[count];
-          listUI.add(Expanded(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                    onTap: () {
-                      setState(() {
-                        date.isSelected = !date.isSelected;
-                        showCustomSnackBar(date.titleTxt);
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            date.isSelected
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank,
-                            color: date.isSelected
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey.withOpacity(0.6),
-                          ),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            date.titleTxt,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ));
-          if (count < popularFilterListData.length - 1) {
-            count += 1;
-          } else {
-            break;
-          }
-        } catch (e) {
-          print(e);
-        }
-      }
-      noList.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: listUI,
-      ));
-    }
-    return noList;
-  }
-
-  Widget priceBarFilter() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'Price (for 1 night)',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
-                fontWeight: FontWeight.normal),
-          ),
-        ),
-        // RangeSliderView(
-        //   values: _values,
-        //   onChangeRangeValues: (RangeValues values) {
-        //     _values = values;
-        //   },
-        // ),
-        const SizedBox(
-          height: 8,
-        )
       ],
     );
   }
@@ -687,14 +543,12 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 ),
               ),
             ),
-            Container(
-              child: const Text(
-                'الفلترة',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22,
-                    color: Colors.white
-                ),
+            Text(
+              'filter'.tr,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 22,
+                  color: Colors.white
               ),
             ),
             Container(

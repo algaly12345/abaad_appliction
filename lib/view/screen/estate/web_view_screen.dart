@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:abaad/view/base/custom_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -17,70 +17,58 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   final Completer<WebViewController> _controller = Completer<WebViewController>();
   WebViewController controllerGlobal;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    print("--------------${widget.url}");
-  }
+  double _progress = 0.0;
+  bool _hasError = false;
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _exitApp,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
-        body: Column(
-          children: [
+    return Scaffold(
 
-
-            Expanded(
-              child: Stack(
-                children: [
-                  WebView(
-                    javascriptMode: JavascriptMode.unrestricted,
-                    initialUrl: widget.url,
-                    gestureNavigationEnabled: true,
-                    onWebViewCreated: (WebViewController webViewController) {
-                      _controller.future.then((value) => controllerGlobal = value);
-                      _controller.complete(webViewController);
-                    },
-                    onPageStarted: (String url) {
-                      print('Page started loading: $url');
-                      setState(() {
-                        _isLoading = true;
-                      });
-                    },
-                    onPageFinished: (String url) {
-                      print('Page finished loading: $url');
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    },
-                  ),
-
-                  _isLoading ? CustomLoader(color: Theme.of(context).primaryColor) : SizedBox.shrink(),
-                ],
+      body: Column(
+        children: [
+          _buildProgressIndicator(),
+          Expanded(
+            child: _hasError
+                ? Center(
+              child: Text(
+                "there_is_no_virtual_tour".tr,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
+            )
+                : WebView(
+              initialUrl: widget.url ?? '', // Handle null URL gracefully.
+              javascriptMode: JavascriptMode.unrestricted,
+              onProgress: (progress) {
+                setState(() {
+                  _progress = progress / 100; // Normalize progress to 0-1.
+                });
+              },
+              onPageFinished: (url) {
+                setState(() {
+                  _progress = 0.0; // Reset progress when the page is loaded.
+                });
+              },
+              onWebResourceError: (error) {
+                setState(() {
+                  _hasError = true;
+                });
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Future<bool> _exitApp() async {
-    if(controllerGlobal != null) {
-      if (await controllerGlobal.canGoBack()) {
-        controllerGlobal.goBack();
-        return Future.value(false);
-      } else {
-        return Future.value(true);
-      }
-    }else {
-      return Future.value(true);
-    }
+  Widget _buildProgressIndicator() {
+    return _progress > 0.0
+        ? Center(
+      child: LinearProgressIndicator(
+        value: _progress,
+        backgroundColor: Colors.grey,
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+      ),
+    )
+        : SizedBox(); // Hide the progress indicator when progress is 0.
   }
 }

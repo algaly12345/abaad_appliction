@@ -210,10 +210,10 @@ class NotificationHelper {
 
 Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
   print("onBackground: ${message.notification.title}/${message.notification.body}/${message.notification.titleLocKey}");
-  // var androidInitialize = new AndroidInitializationSettings('notification_icon');
-  // var iOSInitialize = new IOSInitializationSettings();
-  // var initializationsSettings = new InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  // flutterLocalNotificationsPlugin.initialize(initializationsSettings);
-  // NotificationHelper.showNotification(message, flutterLocalNotificationsPlugin, true);
+  var androidInitialize = new AndroidInitializationSettings('notification_icon');
+  var iOSInitialize = new IOSInitializationSettings();
+  var initializationsSettings = new InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.initialize(initializationsSettings);
+  NotificationHelper.showNotification(message, flutterLocalNotificationsPlugin, true);
 }

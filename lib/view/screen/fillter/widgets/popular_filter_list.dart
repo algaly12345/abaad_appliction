@@ -1,52 +1,37 @@
+import 'package:get/get.dart';
+
 class PopularFilterListData {
   PopularFilterListData({
     this.titleTxt = '',
     this.isSelected = false,
+    this.value
   });
 
   String titleTxt;
+  int value;
   bool isSelected;
 
-  static List<PopularFilterListData> popularFList = <PopularFilterListData>[
-    PopularFilterListData(
-      titleTxt: 'Free Breakfast',
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: 'Free Parking',
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: 'Pool',
-      isSelected: true,
-    ),
-    PopularFilterListData(
-      titleTxt: 'Pet Friendly',
-      isSelected: false,
-    ),
-    PopularFilterListData(
-      titleTxt: 'Free wifi',
-      isSelected: false,
-    ),
-  ];
 
   static List<PopularFilterListData> accomodationList = [
     PopularFilterListData(
-      titleTxt: 'الكل',
+      titleTxt: 'all'.tr,
       isSelected: false,
+
     ),
     PopularFilterListData(
-      titleTxt: 'عروض مع العقار',
+      titleTxt: 'it_includes_offers'.tr,
       isSelected: false,
+      value: 1
     ),
     PopularFilterListData(
-      titleTxt: 'جولة افتراضية',
-      isSelected: true,
+      titleTxt: 'virtual_ture'.tr,
+      isSelected: false
+
     ),
-    PopularFilterListData(
-      titleTxt: 'منظور الشارع',
-      isSelected: false,
-    ),
+    // PopularFilterListData(
+    //   titleTxt: 'منظور الشارع',
+    //   isSelected: false,
+    // ),
     // PopularFilterListData(
     //   titleTxt: 'Hotel',
     //   isSelected: false,

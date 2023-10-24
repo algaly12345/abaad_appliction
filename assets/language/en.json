@@ -188,7 +188,19 @@
   "residential": "residential",
   "commercial": "commercial",
   "views": "Views",
-  "location": "location"
+  "location": "location",
+  "restaurant": "Restaurant",
+  "mosque": "Mosque",
+  "hospital": "Hospital",
+  "pharmacies": "Pharmacies",
+  "schools": "schools",
+  "neighboring_facilities": "Neighboring facilities",
+  "city": "city",
+  "district": "district",
+  "search_properties": "Search properties",
+  "filter": "filter",
+  "all": "all",
+  "there_is_no_virtual_tour": "There is no virtual tour"
 
 
 }

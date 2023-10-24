@@ -31,7 +31,7 @@ class DrawerMenu extends StatelessWidget {
 
               UserAccountsDrawerHeader(
                 accountName:  Text(
-                  _isLoggedIn ? '${userController.userInfoModel.name}' : 'guest'.tr,
+                  _isLoggedIn ? '${userController.userInfoModel.phone}' : 'guest'.tr,
                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge,color:  Colors.grey), ),
 
                 accountEmail:   Text(

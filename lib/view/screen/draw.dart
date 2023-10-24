@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,71 +9,129 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Button Color Change Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
+      home: HomeScreenFill(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class FilterSwitch extends StatefulWidget {
+  final String label;
+  final Function(bool) onChanged;
+  final bool initialValue;
+
+  FilterSwitch({
+    @required this.label,
+    @required this.onChanged,
+    @required this.initialValue,
+  });
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _FilterSwitchState createState() => _FilterSwitchState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String selectedButton = 'سكني'; // Initialize with default value
+class _FilterSwitchState extends State<FilterSwitch> {
+  bool _value = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.initialValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoFormRow(
+      child: CupertinoSwitch(
+        value: _value,
+        onChanged: (newValue) {
+          setState(() {
+            _value = newValue;
+          });
+          widget.onChanged(newValue);
+        },
+      ),
+      prefix: Text(widget.label),
+    );
+  }
+}
+
+class HomeScreenFill extends StatefulWidget {
+  @override
+  _HomeScreenFillState createState() => _HomeScreenFillState();
+}
+
+class _HomeScreenFillState extends State<HomeScreenFill> {
+  List<String> selectedFilters = [];
+
+  void _openFilterDialog() async {
+    final selected = await showCupertinoDialog<List<String>>(
+      context: context,
+      builder: (BuildContext context) {
+        List<String> filters = ['Option 1', 'Option 2', 'Option 3'];
+
+        return CupertinoAlertDialog(
+          title: Text('Select Filters'),
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: filters.map((filter) {
+                final isSelected = selectedFilters.contains(filter);
+
+                return FilterSwitch(
+                  label: filter,
+                  initialValue: isSelected,
+                  onChanged: (bool newValue) {
+                    setState(() {
+                      if (newValue) {
+                        selectedFilters.add(filter);
+                      } else {
+                        selectedFilters.remove(filter);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text('Apply'),
+              onPressed: () {
+                Navigator.of(context).pop(selectedFilters);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (selected != null) {
+      setState(() {
+        selectedFilters = selected;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Button Color Change Example'),
+        title: Text('Filter Selection Example'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    selectedButton = 'سكني';
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: selectedButton == 'سكني'
-                      ? Colors.green
-                      : Theme.of(context).buttonColor,
-                ),
-                child: Text('residential'.tr),
-              ),
-              SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    selectedButton = 'تجاري';
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: selectedButton == 'تجاري'
-                      ? Colors.green
-                      : Theme.of(context).buttonColor,
-                ),
-                child: Text('commercial'.tr),
-              ),
-            ],
-          ),
-          SizedBox(height: 40),
-          Text(
-            'Selected Value: $selectedButton',
-            style: TextStyle(fontSize: 18),
-          ),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Selected Filters:'),
+            Text(selectedFilters.join(', ')),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _openFilterDialog,
+              child: Text('Open Filter Dialog'),
+            ),
+          ],
+        ),
       ),
     );
   }

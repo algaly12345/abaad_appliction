@@ -72,11 +72,11 @@ class _NearByViewState extends State<NearByView> {
               double.parse(widget.esate.longitude),
             ))
     );
-    sampleData.add( RadioModel(false, 'مطعم', Images.restaurant));
-    sampleData.add( RadioModel(false, 'مسجد', Images.mosque));
-    sampleData.add( RadioModel(false, 'مستشفى',Images.hosptial));
-    sampleData.add( RadioModel(false, 'مدارس',Images.hosptial));
-    sampleData.add( RadioModel(false, 'صيدليات',Images.heart));
+    sampleData.add( RadioModel(false, 'restaurant'.tr, Images.restaurant));
+    sampleData.add( RadioModel(false, 'mosque'.tr, Images.mosque));
+    sampleData.add( RadioModel(false, 'hospital'.tr,Images.hosptial));
+    sampleData.add( RadioModel(false, 'schools'.tr,Images.hosptial));
+    sampleData.add( RadioModel(false, 'hospital'.tr,Images.heart));
     // getNearbyPlaces();
     // loadData();
   }
@@ -158,7 +158,7 @@ class _NearByViewState extends State<NearByView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  CustomAppBar(title: 'المرافق المجاورة'.tr),
+      appBar:  CustomAppBar(title: 'neighboring_facilities'.tr),
       body: Stack(
         children: [
           GoogleMap(
@@ -203,21 +203,21 @@ class _NearByViewState extends State<NearByView> {
 
 
 
-                          if (sampleData[index].buttonText=='مطعم') {
+                          if (sampleData[index].buttonText=='restaurant'.tr) {
                             type = 'restaurant';
                             getNearbyPlaces(type);
 
-                          } else if (sampleData[index].buttonText=='مستشفى') {
+                          } else if (sampleData[index].buttonText=='hospital'.tr) {
 
                             type = 'hospital';
                             getNearbyPlaces(type);
-                          } else if (sampleData[index].buttonText=='مسجد') {
+                          } else if (sampleData[index].buttonText=='mosque'.tr) {
                             type = 'mosque';
                             getNearbyPlaces(type);
-                          }else if (sampleData[index].buttonText=='مدارس') {
+                          }else if (sampleData[index].buttonText=='schools'.tr) {
                             type = 'school';
                             getNearbyPlaces(type);
-                          }else if (sampleData[index].buttonText=='صيدليات') {
+                          }else if (sampleData[index].buttonText=='hospital'.tr) {
                             type = 'pharmacy';
                             getNearbyPlaces(type);
                           }

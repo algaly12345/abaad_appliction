@@ -132,6 +132,7 @@ class AuthController extends GetxController implements GetxService {
       if(Get.find<SplashController>().configModel.customerVerification && response.body['is_phone_verified'] == 0) {
 
       }else {
+        print('-----------------------token${response.body['token']}');
         authRepo.saveUserToken(response.body['token']);
         await authRepo.updateToken();
       }
