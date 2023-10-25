@@ -233,7 +233,7 @@ class _SignInScreenState extends State<SignInScreen> {
             authController.clearUserNumberAndPassword();
           }
           String _token = status.message.substring(1, status.message.length);
-          showCustomSnackBar("$_token");
+       ///   showCustomSnackBar("$_token");
             List<int> _encoded = utf8.encode("1234567");
             String _data = base64Encode(_encoded);
             Get.toNamed(RouteHelper.getVerificationRoute(_numberWithCountryCode, _token, RouteHelper.signUp, _data));
