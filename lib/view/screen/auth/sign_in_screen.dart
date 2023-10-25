@@ -207,7 +207,6 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-
   void _login(AuthController authController, String countryDialCode) async {
     String _phone = _phoneController.text.trim();
     // String _password = _passwordController.text.trim();
