@@ -216,7 +216,7 @@ class _SignInScreenState extends State<SignInScreen> {
       try {
         PhoneNumber phoneNumber = await PhoneNumberUtil().parse(_numberWithCountryCode);
         _numberWithCountryCode = '+' + phoneNumber.countryCode + phoneNumber.nationalNumber;
-        _isValid = true;
+        _isValid = true;  
       } catch (e) {}
     }
     if (_phone.isEmpty) {

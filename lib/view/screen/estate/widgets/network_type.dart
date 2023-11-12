@@ -41,7 +41,7 @@ class NetworkTypeItem extends StatelessWidget {
 
         children: [
           Expanded(child: Container(
-              padding: EdgeInsets.all(10),child:  Text("network".tr))),
+              padding: EdgeInsets.all(10),child:  Text("network_type".tr))),
           VerticalDivider(width: 1.0),
           Expanded(child: Container(
               padding: EdgeInsets.all(10),child:  Container(

@@ -89,21 +89,26 @@ class _EstateViewState extends State<EstateView> {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                            Container(
-                            height: 27,
-                            width: 27,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 1,
+                            GestureDetector(
+                              onTap: (){
+                                Get.back();
+                              },
+                              child: Container(
+                              height: 27,
+                              width: 27,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              borderRadius: BorderRadius.circular(5),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4,left: 4),
+                                child: Icon(Icons.arrow_back_ios,size: 23),
+                              )),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 4,left: 4),
-                              child: Icon(Icons.arrow_back_ios,size: 23),
-                            )),
                               SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                               Row(
                                 children: [
@@ -119,7 +124,18 @@ class _EstateViewState extends State<EstateView> {
 
                               GestureDetector(
                                 onTap: (){
-                                  buildDynamicLinks(widget.estate.title, "${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}", widget.estate.id.toString());
+                                 if( widget.estate.images.length  >0) {
+                                   buildDynamicLinks(widget.estate.title, "${Get
+                                       .find<SplashController>()
+                                       .configModel
+                                       .baseUrls
+                                       .estateImageUrl}/${widget.estate
+                                       .images[0] ?? ''}",
+                                       widget.estate.id.toString());
+                                 }else {
+                                   buildDynamicLinks(widget.estate.title, "",
+                                       widget.estate.id.toString());
+                                 }
                                 },
                                   child: Icon(Icons.share, size: 23, color: Theme.of(context).textTheme.bodyText1.color)),
                             ]),

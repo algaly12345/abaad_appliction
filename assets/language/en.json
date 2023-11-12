@@ -184,7 +184,7 @@
   "virtual_ture": "Virtual ture",
   "images": "images",
   "operation_accomplished_successfully": "operation accomplished successfully",
-  "this_offer_includes_offers_and_discounts": "This offer includes offers and discounts from service providers in a number of services provided within the offer",
+  "this_offer_includes_offers_and_discounts": "《This advertisement includes offers and discounts from a number of service providers》",
   "residential": "residential",
   "commercial": "commercial",
   "views": "Views",
@@ -200,7 +200,9 @@
   "search_properties": "Search properties",
   "filter": "filter",
   "all": "all",
-  "there_is_no_virtual_tour": "There is no virtual tour"
+  "there_is_no_virtual_tour": "There is no virtual tour",
+  "currency": "SAR",
+  "document_number": "document number"
 
 
 }

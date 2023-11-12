@@ -19,6 +19,7 @@ class ConfigModel {
   String aboutUs;
   String aboutUsAr;
   String privacyPolicy;
+  String privacyPolicyAr;
   String termsConditions;
   String termsConditionsAr;
   int appMinimumVersionAndroid;
@@ -76,7 +77,9 @@ class ConfigModel {
         this.termsConditionsAr,
 this.aboutUsAr,
       this.feature,
-      this.featureAr});
+      this.featureAr,
+      this.privacyPolicyAr
+      });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
     businessName = json['business_name'];
@@ -118,6 +121,7 @@ this.aboutUsAr,
     aboutUsAr = json['about_us_ar'];
     feature= json['feature'];
     featureAr= json['feature_ar'];
+    privacyPolicyAr= json['privacy_policy_ar'];
 
   }
 
@@ -160,6 +164,7 @@ this.aboutUsAr,
     data['about_us_ar']=this.aboutUsAr;
     data['feature']=this.feature;
     data['feature_ar']=this.featureAr;
+    data['privacy_policy_ar']=this.privacyPolicyAr;
 
 
 

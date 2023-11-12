@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
@@ -12,6 +13,7 @@ import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/image_view_dialog.dart';
 import 'package:abaad/view/base/no_data_screen.dart';
+import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/screen/estate/web_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
@@ -126,7 +128,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
 
   Future<bool> isStreetViewAvailable(double latitude, double longitude) async {
-    final apiKey = 'IzaSyDa4Ng7nNB5EkPqvcI1yaxcl8QE1Ja-tPA'; // Replace with your Google Maps API key
+    final apiKey = 'AIzaSyCQD6nS0Jb0KzzGTts-uLXahVh7o4taUPY'; // Replace with your Google Maps API key
     final url = 'https://maps.googleapis.com/maps/api/streetview/metadata?location=$latitude,$longitude&key=$apiKey';
 
     final response = await http.get(Uri.parse(url));
@@ -207,7 +209,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
                 ),
               ):widget.featureId=="3"?Column(
                 children: [
-                  Expanded(
+                  Get.find<AuthController>().isLoggedIn() ?    Expanded(
                     child: streetViewAvailable
                         ?  FlutterGoogleStreetView(
               initSource: StreetViewSource.outdoor,
@@ -234,7 +236,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
-                  ),
+                  ): NotLoggedInScreen(),
                 ],
               ):widget.featureId=="4"?Container(
                 width: Dimensions.WEB_MAX_WIDTH,

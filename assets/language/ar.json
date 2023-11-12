@@ -180,7 +180,7 @@
   "virtual_ture": "جولة افتراضية",
   "images": "صور",
   "operation_accomplished_successfully": "تمت العملية بنجاح",
-  "this_offer_includes_offers_and_discounts": "يشمل هذا العرض عروض وخصومات مقدمي الخدمات في عدد من الخدمات المقدمة ضمن العرض",
+  "this_offer_includes_offers_and_discounts": "《يشمل هذا الاعلان على عروض وخصومات من عدد من مقدمي الخدمات》",
   "residential": "سكني",
   "commercial": "تجاري",
   "views": "المشاهدات",
@@ -198,5 +198,7 @@
   "filter": "بحث متقدم",
 
   "all": "الكل ",
-  "there_is_no_virtual_tour": "لاتوجد جولة إفتراضية"
+  "there_is_no_virtual_tour": "لاتوجد جولة إفتراضية",
+  "currency": "ريال ",
+  "document_number": "قم الوثيقة"
 }

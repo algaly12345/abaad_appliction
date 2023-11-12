@@ -20,8 +20,8 @@ class SupportScreen extends StatelessWidget {
         child: Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(children: [
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-          Image.asset(Images.support_image, height: 120),
-          SizedBox(height: 30),
+          // Image.asset(Images.support_image, height: 120),
+          SizedBox(height: 60),
 
           Image.asset(Images.logo, width: 100),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -33,7 +33,7 @@ class SupportScreen extends StatelessWidget {
 
           SupportButton(
             icon: Icons.location_on, title: 'address'.tr, color: Colors.blue,
-            info: Get.find<SplashController>().configModel.address,
+            info: "الشرقية , الدمام.",
             onTap: () {},
           ),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),

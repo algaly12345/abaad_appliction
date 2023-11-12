@@ -119,8 +119,11 @@ class _EstateDetailsState extends State<EstateDetails> {
                                 "${estateController.estate.price}",
                                 style: robotoRegular.copyWith(
                                   fontSize: Dimensions.fontSizeDefault,
-                                )
+                                ),
+
                             ),
+                            SizedBox(width: 2.0),
+                            Text("currency".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall,color: Colors.white),)
                           ],
                         ),
 
@@ -594,7 +597,12 @@ class _EstateDetailsState extends State<EstateDetails> {
                           children: [
                             Expanded(flex: 1,
                                 child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text("document_type".tr))),
+                                    padding: EdgeInsets.all(10),child:  Row(
+                                      children: [
+                                        Text("document_number".tr),
+
+                                      ],
+                                    ))),
                             VerticalDivider(width: 1.0),
                             Expanded(flex: 1,
                                 child: Container(
@@ -625,7 +633,11 @@ class _EstateDetailsState extends State<EstateDetails> {
                           children: [
                             Expanded(
                                 flex: 1,child: Container(
-                                padding: EdgeInsets.all(10),child:  Text("price".tr))),
+                                padding: EdgeInsets.all(10),child:  Row(
+                                  children: [
+                                    Text("price".tr),
+                                  ],
+                                ))),
                             VerticalDivider(width: 1.0),
                             Expanded(flex: 1,
                                 child: Container(

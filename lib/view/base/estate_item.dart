@@ -139,9 +139,12 @@ class EstateItem extends StatelessWidget {
                                   children: [
                                    Row(
                                      children: [
+
                                        Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
                                        SizedBox(width: 11.0),
                                        Text(" ${estate.price}"  ,style: robotoBlack.copyWith(fontSize: 11)),
+                                       SizedBox(width: 2.0),
+                                     Text("currency".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall))
                                      ],
                                    )
 ,

@@ -125,10 +125,12 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                         "${widget.estate.price}",
                                         style: robotoRegular.copyWith(
                                           fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).cardColor,
-                                        )
+                                        ),
+
                                     ),
 
-
+                                    SizedBox(width: 2.0),
+                                    Text("currency".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall,color: Colors.white),)
                                   ],
                                 ),
                               ),
@@ -550,7 +552,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               children: [
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("document_type".tr))),
+                                        padding: EdgeInsets.all(10),child:  Text("document_number".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(

@@ -76,7 +76,7 @@ class _NearByViewState extends State<NearByView> {
     sampleData.add( RadioModel(false, 'mosque'.tr, Images.mosque));
     sampleData.add( RadioModel(false, 'hospital'.tr,Images.hosptial));
     sampleData.add( RadioModel(false, 'schools'.tr,Images.hosptial));
-    sampleData.add( RadioModel(false, 'hospital'.tr,Images.heart));
+    sampleData.add( RadioModel(false, 'pharmacies'.tr,Images.heart));
     // getNearbyPlaces();
     // loadData();
   }
@@ -217,7 +217,7 @@ class _NearByViewState extends State<NearByView> {
                           }else if (sampleData[index].buttonText=='schools'.tr) {
                             type = 'school';
                             getNearbyPlaces(type);
-                          }else if (sampleData[index].buttonText=='hospital'.tr) {
+                          }else if (sampleData[index].buttonText=='pharmacies'.tr) {
                             type = 'pharmacy';
                             getNearbyPlaces(type);
                           }
@@ -258,7 +258,7 @@ class _NearByViewState extends State<NearByView> {
             widget.esate.longitude +
             '&radius=1500&type=' +
             type +
-            '&key=AIzaSyDa4Ng7nNB5EkPqvcI1yaxcl8QE1Ja-tPA');
+            '&key=AIzaSyCQD6nS0Jb0KzzGTts-uLXahVh7o4taUPY');
 
     var response = await http.post(url);
 
