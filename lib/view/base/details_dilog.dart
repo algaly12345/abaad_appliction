@@ -337,7 +337,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                         child: Container(
                                           padding: const EdgeInsets.all(6),
                                           child: Image.asset(
-                                              Images.bed, height: 24,
+                                              Images.kitchen, height: 24,
                                               color: Theme.of(context).primaryColor,
                                               width: 24),
                                         ),
@@ -376,7 +376,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                         child: Container(
                                           padding: const EdgeInsets.all(6),
                                           child: Image.asset(
-                                              Images.bed, height: 24,
+                                              Images.setroom, height: 24,
                                               color: Theme.of(context).primaryColor,
                                               width: 24),
                                         ),
@@ -414,7 +414,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                         child: Container(
                                           padding: const EdgeInsets.all(6),
                                           child: Image.asset(
-                                              Images.bed, height: 24,
+                                              Images.setroom, height: 24,
                                               color: Theme.of(context).primaryColor,
                                               width: 24),
                                         ),
@@ -673,7 +673,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                               children: [
                                 Expanded(flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text("advertiser".tr))),
+                                    padding: EdgeInsets.all(10),child:  Text("advertiser_phone".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,child: Container(
                                     padding: EdgeInsets.all(10),child: Text("${ widget.estate.users.phone}",  style: robotoBlack.copyWith(fontSize: 14)))),

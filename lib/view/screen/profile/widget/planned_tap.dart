@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/util/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,7 +26,7 @@ class _PlannedTabState extends State<PlannedTab> {
   int _currentIndex = 0;
 
   Future<void> _fetchExistingImages(int id) async {
-    final response = await http.get(Uri.parse('https://abaad.iaspl.net/api/v1/estate/etch-existing-planned/$id'));
+    final response = await http.get(Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/etch-existing-planned/$id'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -64,7 +65,7 @@ class _PlannedTabState extends State<PlannedTab> {
         imageFiles.add(http.MultipartFile.fromBytes('planned[]', imageBytes, filename: imageFile.name));
       }
 
-      final Uri uploadUri = Uri.parse('https://abaad.iaspl.net/api/v1/estate/upload-planned/$id');
+      final Uri uploadUri = Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/upload-planned/$id');
       var request = http.MultipartRequest('POST', uploadUri);
       request.files.addAll(imageFiles);
 
@@ -91,7 +92,7 @@ class _PlannedTabState extends State<PlannedTab> {
     await pr.show();
 
     try {
-      final response = await http.delete(Uri.parse('https://abaad.iaspl.net/api/v1/estate/delete-planned/$id/$imageUrl'));
+      final response = await http.delete(Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/delete-planned/$id/$imageUrl'));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -114,7 +115,7 @@ class _PlannedTabState extends State<PlannedTab> {
         children: [
           SizedBox.expand(
             child: Image.network(
-              '${Get.find<SplashController>().configModel.baseUrls.planed}/' + Uri.encodeComponent(imageUrl),
+              '${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/' + Uri.encodeComponent(imageUrl),
               fit: BoxFit.cover,
             ),
           ),

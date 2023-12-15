@@ -39,6 +39,7 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 
 
@@ -104,6 +105,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   final TextEditingController _westController = TextEditingController();
   final TextEditingController _eastController = TextEditingController();
   final TextEditingController _southController = TextEditingController();
+
+
+  TextEditingController _textEditingController = TextEditingController();
+  bool isButtonEnabled = false;
+
 
 
   final FocusNode _northFocus = FocusNode();
@@ -816,18 +822,50 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                   ),
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  MyTextField(
-                    hintText: 'enter_long_desc'.tr,
-                    controller: _longDescController,
-                    focusNode: _longDescFocus,
-                    // nextFocus: _vatFocus,
-                    size: 17,
+               //    MyTextField(
+               //      hintText: 'enter_long_desc'.tr,
+               //      controller: _longDescController,
+               // //     focusNode: _longDescFocus,
+               //
+               //      // nextFocus: _vatFocus,
+               //      size: 17,
+               //      maxLines: 4,
+               //
+               //      inputType: TextInputType.multiline,
+               //      capitalization: TextCapitalization.sentences,
+               //     // showBorder: true,
+               //    ),
 
+
+
+                  TextField(
+                    controller: _longDescController,
+                    keyboardType: TextInputType.multiline,
                     maxLines: 4,
-                    inputType: TextInputType.text,
-                    capitalization: TextCapitalization.sentences,
-                    showBorder: true,
+                      focusNode: _longDescFocus,
+
+
+                      cursorColor: Theme.of(context).primaryColor,
+                      decoration: InputDecoration(
+                        hintText: 'enter_long_desc'.tr,
+                        isDense: true,
+                        filled: true,
+                        fillColor: Theme.of(context).cardColor,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), borderSide: BorderSide.none),
+                        hintStyle: robotoRegular.copyWith(color: Theme.of(context).hintColor),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1, color: Colors.grey)
+                          )
+
+                      )
+
                   ),
+
+
+
+
+
+
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
@@ -1746,10 +1784,63 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       showBorder: true,
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+
+
+                    Row(children: [
+                      Expanded(
+
+                          child:Column(children: [
+
+                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                            MyTextField(
+                              hintText: 'enter_virtual_tour_link'.tr,
+                              size: 20,
+                       controller: _textEditingController,
+      onChanged: (value) {
+      setState(() {
+      isButtonEnabled = value.isNotEmpty;
+      });
+      },
+                              inputType: TextInputType.text,
+                              showBorder: true,
+
+                              capitalization: TextCapitalization.words,
+                            ),
+                          ],)
+                      ),
+
+
+
+
+                      SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                      Container(
+                        height: 70,
+                        padding: EdgeInsets.only(
+                            right: 4, left: 4, top: 16,bottom: 4),
+                        child:    ElevatedButton(
+                          onPressed: isButtonEnabled
+                              ? () {
+                            String url = _textEditingController.text;
+                            if (url.isNotEmpty) {
+                              _showWebViewDialog(context, url);
+                            } else {
+                              // Handle empty URL input
+                              print('URL is empty');
+                            }
+                          }
+                              : null,
+                          child: Text('View'),
+                        ),
+                      ),
+
+                    ]),
+                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                   ]))),
+
                 )
 
-
+,
 
               ):currentStep==4?
               Container(
@@ -1757,295 +1848,6 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                 child:   Container(
                     child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
                       child: Column(children: [
-//                         Column(children: [
-//
-//
-//                           Column(children: [
-//
-//                             Center(child: Text('choose_your_business_plan'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeDefault))),
-//                             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-//
-//                             Padding(
-//                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-//                               child: Row(children: [
-//                                 Get.find<SplashController>().configModel.businessPlan.commission != 0 ? Expanded(
-//                                   child: baseCardWidget(authController, context, title: 'commission'.tr,
-//                                       index: 0, onTap: ()=> authController.setBusiness(0)),
-//                                 ) : SizedBox(),
-//                                 SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
-//
-//                                 Get.find<SplashController>().configModel.businessPlan.subscription != 0 ? Expanded(
-//                                   child: baseCardWidget(authController, context, title: 'subscription_base'.tr,
-//                                       index: 1, onTap: ()=> authController.setBusiness(1)),
-//                                 ) : SizedBox(),
-//                               ]),
-//                             ),
-//                             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-//
-//                             authController.businessIndex == 0 ? Padding(
-//                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-//                               child: Text(
-//                                 "${'يتم اخذ عمولة من تطبيق'.tr}  ${Get.find<SplashController>().configModel.businessName} ${'من سعر العقار  من خلال تسويق عقارك وهي'.tr} ${Get.find<SplashController>().configModel.adminCommission}% ",
-//                                 style: robotoRegular, textAlign: TextAlign.start, textScaleFactor: 1.1,
-//                               ),
-//                             ) : Container(
-//                               child: Column(children: [
-//
-//
-//
-//                                 Container(
-//                                   width: 300,
-//                                   decoration: BoxDecoration(
-//                                     borderRadius: BorderRadius.circular(20),
-//                                   ),
-//                                   child: Column(
-//                                     mainAxisSize: MainAxisSize.min,
-//                                     children: [
-//                                       Container(
-//                                         height: 120,
-//                                         decoration: BoxDecoration(
-//                                           borderRadius: BorderRadius.vertical(
-//                                             top: Radius.circular(20),
-//                                           ),
-//                                           gradient: LinearGradient(
-//                                             begin: Alignment.topCenter,
-//                                             end: Alignment.bottomCenter,
-//                                             colors: [Colors.blue.shade700, Colors.blue.shade400],
-//                                           ),
-//                                         ),
-//                                         child: Center(
-//                                           child: Column(
-//                                             mainAxisAlignment: MainAxisAlignment.center,
-//                                             children: [
-//                                               Icon(
-//                                                 Icons.check_circle,
-//                                                 size: 64,
-//                                                 color: Colors.white,
-//                                               ),
-//                                               SizedBox(height: 10),
-//                                               Text(
-//                                                 'Welcome to My App',
-//                                                 style: TextStyle(
-//                                                   fontSize: 24,
-//                                                   fontWeight: FontWeight.bold,
-//                                                   color: Colors.white,
-//                                                 ),
-//                                               ),
-//                                             ],
-//                                           ),
-//                                         ),
-//                                       ),
-//                                       Padding(
-//                                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-//                                         child: Column(
-//                                           children: [
-//                                             Text(
-//                                               'Description:',
-//                                               style: TextStyle(
-//                                                 fontSize: 18,
-//                                                 fontWeight: FontWeight.bold,
-//                                               ),
-//                                             ),
-//                                             SizedBox(height: 10),
-//                                             Text(
-//                                               'This is a longer description of what the app does. You can use this app to accomplish various tasks and manage your daily activities. It provides a user-friendly interface and a range of features designed to enhance your productivity and organization. Whether you\'re a student, professional, or anyone looking to streamline your tasks, this app has got you covered.',
-//                                               style: TextStyle(
-//                                                 fontSize: 16,
-//                                                 color: Colors.grey[600],
-//                                               ),
-//                                               textAlign: TextAlign.center,
-//                                             ),
-//                                             SizedBox(height: 15),
-//                                             Row(
-//                                               mainAxisAlignment: MainAxisAlignment.center,
-//                                               children: [
-//                                                 Checkbox(
-//                                                   value: isCheckBoxChecked,
-//                                                   onChanged: (value) {
-//                                                     setState(() {
-//                                                       isCheckBoxChecked = value;
-//                                                     });
-//                                                   },
-//                                                 ),
-//                                                 Text('I agree to the terms.'),
-//                                               ],
-//                                             ),
-//                                             SizedBox(height: 15),
-//                                             Row(
-//                                               mainAxisAlignment: MainAxisAlignment.center,
-//                                               children: [
-//                                                 ElevatedButton(
-//                                                   onPressed: isCheckBoxChecked
-//                                                       ? () {
-//                                                     Navigator.pop(context); // Close the dialog
-//                                                   }
-//                                                       : null,
-//                                                   style: ElevatedButton.styleFrom(
-//                                                     primary: Colors.green,
-//                                                     padding: EdgeInsets.symmetric(horizontal: 30),
-//                                                     shape: RoundedRectangleBorder(
-//                                                       borderRadius: BorderRadius.circular(10),
-//                                                     ),
-//                                                   ),
-//                                                   child: Text(
-//                                                     'Yes',
-//                                                     style: TextStyle(fontSize: 16),
-//                                                   ),
-//                                                 ),
-//                                                 SizedBox(width: 20),
-//                                                 ElevatedButton(
-//                                                   onPressed: () {
-//                                                     Navigator.pop(context); // Close the dialog
-//                                                   },
-//                                                   style: ElevatedButton.styleFrom(
-//                                                     primary: Colors.red,
-//                                                     padding: EdgeInsets.symmetric(horizontal: 30),
-//                                                     shape: RoundedRectangleBorder(
-//                                                       borderRadius: BorderRadius.circular(10),
-//                                                     ),
-//                                                   ),
-//                                                   child: Text(
-//                                                     'No',
-//                                                     style: TextStyle(fontSize: 16),
-//                                                   ),
-//                                                 ),
-//                                               ],
-//                                             ),
-//                                             SizedBox(height: 20), // Added spacing
-//                                             ElevatedButton(
-//                                               onPressed: () {
-//                                                 Navigator.pop(context); // Close the dialog
-//                                               },
-//                                               style: ElevatedButton.styleFrom(
-//                                                 primary: Colors.grey[200],
-//                                                 padding: EdgeInsets.symmetric(horizontal: 30),
-//                                                 shape: RoundedRectangleBorder(
-//                                                   borderRadius: BorderRadius.circular(10),
-//                                                 ),
-//                                               ),
-//                                               child: Text(
-//                                                 'Cancel',
-//                                                 style: TextStyle(fontSize: 16, color: Colors.black),
-//                                               ),
-//                                             ),
-//                                           ],
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 )
-//                                 // Padding(
-//                                 //   padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
-//                                 //   child: Text(
-//                                 //     'subscription_package'.tr,
-//                                 //     style: robotoRegular, textAlign: TextAlign.start,
-//                                 //   ),
-//                                 // ),
-//                                 //
-//                                 // authController.packageModel != null ? SizedBox(
-//                                 //   height: ResponsiveHelper.isDesktop(context) ? 700 : 600,
-//                                 //   child: (authController.packageModel.packages.isNotEmpty && authController.packageModel.packages.length != 0) ? Swiper(
-//                                 //
-//                                 //     itemCount: authController.packageModel.packages.length,
-//                                 //     itemWidth: ResponsiveHelper.isDesktop(context) ? 400 : context.width * 0.8,
-//                                 //     itemHeight: 600.0,
-//                                 //     layout: SwiperLayout.STACK,
-//                                 //     onIndexChanged: (index){
-//                                 //       authController.selectSubscriptionCard(index);
-//                                 //     },
-//                                 //     itemBuilder: (BuildContext context, int index){
-//                                 //       Packages _package = authController.packageModel.packages[index];
-//                                 //
-//                                 //       Color _color = ColorConverter.stringToColor(_package.color);
-//                                 //
-//                                 //       return GetBuilder<AuthController>(
-//                                 //           builder: (authController) {
-//                                 //
-//                                 //             return Stack(clipBehavior: Clip.none, children: [
-//                                 //
-//                                 //               Container(
-//                                 //                 decoration: BoxDecoration(
-//                                 //                   color: Theme.of(context).cardColor,
-//                                 //                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_EXTRA_LARGE),
-//                                 //                   boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 1, blurRadius: 10)],
-//                                 //                 ),
-//                                 //                 padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-//                                 //                 margin: EdgeInsets.only(top: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-//                                 //                 child: SubscriptionCard(index: index, authController: authController, package: _package, color: _color),
-//                                 //               ),
-//                                 //
-//                                 //               authController.activeSubscriptionIndex == index ? Positioned(
-//                                 //                 top: 5, right: -10,
-//                                 //                 child: Container(
-//                                 //                   height: 40, width: 40,
-//                                 //                   decoration: BoxDecoration(
-//                                 //                     borderRadius: BorderRadius.circular(50),
-//                                 //                     color: _color, border: Border.all(color: Theme.of(context).cardColor, width: 2),
-//                                 //                   ),
-//                                 //                   child: Icon(Icons.check, color: Theme.of(context).cardColor),
-//                                 //                 ),
-//                                 //               ) : SizedBox(),
-//                                 //
-//                                 //             ]);
-//                                 //           }
-//                                 //       );
-//                                 //     },
-//                                 //   ) : Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-//                                 //       children: [
-//                                 //         Image.asset(Images.empty_box, height: 150),
-//                                 //         SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-//                                 //         Text('no_package_available'.tr),
-//                                 //       ]),
-//                                 //   ),
-//                                 // ) : CircularProgressIndicator(),
-// ,
-//                                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-//
-//                               ]),
-//                             ),
-//                           ])
-//                         ]),
-
-
-
-
-                        // SizedBox(
-                        //   width: Dimensions.WEB_MAX_WIDTH,
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_SMALL),
-                        //     child: Row(children: [
-                        //       (authController.businessPlanStatus == 'payment') ? Expanded(
-                        //         child: InkWell(
-                        //           onTap: () {
-                        //             if(authController.businessPlanStatus != 'payment'){
-                        //               authController.showBackPressedDialogue('your_business_plan_not_setup_yet'.tr);
-                        //             }else{
-                        //               authController.setBusinessStatus('business');
-                        //               if(authController.isFirstTime == false){
-                        //                 authController.isFirstTime = true;
-                        //               }
-                        //             }
-                        //           },
-                        //           child: Padding(
-                        //             padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
-                        //             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        //               Icon(Icons.keyboard_double_arrow_left),
-                        //               SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                        //
-                        //               Text("back".tr, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),),
-                        //             ]),
-                        //           ),
-                        //         ),
-                        //       ) : SizedBox(),
-                        //       SizedBox(width: (authController.businessPlanStatus == 'payment') ? Dimensions.PADDING_SIZE_EXTRA_SMALL : 0),
-                        //
-                        //       authController.businessIndex == 0 || (authController.businessIndex == 1 && authController.packageModel.packages.length != 0) ? Expanded(child: CustomButton(
-                        //         buttonText: 'next'.tr,
-                        //         onPressed: () => authController.submitBusinessPlan(restaurantId: 1),
-                        //       )) : SizedBox(),
-                        //     ]),
-                        //   ),
-                        // )
 
                         SizedBox(height: 20,),
                         Container(
@@ -2400,7 +2202,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   shortDescription: _shortDesc,
                                   categoryId:restController.getCategoryIndex().toString(),
                                   ageEstate: _ageValue,
-                                  arPath: "3434",
+                                  arPath: _textEditingController.text,
                                   districts: district,
                                   floors: "4545",
                                   latitude: locationController.pickPosition.latitude.toString(),
@@ -2509,6 +2311,33 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     }
   }
 
+
+  void _showWebViewDialog(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Web View'),
+          content: Container(
+            width: double.maxFinite,
+            height: 300, // Adjust the height as needed
+            child: WebView(
+              initialUrl: url,
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
   Widget baseCardWidget(AuthController authController, BuildContext context,{ @required String title, @required int index, @required Function onTap}){
     return InkWell(
       onTap: onTap,

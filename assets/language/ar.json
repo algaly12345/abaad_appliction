@@ -144,7 +144,7 @@
   "complete_the_process": "إكمال العملية",
   "thanks": "شكرا",
   "contact_the_advertiser": "تواصل مع المعلن",
-  "added_successfully": "تمت عملية اضافة العقار بنجاح",
+  "added_successfully": "تمت العملية بنجاح",
   "attach_video": "بإمكانك إرفاق فيديو للعرض ",
   "download_video": "حمل الفيديو الأن",
   "i_don_t_want_upload": "لا اريد تحميل فيديو",
@@ -200,5 +200,15 @@
   "all": "الكل ",
   "there_is_no_virtual_tour": "لاتوجد جولة إفتراضية",
   "currency": "ريال ",
-  "document_number": "قم الوثيقة"
+  "document_number": "رقم الوثيقة",
+  "enter_virtual_tour_link": "ادخل رابط الجولة الافتراضية",
+  "do_you_really_want_to_delete_this_offer": "هل تريد حقا حذف هذا العرض ؟",
+  "you_will_remove_all_your_information_from_the_offer": "سوف معلومات الخاصة  بالعرض",
+  "no_data_available": "لا تتوفر بيانات",
+  "video_drone": "إذا كان لديك فيديو  منظور الجوي، قم بتحميله من هنا",
+  "confirm": "تاكيد",
+  "update": "تحديث",
+  "advertiser_phone": "رقم جوال المعلن",
+  "done": "انهاء",
+  "the_operation_failed_try_again": "فشلت العملية حاول من جديد"
 }

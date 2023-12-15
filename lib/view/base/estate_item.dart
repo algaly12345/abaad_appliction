@@ -3,6 +3,7 @@ import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/wishlist_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
@@ -101,8 +102,8 @@ class EstateItem extends StatelessWidget {
                               IconButton(
                                 onPressed: () {
                                   Get.dialog(ConfirmationDialog(icon: Images.support,
-                                    title: 'are_you_sure_to_delete_account'.tr,
-                                    description: 'it_will_remove_your_all_information'.tr, isLogOut: true,
+                                    title: 'do_you_really_want_to_delete_this_offer'.tr,
+                                    description: 'you_will_remove_all_your_information_from_the_offer'.tr, isLogOut: true,
                                     onYesPressed: () => Get.find<EstateController>().deleteEstate(estate.id),
                                   ), useSafeArea: false);
                                 },
@@ -112,7 +113,9 @@ class EstateItem extends StatelessWidget {
                                 onPressed: ()async {
                                   Get.find<EstateController>().currentIndex==0;
                                   Get.find<EstateController>().categoryIndex==0;
-                                  await    Get.dialog(EditDialog(estate:estate));
+                                  await       Get.toNamed(RouteHelper.getEditEstatRoute(estate));
+
+                                  // Get.dialog(EditDialog(estate:estate));
                                 },
                                 icon: Icon(Icons.edit_note_rounded, color: Colors.orange),
                               ),
@@ -435,7 +438,7 @@ estate.category!="5"?     estate.property  != null ?Center(
               child: Container(
                 padding: const EdgeInsets.all(6),
                 child: Image.asset(
-                    Images.bed, height: 20,
+                    Images.setroom, height: 20,
                     color: Theme.of(context).primaryColor,
                     width: 20),
               ),

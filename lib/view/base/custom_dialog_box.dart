@@ -49,7 +49,7 @@ class _ScreenSuccessState extends State<ScreenSuccess> {
             ),
 
             Text(
-              "شكرا",
+              "thanks".tr,
               style:  robotoBold.copyWith(
               fontSize: 40,
               color: Theme.of(context).primaryColor,
@@ -57,20 +57,12 @@ class _ScreenSuccessState extends State<ScreenSuccess> {
             ),
             SizedBox(height: screenHeight * 0.01),
             Text(
-              "تمت عملية اضافة العقار بنجاح",
+              "added_successfully".tr,
               style: robotoBold.copyWith(
                 fontSize: 20,
                 color: Theme.of(context).primaryColor),
             ),
 
-            SizedBox(height: screenHeight * 0.01),
-            Text(
-              "بيانات االأن تحت المراجعة  يستغرف الوقت نص ساعة\n كافترة اقصي  ومن ثم تتم الموافقة",
-              textAlign: TextAlign.center,
-              style: robotoBold.copyWith(
-                  fontSize: 15,
-                  color: Theme.of(context).primaryColor),
-            ),
             SizedBox(height: screenHeight * 0.04),
         SizedBox(height: 40),
         Container(

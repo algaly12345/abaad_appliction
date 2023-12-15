@@ -29,7 +29,8 @@ class FeatureScreen extends StatefulWidget {
   final Estate estate;
   String path ;
   String pathVideo;
-  FeatureScreen({@required this.featureId,this.estate,this.path,this.pathVideo});
+  String skyView;
+  FeatureScreen({@required this.featureId,this.estate,this.path,this.pathVideo,this.skyView});
 
   @override
   State<FeatureScreen> createState() => _FeatureScreenState();
@@ -40,6 +41,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
   double value = 0.0;
 
   VideoPlayerController _controller;
+  VideoPlayerController _controllerSkyView;
   String selectedUrl;
   WebViewController controllerGlobal;
   bool _isLoading = true;
@@ -47,9 +49,9 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
   StreetViewController streetViewController;
   VideoPlayerController _controller1;
-  VideoPlayerController _controller2;
 
   bool streetViewAvailable = true;
+   double scale = 1.0;
 
 
 
@@ -62,37 +64,32 @@ class _FeatureScreenState extends State<FeatureScreen> {
    // selectedUrl = '${AppConstants.BASE_URL}/payment-mobile/pyment?order_id=${widget.orderModel.id}&customer_id=${widget.orderModel.userId}';
 
      print("-------------------------------${widget.featureId}");
-    _controller1=VideoPlayerController.network("${ Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/skey3.mp4")
-      ..initialize().then((_){
-        setState(() {
 
-        });
-      });
 
-    _controller2=VideoPlayerController.network("${ Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/vedio5.mp41")
-      ..initialize().then((_){
-        setState(() {
-
-        });
-      });
-    _controller = VideoPlayerController.network(
-      '${AppConstants.BASE_URL}/storage/app/public/videos/${widget.pathVideo}',
-    )..initialize().then((_) {
-      setState(() {});
-    });
     if(widget.featureId=="6"){
 
+      _controller = VideoPlayerController.network(
+        '${AppConstants.BASE_URL}/storage/app/public/videos/${widget.pathVideo}',
+      )..initialize().then((_) {
+        setState(() {});
+      });
+
     }else if(widget.featureId=="5"){
-      _controller2.value.isPlaying?_controller2.pause():_controller2.play();
+      _controller1 = VideoPlayerController.network(
+        '${AppConstants.BASE_URL}/storage/app/public/videos/${widget.skyView}',
+      )..initialize().then((_) {
+        setState(() {});
+      });
     }
     else if(widget.featureId=="2"){
 
       _initData();
+      //isStreetViewAvailable(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude));
     }
 
 
 
-    print("-----------------------------${widget.pathVideo}");
+    print("--------------------------+---${widget.estate.latitude}");
 
 
 
@@ -128,17 +125,28 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
 
   Future<bool> isStreetViewAvailable(double latitude, double longitude) async {
-    final apiKey = 'AIzaSyCQD6nS0Jb0KzzGTts-uLXahVh7o4taUPY'; // Replace with your Google Maps API key
+    final apiKey = 'AIzaSyCQD6nS0Jb0KzzGTts-uLXahVh7o4taUP'; // Replace with your Google Maps API key
     final url = 'https://maps.googleapis.com/maps/api/streetview/metadata?location=$latitude,$longitude&key=$apiKey';
 
-    final response = await http.get(Uri.parse(url));
+    try {
+      final response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      // If Street View metadata is available, Street View is likely available
-      return true;
-    } else {
+      if (response.statusCode == 200) {
+        // If Street View metadata is available, Street View is likely available
+        return true;
+      } else if (response.statusCode == 404) {
+        setState(() {
 
-      showCustomSnackBar("not aviale");
+        });
+        showCustomSnackBar("message");
+        // Handle case where Street View metadata is not found
+        return false;
+      } else {
+        // Handle other status codes
+        return false;
+      }
+    } catch (error) {
+      // Handle other errors, e.g., network issues
       return false;
     }
   }
@@ -207,37 +215,27 @@ class _FeatureScreenState extends State<FeatureScreen> {
                   width: Dimensions.WEB_MAX_WIDTH,
                   child:WebViewScreen(  url: widget.path),
                 ),
-              ):widget.featureId=="3"?Column(
-                children: [
-                  Get.find<AuthController>().isLoggedIn() ?    Expanded(
-                    child: streetViewAvailable
-                        ?  FlutterGoogleStreetView(
-              initSource: StreetViewSource.outdoor,
-                  // initBearing: 30,
-                  zoomGesturesEnabled: false,
-                  initPos:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)),
-                  onStreetViewCreated: (StreetViewController controller) async {
-                    //save controller for late using
-                    streetViewController = controller;
-                    controller.animateTo(
-                        duration: 3000,
-                        camera: StreetViewPanoramaCamera(
-                            bearing: 200, tilt: 3));
+              ):widget.featureId=="3"? SafeArea(
+                child: Center(
+                  child: FlutterGoogleStreetView(
+                      initSource: StreetViewSource.outdoor,
+                      // initBearing: 30,
+                      zoomGesturesEnabled: false,
+                      initPos:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)),
+                      onStreetViewCreated: (StreetViewController controller) async {
+                        //save controller for late using
+                        streetViewController = controller;
+                        controller.animateTo(
+                            duration: 3000,
+                            camera: StreetViewPanoramaCamera(
+                                bearing: 200, tilt: 3));
 
 
-                    //change position by controller
-                    controller.setPosition(position:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)));
-                  }
-              )
-
-                        : Center(
-                      child: Text(
-                        "Street View is not available for this location.",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ): NotLoggedInScreen(),
-                ],
+                        //change position by controller
+                        controller.setPosition(position:LatLng(double.parse(widget.estate.latitude),double.parse(widget.estate.longitude)));
+                      }
+                  ),
+                ),
               ):widget.featureId=="4"?Container(
                 width: Dimensions.WEB_MAX_WIDTH,
                 padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
@@ -286,29 +284,79 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
 
                 ]),
-              ):widget.featureId=="6"?Container(
-                child: Center(
-                  child: widget.pathVideo == ""||widget.pathVideo ==null
-                    ? NoDataScreen(
-                    text: 'no_data_available',
-                  )// Display a message when video path is null
-                      : _controller.value.isInitialized
-                      ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                      : CircularProgressIndicator(),
-                )
-              ):widget.featureId=="5"? Container(
+              ):widget.featureId=="6"?Stack(
+                children: [
+                  GestureDetector(
+                    onScaleUpdate: (ScaleUpdateDetails details) {
+                      // Scale the video player based on the user's pinch gesture
+                      setState(() {
+                        scale = details.scale.clamp(0.5, 2.0); // Adjust the range as needed
+                      });
+                    },
+                    onDoubleTap: () {
+                      // Double tap to toggle between min and max scale
+                      setState(() {
+                        scale = scale == 1.0 ? 2.0 : 1.0;
+                      });
+                    },
+                    child: Container(
+                      child: Center(
+                        child: widget.pathVideo.isEmpty || widget.pathVideo == "null"
+                            ? NoDataScreen(
+                          text: 'no_data_available',
+                        ) // Display a message when the video path is null
+                            : _controller.value.isInitialized
+                            ? Transform.scale(
+                          scale: scale,
+                          child: AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          ),
+                        )
+                            : CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 16,
+                    left: 16,
+                    child: Row(
+                      children: [
+                        // FloatingActionButton(
+                        //   onPressed: () {
+                        //     // Minimize action
+                        //     setState(() {
+                        //       scale = 0.5; // Set the desired minimum scale
+                        //     });
+                        //   },
+                        //   child: Icon(Icons.remove),
+                        // ),
+                        // SizedBox(width: 16),
+                        // FloatingActionButton(
+                        //   onPressed: () {
+                        //     // Maximize action
+                        //     setState(() {
+                        //       scale = 2.0; // Set the desired maximum scale
+                        //     });
+                        //   },
+                        //   child: Icon(Icons.add),
+                        // ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            :widget.featureId=="5"? Container(
+                color: Colors.black,
             child:Center(
-              child: widget.pathVideo == ""
+              child: widget.skyView == "null"
                   ? NoDataScreen(
-                text: 'no_data_available',
+                text: 'no_data_available'.tr,
               ) // Display a message when video path is null
-                  : _controller.value.isInitialized
+                  : _controller1.value.isInitialized
                   ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
+                aspectRatio: _controller1.value.aspectRatio,
+                child: VideoPlayer(_controller1),
               )
                   : CircularProgressIndicator(),
             ),
@@ -343,6 +391,38 @@ class _FeatureScreenState extends State<FeatureScreen> {
                     _controller.pause();
                   }
                   _controller.seekTo(Duration.zero);
+                });
+              },
+              child: Icon(Icons.stop),
+            ),
+
+
+          ],
+        ):widget.featureId=="5"?Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  if (_controller1.value.isPlaying) {
+                    _controller1.pause();
+                  } else {
+                    _controller1.play();
+                  }
+                });
+              },
+              child: Icon(
+                _controller1.value.isPlaying ? Icons.pause : Icons.play_arrow,
+              ),
+            ),
+            SizedBox(height: 16),
+            FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  if (_controller1.value.isPlaying) {
+                    _controller1.pause();
+                  }
+                  _controller1.seekTo(Duration.zero);
                 });
               },
               child: Icon(Icons.stop),

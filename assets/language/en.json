@@ -151,7 +151,7 @@
   "you_can_tour_the_property_with": "You can tour the property with high quality through the virtual tour feature, as it shows you the 3D perspective and the street view.\nLet the vision be from the inside and the outside.You can tour the property with high quality through the virtual tour feature, as it shows you the 3D perspective and the street view.\nLet the vision be from the inside and the outside.",
   "complete_the_process": "Complete the process",
   "thanks": "Thanks",
-  "added_successfully": "The property has been added successfully",
+  "added_successfully": "The property has been  successfully",
   "attach_video": "You can attach a video of the show",
   "download_video": "download_video",
   "i_don_t_want_upload": "I don't want to upload a video",
@@ -202,7 +202,18 @@
   "all": "all",
   "there_is_no_virtual_tour": "There is no virtual tour",
   "currency": "SAR",
-  "document_number": "document number"
+  "document_number": "document number",
+  "enter_virtual_tour_link": "Enter the virtual tour link",
+  "do_you_really_want_to_delete_this_offer": "Do you really want to delete this offer?",
+  "you_will_remove_all_your_information_from_the_offer": "You will remove your information from the offer",
+  "no_data_available": "no data available",
+  "video_drone": "If you have a video drone, upload  it from here",
+  "confirm": "confirm",
+  "update": "update",
+  "advertiser_phone": "advertiser phone",
+  "done": "done",
+  "the_operation_failed_try_again": "The operation failed, try again"
+
 
 
 }

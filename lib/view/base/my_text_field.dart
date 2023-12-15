@@ -23,6 +23,8 @@ class MyTextField extends StatefulWidget {
   final bool showBorder;
   final double size;
 
+  bool multiLine;
+
   MyTextField(
       {this.hintText = '',
         this.controller,
@@ -41,6 +43,7 @@ class MyTextField extends StatefulWidget {
         this.autoFocus = false,
         this.showBorder = false,
         this.size,
+        this.multiLine=false,
         this.key});
 
   @override
@@ -60,6 +63,7 @@ class _MyTextFieldState extends State<MyTextField> {
         controller: widget.controller,
         focusNode: widget.focusNode,
         style:TextStyle(fontSize:widget.size),
+
 
         textInputAction: widget.inputAction,
         keyboardType: widget.inputType,

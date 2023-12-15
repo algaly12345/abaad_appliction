@@ -84,6 +84,7 @@ class Estate {
   String categoryNameAr;
   String  zoneNameAr;
   String property_type;
+  String skyView;
 
 
 
@@ -138,7 +139,8 @@ class Estate {
     this.categoryNameAr,
     this.zoneName,
     this.zoneNameAr,
-    this.property_type
+    this.property_type,
+    this.skyView
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -225,6 +227,7 @@ class Estate {
     categoryNameAr=json["category_name_ar"];
     categoryName=json['category_name'];
     property_type= json['property_type'];
+    skyView=json["skyview"];
 
 
 
@@ -303,6 +306,7 @@ class Estate {
     data["category_name_ar"]=this.categoryNameAr;
     data["zone_name_ar"]=this.zoneNameAr;
     data['property_type']=this.property_type;
+    data['skyview']=this.skyView;
 
     return data;
   }

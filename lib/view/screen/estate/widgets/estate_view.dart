@@ -130,7 +130,7 @@ class _EstateViewState extends State<EstateView> {
                                        .configModel
                                        .baseUrls
                                        .estateImageUrl}/${widget.estate
-                                       .images[0] ?? ''}",
+                                        .images[0] ?? ''}",
                                        widget.estate.id.toString());
                                  }else {
                                    buildDynamicLinks(widget.estate.title, "",
@@ -235,7 +235,7 @@ class _EstateViewState extends State<EstateView> {
                             Get.toNamed(RouteHelper.getFeatureRoute(
                                 widget.estate.id, "${sampleData[index].id}",
                                 widget.estate.arPath,widget.estate.videoUrl, widget.estate.latitude,
-                                widget.estate.longitude));
+                                widget.estate.longitude,widget.estate.skyView));
                           // }
                         });
                       },

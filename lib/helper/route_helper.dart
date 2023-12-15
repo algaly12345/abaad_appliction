@@ -20,6 +20,7 @@ import 'package:abaad/view/screen/estate/add_estate_screen.dart';
 import 'package:abaad/view/screen/estate/confiram_screen.dart';
 import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
 import 'package:abaad/view/screen/estate/estate_details.dart';
+import 'package:abaad/view/screen/estate/success_screen2.dart';
 import 'package:abaad/view/screen/estate/web_view_screen.dart';
 import 'package:abaad/view/screen/estate/widgets/feature_item_view.dart';
 import 'package:abaad/view/screen/html/html_viewer_screen.dart';
@@ -29,6 +30,7 @@ import 'package:abaad/view/screen/map/map_screen.dart';
 import 'package:abaad/view/screen/map/pick_map_screen.dart';
 import 'package:abaad/view/screen/notification/notification_screen.dart';
 import 'package:abaad/view/screen/onboard/on_boarding_page.dart';
+import 'package:abaad/view/screen/profile/edit_dilog.dart';
 import 'package:abaad/view/screen/profile/profile_screen.dart';
 import 'package:abaad/view/screen/profile/update_profile_screen.dart';
 import 'package:abaad/view/screen/splash/splash_screen.dart';
@@ -71,6 +73,9 @@ class RouteHelper {
   static const String webview = '/webview';
   static const String support = '/help-and-support';
   static const String payment = '/payment';
+  static const String sucess2 = '/success';
+
+  static const String editEstate = '/edite-estate';
 
 
 
@@ -107,7 +112,7 @@ class RouteHelper {
   static String getDetailsRoute(int id) => '$estate?id=$id';
   // static String getWebViewRoute(String ar_path) => 'ar_path=$webview';
   static String getWebViewRoute(String page) => '$webview?url=$page';
-  static String getFeatureRoute(int id,String  featureId ,String path,String video_path, String latitude, String longitude ) => '$feature?id=$id&feature_id=$featureId&path=$path&path_video=$video_path&latitude=$latitude&longitude=$longitude';
+  static String getFeatureRoute(int id,String  featureId ,String path,String video_path, String latitude, String longitude ,String sky_view) => '$feature?id=$id&feature_id=$featureId&path=$path&path_video=$video_path&latitude=$latitude&longitude=$longitude&sky_view=$sky_view';
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
   static String getAddEstateRoute() => '$addEstate';
@@ -116,6 +121,16 @@ class RouteHelper {
   static String getBusinessPlanRoute(int restaurantId) => '$businessPlan?id=$restaurantId';
 
   static String getPaymentRoute(int id) => '$payment?id=$id';
+
+  static String getSuccesstRoute(int id) => '$sucess2?id=$id';
+
+  static String getEditEstatRoute(Estate estate) {
+    String data = base64Url.encode(utf8.encode(jsonEncode(estate.toJson())));
+    return '$editEstate?item=$data';
+  }
+
+
+
 
   static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id,String link}) {
     String _notificationBody = 'null';
@@ -214,8 +229,15 @@ class RouteHelper {
       return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])) ,);
     }),
 
+
+
+
+    GetPage(name: editEstate, page: () => EditDialog(
+      estate: Estate.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['item'].replaceAll(' ', '+'))))),
+    )),
+
     GetPage(name: feature, page: () {
-      return Get.arguments ?? FeatureScreen(estate: Estate(id: int.parse(Get.parameters['id']),latitude:Get.parameters['latitude'],longitude: Get.parameters['longitude']),featureId:Get.parameters['feature_id'],path:Get.parameters['path'] ,pathVideo:Get.parameters['path_video']);
+      return Get.arguments ?? FeatureScreen(estate: Estate(id: int.parse(Get.parameters['id']),latitude:Get.parameters['latitude'],longitude: Get.parameters['longitude']),featureId:Get.parameters['feature_id'],path:Get.parameters['path'] ,pathVideo:Get.parameters['path_video'],skyView: Get.parameters['sky_view'],);
     }),
     GetPage(name: businessPlan, page: () => BusinessPlanScreen(estateId: int.parse(Get.parameters['id']))),
    // GetPage(name: categories, page: () =>MapScreen(mainCategory: ZoneModel(id: int.parse(Get.parameters['id'])))),
@@ -225,6 +247,8 @@ class RouteHelper {
     }),
 
     GetPage(name: payment, page: () => SuccessScreen(estate_id: int.parse(Get.parameters['id']),)),
+
+    GetPage(name: sucess2, page: () => SuccessScreen2(estate_id: int.parse(Get.parameters['id']),)),
   ];
 
 

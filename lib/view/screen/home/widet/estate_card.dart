@@ -152,11 +152,18 @@ class PropertyCard extends StatelessWidget {
                       MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Text(
-                            "${estate.price}",
-                            style: robotoBlack.copyWith(fontSize: 14),
+                          child: Row(
+                            children: [
+                              Text(
+                                "${estate.price}",
+                                style: robotoBlack.copyWith(fontSize: 14),
+                              ),
+                              SizedBox(width: 2.0),
+                              Text("currency".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall))
+                            ],
                           ),
                         ),
+
 
 
                         Container(
@@ -302,7 +309,7 @@ class PropertyCard extends StatelessWidget {
                               child: Container(
                                 padding: const EdgeInsets.all(4),
                                 child: Image.asset(
-                                    Images.bathroom, height: 15,
+                                    Images.kitchen, height: 15,
                                     color: Theme.of(context).primaryColor,
                                     width: 15),
                               ),
@@ -404,7 +411,7 @@ class PropertyCard extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.all(6),
                               child: Image.asset(
-                                  Images.bed, height: 20,
+                                  Images.setroom, height: 20,
                                   color: Theme.of(context).primaryColor,
                                   width: 20),
                             ),

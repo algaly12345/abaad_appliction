@@ -6,11 +6,13 @@ import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/app_constants.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,24 +26,30 @@ class VideoTab extends StatefulWidget {
   State<VideoTab> createState() => _VideoTabState();
 }
 class _VideoTabState extends State<VideoTab> {
-   String videoUrl;
-   VideoPlayerController _controller;
+    String videoUrl;
+  //  VideoPlayerController _controller;
   bool isPlaying = true; // Set to true to start video automatically
 
-  @override
+   VideoPlayerController _videoController;
+   FilePickerResult _filePickerResult;
+   double _uploadProgress = 0.0;
+   bool _uploading = false;
+
+
+   @override
   void initState() {
     super.initState();
     // Replace with initial video URL or empty string
     videoUrl =  '${AppConstants.BASE_URL}/storage/app/public/videos/${widget.estate.videoUrl}'; // Load the previously selected video URL here
-    _controller = VideoPlayerController.file(File(videoUrl))
+    _videoController = VideoPlayerController.file(File(videoUrl))
       ..initialize().then((_) {
         setState(() {});
         if (isPlaying) {
-          _controller.play();
+          _videoController.play();
         }
       });
 
-    _controller = VideoPlayerController.network(
+    _videoController = VideoPlayerController.network(
       '${AppConstants.BASE_URL}/storage/app/public/videos/${widget.estate.videoUrl}',
     )..initialize().then((_) {
       setState(() {});
@@ -54,57 +62,117 @@ class _VideoTabState extends State<VideoTab> {
     if (pickedFile != null) {
       setState(() {
         videoUrl = pickedFile.path;
-        _controller = VideoPlayerController.file(File(videoUrl))
+        _videoController = VideoPlayerController.file(File(videoUrl))
           ..initialize().then((_) {
             setState(() {});
             if (isPlaying) {
-              _controller.play();
+              _videoController.play();
             }
           });
       });
     }
   }
 
-  Future<void> updateVideo() async {
-    if (videoUrl.isNotEmpty) {
-      final response = await http.put(
-        Uri.parse('YOUR_LARAVEL_API_ENDPOINT/updateVideo'),
-        body: {'video_url': videoUrl},
-      );
 
-      if (response.statusCode == 200) {
-        // Video URL updated successfully.
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Video updated successfully!')),
-        );
-      } else {
-        // Handle error.
-      }
-    }
-  }
+
+
+
+
+   Future<void> pickAndPreviewVideo() async {
+
+     FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.video);
+
+     if (result != null) {
+       setState(() {
+         _filePickerResult = result;
+         _videoController = VideoPlayerController.file(File(result.files.single.path))
+           ..initialize().then((_) {
+             setState(() {});
+           });
+       });
+     }
+   }
+
+
+   Future<void> uploadVideo(String  id ) async {
+
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+     if (_filePickerResult != null) {
+       String filePath = _filePickerResult.files.single.path;
+       var request = http.MultipartRequest('POST', Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/upload-video'));
+       request.fields['id'] = "${id}";
+       request.files.add(await http.MultipartFile.fromPath('video', filePath));
+
+       setState(() {
+         _uploading = true;
+         _uploadProgress = 0.0;
+       });
+       var response = await request.send();
+       response.stream.listen((event) {
+         setState(() {
+           _uploadProgress = response.contentLength != null
+               ? event.length / response.contentLength
+               : 0;
+         });
+       }).onDone(() {
+         setState(() {
+           _uploadProgress = 1.0;
+           _uploading = false;
+         });
+       });
+
+       if (response.statusCode == 200) {
+         // ignore: use_build_context_synchronously
+
+         Future.delayed(Duration(seconds: 2), () {
+
+           Get.snackbar(
+             'Thanks'.tr,
+             'operation_accomplished_successfully'.tr,
+             backgroundColor: Colors.green, // Customize snackbar color
+             colorText: Colors.white, // Customize text color
+             duration: Duration(seconds: 3), // Set duration in seconds
+             snackPosition: SnackPosition.BOTTOM, // Set snackbar position
+             margin: EdgeInsets.all(10), // Set margin around the snackbar
+             isDismissible: true, // Allow dismissing the snackbar with a tap// Dismiss direction
+           );
+           // Get.offAllNamed(RouteHelper.getInitialRoute());
+           // Get.offNamed(RouteHelper.getInitialRoute());
+         });
+
+         Get.find<UserController>().getEstateByUser(1, false,widget.estate.userId);
+       } else {
+         print('Failed to upload video');
+       }
+     } else {
+       print('No video file selected');
+     }
+   }
 
   void toggleVideoPlayback() {
-    if (_controller.value.isPlaying) {
-      _controller.pause();
+    if (_videoController.value.isPlaying) {
+      _videoController.pause();
     } else {
-      _controller.play();
+      _videoController.play();
     }
     setState(() {
-      isPlaying = _controller.value.isPlaying;
+      isPlaying = _videoController.value.isPlaying;
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _videoController.dispose();
+    _videoController?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-          _controller.pause();
+        _videoController.pause();
 
         return true;
       },
@@ -115,56 +183,76 @@ class _VideoTabState extends State<VideoTab> {
             mainAxisAlignment: MainAxisAlignment.center,
 
             children: [
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Container(
+
+              GestureDetector(
+                onTap: (){
+                  pickAndPreviewVideo();
+                },
+                child: _videoController != null && _videoController.value.isInitialized? Container(
+                  height: 230,
+                  width: 230,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 5.0,
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: videoUrl.isNotEmpty
-                        ? VideoPlayerWidget(
-                      videoUrl: videoUrl,
-                      controller: _controller,
-                      isPlaying: isPlaying,
-                    )
-                        : Center(
-                      child: Text('No video'),
+                    border: Border.all(
+                        width: 1.0
+                    ),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(5.0) //                 <--- border radius here
                     ),
                   ),
+                  child: AspectRatio(
+                    aspectRatio: _videoController.value.aspectRatio,
+                    child: VideoPlayer(_videoController),
+                  ),
+                ):
+                Container(
+                  height: 150,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        width: 1.0
+                    ),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(5.0) //                 <--- border radius here
+                    ),
+                  ),
+                  // child: Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: Image.asset(
+                  //     Images.video_place,
+                  //     fit: BoxFit.contain,
+                  //
+                  //
+                  //   ),
+                  // ),
+                ),
+              ),
+              // ElevatedButton(
+              //   onPressed: pickAndPreviewVideo,
+              //   child: Text('Pick and Preview Video'),
+              // ),
+
+              ElevatedButton.icon(
+                onPressed:(){
+                  _uploading ? null : uploadVideo(widget.estate.id.toString());
+                },
+                icon: Icon(Icons.upload_file),  //icon data for elevated button
+                label: Text("download_video".tr), //label text
+                style: ElevatedButton.styleFrom(
+                    primary:Theme.of(context).primaryColor //elevated btton background color
                 ),
               ),
 
-              Container(
-                padding:  EdgeInsets.all(4.0),
-                width: double.infinity,
-                color: Colors.transparent,
-                child: OutlinedButton.icon(
-                    onPressed: pickVideo,
-                    icon:Icon(Icons.drive_folder_upload,color:Theme.of(context).primaryColor ),
-                    label:  Text("upload_images".tr)),
-              ),
-              Padding(
-                padding:  EdgeInsets.all(4.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: updateVideo,
-                      style: ElevatedButton.styleFrom(
-                      primary:Theme.of(context).primaryColor),
-                      child:  Text('browse_and_add_photos'.tr)),),
-              ),
-              ElevatedButton(
-                onPressed: toggleVideoPlayback,
-                child: Text(isPlaying ? 'Pause' : 'Play'),
-              ),
+
+              if (_uploading)
+                Column(
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 8),
+                    Text('loading_video'.tr),
+                  ],
+                ),
+              if (_uploadProgress > 0 && _uploadProgress < 1)
+                LinearProgressIndicator(value: _uploadProgress),
             ],
           ),
         ),
@@ -174,25 +262,25 @@ class _VideoTabState extends State<VideoTab> {
             FloatingActionButton(
               onPressed: () {
                 setState(() {
-                  if (_controller.value.isPlaying) {
-                    _controller.pause();
+                  if (_videoController.value.isPlaying) {
+                    _videoController.pause();
                   } else {
-                    _controller.play();
+                    _videoController.play();
                   }
                 });
               },
               child: Icon(
-                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                _videoController.value.isPlaying ? Icons.pause : Icons.play_arrow,
               ),
             ),
             SizedBox(height: 16),
             FloatingActionButton(
               onPressed: () {
                 setState(() {
-                  if (_controller.value.isPlaying) {
-                    _controller.pause();
+                  if (_videoController.value.isPlaying) {
+                    _videoController.pause();
                   }
-                  _controller.seekTo(Duration.zero);
+                  _videoController.seekTo(Duration.zero);
                 });
               },
               child: Icon(Icons.stop),

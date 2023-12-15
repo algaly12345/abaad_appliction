@@ -350,9 +350,8 @@ class EstateController extends GetxController implements GetxService {
     Response response = await estateRepo.updateEstate(estatetBody);
 
     if (response.statusCode == 200) {
-      print("save estate---------------------------------------------------${response.body}");
-      _isLoading=false;
-      Get.offAllNamed(RouteHelper.getSuccess());
+      Get.offAllNamed(RouteHelper.getProfileRoute());
+      showCustomSnackBar('update_successful'.tr, isError: false);
     } else {
       ApiChecker.checkApi(response);
       print("error estate---------------------------------------------------${response.body}");

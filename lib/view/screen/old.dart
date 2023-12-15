@@ -1,35 +1,81 @@
-import 'package:abaad/view/base/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-class StreetViewDemo extends StatelessWidget {
+import 'package:webview_flutter/webview_flutter.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: CustomButton(
-         buttonText: 'Click to open streetview',
-          onPressed: () {
-            StreetViewer.showStreetView("50.0635836395458", "19.94512172576971", "139.26709247816694", "8.931085777681233");
-          },
-        ),
-      ),
+    return MaterialApp(
+      home: MyHomePage(),
     );
   }
 }
 
+class MyHomePage extends StatelessWidget {
+  TextEditingController _textEditingController = TextEditingController();
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Web View in Dialog Example'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _textEditingController,
+              decoration: InputDecoration(
+                hintText: 'Enter the URL',
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                String url = _textEditingController.text;
+                if (url.isNotEmpty) {
+                  _showWebViewDialog(context, url);
+                } else {
+                  // Handle empty URL input
+                  print('URL is empty');
+                }
+              },
+              child: Text('Open Web View'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-class StreetViewer {
-  static const _platform = const MethodChannel('streetView');
-
-  static Future<void> showStreetView(
-      String lat, String lng, String heading, String pitch) async {
-    final arguments = <String, dynamic>{
-      'latitude': lat,
-      'longitude': lng,
-      'heading': heading,
-      'pitch': pitch,
-    };
-    await _platform.invokeMethod('viewStreetView',arguments);
+  void _showWebViewDialog(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Web View'),
+          content: Container(
+            width: double.maxFinite,
+            height: 300, // Adjust the height as needed
+            child: WebView(
+              initialUrl: url,
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -57,7 +57,8 @@ class EstateRepo {
       "build_space":estate.buildSpace,
       "document_number":estate.documentNumber,
       "ad_number":estate.adNumber,
-      "feature":estate.feature
+      "feature":estate.feature,
+      "ar_path":estate.arPath
 
 
 
@@ -94,7 +95,8 @@ class EstateRepo {
       "street_space":estate.streetSpace,
       "build_space":estate.buildSpace,
       "document_number":estate.documentNumber,
-      "ad_number":estate.adNumber
+      "ad_number":estate.adNumber,
+      "ar_path":estate.arPath
 
 
 

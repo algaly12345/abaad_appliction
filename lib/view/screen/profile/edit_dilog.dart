@@ -27,6 +27,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class EditDialog extends StatefulWidget {
   Estate estate;
@@ -152,6 +153,10 @@ class _EditDialogState extends State<EditDialog> {
   int _djectivePresenter=0;
 
   String _ageValue;
+
+  bool isButtonEnabled = false;
+
+  TextEditingController _textEditingController = TextEditingController();
   _onSelected(int index) {
     setState(() => _selectedRoomIndex = index);
   }
@@ -240,7 +245,7 @@ class _EditDialogState extends State<EditDialog> {
 
     // input.split('').forEach((ch) => print(ch));
 
-    print("----------------------------categore${widget.estate.ageEstate}");
+    print("----------------------------categore${widget.estate.longDescription}");
     // zone_id=widget.estate.zoneId;
    // widget.estate.priceNegotiation=="غير قابل للتفاوض"?   isSelected2.first=false: widget.estate.priceNegotiation=="قابل للتفاوض"? isSelected2.first=true:true;
 
@@ -258,6 +263,7 @@ class _EditDialogState extends State<EditDialog> {
       _longDescController.text = widget.estate.longDescription ?? '';
       _spaceController.text =  widget.estate.space ?? '';
       _documentNumberController.text =  widget.estate.documentNumber?? '';
+      _textEditingController.text =  widget.estate.arPath?? '';
       images=widget.estate.images;
       city=widget.estate.city;
       district=widget.estate.districts;
@@ -277,7 +283,8 @@ class _EditDialogState extends State<EditDialog> {
   Widget build(BuildContext context) {
     bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
-
+    final currentLocale = Get.locale;
+    bool isArabic = currentLocale?.languageCode == 'ar';
     return Scaffold(
 
       body: SingleChildScrollView(
@@ -403,7 +410,7 @@ class _EditDialogState extends State<EditDialog> {
                            items: restController.categoryIds.map((int value) {
                              return DropdownMenuItem<int>(
                                value: restController.categoryIds.indexOf(value),
-                               child: Text(value != 0 ? restController.categoryList[(restController.categoryIds.indexOf(value)-1)].name : 'Select'),
+                               child: isArabic?Text(value != 0 ? restController.categoryList[(restController.categoryIds.indexOf(value)-1)].nameAr : 'Select'):Text(value != 0 ? restController.categoryList[(restController.categoryIds.indexOf(value)-1)].name   : 'Select'),
                              );
                            }).toList(),
                            onChanged: (int value) {
@@ -482,7 +489,7 @@ class _EditDialogState extends State<EditDialog> {
                                    value: 1,
                                  ),
                                  Text(
-                                   "قابل للتفاوض",
+                                   "negotiate".tr,
                                    style: robotoRegular.copyWith(
                                        fontSize: Dimensions.fontSizeSmall),
                                  ),
@@ -512,7 +519,7 @@ class _EditDialogState extends State<EditDialog> {
                                    value: 2,
                                  ),
                                  Text(
-                                   "غير قابل للتفاوض",
+                                   "non_negotiable".tr,
                                    style: robotoRegular.copyWith(
                                        fontSize: Dimensions.fontSizeSmall),
                                  ),
@@ -669,7 +676,7 @@ class _EditDialogState extends State<EditDialog> {
                     items: locationController.zoneIds==null?Container():locationController.zoneIds.map((int value) {
                       return DropdownMenuItem<int>(
                         value: locationController.zoneIds.indexOf(value),
-                        child: Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name : 'حدد المنطقة'),
+                        child: isArabic?Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].nameAr : 'حدد المنطقة'):Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name   : 'select zone'),
                       );
                     }).toList(),
                     onChanged: (int value) {
@@ -1625,8 +1632,60 @@ class _EditDialogState extends State<EditDialog> {
                               ),
                             ),
                           ),
+
+
+
                         ],
                       ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                      Row(children: [
+                        Expanded(
+
+                            child:Column(children: [
+
+                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              MyTextField(
+                                hintText: 'enter_virtual_tour_link'.tr,
+                                size: 20,
+                                controller: _textEditingController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isButtonEnabled = value.isNotEmpty;
+                                  });
+                                },
+                                inputType: TextInputType.text,
+                                showBorder: true,
+
+                                capitalization: TextCapitalization.words,
+                              ),
+                            ],)
+                        ),
+
+
+
+
+                        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                        Container(
+                          height: 70,
+                          padding: EdgeInsets.only(
+                              right: 4, left: 4, top: 16,bottom: 4),
+                          child:    ElevatedButton(
+                            onPressed: isButtonEnabled
+                                ? () {
+                              String url = _textEditingController.text;
+                              if (url.isNotEmpty) {
+                                _showWebViewDialog(context, url);
+                              } else {
+                                // Handle empty URL input
+                                print('URL is empty');
+                              }
+                            }
+                                : null,
+                            child: Text('View'),
+                          ),
+                        ),
+
+                      ]),
                       CustomButton(
                         onPressed: () async {
 
@@ -1680,7 +1739,7 @@ class _EditDialogState extends State<EditDialog> {
                                   shortDescription: _shortDesc,
                                   categoryId:category_id.toString(),
                                   ageEstate: _ageValue,
-                                  arPath: "",
+                                  arPath: _textEditingController.text,
                                    districts:  locationController.pickPosition.longitude==0.0?widget.estate.districts:locationController.district.toString(),
                                   floors: "4545",
                                   latitude: locationController.pickPosition.latitude==0.0?widget.estate.latitude:locationController.pickPosition.latitude.toString(),
@@ -1744,6 +1803,32 @@ class _EditDialogState extends State<EditDialog> {
 
 
 
+  void _showWebViewDialog(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Web View'),
+          content: Container(
+            width: double.maxFinite,
+            height: 300, // Adjust the height as needed
+            child: WebView(
+              initialUrl: url,
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
   void _checkPermission(Function onTap) async {
