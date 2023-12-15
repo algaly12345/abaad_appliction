@@ -221,9 +221,11 @@ class _SignInScreenState extends State<SignInScreen> {
     }
     if (_phone.isEmpty) {
       showCustomSnackBar('enter phone number'.tr);
-    }else if (!_isValid) {
-      showCustomSnackBar('invalid phone number'.tr);
-    }else {
+    }
+    // else if (!_isValid) {
+    //   showCustomSnackBar('invalid phone number'.tr);
+    // }
+    else {
       authController.login(_numberWithCountryCode, "1234567").then((status) async {
         if (status.isSuccess) {
           if (authController.isActiveRememberMe) {
