@@ -210,5 +210,7 @@
   "update": "تحديث",
   "advertiser_phone": "رقم جوال المعلن",
   "done": "انهاء",
-  "the_operation_failed_try_again": "فشلت العملية حاول من جديد"
+  "the_operation_failed_try_again": "فشلت العملية حاول من جديد",
+  "offers": "العروض",
+  "expiry_date": "تاريخ الإنتهاء"
 }

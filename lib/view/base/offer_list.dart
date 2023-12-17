@@ -26,13 +26,257 @@ class _OfferListState extends State<OfferList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:  CustomAppBar(title: 'العروض'),
+        appBar:  CustomAppBar(title: 'offers'.tr),
         body: ListView.builder(
         physics: BouncingScrollPhysics(),
     itemCount:  widget.estate.serviceOffers.length,
     scrollDirection: Axis.vertical,
     itemBuilder: (context, index) {
-      return    Padding(
+      return   Card(
+        // Define the shape of the card
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        // Define how the card's content should be clipped
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        // Define the child widget of the card
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Add padding around the row widget
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // Add an image widget to display an image
+              GetBuilder<SplashController>(builder: (splashController) {
+                String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+                //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
+                return ClipOval(
+                  child: CustomImage(
+                    image: '$_baseUrl/${widget.estate.serviceOffers[index].image}',
+                    fit: BoxFit.cover,
+                    height: 50,
+                    width: 50,
+                  ),
+                );
+              },
+              ),
+
+                  // Add some spacing between the image and the text
+                  Container(width: 20),
+                  // Add an expanded widget to take up the remaining horizontal space
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        // Add some spacing between the top of the card and the title
+                        Container(height: 5),
+                        // Add a title widget
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${ widget.estate.serviceOffers[index].title}",
+                              style:  robotoBlack.copyWith(fontSize: 10,color: Colors.red),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.phone_callback),
+                              color: Colors.green,
+                              onPressed:()=>Get.dialog(
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child: Material(
+                                            child: Column(
+                                              children: [
+                                                const SizedBox(height: 10),
+
+                                                const SizedBox(height: 15),
+                                                const Text(
+                                                  "تواصل مع مقدم الخدمة",
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                const SizedBox(height: 25),
+                                                //Buttons
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child:GestureDetector(
+
+                                                        onTap:(){
+                                                          buildDynamicLinks(widget.estate.title, "${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}", widget.estate.id.toString(),widget.estate.serviceOffers[index].phoneProvider);
+                                                        },
+                                                        child: Container(
+                                                          padding: const EdgeInsets.symmetric(
+                                                              horizontal: 5, vertical: 5),
+                                                          decoration: const BoxDecoration(
+                                                              color: Color(0xfff5f8fd),
+                                                              borderRadius:
+                                                              BorderRadius.all(Radius.circular(20)),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  //Created this shadow for looking elevated.
+                                                                  //For creating like a card.
+                                                                    color: Colors.black12,
+                                                                    offset: Offset(0.0,
+                                                                        18.0), // This offset is for making the the lenght of the shadow and also the brightness of the black color try seeing it by changing its values.
+                                                                    blurRadius: 15.0),
+                                                                BoxShadow(
+                                                                    color: Colors.black12,
+                                                                    offset: Offset(0.0, -04.0),
+                                                                    blurRadius: 10.0),
+                                                              ]),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .center, // I had added main axis allignment to be center to make to be at the center.
+                                                            children: [
+                                                              Icon(Icons.whatsapp),
+                                                              const SizedBox(width: 3),
+                                                              Text(
+                                                                "واتساب",
+                                                                style: TextStyle(
+                                                                    fontSize: 16,
+                                                                    color: Colors.deepPurpleAccent,
+                                                                    fontWeight: FontWeight.w700),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child:GestureDetector(
+                                                        onTap:() async{
+                                                          openDialPad(widget.estate.serviceOffers[index].phoneProvider);
+                                                        },
+                                                        child: Container(
+                                                          padding: const EdgeInsets.symmetric(
+                                                              horizontal: 5, vertical: 5),
+                                                          decoration: const BoxDecoration(
+                                                              color: Color(0xfff5f8fd),
+                                                              borderRadius:
+                                                              BorderRadius.all(Radius.circular(20)),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  //Created this shadow for looking elevated.
+                                                                  //For creating like a card.
+                                                                    color: Colors.black12,
+                                                                    offset: Offset(0.0,
+                                                                        18.0), // This offset is for making the the lenght of the shadow and also the brightness of the black color try seeing it by changing its values.
+                                                                    blurRadius: 15.0),
+                                                                BoxShadow(
+                                                                    color: Colors.black12,
+                                                                    offset: Offset(0.0, -04.0),
+                                                                    blurRadius: 10.0),
+                                                              ]),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .center, // I had added main axis allignment to be center to make to be at the center.
+                                                            children: [
+                                                              Icon(Icons.call),
+                                                              const SizedBox(width: 3),
+                                                              Text(
+                                                                "إتصال",
+                                                                style: TextStyle(
+                                                                    fontSize: 16,
+                                                                    color: Colors.deepPurpleAccent,
+                                                                    fontWeight: FontWeight.w700),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        // Add some spacing between the title and the subtitle
+                        Container(height: 5),
+                        // Add a subtitle widget
+                        Row(
+                          children: [
+                            widget. estate.serviceOffers[index].servicePrice!=null?Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)):Text("discount".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                            SizedBox(width: 11.0),
+                            widget.estate.serviceOffers[index].discount!=null?  SizedBox(
+                              height: 16,
+                              width: 44,
+                              child: CustomPaint(
+                                painter: PriceTagPaint(),
+                                child: Center(
+                                  child: Text(
+                                      "${widget.estate.serviceOffers[index].discount}%",
+                                      style: robotoBlack.copyWith(fontSize: 10,color: Colors.white)
+                                  ),
+                                ),
+                              ),
+                            ):Text(" ${widget.estate.serviceOffers[index].servicePrice} ريال "  ,style: robotoBlack.copyWith(fontSize: 11)),
+                          ],
+                        ),
+                        // Add some spacing between the subtitle and the text
+                        Container(height: 10),
+                        // Add a text widget to display some text
+                        Text(
+                        "${widget.estate.serviceOffers[index].description}",
+                          maxLines: 2,
+                          style: robotoBlack.copyWith(fontSize: 10,color: Colors.black38),
+                        ),
+
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "expiry_date".tr,
+                              style:  robotoBlack.copyWith(fontSize: 10,color: Colors.red),
+                            ),
+                            SizedBox(width: 10,),
+                            Text(
+                              "${widget.estate.serviceOffers[index].expiryDate}",
+                              style:  robotoBlack.copyWith(fontSize: 10,color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+
+
+        Padding(
         padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
         child: Card(
           color: Colors.white,

@@ -212,7 +212,9 @@
   "update": "update",
   "advertiser_phone": "advertiser phone",
   "done": "done",
-  "the_operation_failed_try_again": "The operation failed, try again"
+  "the_operation_failed_try_again": "The operation failed, try again",
+  "offers": "offers",
+  "expiry_date": "Expiry date"
 
 
 
