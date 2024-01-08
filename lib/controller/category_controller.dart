@@ -68,6 +68,11 @@ class CategoryController extends GetxController implements GetxService {
   Estate get estate => _estate;
 
 
+
+
+  List<OtherAdvantages> advanLists = []; // Assuming you have a list of OtherAdvantages
+  List<bool> advanSelectedLists = []; // Initial
+
   Future<void> getCategoryList(bool reload) async {
 
     if(_categoryList == null || reload) {
@@ -177,6 +182,12 @@ class CategoryController extends GetxController implements GetxService {
     update();
   }
 
+
+  void updateAdvantSelection(int index) {
+    _advanSelectedList[index] = !_advanSelectedList[index];
+    update();
+  }
+
   void setRestaurant(bool isRestaurant) {
     _isEstates = isRestaurant;
     update();
@@ -246,4 +257,9 @@ class CategoryController extends GetxController implements GetxService {
   String getNameCityIndex() {
     return _nameCityIndex;
   }
+
+
+
+  // Method to toggle the selection of an advantage
+
 }

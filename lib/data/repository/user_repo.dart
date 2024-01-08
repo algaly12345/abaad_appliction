@@ -30,7 +30,7 @@ class UserRepo {
   }
 
   Future<Response>  getEstateList(int offset, String filterBy,int userId) async {
-    return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}/al*l?offset=$offset&user_id=$userId');
+    return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}/all?offset=$offset&user_id=$userId');
   }
 
 }

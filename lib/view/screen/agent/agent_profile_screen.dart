@@ -308,41 +308,18 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                 ],
               ),
             ),
-            mainWidget: SingleChildScrollView(physics: BouncingScrollPhysics(), child: Center(child: Container(
+            mainWidget: Scrollbar( child: Center(child:ListView.builder(
+              physics: BouncingScrollPhysics(),
+              itemCount:  restController.estateModel.estates.length,
+              scrollDirection: Axis.vertical,
 
-              width: Dimensions.WEB_MAX_WIDTH, color: Theme.of(context).cardColor,
-
-              child: Column(children: [
-
-
-
-                Container(
-                  height: 600,
-                  child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount:  restController.estateModel.estates.length,
-                    scrollDirection: Axis.vertical,
-
-                    itemBuilder: (context, index) {
-                      return  GetBuilder<EstateController>(builder: (wishController) {
-                        return  EstateItem(estate: restController.estateModel.estates[index],onPressed: (){
-                          Get.toNamed(RouteHelper.getDetailsRoute( restController.estateModel.estates[index].id));
-                        },fav: false,isMyProfile: widget.isMyProfile);
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_LARGE : 0),
-
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text('${'version'.tr}:', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Text(AppConstants.APP_VERSION.toString(), style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall)),
-
-
-                ]),
-
-              ]),
+              itemBuilder: (context, index) {
+                return  GetBuilder<EstateController>(builder: (wishController) {
+                  return  EstateItem(estate: restController.estateModel.estates[index],onPressed: (){
+                    Get.toNamed(RouteHelper.getDetailsRoute( restController.estateModel.estates[index].id));
+                  },fav: false,isMyProfile: widget.isMyProfile);
+                });
+              },
             ))),
 
           ),

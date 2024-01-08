@@ -1040,35 +1040,45 @@ class _DettailsDilogState extends State<DettailsDilog> {
               ),
             ),
             CustomButton(
-              onPressed: () async{
-          //      buildDynamicLinks(widget.estate.title, "${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}", widget.estate.id.toString());
-                String url = "https://abaad.page.link";
-                final DynamicLinkParameters parameters = DynamicLinkParameters(
-                  uriPrefix: url,
-                  link: Uri.parse('$url/${widget.estate.id.toString()}'),
-                  androidParameters: AndroidParameters(
-                    packageName: "sa.pdm.abaad.abaad",
-                    minimumVersion: 0,
-                  ),
-                  iosParameters: IosParameters(
-                    bundleId: "Bundle-ID",
-                    minimumVersion: '0',
-                  ),
-                  // socialMetaTagParameters: SocialMetaTagParameters(
-                  //     description: '',
-                  //     imageUrl:
-                  //     Uri.parse("${Get.find<SplashController>().configModel.baseUrls.estateImageUrl}/${widget.estate.images[0]}"),
-                  //     title: widget.estate.title),
-                );
-                final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+              onPressed: () async {
+                try {
+                  String url = "https://abaadapp.page.link";
+                  final DynamicLinkParameters parameters = DynamicLinkParameters(
+                    uriPrefix: url,
+                    link: Uri.parse('$url/${widget.estate.id.toString()}'),
+                    androidParameters: AndroidParameters(
+                      packageName: "sa.pdm.abaad.abaad",
+                      minimumVersion: 0,
+                    ),
+                    iosParameters: IosParameters(
+                      bundleId: "Bundle-ID",
+                      minimumVersion: '0',
+                    ),
+                  );
 
-                String desc = '${dynamicUrl.shortUrl.toString()}';
-                await Get.toNamed(RouteHelper.getChatRoute(
-                    notificationBody: NotificationBody(orderId: widget.estate.id, restaurantId: widget.estate.userId),
-                    user: Userinfo(id:  widget.estate.userId, name:widget.estate.users.name ,  image: widget.estate.users.image ),estate_id: widget.estate.id,link: desc
+                  final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+                  String desc = '${dynamicUrl.shortUrl.toString()}';
 
-                ));
+                  await Get.toNamed(RouteHelper.getChatRoute(
+                    notificationBody: NotificationBody(
+                      orderId: widget.estate.id,
+                      restaurantId: widget.estate.userId,
+                    ),
+                    user: Userinfo(
+                      id: widget.estate.userId,
+                      name: widget.estate.users.name,
+                      image: widget.estate.users.image,
+                    ),
+                    estate_id: widget.estate.id,
+                    link: desc,
+                  ));
+                } catch (e) {
+                  print("Error building short dynamic link: $e");
+                  // Handle the error as needed, e.g., show an error message to the user.
+                }
               },
+
+
               buttonText: 'contact_the_advertiser'.tr,
             ),
           ],

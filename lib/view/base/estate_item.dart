@@ -324,7 +324,7 @@ estate.category!="5"?     estate.property  != null ?Center(
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   child: Image.asset(
-                      Images.bathroom, height: 15,
+                      Images.kitchen, height: 15,
                       color: Theme.of(context).primaryColor,
                       width: 15),
                 ),

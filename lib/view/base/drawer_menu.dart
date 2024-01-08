@@ -31,12 +31,20 @@ class DrawerMenu extends StatelessWidget {
 
               UserAccountsDrawerHeader(
                 accountName:  Text(
-                  _isLoggedIn ? '${userController.userInfoModel.phone}' : 'guest'.tr,
+                  _isLoggedIn ? '${userController.userInfoModel.name}' : 'guest'.tr,
                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge,color:  Colors.grey), ),
 
-                accountEmail:   Text(
-                  _isLoggedIn ? '${userController.userInfoModel.phone}' : 'guest'.tr,
-                  style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.grey),
+                accountEmail:   Row(
+                  children: [
+                    Text(
+                      _isLoggedIn ? 'advertiser_no'.tr : 'guest'.tr,
+                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.grey),
+                    ),
+                    Text(
+                      _isLoggedIn ? '${userController.userInfoModel.advertiserNo}' : 'guest'.tr,
+                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.grey),
+                    ),
+                  ],
                 ),
                 onDetailsPressed: (){
                   Get.toNamed(RouteHelper.getProfileRoute());
@@ -59,6 +67,7 @@ class DrawerMenu extends StatelessWidget {
                 if(userController.userInfoModel==null){
                   Get.toNamed(RouteHelper.getProfileRoute());
                 }else{
+
                   Get.find<UserController>().getUserInfoByID(userController.userInfoModel.id );
                   Get.find<UserController>().getEstateByUser(1, false,userController.userInfoModel.id );
                   Get.toNamed(RouteHelper.getProfileRoute());

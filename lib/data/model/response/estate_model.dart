@@ -267,6 +267,7 @@ class Estate {
     data['territory_id'] = this.territoryId;
     data['age_estate'] = this.ageEstate;
     data['short_description'] = this.shortDescription;
+    data['long_description'] = this.longDescription;
     data['floors'] = this.floors;
     data['near'] = this.near;
     data['created_at'] = this.createdAt;
@@ -468,13 +469,16 @@ class NetworkType {
 
 
 class OtherAdvantages {
+
   String name;
 
 
-  OtherAdvantages({this.name});
+
+  OtherAdvantages({this.name });
 
   OtherAdvantages.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+
 
   }
 

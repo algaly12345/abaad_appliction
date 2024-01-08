@@ -20,6 +20,7 @@ import 'package:abaad/view/base/data_view.dart';
 import 'package:abaad/view/base/my_text_field.dart';
 import 'package:abaad/view/screen/map/pick_map_screen.dart';
 import 'package:abaad/view/screen/map/widget/permission_dialog.dart';
+import 'package:abaad/view/screen/qr.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,6 +29,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class EditDialog extends StatefulWidget {
   Estate estate;
@@ -44,6 +48,10 @@ class _EditDialogState extends State<EditDialog> {
   bool _isLoggedIn;
   String like;
   int zone_id=0;
+
+  List<String> selectedAdvantages = [];
+ // List<String> alreadySelectedAdvantages = [];
+  bool isLoading = false;
 
   int zone_value=0;
   var isSelected2 = [true, false];
@@ -152,6 +160,8 @@ class _EditDialogState extends State<EditDialog> {
   int _selectedkitchen=0;
   int _djectivePresenter=0;
 
+
+
   String _ageValue;
 
   bool isButtonEnabled = false;
@@ -197,6 +207,8 @@ class _EditDialogState extends State<EditDialog> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+
     _isLoggedIn = Get.find<AuthController>().isLoggedIn();
     Get.find<CategoryController>().getFacilitiesList(true);
     Get.find<UserController>().getEstateByUser(1, false,widget.estate.userId );
@@ -240,7 +252,7 @@ class _EditDialogState extends State<EditDialog> {
     // }
 
 
-
+ 
     // north_st=widget.estate.interface[0].name;
     // west_st=widget.estate.interface[1].name;
 
@@ -280,8 +292,26 @@ class _EditDialogState extends State<EditDialog> {
     }
 
   }
+
+
+
+
+
+
+
+  bool _isAlreadySelected(String advantageName) {
+    return widget.estate.otherAdvantages.contains(advantageName);
+  }
+
+  bool _isAnyAlreadySelected(List<String> advantageNames) {
+    return advantageNames.any((name) => widget.estate.otherAdvantages.contains(name));
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
+
     bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
     final currentLocale = Get.locale;
@@ -311,7 +341,11 @@ class _EditDialogState extends State<EditDialog> {
 
 
     GetBuilder<EstateController>(builder: (restController) {
-
+      void updateColorBack(int index) {
+        setState(() {
+          categoryController.advanSelectedList[index] = !    Get.find<CategoryController>().advanSelectedList[index];
+        });
+      }
              return (restController.categoryList != null &&   restController.isLoading==false)? Container(
                padding: const EdgeInsets.only(right: 7.0,left: 7.0),
                child:    GetBuilder<LocationController>(builder: (locationController) {
@@ -713,7 +747,7 @@ class _EditDialogState extends State<EditDialog> {
 
 
                             if( zone_id==0){
-                              showCustomSnackBar('حدد المنطقة'.tr);
+                          //    showCustomSnackBar('حدد المنطقة'.tr);
                             }else{
                               Get.toNamed(
                                 RouteHelper.getPickMapRoute('add-address', false),
@@ -1442,6 +1476,49 @@ class _EditDialogState extends State<EditDialog> {
                             ExpansionTile(
                               title: const Text("إضافة تغطية"), //add icon//children padding
                               children: [
+
+                                Container(
+                                  height: 50,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: widget.estate.networkType.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(4),
+                                                side: BorderSide(color: Theme.of(context).primaryColor),
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            // Handle button press
+                                          },
+                                          child: Row(
+                                            children: [
+                                              // Add an Image widget for your icon
+                                              CustomImage(
+                                                image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                                                    '/${widget.estate.networkType[index].image}',
+                                                height: 20, width: 20,
+                                              ),
+                                              SizedBox(width: 8), // Add spacing between icon and text
+                                              Text(
+                                                "${widget.estate.networkType[index].name}",
+                                                style: TextStyle(color: Theme.of(context).cardColor, fontSize: 15.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+,
                                 Center(
                                   child: Container(
                                     height: 240,
@@ -1501,59 +1578,121 @@ class _EditDialogState extends State<EditDialog> {
                           ],
                         ):Container(),
                       ),
+
+
+
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
 
                           categoryController.advanList.length!=null?    Column(
                             children: [
+
                               ExpansionTile(
                                 title:Text("other_advantages".tr), //add icon//children padding
                                 children: [
-                                  Center(
-                                    child: Container(
-                                      height: 240,
-                                      child:GridView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount: categoryController.advanList.length,
-                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3 ,
-                                          childAspectRatio: (1/0.50),
-                                        ),
-                                        itemBuilder: (context, index) {
-                                          return InkWell(
-                                            onTap: () => categoryController.addAdvantSelection(index),
-                                            child: Container(
-                                              margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: categoryController.advanSelectedList[index] ? Theme.of(context).primaryColor
-                                                    : Theme.of(context).cardColor,
-                                                borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
-                                              ),
-                                              alignment: Alignment.center,
-                                              child:   Row(
 
-                                                children: [
-                                                  Flexible(child: Text(
-                                                    categoryController.advanList[index].name,
-                                                    style: robotoMedium.copyWith(
-                                                      fontSize: Dimensions.fontSizeSmall,
-                                                      color: categoryController.advanSelectedList[index] ? Theme.of(context).cardColor
-                                                          : Theme.of(context).textTheme.bodyText1.color,
-                                                    ),
-                                                    maxLines: 2, overflow: TextOverflow.ellipsis,
-                                                  )),
-                                                ],
+                                  Column(
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount:  widget.estate.otherAdvantages.length,
+                                          itemBuilder: (context, index) {
+
+
+                                            return  Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: TextButton(
+                                                  style:  ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all<Color>( Theme.of(context).primaryColor ),
+                                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+
+                                                      RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(4),
+
+                                                          side: BorderSide(color:Theme.of(context).primaryColor)
+                                                      ),),),
+                                                  onPressed: (){
+
+                                                  },
+                                                  child: Text("${widget.estate.otherAdvantages[index].name}",style: TextStyle(color:Theme.of(context).cardColor,fontSize: 15.0),)
                                               ),
-                                            ),
-                                          );
-                                        },
+                                            );
+
+                                          },
+                                        ),
                                       ),
-                                    ),
+
+
+                                      Center(
+                                        child: Container(
+                                          height: 240,
+                                          child: GridView.builder(
+                                            physics: BouncingScrollPhysics(),
+                                            itemCount: categoryController.advanList.length,
+                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              childAspectRatio: (1 / 0.50),
+                                            ),
+                                            itemBuilder: (context, index) {
+
+                                              return InkWell(
+                                                onTap: () async{
+                                                  categoryController.addAdvantSelection(index);
+                                                  setState(() {
+
+                                                  });
+                                            //      updateColorBack(index);
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL,
+                                                    horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: categoryController.advanSelectedList[index]
+                                                        ? Theme.of(context).primaryColor
+                                                        : Theme.of(context).cardColor,
+
+
+
+                                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.grey[Get.isDarkMode ? 800 : 200],
+                                                        blurRadius: 5,
+                                                        spreadRadius: 1,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  alignment: Alignment.center,
+                                                  child: Row(
+                                                    children: [
+                                                      Flexible(
+                                                        child: Text(
+                                                          categoryController.advanList[index].name,
+                                                          style: robotoMedium.copyWith(
+                                                            fontSize: Dimensions.fontSizeSmall,
+                                                            color: categoryController.advanSelectedList[index]
+                                                                ? Theme.of(context).cardColor
+                                                                : Theme.of(context).textTheme.bodyText1.color,
+                                                          ),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
 
 
@@ -1722,16 +1861,37 @@ class _EditDialogState extends State<EditDialog> {
 
 
 
+
+                          List<Map<String, dynamic>> serializedAdvantages = widget.estate.otherAdvantages.map((advantage) => advantage.toJson()).toList();
+                          String new_adv = jsonEncode(serializedAdvantages);
+
+
+
+                  // showCustomSnackBar(     jsonEncode({widget.estate.otherAdvantages}));
+
+
+
                           List<Map<String, dynamic >> _advan= [];
                           for(int index=0; index<categoryController.advanList.length; index++) {
                             if(categoryController.advanSelectedList[index]) {
 
+                              //   showCustomSnackBar("${categoryController.advanList[index].name }");
                               _advan.add ({'"' + "name" + '"':'"' + categoryController.advanList[index].name + '"'});
                             }
                           }
 
+
+
+
+
+
+                          String otherAdvantages = (_advan != null && _advan.isNotEmpty) ? jsonEncode(_advan) :new_adv;
+
+
+
+
                           restController.updatEstate(
-                              EstateBody(
+                              EstateBody (
 
                                  id: widget.estate.id.toString(),
                                   address: "${locationController.address}",
@@ -1756,8 +1916,8 @@ class _EditDialogState extends State<EditDialog> {
                                   nationalAddress: "234234",
                                   user_id: widget.estate.userId.toString(),
                                   city: locationController.pickPosition.longitude==0.0?widget.estate.city.toString():locationController.city.toString(),
-                                  otherAdvantages: "$_advan",
-                                  interface:widget.estate.interface.map((v) => v.toJson()).toList().toString(),
+                                  otherAdvantages:"$_advan",
+                                  // interface:widget.estate.interface.map((v) => v.toJson()).toList().toString(),
                                   streetSpace: "${_widthStreetController.text.toString()}",
 
                                   price: _priceController.text.toString(),
@@ -1792,6 +1952,8 @@ class _EditDialogState extends State<EditDialog> {
 
               );
 
+
+
             })
       ;   })
                   : const SizedBox()
@@ -1801,6 +1963,9 @@ class _EditDialogState extends State<EditDialog> {
     );
 
   }
+
+
+
 
 
 
@@ -1830,6 +1995,9 @@ class _EditDialogState extends State<EditDialog> {
       },
     );
   }
+
+
+
 
 
   void _checkPermission(Function onTap) async {

@@ -1,113 +1,183 @@
-import 'package:abaad/helper/route_helper.dart';
-import 'package:abaad/view/base/custom_snackbar.dart';
-import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  runApp(MyApp(cameras: cameras));
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final List<CameraDescription> cameras;
-
-  MyApp({@required this.cameras});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: QRCodeScannerWidget(cameras: cameras),
+      home: AdvantagesList(),
     );
   }
 }
 
-class QRCodeScannerWidget extends StatefulWidget {
-  final List<CameraDescription> cameras;
+class Advantage {
+  final int id;
+  final String name;
 
-  QRCodeScannerWidget({@required this.cameras});
+  Advantage({@required this.id, @required this.name});
 
-  @override
-  _QRCodeScannerWidgetState createState() => _QRCodeScannerWidgetState();
+  factory Advantage.fromJson(Map<String, dynamic> json) {
+    return Advantage(id: json['id'], name: json['name']);
+  }
 }
 
+class AdvantagesList extends StatefulWidget {
+  @override
+  _AdvantagesListState createState() => _AdvantagesListState();
+}
 
-class _QRCodeScannerWidgetState extends State<QRCodeScannerWidget> {
-  String result = "Scan a QR Code"; // Initialize with a default message
-  bool isFlashOn = false;
+class _AdvantagesListState extends State<AdvantagesList> {
+  List<Advantage> allAdvantages = [];
+  List<String> selectedAdvantages = [];
+  List<String> alreadySelectedAdvantages = [];
+  bool isLoading = false;
 
-  Future<void> scanQRCode() async {
+  @override
+  void initState() {
+    super.initState();
+    fetchAllAdvantages();
+    fetchAlreadySelectedAdvantages();
+  }
+
+  Future<void> fetchAllAdvantages() async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
-      final ScanResult scanResult = await BarcodeScanner.scan(
-        options: ScanOptions(
-          useCamera: -1, // Use the back camera by default
-          autoEnableFlash: isFlashOn,
-        ),
-      );
-      setState(() {
-        result = scanResult.rawContent;
-        Get.toNamed(RouteHelper.getDetailsRoute( 162));
-      });
+      final response = await http.get(Uri.parse('http://192.168.199.207/abaadDashboard/api/v1/estate/advantages'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          allAdvantages = data.map((item) => Advantage.fromJson(item)).toList();
+        });
+      } else {
+        print('Failed to load advantages. Status code: ${response.statusCode}');
+      }
     } catch (e) {
+      print('Error fetching advantages: $e');
+    } finally {
       setState(() {
-        result = "Error: $e";
+        isLoading = false;
       });
     }
   }
 
-  void toggleFlash() {
-    setState(() {
-      isFlashOn = !isFlashOn;
-    });
+  Future<void> fetchAlreadySelectedAdvantages() async {
+    try {
+      final response =
+      await http.get(Uri.parse('http://192.168.199.207/abaadDashboard/api/v1/estate/existing-advantages'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          alreadySelectedAdvantages = data.map<String>((item) => item['name']).toList();
+        });
+      } else {
+        print('Failed to load already selected advantages. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching already selected advantages: $e');
+    }
+  }
+
+  bool _isAlreadySelected(String advantageName) {
+    return alreadySelectedAdvantages.contains(advantageName);
+  }
+
+  bool _isAnyAlreadySelected(List<String> advantageNames) {
+
+    return advantageNames.any((name) => alreadySelectedAdvantages.contains(name));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('QR Code Scanner'),
+        title: Text('Advantages List'),
       ),
-      body: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  result,
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: scanQRCode,
-                  child: Text('Scan QR Code'),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ElevatedButton.icon(
-                    onPressed: toggleFlash,
-                    icon: Icon(
-                      Icons.flash_on,
-                      size: 24,
-                    ),
-                    label: Text(''), // Empty text
-                  ),
-                ],
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        itemCount: allAdvantages.length,
+        itemBuilder: (context, index) {
+          final isSelected = selectedAdvantages.contains(allAdvantages[index].name);
+          final isAlreadySelected = _isAnyAlreadySelected([allAdvantages[index].name]);
+
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              elevation: isSelected || isAlreadySelected ? 8.0 : 2.0,
+              shadowColor: Colors.blue.withOpacity(0.5),
+              color: isAlreadySelected ? Colors.black : null,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              child: ListTile(
+                title: Text(allAdvantages[index].name),
+                tileColor: isSelected ? Colors.blue.withOpacity(0.2) : null,
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      selectedAdvantages.remove(allAdvantages[index].name);
+                    } else {
+                      selectedAdvantages.add(allAdvantages[index].name);
+                    }
+                  });
+                },
               ),
             ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (selectedAdvantages.isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdvantagesUpdateScreen(selectedAdvantages: selectedAdvantages),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('No advantages selected'),
+            ));
+          }
+        },
+        child: Icon(Icons.edit),
+      ),
+    );
+  }
+}
+
+class AdvantagesUpdateScreen extends StatelessWidget {
+  final List<String> selectedAdvantages;
+
+  AdvantagesUpdateScreen({@required this.selectedAdvantages});
+
+  @override
+  Widget build(BuildContext context) {
+    // Implement the UI for updating selected advantages
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Update Advantages'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Selected Advantages: $selectedAdvantages'),
+            // Implement the rest of the UI as needed
           ],
         ),
       ),
     );
   }
 }
-

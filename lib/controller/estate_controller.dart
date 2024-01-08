@@ -352,6 +352,8 @@ class EstateController extends GetxController implements GetxService {
     if (response.statusCode == 200) {
       Get.offAllNamed(RouteHelper.getProfileRoute());
       showCustomSnackBar('update_successful'.tr, isError: false);
+      update();
+
     } else {
       ApiChecker.checkApi(response);
       print("error estate---------------------------------------------------${response.body}");

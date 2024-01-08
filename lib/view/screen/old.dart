@@ -1,81 +1,204 @@
+// main.dart
+
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-void main() {
-  runApp(MyApp());
-}
+class Todo {
+  int id;
+  String title;
+  bool completed;
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(),
+  Todo({@required this.id, @required this.title, @required this.completed});
+
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    return Todo(
+      id: json['id'],
+      title: json['title'],
+      completed: json['completed'],
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  TextEditingController _textEditingController = TextEditingController();
+class TodoService {
+  static const apiUrl = 'http://your-laravel-api-endpoint.com/api/todos';
+
+  Future<List<Todo>> fetchTodos() async {
+    final response = await http.get(Uri.parse(apiUrl));
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data.map((item) => Todo.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load todos');
+    }
+  }
+
+  Future<void> updateTodo(Todo todo) async {
+    final response = await http.put(
+      Uri.parse('$apiUrl/${todo.id}'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'completed': todo.completed}),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update todo');
+    }
+  }
+}
+
+class ViewTodoScreen extends StatelessWidget {
+  final Todo todo;
+
+  ViewTodoScreen({@required this.todo});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Web View in Dialog Example'),
+        title: Text('View Todo'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _textEditingController,
-              decoration: InputDecoration(
-                hintText: 'Enter the URL',
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                String url = _textEditingController.text;
-                if (url.isNotEmpty) {
-                  _showWebViewDialog(context, url);
-                } else {
-                  // Handle empty URL input
-                  print('URL is empty');
-                }
+            Text('Title: ${todo.title}'),
+            SizedBox(height: 8),
+            Text('Completed: ${todo.completed}'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UpdateTodoScreen extends StatefulWidget {
+  final Todo todo;
+
+  UpdateTodoScreen({@required this.todo});
+
+  @override
+  _UpdateTodoScreenState createState() => _UpdateTodoScreenState();
+}
+
+class _UpdateTodoScreenState extends State<UpdateTodoScreen> {
+   bool completed;
+
+  @override
+  void initState() {
+    super.initState();
+    completed = widget.todo.completed;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Update Todo'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Title: ${widget.todo.title}'),
+            SizedBox(height: 8),
+            Checkbox(
+              value: completed,
+              onChanged: (value) {
+                setState(() {
+                  completed = value;
+                });
               },
-              child: Text('Open Web View'),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                // Update the completed status in the backend
+                // and update the UI accordingly
+                await TodoService().updateTodo(
+                  Todo(
+                    id: widget.todo.id,
+                    title: widget.todo.title,
+                    completed: completed,
+                  ),
+                );
+
+                // Navigate back to the previous screen
+                Navigator.pop(context);
+              },
+              child: Text('Update Todo'),
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  void _showWebViewDialog(BuildContext context, String url) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Web View'),
-          content: Container(
-            width: double.maxFinite,
-            height: 300, // Adjust the height as needed
-            child: WebView(
-              initialUrl: url,
-              javascriptMode: JavascriptMode.unrestricted,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+class TodoScreen extends StatefulWidget {
+  @override
+  _TodoScreenState createState() => _TodoScreenState();
+}
+
+class _TodoScreenState extends State<TodoScreen> {
+   List<Todo> todos;
+   TodoService todoService;
+
+  @override
+  void initState() {
+    super.initState();
+    todoService = TodoService();
+    todos = [];
+    fetchTodos();
+  }
+
+  void fetchTodos() async {
+    List<Todo> fetchedTodos = await todoService.fetchTodos();
+    setState(() {
+      todos = fetchedTodos;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Todo List'),
+      ),
+      body: ListView.builder(
+        itemCount: todos.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(todos[index].title),
+            subtitle: Text('Completed: ${todos[index].completed}'),
+            trailing: Checkbox(
+              value: todos[index].completed,
+              onChanged: (bool value) {
+                // Update the completed status in the backend
+                // and update the UI accordingly
+                // You may use todoService.updateTodo here
+                // to update the completed status in Laravel API
+                setState(() {
+                  todos[index].completed = value;
+                });
               },
-              child: Text('Close'),
             ),
-          ],
-        );
-      },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewTodoScreen(todo: todos[index]),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
+
+void main() => runApp(MaterialApp(
+  home: TodoScreen(),
+));
