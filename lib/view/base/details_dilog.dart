@@ -89,7 +89,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                         // ),
                         Row(
                           children: [
-                            Text(isArabic ? "${widget.estate.categoryNameAr} -${widget.estate.zoneNameAr} -${widget.estate.districts}":"${widget.estate.categoryName} -${widget.estate.zoneName} -${widget.estate.districts}",
+                            Text(isArabic ? "${widget.estate.categoryNameAr} -${widget.estate.zoneNameAr} -${widget.estate.districts??''}":"${widget.estate.categoryName} -${widget.estate.zoneName??''} ",
                                 style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
                           ],
                         ),
@@ -468,7 +468,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text( widget.estate.property_type=="سكني"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
+                                        padding: EdgeInsets.all(10),child:  Text( widget.estate.estate_type=="1"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
                               ],
                             ),
                           ),
@@ -994,7 +994,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                             ),
                             child: Center(
-                              child: Text(widget.estate.users.membershipType, style: robotoBold.copyWith(
+                              child: Text(widget.estate.users.membershipType??'', style: robotoBold.copyWith(
                                 color: Theme.of(context).cardColor, fontSize: Dimensions.fontSizeDefault,
                               )),
                             ),

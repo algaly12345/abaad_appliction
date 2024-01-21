@@ -240,7 +240,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   @override
   void initState() {
     super.initState();
-
+    _selectionTypeEstate=2;
     Get.find<AuthController>().getZoneList();
     Get.find<CategoryController>().getFacilitiesList(true);
     Get.find<CategoryController>().getAdvantages(true);
@@ -272,8 +272,14 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   static const _locale = 'en';
   String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(double.parse(s));
   String get _currency => NumberFormat.compactSimpleCurrency(locale: _locale).currencySymbol;
+  int _selectionTypeEstate = 1;
 
 
+  selectTypeEstate(int timeSelected) {
+    setState(() {
+      _selectionTypeEstate = timeSelected;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     bool _isNull = true;
@@ -982,7 +988,81 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                             restController.getCategoryPostion()==1?    Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-
+                                Text(
+                                  "type_property".tr,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _selectionTypeEstate = 1;
+                                        });
+                                      },
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Container(
+                                            height: 40,
+                                            color: _selectionTypeEstate == 1 ? Colors.green : Colors.white,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Radio(
+                                                focusColor: Colors.white,
+                                                groupValue: _selectionTypeEstate,
+                                                onChanged: selectTypeEstate,
+                                                value: 1,
+                                              ),
+                                              Text(
+                                                "residential".tr,
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _selectionTypeEstate = 2;
+                                        });
+                                      },
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Container(
+                                            height: 40,
+                                            color: _selectionTypeEstate == 2 ? Colors.green : Colors.white,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Radio(
+                                                focusColor: Colors.white,
+                                                groupValue: _selectionTypeEstate,
+                                                onChanged: selectTypeEstate,
+                                                value: 2,
+                                              ),
+                                              Text(
+                                                "commercial".tr,
+                                                style:const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
 
 
                                 SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -1521,76 +1601,76 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                 ),
 
 
-
-                                Text(
-                                  'age_of_the_property'.tr,
-                                  style: robotoRegular.copyWith(
-                                      fontSize: Dimensions.fontSizeSmall),
-                                ),
-                                 const SizedBox(
-                                    height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                  decoration: BoxDecoration(
-                                    color: Theme
-                                        .of(context)
-                                        .cardColor,
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.RADIUS_SMALL),
-                                    boxShadow: [
-                                      BoxShadow(color: Colors.grey[Get.isDarkMode
-                                          ? 800
-                                          : 200],
-                                          spreadRadius: 2,
-                                          blurRadius: 5,
-                                          offset: Offset(0, 5))
-                                    ],
-                                  ),
-                                  child: DropdownButton<String>(
-                                    focusColor: Colors.white,
-                                    value: _ageValue,
-                                    isExpanded: true,
-                                    underline: SizedBox(),
-                                    //elevation: 5,
-                                    style: robotoRegular.copyWith(
-                                        fontSize: Dimensions.fontSizeLarge,
-                                        color: Colors.black),
-                                    iconEnabledColor: Colors.black,
-                                    items: <String>[
-                                      'جديد',
-                                      'سنة',
-                                      'سنتين',
-                                      '3 سنوات',
-                                      '4 سنوات',
-                                      '5 سنوات',
-                                      '6 سنوات',
-                                      '7 سنوات',
-                                      '8 سنوات',
-                                      '9 سنوات',
-                                      '10 سنوات',
-                                      'اكثر من 10',
-                                      'اكثر من 20'
-                                    ].map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value, style: const TextStyle(
-                                            color: Colors.black),),
-                                      );
-                                    }).toList(),
-                                    hint: Text(
-                                      "select_age_of_the_property".tr,
-                                      style: robotoRegular.copyWith(
-                                          fontSize: Dimensions.fontSizeLarge,
-                                          color: Colors.black),
-                                    ),
-                                    onChanged: (String value) {
-                                      setState(() {
-                                        _ageValue = value;
-                                      });
-                                    },
-                                  ),
-                                ),
+                                 //
+                                // Text(
+                                //   'age_of_the_property'.tr,
+                                //   style: robotoRegular.copyWith(
+                                //       fontSize: Dimensions.fontSizeSmall),
+                                // ),
+                                //  const SizedBox(
+                                //     height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                // Container(
+                                //   padding: const EdgeInsets.symmetric(
+                                //       horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                //   decoration: BoxDecoration(
+                                //     color: Theme
+                                //         .of(context)
+                                //         .cardColor,
+                                //     borderRadius: BorderRadius.circular(
+                                //         Dimensions.RADIUS_SMALL),
+                                //     boxShadow: [
+                                //       BoxShadow(color: Colors.grey[Get.isDarkMode
+                                //           ? 800
+                                //           : 200],
+                                //           spreadRadius: 2,
+                                //           blurRadius: 5,
+                                //           offset: Offset(0, 5))
+                                //     ],
+                                //   ),
+                                //   child: DropdownButton<String>(
+                                //     focusColor: Colors.white,
+                                //     value: _ageValue,
+                                //     isExpanded: true,
+                                //     underline: SizedBox(),
+                                //     //elevation: 5,
+                                //     style: robotoRegular.copyWith(
+                                //         fontSize: Dimensions.fontSizeLarge,
+                                //         color: Colors.black),
+                                //     iconEnabledColor: Colors.black,
+                                //     items: <String>[
+                                //       'جديد',
+                                //       'سنة',
+                                //       'سنتين',
+                                //       '3 سنوات',
+                                //       '4 سنوات',
+                                //       '5 سنوات',
+                                //       '6 سنوات',
+                                //       '7 سنوات',
+                                //       '8 سنوات',
+                                //       '9 سنوات',
+                                //       '10 سنوات',
+                                //       'اكثر من 10',
+                                //       'اكثر من 20'
+                                //     ].map<DropdownMenuItem<String>>((String value) {
+                                //       return DropdownMenuItem<String>(
+                                //         value: value,
+                                //         child: Text(value, style: const TextStyle(
+                                //             color: Colors.black),),
+                                //       );
+                                //     }).toList(),
+                                //     hint: Text(
+                                //       "select_age_of_the_property".tr,
+                                //       style: robotoRegular.copyWith(
+                                //           fontSize: Dimensions.fontSizeLarge,
+                                //           color: Colors.black),
+                                //     ),
+                                //     onChanged: (String value) {
+                                //       setState(() {
+                                //         _ageValue = value;
+                                //       });
+                                //     },
+                                //   ),
+                                // ),
                                 const SizedBox(
                                     height: Dimensions.PADDING_SIZE_LARGE),
 
@@ -1759,12 +1839,12 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                     Text(
-                      'رقم الوثيقة'.tr,
+                      'document_number'.tr,
                       style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                     MyTextField(
-                      hintText: 'ادخل رقم الوثيقة'.tr,
+                      hintText: 'enter_the_document_number'.tr,
                       controller: _documentNumberController,
                       focusNode: _documentNumberFocus,
 
@@ -1774,8 +1854,12 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                       showBorder: true,
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                    Text(
+                      'ad_number'.tr,
+                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                    ),
                          MyTextField(
-                      hintText: 'ادخل رقم الإعلان'.tr,
+                      hintText: 'enter_the_advertisement_number'.tr,
                       controller: _addNumberController,
 
                       inputType: TextInputType.number,
@@ -2077,7 +2161,6 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   Expanded(
                     child:  !restController.isLoading ?  CustomButton(
                       onPressed: () {
-
                         String _price;
                         String _shortDesc;
                         String _space;
@@ -2201,7 +2284,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   longDescription: _longDescController.text,
                                   shortDescription: _shortDesc,
                                   categoryId:restController.getCategoryIndex().toString(),
-                                  ageEstate: _ageValue,
+                                  ageEstate: _ageValue??"null",
                                   arPath: _textEditingController.text,
                                   districts: district,
                                   floors: "4545",
@@ -2225,8 +2308,11 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   price: _priceController.text.toString(),
                                 buildSpace: _buildSpaceController.text.toString(),
                                 documentNumber: _documentNumberController.text.toString(),
-                                adNumber: _adNumber,
+                                  estate_type: _selectionTypeEstate.toString(),
+                                adNumber: _addNumberController.text.toString(),
                                 priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ,
+                                  authorization_number: _authorizedController.text.toString(),
+
                                   feature:"$isCheckBoxChecked"));
                          // authController.submitBusinessPlan(restaurantId: 1);
                          //  next();

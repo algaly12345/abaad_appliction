@@ -58,7 +58,10 @@ class EstateRepo {
       "document_number":estate.documentNumber,
       "ad_number":estate.adNumber,
       "feature":estate.feature,
-      "ar_path":estate.arPath
+      "ar_path":estate.arPath,
+      "age_estate":estate.ageEstate,
+      "estate_type":estate.estate_type,
+      "authorization_number":estate.authorization_number
 
 
 
@@ -96,7 +99,10 @@ class EstateRepo {
       "build_space":estate.buildSpace,
       "document_number":estate.documentNumber,
       "ad_number":estate.adNumber,
-      "ar_path":estate.arPath
+      "ar_path":estate.arPath,
+      "age_estate":estate.ageEstate,
+      "estate_type":estate.estate_type,
+      "authorization_number":estate.authorization_number
 
 
 

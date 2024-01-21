@@ -214,7 +214,10 @@
   "done": "done",
   "the_operation_failed_try_again": "The operation failed, try again",
   "offers": "offers",
-  "expiry_date": "Expiry date"
+  "expiry_date": "Expiry date",
+  "category": "category",
+  "enter_the_document_number": "Enter the document number",
+  "enter_the_advertisement_number": "Enter the advertisement number"
 
 
 

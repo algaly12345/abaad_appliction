@@ -85,6 +85,8 @@ class Estate {
   String  zoneNameAr;
   String property_type;
   String skyView;
+  String estate_type;
+  String  authorization_number;
 
 
 
@@ -140,7 +142,9 @@ class Estate {
     this.zoneName,
     this.zoneNameAr,
     this.property_type,
-    this.skyView
+    this.skyView,
+    this.estate_type,
+    this.authorization_number
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -192,6 +196,7 @@ class Estate {
     city=json["city"];
     title=json["title"];
     category=json["category"];
+    authorization_number=json["authorization_number"];
 
     userId=json['user_id'];
     if (json['network_type'] != null) {
@@ -228,6 +233,7 @@ class Estate {
     categoryName=json['category_name'];
     property_type= json['property_type'];
     skyView=json["skyview"];
+    estate_type=json["estate_type"];
 
 
 
@@ -282,6 +288,8 @@ class Estate {
     data["build_space"]=this.buildSpace;
     data["document_number"]=this.documentNumber;
     data["video_url"]=this.videoUrl;
+    data["estate_type"]=this.estate_type;
+    data["authorization_number"]=this.authorization_number;
 
     if (this.networkType != null) {
       data['network_type'] = this.networkType.map((v) => v.toJson()).toList();

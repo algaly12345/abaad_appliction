@@ -212,5 +212,9 @@
   "done": "انهاء",
   "the_operation_failed_try_again": "فشلت العملية حاول من جديد",
   "offers": "العروض",
-  "expiry_date": "تاريخ الإنتهاء"
+  "expiry_date": "تاريخ الإنتهاء",
+  "category": " فئة العقار",
+  "enter_the_document_number": "ادخل رقم الوثيقة",
+  "enter_the_advertisement_number": "ادخل رقم الإعلان"
+
 }

@@ -68,6 +68,8 @@ class _EditDialogState extends State<EditDialog> {
   final TextEditingController _shortDescController = TextEditingController();
   final TextEditingController _longDescController = TextEditingController();
   final TextEditingController _documentNumberController  = TextEditingController();
+  final TextEditingController _addNumberController = TextEditingController();
+
 
 
   final TextEditingController _northController = TextEditingController();
@@ -177,6 +179,16 @@ class _EditDialogState extends State<EditDialog> {
     setState(() => _selectedBathroomsIndex = index);
   }
 
+
+  int _selectionTypeEstate = 1;
+
+
+  selectTypeEstate(int timeSelected) {
+    setState(() {
+      _selectionTypeEstate = timeSelected;
+    });
+  }
+
   _onSelectedlounge(int index) {
     setState(() => _selectedLounge = index);
   }
@@ -225,6 +237,13 @@ class _EditDialogState extends State<EditDialog> {
       _selection=1;
     }
 
+
+
+    if( widget.estate.estate_type=="2"){
+      _selectionTypeEstate=2;
+    }else if( widget.estate.estate_type=="1"){
+      _selectionTypeEstate=1;
+    }
     if(widget.estate.ownershipType=="مفوض"){
       _djectivePresenter==0;
     }else if(widget.estate.ownershipType=="مالك"){
@@ -258,7 +277,7 @@ class _EditDialogState extends State<EditDialog> {
 
     // input.split('').forEach((ch) => print(ch));
 
-    print("----------------------------categore${widget.estate.longDescription}");
+    print("----------------------------categore${widget.estate.authorization_number}");
     // zone_id=widget.estate.zoneId;
    // widget.estate.priceNegotiation=="غير قابل للتفاوض"?   isSelected2.first=false: widget.estate.priceNegotiation=="قابل للتفاوض"? isSelected2.first=true:true;
 
@@ -276,9 +295,12 @@ class _EditDialogState extends State<EditDialog> {
       _longDescController.text = widget.estate.longDescription ?? '';
       _spaceController.text =  widget.estate.space ?? '';
       _documentNumberController.text =  widget.estate.documentNumber?? '';
+      _addNumberController.text =  widget.estate.adNumber.toString()?? '';
+       _authorizedController.text=widget.estate.authorization_number?? '';
       _textEditingController.text =  widget.estate.arPath?? '';
       images=widget.estate.images;
       city=widget.estate.city;
+
       district=widget.estate.districts;
 
 
@@ -351,86 +373,95 @@ class _EditDialogState extends State<EditDialog> {
                child:    GetBuilder<LocationController>(builder: (locationController) {
               return   Column(
                    crossAxisAlignment: CrossAxisAlignment.start, children: [
-                 Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Text("ad_typ".tr, style: robotoRegular.copyWith(
-                         fontSize: Dimensions.fontSizeDefault, color: Theme
-                         .of(context)
-                         .hintColor),),
-                     SizedBox(height: 7),
-                     Row(
-                       mainAxisSize: MainAxisSize.max,
-                       children: [
-                         Expanded( // Place `Expanded` inside `Row`
-                           child: InkWell(
-                             onTap: () {
-                               setState(() => _typeProperties = 0);
-                             },
-                             child: Container(
-                               height: 39,
-                               decoration: BoxDecoration(
-                                   color: _typeProperties == 0 ? Theme
-                                       .of(context)
-                                       .secondaryHeaderColor : Colors
-                                       .transparent,
-                                   border: Border.all(
-                                     width: 1, color: Colors.blue[500],),
-                                   borderRadius: BorderRadius.circular(2,)
-                               ),
 
-                               child: Center(child: Text('for_rent'.tr,
-                                 style: robotoBlack.copyWith(fontSize: 16,
-                                     color: _typeProperties == 0
-                                         ? Colors.white
-                                         : Colors.blue),)),
-
-
-                             ),
-                           ),
-                         ),
-                         SizedBox(width: 3,),
-                         Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
-                           child: InkWell(
-                             onTap: () {
-                               setState(() => _typeProperties = 1);
-                             },
-                             child: Container(
-                               decoration: BoxDecoration(
-                                   color: _typeProperties == 1 ? Theme
-                                       .of(context)
-                                       .secondaryHeaderColor : Colors
-                                       .transparent,
-                                   border: Border.all(
-                                     width: 1, color: Colors.blue[500],),
-                                   borderRadius: BorderRadius.circular(2,)
-                               ),
-                               height: 39,
-                               // color: _value == 1 ? Colors.grey : Colors.transparent,
-                               child: Center(child: Text('for_sell'.tr,
-                                 style: robotoBlack.copyWith(fontSize: 16,
-                                     color: _typeProperties == 1
-                                         ? Colors.white
-                                         : Colors.blue),)),
-
-
-                             ),
-                           ),
-                         ),
-                       ],
-                     )
-                   ],
-                 ),
                  SizedBox(
                      height: 35),
                  Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
 
+
+
+
+                     Text(
+                       "type_property".tr,
+                       style: const TextStyle(
+                         fontSize: 13,
+                         fontWeight: FontWeight.bold,
+                       ),
+                     ),
+                     Row(
+                       children: <Widget>[
+                         InkWell(
+                           onTap: () {
+                             setState(() {
+                               _selectionTypeEstate = 1;
+                             });
+                           },
+                           child: Stack(
+                             children: <Widget>[
+                               Container(
+                                 height: 40,
+                                 color: _selectionTypeEstate == 1 ? Colors.green : Colors.white,
+                               ),
+                               Row(
+                                 children: <Widget>[
+                                   Radio(
+                                     focusColor: Colors.white,
+                                     groupValue: _selectionTypeEstate,
+                                     onChanged: selectTypeEstate,
+                                     value: 1,
+                                   ),
+                                   Text(
+                                     "residential".tr,
+                                     style: const TextStyle(
+                                       fontSize: 13,
+                                       fontWeight: FontWeight.bold,
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                             ],
+                           ),
+                         ),
+                         InkWell(
+                           onTap: () {
+                             setState(() {
+                               _selectionTypeEstate = 2;
+                             });
+                           },
+                           child: Stack(
+                             children: <Widget>[
+                               Container(
+                                 height: 40,
+                                 color: _selectionTypeEstate == 2 ? Colors.green : Colors.white,
+                               ),
+                               Row(
+                                 children: <Widget>[
+                                   Radio(
+                                     focusColor: Colors.white,
+                                     groupValue: _selectionTypeEstate,
+                                     onChanged: selectTypeEstate,
+                                     value: 2,
+                                   ),
+                                   Text(
+                                     "commercial".tr,
+                                     style:const TextStyle(
+                                       fontSize: 13,
+                                       fontWeight: FontWeight.bold,
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                             ],
+                           ),
+                         )
+                       ],
+                     ),
                      SizedBox(height: 7),
                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                        Text(
-                         'type_property'.tr,
+                         'category'.tr,
                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor),
                        ),
                        SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -622,6 +653,9 @@ class _EditDialogState extends State<EditDialog> {
                    // ),
                    // ),
                  ]),
+
+
+
                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                  Text(
@@ -1798,6 +1832,9 @@ class _EditDialogState extends State<EditDialog> {
 
                                 capitalization: TextCapitalization.words,
                               ),
+
+
+
                             ],)
                         ),
 
@@ -1826,6 +1863,58 @@ class _EditDialogState extends State<EditDialog> {
                         ),
 
                       ]),
+
+
+
+                      Text(
+                        'authorization_number'.tr,
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                      ),
+
+
+                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      MyTextField(
+                        hintText: 'authorization_number'.tr,
+                        controller: _authorizedController,
+                        inputType: TextInputType.phone,
+
+                        isEnabled: true,
+                        showBorder: true,
+                      ),
+
+
+
+                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      Text(
+                        'document_number'.tr,
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      MyTextField(
+                        hintText: 'enter_the_document_number'.tr,
+                        controller: _documentNumberController,
+                        focusNode: _documentNumberFocus,
+
+                        inputType: TextInputType.number,
+                        size: 17,
+                        capitalization: TextCapitalization.sentences,
+                        showBorder: true,
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                      Text(
+                        'ad_number'.tr,
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                      ),
+                      MyTextField(
+                        hintText: 'enter_the_advertisement_number'.tr,
+                        controller: _addNumberController,
+
+                        inputType: TextInputType.number,
+                        size: 17,
+                        capitalization: TextCapitalization.sentences,
+                        showBorder: true,
+                      ),
+                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                       CustomButton(
                         onPressed: () async {
 
@@ -1923,10 +2012,12 @@ class _EditDialogState extends State<EditDialog> {
                                   price: _priceController.text.toString(),
                                   buildSpace: _buildSpaceController.text.toString(),
                                   documentNumber: _documentNumberController.text.toString(),
-                                  adNumber: _adNumber,
+                                authorization_number: _authorizedController.text.toString(),
+                                  adNumber: _addNumberController.text.toString(),
 
                               //    priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" )
                              priceNegotiation: _selection==0?widget.estate.priceNegotiation: _selection!=1?"غير قابل للتفاوض":"قابل للتفاوض",
+                                estate_type: _selectionTypeEstate==0?widget.estate.estate_type: _selectionTypeEstate!=1?"2":"1",
                               )
                               );
 

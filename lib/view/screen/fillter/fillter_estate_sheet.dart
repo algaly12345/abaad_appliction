@@ -383,11 +383,19 @@ class _FiltersScreenState extends State<FiltersScreen> {
                      // showCustomSnackBar(date.titleTxt);
                      //    }
 
-                        showCustomSnackBar(selectedFilters.join(', '));
+                       int  ar_value=0;
+                       if(selectedFilters.join(', ')=="virtual_ture".tr){
+                         ar_value=1;
+                       }else
+                         {
+                           ar_value=0;
+                         }
 
-                    categoryController.setFilterIndex(0,restController.getCategoryIndex(),ctiy_name,districts,distValue~/10,selectedFilters.join(', ')=='it_includes_offers'.tr?1:0,selectedFilters.join(', ')=='virtual_ture'.tr?1:0);
-                    Navigator.pop(context);
-                      },
+                        showCustomSnackBar("${selectedFilters.join(', ')}");
+
+               categoryController.setFilterIndex(0,restController.getCategoryIndex(),ctiy_name,districts,distValue~/10,selectedFilters.join(', ')=='virtual_ture'.tr?1:0,selectedFilters.join(', ')=='it_includes_offers'.tr?1:0);
+              Navigator.pop(context);
+                       },
                       child: const Center(
                         child: Text(
                           'Apply',

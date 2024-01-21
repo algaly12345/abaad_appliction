@@ -33,6 +33,8 @@ class EstateBody {
   String documentNumber;
   String feature;
   String property_type;
+  String estate_type;
+  String  authorization_number;
 
 
   EstateBody(
@@ -70,7 +72,9 @@ class EstateBody {
         this.buildSpace,
         this.documentNumber,
         this.feature,
-        this.property_type
+        this.property_type,
+        this.estate_type,
+        this.authorization_number
         });
 
   EstateBody.fromJson(Map<String, dynamic> json) {
@@ -112,6 +116,8 @@ class EstateBody {
     documentNumber=json["document_number"];
     feature= json['feature'];
     property_type= json['property_type'];
+    estate_type=json['estate_type'];
+    authorization_number=json["authorization_number"];
 
 
 
@@ -155,6 +161,8 @@ class EstateBody {
     data["document_number"]=this.documentNumber;
     data['feature']=this.feature;
     data['property_type']=this.property_type;
+    data['estate_type']=this.estate_type;
+    data["authorization_number"]=this.authorization_number;
     return data;
   }
 }

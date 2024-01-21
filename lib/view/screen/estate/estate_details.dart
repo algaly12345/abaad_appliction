@@ -480,7 +480,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                             VerticalDivider(width: 1.0),
                             Expanded(flex: 1,
                                 child: Container(
-                                padding: EdgeInsets.all(10),child: Text( estateController.estate.property_type=="سكني"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
+                                    padding: EdgeInsets.all(10),child:  Text( widget.estate.estate_type=="1"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
                       ),

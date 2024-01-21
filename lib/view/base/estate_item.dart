@@ -210,7 +210,7 @@ class EstateItem extends StatelessWidget {
                                 const SizedBox(
                                   height: 3.0,
                                 ),
-                                Text(   isArabic ? "${estate.categoryNameAr} -${estate.zoneNameAr} -${estate.districts}":"${estate.categoryName} -${estate.zoneName} -${estate.districts}",
+                                Text(   isArabic ? "${estate.categoryNameAr} -${estate.zoneNameAr} -${estate.districts??''}":"${estate.categoryName} -${estate.zoneName} -${estate.districts}",
                                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                                 const SizedBox(
                                   height: 3.0,

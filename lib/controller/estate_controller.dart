@@ -318,13 +318,16 @@ class EstateController extends GetxController implements GetxService {
     for (XFile file in _pickPlaned) {
       _multiParts.add(MultipartBody('planed_image[]', file));
     }
+
     Response response = await estateRepo.createEstate(
         estateBody, _multiParts);
    prefs.setString('estate_id', response.body["message"].toString());
-
+    _pickPlaned.clear();
     if (response.statusCode == 200) {
       _isLoading=false;
-
+      _pickPlaned.clear();
+      _pickedIdentities.clear();
+      _categoryIndex=0;
       Get.offNamed(RouteHelper.getPaymentRoute(161));
    //   Get.offAllNamed(RouteHelper.getSuccess());
     } else {
