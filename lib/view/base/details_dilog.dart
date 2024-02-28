@@ -25,6 +25,9 @@ import 'package:clipboard/clipboard.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'my_text_field.dart';
 
 class DettailsDilog extends StatefulWidget {
   Estate estate;
@@ -1040,43 +1043,20 @@ class _DettailsDilogState extends State<DettailsDilog> {
               ),
             ),
             CustomButton(
-              onPressed: () async {
-                try {
-                  String url = "https://abaadapp.page.link";
-                  final DynamicLinkParameters parameters = DynamicLinkParameters(
-                    uriPrefix: url,
-                    link: Uri.parse('$url/${widget.estate.id.toString()}'),
-                    androidParameters: AndroidParameters(
-                      packageName: "sa.pdm.abaad.abaad",
-                      minimumVersion: 0,
-                    ),
-                    iosParameters: IosParameters(
-                      bundleId: "Bundle-ID",
-                      minimumVersion: '0',
-                    ),
-                  );
-
-                  final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
-                  String desc = '${dynamicUrl.shortUrl.toString()}';
-
-                  await Get.toNamed(RouteHelper.getChatRoute(
-                    notificationBody: NotificationBody(
-                      orderId: widget.estate.id,
-                      restaurantId: widget.estate.userId,
-                    ),
-                    user: Userinfo(
-                      id: widget.estate.userId,
-                      name: widget.estate.users.name,
-                      image: widget.estate.users.image,
-                    ),
-                    estate_id: widget.estate.id,
-                    link: desc,
-                  ));
-                } catch (e) {
-                  print("Error building short dynamic link: $e");
-                  // Handle the error as needed, e.g., show an error message to the user.
-                }
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Get.find<AuthController>().isLoggedIn() ? Container(child:      GetBuilder<EstateController>(builder: (wishController) {
+                      return   ConctactWidget(widget.estate.title, "",widget.estate.shortDescription,widget.estate.users.phone);
+                    })) : NotLoggedInScreen();
+                  },
+                );
               },
+
+
+              // async {
+
 
 
               buttonText: 'contact_the_advertiser'.tr,
@@ -1098,13 +1078,356 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
   }
 
+  Widget ConctactWidget(String title  ,String image,String disc ,String phone)
+  {
+
+    return AlertDialog(
+      title: Text('contact_the_advertiser'.tr),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+              height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+          Container(
+            padding:  const EdgeInsets.symmetric(
+                horizontal: Dimensions.PADDING_SIZE_SMALL),
+            decoration: BoxDecoration(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              borderRadius: BorderRadius.circular(
+                14),
+              boxShadow: [
+                BoxShadow(color: Colors.grey[Get.isDarkMode
+                    ? 800
+                    : 200],
+                    spreadRadius: 2,
+                    blurRadius: 1,
+                    offset: Offset(0, 2))
+              ],
+            ),
+          ),
+
+
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 3,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child:  GetBuilder<SplashController>(builder: (splashController) {
+                        String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+                        //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
+                        return const ClipOval(
+                          child: Icon(Icons.phone,size: 40, color: Colors.green,),
+                        );
+                      },
+                      ),
+                    ),
+                    const SizedBox(width: 4.0),
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Container(
+
+                        child:  Text(
+                          'call_the_advertiser'.tr,
+                          style: robotoBlack.copyWith(fontSize: 11),
+                        ),
+                      ),
+                      const SizedBox(height: 3.0),
+                      // const RatingStars(
+                      //   value: 3* 1.0,
+                      //   starCount: 5,
+                      //   starSize: 7,
+                      //   valueLabelColor: Color(0xff9b9b9b),
+                      //   valueLabelTextStyle: TextStyle(
+                      //       color: Colors.white,
+                      //       fontFamily: 'WorkSans',
+                      //       fontWeight: FontWeight.w400,
+                      //       fontStyle: FontStyle.normal,
+                      //       fontSize: 9.0),
+                      //   valueLabelRadius: 7,
+                      //   maxValue: 5,
+                      //   starSpacing: 2,
+                      //   maxValueVisibility: false,
+                      //   valueLabelVisibility: true,
+                      //   animationDuration: Duration(milliseconds: 1000),
+                      //   valueLabelPadding:
+                      //   EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                      //   valueLabelMargin: EdgeInsets.only(right: 4),
+                      //   starOffColor: Color(0xffe7e8ea),
+                      //   starColor: Colors.yellow,
+                      // )
+                    ])
+                  ],
+                ),
+
+                // Divider(color: Colors.grey.shade600, height: 1.0)
+              ],
+            ),
+          ),
+          SizedBox(height: 12),
+          GestureDetector(
+            onTap: (){
+              buildDynamicLinks(title ,image,disc,phone);
+
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 3,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+
+                          shape: BoxShape.circle,
+                        ),
+                        child:  GetBuilder<SplashController>(builder: (splashController) {
+                          String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+                          //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
+                          return ClipOval(
+                            child: Icon(Icons.whatsapp,size: 40, color: Colors.green,),
+                          );
+                        },
+                        ),
+                      ),
+                      const SizedBox(width: 4.0),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Container(
+
+                          child:  Text(
+                            'contact_whatsApp'.tr,
+                            style: robotoBlack.copyWith(fontSize: 11),
+                          ),
+                        ),
+                        const SizedBox(height: 3.0),
+                        // const RatingStars(
+                        //   value: 3* 1.0,
+                        //   starCount: 5,
+                        //   starSize: 7,
+                        //   valueLabelColor: Color(0xff9b9b9b),
+                        //   valueLabelTextStyle: TextStyle(
+                        //       color: Colors.white,
+                        //       fontFamily: 'WorkSans',
+                        //       fontWeight: FontWeight.w400,
+                        //       fontStyle: FontStyle.normal,
+                        //       fontSize: 9.0),
+                        //   valueLabelRadius: 7,
+                        //   maxValue: 5,
+                        //   starSpacing: 2,
+                        //   maxValueVisibility: false,
+                        //   valueLabelVisibility: true,
+                        //   animationDuration: Duration(milliseconds: 1000),
+                        //   valueLabelPadding:
+                        //   EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                        //   valueLabelMargin: EdgeInsets.only(right: 4),
+                        //   starOffColor: Color(0xffe7e8ea),
+                        //   starColor: Colors.yellow,
+                        // )
+                      ])
+                    ],
+                  ),
+
+                  // Divider(color: Colors.grey.shade600, height: 1.0)
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 3,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () async{
+  try {
+  String url = "https://abaadapp.page.link";
+  final DynamicLinkParameters parameters = DynamicLinkParameters(
+  uriPrefix: url,
+  link: Uri.parse('$url/${widget.estate.id.toString()}'),
+  androidParameters: AndroidParameters(
+  packageName: "sa.pdm.abaad.abaad",
+  minimumVersion: 0,
+  ),
+  iosParameters: IosParameters(
+  bundleId: "Bundle-ID",
+  minimumVersion: '0',
+  ),
+  );
+
+  final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+  String desc = '${dynamicUrl.shortUrl.toString()}';
+
+  await Get.toNamed(RouteHelper.getChatRoute(
+  notificationBody: NotificationBody(
+  orderId: widget.estate.id,
+  restaurantId: widget.estate.userId,
+  ),
+  user: Userinfo(
+  id: widget.estate.userId,
+  name: widget.estate.users.name,
+  image: widget.estate.users.image,
+  ),
+  estate_id: widget.estate.id,
+  link: desc,
+  ));
+  } catch (e) {
+  print("Error building short dynamic link: $e");
+  // Handle the error as needed, e.g., show an error message to the user.
+  }
+
+                      },
+
+                      child:  GetBuilder<SplashController>(builder: (splashController) {
+                        String _baseUrl = Get.find<SplashController>().configModel.baseUrls.provider;
+                        //   print("------------${'$_baseUrl/${estateController.estate.serviceOffers[index].imageCover}'}");
+                        return const ClipOval(
+                          child: Icon(Icons.chat,size: 35, color: Colors.green,),
+                        );
+                      },
+                      ),
+                    ),
+                    const SizedBox(width: 4.0),
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Container(
+
+                        child:  Text(
+                          'Chat_inside_the_app'.tr,
+                          style: robotoBlack.copyWith(fontSize: 11),
+                        ),
+                      ),
+                      const SizedBox(height: 3.0),
+                      // const RatingStars(
+                      //   value: 3* 1.0,
+                      //   starCount: 5,
+                      //   starSize: 7,
+                      //   valueLabelColor: Color(0xff9b9b9b),
+                      //   valueLabelTextStyle: TextStyle(
+                      //       color: Colors.white,
+                      //       fontFamily: 'WorkSans',
+                      //       fontWeight: FontWeight.w400,
+                      //       fontStyle: FontStyle.normal,
+                      //       fontSize: 9.0),
+                      //   valueLabelRadius: 7,
+                      //   maxValue: 5,
+                      //   starSpacing: 2,
+                      //   maxValueVisibility: false,
+                      //   valueLabelVisibility: true,
+                      //   animationDuration: Duration(milliseconds: 1000),
+                      //   valueLabelPadding:
+                      //   EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                      //   valueLabelMargin: EdgeInsets.only(right: 4),
+                      //   starOffColor: Color(0xffe7e8ea),
+                      //   starColor: Colors.yellow,
+                      // )
+                    ])
+                  ],
+                ),
+
+                // Divider(color: Colors.grey.shade600, height: 1.0)
+              ],
+            ),
+          ),
+        ],
+      ),
+
+    );
+  }
 
 
 
 
 
 
+  buildDynamicLinks(String title,String image,String docId,String phone) async {
+    String url = "https://abaadapp.page.link";
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: url,
+      link: Uri.parse('$url/$docId'),
+      androidParameters: AndroidParameters(
+        packageName: "sa.pdm.abaad.abaad",
+        minimumVersion: 0,
+      ),
+      iosParameters: IosParameters(
+        bundleId: "Bundle-ID",
+        minimumVersion: '0',
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          description: '',
+          imageUrl:
+          Uri.parse("$image"),
+          title: title),
+    );
+    final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+
+    String desc = '${dynamicUrl.shortUrl.toString()}';
+    var whatsapp = "$phone";
+    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=$desc \n مرحبا لديك عرض في  تطبيق ابعاد ");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("WhatsApp is not installed on the device"),
+        ),
+      );
+    }
+    // await Share.share(desc, subject: title,);
+
+  }
 }
 
-
-
+openDialPad(String phoneNumber) async {
+  Uri url = Uri(scheme: "tel", path: phoneNumber);
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+  } else {
+    print("Can't open dial pad.");
+  }
+}

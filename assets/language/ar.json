@@ -215,6 +215,11 @@
   "expiry_date": "تاريخ الإنتهاء",
   "category": " فئة العقار",
   "enter_the_document_number": "ادخل رقم الوثيقة",
-  "enter_the_advertisement_number": "ادخل رقم الإعلان"
+  "enter_the_advertisement_number": "ادخل رقم الإعلان",
+  "profile_updated_successfully": "تم تحديث الملف الشخصي بنجاح",
+  "call_the_advertiser": "اتصل بالمعلن",
+  "contact_whatsApp": "تواصل واتساب",
+  "Chat_inside_the_app": "الدردشة داخل التطبيق "
+
 
 }

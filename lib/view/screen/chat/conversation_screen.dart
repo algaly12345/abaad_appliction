@@ -144,7 +144,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         ),
                         child: CustomInkWell(
                           onTap: () {
-
                             if(_user != null) {
                               Get.toNamed(RouteHelper.getChatRoute(
                                 notificationBody: NotificationBody(
@@ -170,7 +169,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               child: Row(children: [
                                 ClipOval(child: CustomImage(
                                   height: 50, width: 50,
-                                  image: '$_baseUrl/${_user != null ? _user.image : ''}'?? '',
+                                  image: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
                                 )),
                                 SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 

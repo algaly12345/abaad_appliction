@@ -23,8 +23,7 @@ import 'package:get/get.dart';
 
 class ChatScreen extends StatefulWidget {
   final NotificationBody notificationBody;
-  final Userinfo
-     user;
+  final Userinfo user;
   final int conversationID;
   final int index;
   final String  estate_id;
@@ -49,6 +48,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
 
+    print('-------------------------------estate_id${widget.estate_id==0}');
+
     _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
     if(_isLoggedIn) {
@@ -70,13 +71,13 @@ class _ChatScreenState extends State<ChatScreen> {
       Get.find<ChatController>().toggleSendButtonActivity();
       _inputMessageController.text=widget.link;
     }
-
-    _timer = Timer.periodic(Duration(seconds: 5), (timer){
-      Get.find<ChatController>().getMessages(1, widget.notificationBody, widget.user, widget.conversationID, firstLoad: true);
-
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    });
+    //
+    // _timer = Timer.periodic(Duration(seconds: 5), (timer){
+    //   Get.find<ChatController>().getMessages(1, widget.notificationBody, widget.user, widget.conversationID, firstLoad: true);
+    //
+    //   _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+    //       duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    // });
 
   }
 
@@ -101,8 +102,11 @@ class _ChatScreenState extends State<ChatScreen> {
       }
 
       return Scaffold(
-        appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : AppBar(
-          title: Text(chatController.messageModel != null ? '${chatController.messageModel.conversation.receiver.name}' : 'receiver_name'.tr),
+        appBar:
+
+
+        ResponsiveHelper.isDesktop(context) ? WebMenuBar() : AppBar(
+          title: Text(chatController.messageModel != null ? '${chatController.messageModel.conversation.sender.name}' : 'receiver_name'.tr),
           backgroundColor: Theme.of(context).primaryColor,
           actions: <Widget>[
             Flexible(
@@ -117,7 +121,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   child: ClipOval(child: CustomImage(
                     image:'$_baseUrl'
-                        '/${chatController.messageModel != null ? chatController.messageModel.conversation.receiver.image : ''}',
+                        '/${chatController.messageModel != null ? chatController.messageModel.conversation.sender.image : ''}',
                     fit: BoxFit.cover, height: 40, width: 40,
                   )),
                 ),
@@ -126,7 +130,9 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
 
-        body: _isLoggedIn ? SafeArea(
+        body: _isLoggedIn ?
+        GetBuilder<UserController>(builder: (userController) {
+      return  SafeArea(
           child: Center(
             child: Container(
               width: ResponsiveHelper.isDesktop(context) ? Dimensions.WEB_MAX_WIDTH : MediaQuery.of(context).size.width,
@@ -159,7 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         },
                       ),
                     ),
-                  ) : Center(child: Text('no_message_found'.tr)) : Center(child: CircularProgressIndicator()));
+                  ) : Center(child: Container()) : Center(child: CircularProgressIndicator()));
                 }),
 
                 (chatController.messageModel != null) ? Container(
@@ -302,7 +308,10 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-        ) : NotLoggedInScreen(),
+        );
+        })
+
+            : NotLoggedInScreen(),
       );
     });
   }
@@ -321,6 +330,7 @@ class _ChatScreenState extends State<ChatScreen> {
   //     debugPrint("URL is not valid");
   //   }
   // }
+
 
   bool _getUrlValid(String url) {
     bool _isUrlValid = AnyLinkPreview.isValidLink(

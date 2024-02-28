@@ -467,7 +467,7 @@ estate.category!="5"?     estate.property  != null ?Center(
   ),
 ):Container():        Text("${estate.shortDescription}",
     style: robotoBlack.copyWith(fontSize: 12)),
-                                const Divider(),
+
                               ],
                             ),
                           ),

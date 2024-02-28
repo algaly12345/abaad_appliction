@@ -112,7 +112,7 @@ class _EstateScreenState extends State<EstateScreen> {
                             Column(
                               children: [
                                 Text(
-                                  "نوع المعلن",
+                                  "advertiser_type".tr,
                                   style:  robotoRegular.copyWith(
                                       fontSize: Dimensions.fontSizeDefault),
                                 ),
@@ -126,7 +126,7 @@ class _EstateScreenState extends State<EstateScreen> {
                             Column(
                               children: [
                                 Text(
-                                  "الإعلانات",
+                                  "number_of_ads".tr,
                                     style:  robotoRegular.copyWith(
                                         fontSize: Dimensions.fontSizeDefault),
                                 ),
@@ -136,12 +136,12 @@ class _EstateScreenState extends State<EstateScreen> {
                             Column(
                               children: [
                                 Text(
-                                  "رقم المعلن في هية العقار",
+                                  "number_estate_authority".tr,
                                     style:  robotoRegular.copyWith(
                                         fontSize: Dimensions.fontSizeDefault),
                                 ),
                                 Text(
-                                '${userController.agentInfoModel.userinfo.advertiserNo}' ,
+                                userController.agentInfoModel.userinfo.advertiserNo??'' ,
                                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
                               ],
                             ),

@@ -32,19 +32,19 @@ class MessageBubble extends StatelessWidget {
       padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-        Text('${user.name}' ?? '', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+        // Text('${user.name}' ?? '', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
         SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
         Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
 
-          ClipRRect(
-            child: CustomImage(
-              fit: BoxFit.cover, width: 40, height: 40,
-              image: '${userType == UserType.admin ? _baseUrl.estateImageUrl : userType == UserType.vendor
-                  ? _baseUrl.estateImageUrl : _baseUrl.estateImageUrl}/${user.image}',
-            ),
-            borderRadius: BorderRadius.circular(20.0),
-          ),
+          // ClipRRect(
+          //   child: CustomImage(
+          //     fit: BoxFit.cover, width: 40, height: 40,
+          //     image: '${userType == UserType.admin ? _baseUrl.estateImageUrl : userType == UserType.vendor
+          //         ? _baseUrl.estateImageUrl : _baseUrl.estateImageUrl}/${user.image}',
+          //   ),
+          //   borderRadius: BorderRadius.circular(20.0),
+          // ),
           SizedBox(width: 10),
 
           Flexible(
@@ -63,7 +63,7 @@ class MessageBubble extends StatelessWidget {
                     ),
                     padding: EdgeInsets.all(message.message != null ? Dimensions.PADDING_SIZE_DEFAULT : 0),
                     child: GestureDetector( onTap: () async{
-    showCustomSnackBar(message.message);
+    // showCustomSnackBar(message.message);
     var url =message.message;
     if (await canLaunch(url)) {
     await launch(url);
@@ -124,11 +124,11 @@ class MessageBubble extends StatelessWidget {
 
         return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
 
-          Text(
-            '${profileController.userInfoModel != null ? profileController.userInfoModel.name ?? '' : ''} '
-        ,
-            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
-          ),
+        //   Text(
+        //     '${profileController.userInfoModel != null ? profileController.userInfoModel.name ?? '' : ''} '
+        // ,
+        //     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
+        //   ),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
           Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -139,7 +139,7 @@ class MessageBubble extends StatelessWidget {
                 (message.message != null && message.message.isNotEmpty) ? Flexible(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.5),
+                      color: Theme.of(context).primaryColor.withOpacity(0.9),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(Dimensions.RADIUS_DEFAULT),
                         bottomRight: Radius.circular(Dimensions.RADIUS_DEFAULT),
@@ -157,7 +157,7 @@ class MessageBubble extends StatelessWidget {
                             } else {
                               throw 'Could not launch $url';
                             }
-                          },                          child: Text(message.message ?? '')),
+                          },                          child: Text(message.message ?? '',style: TextStyle(color: Colors.white),)),
                     ),
                   ),
                 ) : SizedBox(),
@@ -201,13 +201,13 @@ class MessageBubble extends StatelessWidget {
             ),
             SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: CustomImage(
-                fit: BoxFit.cover, width: 40, height: 40,
-                image: profileController.userInfoModel != null ? '${_baseUrl.customerImageUrl}/${profileController.userInfoModel.image}' : '',
-              ),
-            ),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(20.0),
+            //   child: CustomImage(
+            //     fit: BoxFit.cover, width: 40, height: 40,
+            //     image: profileController.userInfoModel != null ? '${_baseUrl.customerImageUrl}/${profileController.userInfoModel.image}' : '',
+            //   ),
+            // ),
           ]),
 
           Icon(

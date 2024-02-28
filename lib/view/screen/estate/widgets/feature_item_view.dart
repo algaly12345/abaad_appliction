@@ -125,7 +125,7 @@ class _FeatureScreenState extends State<FeatureScreen> {
 
 
   Future<bool> isStreetViewAvailable(double latitude, double longitude) async {
-    final apiKey = 'AIzaSyCQD6nS0Jb0KzzGTts-uLXahVh7o4taUP'; // Replace with your Google Maps API key
+    const apiKey = 'AIzaSyC698w-7CmAo27obPPuVwVcbtfyiO7Y61M'; // Replace with your Google Maps API key
     final url = 'https://maps.googleapis.com/maps/api/streetview/metadata?location=$latitude,$longitude&key=$apiKey';
 
     try {

@@ -21,11 +21,13 @@ import 'package:abaad/view/screen/estate/widgets/interface.dart';
 import 'package:abaad/view/screen/estate/widgets/near_by_view.dart';
 import 'package:abaad/view/screen/estate/widgets/network_type.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 import 'package:flutter/material.dart';
 
 
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'widgets/estate_view.dart';
 import 'widgets/report_widget.dart';
@@ -1078,5 +1080,63 @@ class _EstateDetailsState extends State<EstateDetails> {
     );
   }
 
+  buildDynamicLinks(String title,String image,String docId,String phone) async {
+    String url = "https://abaad.page.link";
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: url,
+      link: Uri.parse('$url/$docId'),
+      androidParameters: AndroidParameters(
+        packageName: "sa.pdm.abaad.abaad",
+        minimumVersion: 0,
+      ),
+      iosParameters: IosParameters(
+        bundleId: "Bundle-ID",
+        minimumVersion: '0',
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          description: '',
+          imageUrl:
+          Uri.parse("$image"),
+          title: title),
+    );
+    final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
 
+    String desc = '${dynamicUrl.shortUrl.toString()}';
+
+    var whatsapp = "$phone";
+    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=$desc \n مرحبا لديك عرض في  تطبيق ابعاد ");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("WhatsApp is not installed on the device"),
+        ),
+      );
+    }
+    // await Share.share(desc, subject: title,);
+
+  }
+  __launchWhatsapp(String  number) async {
+    var whatsapp = "$number";
+    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=مرحبا  لديك عرض  في تطبيق ابعاد");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("WhatsApp is not installed on the device"),
+        ),
+      );
+    }
+  }
+}
+
+openDialPad(String phoneNumber) async {
+  Uri url = Uri(scheme: "tel", path: phoneNumber);
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url);
+  } else {
+    print("Can't open dial pad.");
+  }
 }

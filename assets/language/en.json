@@ -217,7 +217,12 @@
   "expiry_date": "Expiry date",
   "category": "category",
   "enter_the_document_number": "Enter the document number",
-  "enter_the_advertisement_number": "Enter the advertisement number"
+  "enter_the_advertisement_number": "Enter the advertisement number",
+  "profile_updated_successfully": "profile updated successfully",
+  "call_the_advertiser": "Contact the advertiser",
+  "contact_whatsApp": "Contact WhatsApp",
+  "Chat_inside_the_app": "Chat inside the app"
+
 
 
 

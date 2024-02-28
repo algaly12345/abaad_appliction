@@ -12,6 +12,7 @@ import 'package:abaad/helper/user_type.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 // import 'package:image_compression_flutter/image_compression_flutter.dart';
@@ -217,9 +218,9 @@ class ChatController extends GetxController implements GetxService {
             showCustomSnackBar('can_not_add_more_than_3_image'.tr);
             break;
           }else {
-            // XFile _xFile = await compressImage(xFile);
-            // _chatImage.add(_xFile);
-            // _chatRawImage.add(await _xFile.readAsBytes());
+            XFile _xFile = await compressImage(xFile);
+            _chatImage.add(_xFile);
+            _chatRawImage.add(await _xFile.readAsBytes());
           }
         }
         _isSendButtonActive = true;
@@ -329,20 +330,20 @@ class ChatController extends GetxController implements GetxService {
     update();
   }
 
-  // Future<XFile> compressImage(XFile file) async {
-  //   final ImageFile _input = ImageFile(filePath: file.path, rawBytes: await file.readAsBytes());
-  //   final Configuration _config = Configuration(
-  //     outputType: ImageOutputType.webpThenPng,
-  //     useJpgPngNativeCompressor: false,
-  //     quality: (_input.sizeInBytes/1048576) < 2 ? 50 : (_input.sizeInBytes/1048576) < 5
-  //         ? 30 : (_input.sizeInBytes/1048576) < 10 ? 2 : 1,
-  //   );
-  //   final ImageFile _output = await compressor.compress(ImageFileConfiguration(input: _input, config: _config));
-  //   if(kDebugMode) {
-  //     print('Input size : ${_input.sizeInBytes / 1048576}');
-  //     print('Output size : ${_output.sizeInBytes / 1048576}');
-  //   }
-  //   return XFile.fromData(_output.rawBytes);
-  // }
+  Future<XFile> compressImage(XFile file) async {
+    final ImageFile _input = ImageFile(filePath: file.path, rawBytes: await file.readAsBytes());
+    final Configuration _config = Configuration(
+      outputType: ImageOutputType.webpThenPng,
+      useJpgPngNativeCompressor: false,
+      quality: (_input.sizeInBytes/1048576) < 2 ? 50 : (_input.sizeInBytes/1048576) < 5
+          ? 30 : (_input.sizeInBytes/1048576) < 10 ? 2 : 1,
+    );
+    final ImageFile _output = await compressor.compress(ImageFileConfiguration(input: _input, config: _config));
+    if(kDebugMode) {
+      print('Input size : ${_input.sizeInBytes / 1048576}');
+      print('Output size : ${_output.sizeInBytes / 1048576}');
+    }
+    return XFile.fromData(_output.rawBytes);
+  }
 
 }

@@ -177,7 +177,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                             ),
                             SizedBox(width: 7,),
                             Text(
-                                '${userController.agentInfoModel.advertiserNo}' ,
+                                '${userController.agentInfoModel.advertiserNo??''}' ,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
                           ],
                         ),
@@ -315,9 +315,12 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
 
               itemBuilder: (context, index) {
                 return  GetBuilder<EstateController>(builder: (wishController) {
-                  return  EstateItem(estate: restController.estateModel.estates[index],onPressed: (){
-                    Get.toNamed(RouteHelper.getDetailsRoute( restController.estateModel.estates[index].id));
-                  },fav: false,isMyProfile: widget.isMyProfile);
+                  return  Padding(
+                    padding: const EdgeInsets.only(top: 2,bottom: 2),
+                    child: EstateItem(estate: restController.estateModel.estates[index],onPressed: (){
+                      Get.toNamed(RouteHelper.getDetailsRoute( restController.estateModel.estates[index].id));
+                    },fav: false,isMyProfile: widget.isMyProfile),
+                  );
                 });
               },
             ))),

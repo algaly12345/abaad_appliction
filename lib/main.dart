@@ -57,14 +57,6 @@ Future<void> main() async {
     }
   }catch(e) {}
 
-  // if (ResponsiveHelper.isWeb()) {
-  //   FacebookAuth.i.webInitialize(
-  //     appId: "452131619626499",
-  //     cookie: true,
-  //     xfbml: true,
-  //     version: "v9.0",
-  //   );
-  // }
   runApp(MyApp(languages: _languages, body: _body));
 }
 
