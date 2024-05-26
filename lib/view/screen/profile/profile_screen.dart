@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-     _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+    // _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
     if(_isLoggedIn && Get.find<UserController>().userInfoModel == null) {
       Get.find<UserController>().getUserInfo();
@@ -106,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }),
               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
               ProfileButtonMode(icon: Icons.dark_mode, title: 'dark_mode'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                Get.find<ThemeController>().toggleTheme();
+                // Get.find<ThemeController>().toggleTheme();
               }),
 
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _isLoggedIn ? SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5):Container(),
               _isLoggedIn ? ProfileButton(icon: Icons.ads_click, title: 'my_ads'.tr, isButtonActive: Get.isDarkMode, onTap: ()async {
                 Get.find<UserController>().getUserInfoByID(userController.userInfoModel.id );
-                 Get.toNamed(RouteHelper.getProfileAgentRoute(userController.userInfoModel.id ,1));
+                Get.toNamed(RouteHelper.getProfileAgentRoute(userController.userInfoModel.id ,1));
                 // Get.find<ThemeController>().toggleTheme();
               }):Container(),
 
@@ -209,5 +209,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
 }
-
-

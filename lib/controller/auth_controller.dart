@@ -22,7 +22,7 @@ import 'package:image_picker/image_picker.dart';
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
   AuthController({@required this.authRepo}) {
-   _notification = authRepo.isNotificationActive();
+    _notification = authRepo.isNotificationActive();
   }
 
   bool _isLoading = false;
@@ -31,7 +31,7 @@ class AuthController extends GetxController implements GetxService {
   XFile _pickedLogo;
   XFile _pickedCover;
 
- // ZoneModel _zoneModel;
+  // ZoneModel _zoneModel;
   List<ZoneModel> _zoneList;
   int _selectedZoneIndex = 0;
   LatLng _restaurantLocation;
@@ -289,7 +289,7 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void setLocation(LatLng location) async {
- _estateLocation=location;
+    _estateLocation=location;
     ZoneResponseModel _response = await Get.find<LocationController>().getZone(
       location.latitude.toString(), location.longitude.toString(), false,
     );

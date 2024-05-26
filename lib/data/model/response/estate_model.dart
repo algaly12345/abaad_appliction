@@ -352,21 +352,21 @@ class EstateImages {
 
 
 class ServiceOffers {
-  int  id;
+  String   id;
   String title;
   String expiryDate;
   int   servicePrice;
   String description;
-  int  discount;
+  String   discount;
   String sendedAt;
-  int  serviceTypeId;
+  String  serviceTypeId;
   String offerType;
   String createdAt;
   String updatedAt;
   String image;
   String phoneProvider;
-  int  category_id;
-  int   offer_id;
+  String  category_id;
+  String   offer_id;
 
   ServiceOffers(
       {this.id,
@@ -531,7 +531,7 @@ class Users {
   String phone;
   String image;
   String membershipType;
-  int advertiserNo;
+  String advertiserNo;
 
   Users({this.name, this.email, this.phone, this.image,this.membershipType,this.advertiserNo});
 

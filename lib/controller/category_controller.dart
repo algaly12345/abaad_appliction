@@ -24,7 +24,7 @@ class CategoryController extends GetxController implements GetxService {
   int _subCategoryIndex = 0;
   int _filterIndex = 0;
   List<Estate> _categoryProductList;
-   EstateModel _estateModel;
+  EstateModel _estateModel;
   Estate _estate;
 
   List<FilterBody> _filterList;
@@ -64,7 +64,7 @@ class CategoryController extends GetxController implements GetxService {
   List<FilterBody> get filterList => _filterList;
 
   String get nameCityIndex => _nameCityIndex;
-   EstateModel get estateModel => _estateModel;
+  EstateModel get estateModel => _estateModel;
   Estate get estate => _estate;
 
 
@@ -224,7 +224,7 @@ class CategoryController extends GetxController implements GetxService {
 
 
     getCategoryProductList(zoneId,index.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0","0","1",ar_path,sv);
- //   update();
+    //   update();
 
   }
 
@@ -245,7 +245,7 @@ class CategoryController extends GetxController implements GetxService {
       _categoryProductList.addAll(EstateModel.fromJson(response.body).estates);
       _pageSize = EstateModel.fromJson(response.body).totalSize;
       _estateModel = EstateModel.fromJson(response.body);
-     // Get.find<EstateController>() .getCategoryList(response.body);
+      // Get.find<EstateController>() .getCategoryList(response.body);
       _isLoading = false;
     } else {
       ApiChecker.checkApi(response);
@@ -261,6 +261,6 @@ class CategoryController extends GetxController implements GetxService {
 
 
 
-  // Method to toggle the selection of an advantage
+// Method to toggle the selection of an advantage
 
 }

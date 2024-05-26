@@ -33,4 +33,14 @@ class UserRepo {
     return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}/all?offset=$offset&user_id=$userId');
   }
 
+
+
+
+
+
+
+  Future<Response> validateNafath(String idNumber) async {
+    return await apiClient.postData(AppConstants.nafath, {"id_number": idNumber});
+  }
+
 }

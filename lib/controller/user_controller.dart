@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
@@ -9,6 +10,7 @@ import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/data/repository/user_repo.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -132,7 +134,7 @@ class UserController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     Response response ;
-    _isLoading = false;
+
     if (response.statusCode == 200) {
       showCustomSnackBar('your_account_remove_successfully'.tr);
       Get.find<AuthController>().clearSharedData();
@@ -244,5 +246,68 @@ class UserController extends GetxController implements GetxService {
       ApiChecker.checkApi(response);
     }
   }
+
+
+  String  transId ;
+  var random = ''.obs;
+  int  codeStatus ;
+
+  void validateNafath(String idNumber,BuildContext context) async {
+    _isLoading = true;
+    try {
+      final response = await userRepo.validateNafath(idNumber);
+
+      codeStatus=response.statusCode;
+      if (response.statusCode != 200) {
+        final errorMessage = response.body['message']['message'].toString();
+        Get.snackbar('Error', errorMessage);
+      } else {
+        transId = response.body['transId'];
+        random.value = response.body['random'];
+        // Handle the successful response
+        print("----------${transId}");
+        print("----------${random.value}");
+
+
+        AwesomeDialog(
+          context: context,
+          btnCancelColor:Theme.of(context).primaryColor ,
+          btnOkColor: Theme.of(context).primaryColor,
+          barrierColor: Theme.of(context).primaryColor,
+          dialogType: DialogType.SUCCES,
+          borderSide:  BorderSide(
+            color:Theme.of(context).primaryColor,
+            width: 2,
+          ),
+
+          buttonsBorderRadius: const BorderRadius.all(
+            Radius.circular(2),
+          ),
+          dismissOnTouchOutside: true,
+          dismissOnBackKeyPress: false,
+          onDissmissCallback: (type) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Dismissed by $type'),
+              ),
+            );
+          },
+          headerAnimationLoop: false,
+          animType: AnimType.BOTTOMSLIDE,
+          title: '${random}',
+          desc: 'This Dialog can be dismissed touching outside',
+          showCloseIcon: true,
+          btnOkOnPress: () {},
+        ).show();
+
+      }
+    } catch (e) {
+
+      Get.snackbar('Error', e.toString());
+    } finally {
+      _isLoading = false;
+    }
+  }
+
 
 }

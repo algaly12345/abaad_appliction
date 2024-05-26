@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:abaad/data/model/response/estate_model.dart';
+import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_app_bar.dart';
@@ -258,7 +259,7 @@ class _NearByViewState extends State<NearByView> {
             widget.esate.longitude +
             '&radius=1500&type=' +
             type +
-            '&key=AIzaSyC698w-7CmAo27obPPuVwVcbtfyiO7Y61M');
+            '&key=${AppConstants.googleMapKey}');
 
     var response = await http.post(url);
 

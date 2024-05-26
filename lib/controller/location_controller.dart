@@ -444,7 +444,7 @@ class LocationController extends GetxController implements GetxService {
     _cityIds = [];
     _zoneIds.add(0);
     _cityIds.add(0);
-   // getSubCategoryList(0);
+    // getSubCategoryList(0);
     Response response = await locationRepo.getZoneList();
     if (response.statusCode == 200) {
       _categoryList = [];

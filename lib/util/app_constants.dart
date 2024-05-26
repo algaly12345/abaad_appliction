@@ -7,8 +7,8 @@ class AppConstants {
   static const String APP_NAME = 'Baad';
   static const double APP_VERSION = 1.0;
   static const String LOGIN_URI = '/api/v1/auth/login';
-   // static const String  BASE_URL = 'https://abaadapp.sa';
-  static const String  BASE_URL = 'https://baad.arabengksa.com';
+    static const String  BASE_URL = 'https://app.abaadapp.sa';
+  // static const String  BASE_URL = 'https://baad.arabengksa.com';
   static const String LAND_SERVICE_URL = 'https://geoportal-st.gasgi.gov.sa/hosting/rest/services/Hosted/MOT_Layer04_View/FeatureServer/0/query?where=1%3D1&outFields=&outSR=4326&f=json';
  //static const String BASE_URL = 'http://192.168.196.37/abbaadRepo';
    static const String REGISTER_URI = '/api/v1/auth/register';
@@ -87,6 +87,8 @@ class AppConstants {
   static const String latitude = 'latitude';
   static const String longitude = 'longitude';
   static const String createReport = 'estate/create-report';
+  static const String nafath = '/api/v1/customer/nafath-validation';
+  static const googleMapKey='AIzaSyCuTilAfnGfkZtIx0T3qf-eOmWZ_N2LpoY';
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];
 
 

@@ -9,6 +9,9 @@ import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
+import 'package:abaad/view/base/custom_button.dart';
+import 'package:abaad/view/base/custom_snackbar.dart';
+import 'package:abaad/view/base/custom_text_field.dart';
 import 'package:abaad/view/base/drawer_menu.dart';
 import 'package:abaad/view/base/not_logged_in_screen.dart';
 import 'package:abaad/view/base/view_image_dilog.dart';
@@ -26,6 +29,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share/share.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+
+import 'widget/bottom_sheet_guide.dart';
 
 class DashboardScreen extends StatefulWidget {
   final bool fromSignUp;
@@ -107,15 +112,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       NetworkInfo.checkConnectivity(_scaffoldKey.currentContext);
     }*/
   }
+  bool _show = true;
   @override
   void dispose() {
     super.dispose();
     scrollController?.dispose();
   }
+
+  bool checkingFlight = false;
+  bool success = false;
   @override
   Widget build(BuildContext context) {
     // Get.find<UserController>().getUserInfo();
     // bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+
 
     return
       GetBuilder<UserController>(builder: (userController) {
@@ -143,6 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         }
       },
+
       child: Scaffold(
         key: _key,
         appBar: WebMenuBar(ontop:()=>     _key.currentState.openDrawer(),),
@@ -164,7 +175,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   if (userController.userInfoModel.accountVerification != "0") {
                     Get.toNamed(RouteHelper.getAddEstateRoute());
                   } else {
-                    Get.toNamed(RouteHelper.getAgentRegister());
+
+                    showBottomSheet(context);
+                //    Get.toNamed(RouteHelper.getAgentRegister());
                   }
                 }else{
                   Get.dialog(Container(
@@ -268,6 +281,85 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+
+
+  void showBottomSheet(BuildContext context) {
+
+    final TextEditingController _phoneController = TextEditingController();
+    Get.dialog(
+        GetBuilder<UserController>(builder: (userController) {
+          return
+
+
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Material(
+                  child:Container(
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 10, color: Colors.grey[300], spreadRadius: 5)
+                              ]),
+                          child: Column(
+                            children: <Widget>[
+                              CustomTextField(
+                                hintText: '500000000',
+                                controller: _phoneController,
+                                inputType: TextInputType.phone,
+                                divider: false,
+                              ),
+
+
+
+
+                              !userController.isLoading ? CustomButton(
+                                onPressed: () {
+          userController.validateNafath(_phoneController.text.toString(),context);
+          if(userController.codeStatus==200){
+            showCustomSnackBar("oomeroomer");
+
+          }
+          },
+                                margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                buttonText: 'update'.tr,
+                              ) : Center(child: CircularProgressIndicator()),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+
+
+        })
+    );
+  }
 
 
   void handleMyLink(Uri url){
