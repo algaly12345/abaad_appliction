@@ -88,7 +88,8 @@ class AppConstants {
   static const String longitude = 'longitude';
   static const String createReport = 'estate/create-report';
   static const String nafath = '/api/v1/customer/nafath-validation';
-  static const googleMapKey='AIzaSyCuTilAfnGfkZtIx0T3qf-eOmWZ_N2LpoY';
+  static const String check_request_status = '/api/v1/customer/check-request-status';
+  static const googleMapKey='AIzaSyAFuZIjGVfo57sJk3EmCSV0SpP7qVgg7n4';
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];
 
 

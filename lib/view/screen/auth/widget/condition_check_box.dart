@@ -2,6 +2,7 @@ import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/helper/route_helper.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/styles.dart';
+import 'package:abaad/view/screen/html/terms_condition_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +20,7 @@ class ConditionCheckBox extends StatelessWidget {
       ),
       Text('i_agree_with'.tr, style: robotoRegular),
       InkWell(
-        onTap: () => Get.toNamed(RouteHelper.getHtmlRoute('terms_conditions')),
+        onTap: () => Get.dialog(WebViewDialog()),
         child: Padding(
           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
           child: Text('terms_conditions'.tr, style: robotoMedium.copyWith(color: Colors.blue)),

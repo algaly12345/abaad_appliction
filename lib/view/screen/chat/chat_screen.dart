@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/chat_controller.dart';
+import 'package:abaad/controller/estate_controller.dart';
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/model/body/notification_body.dart';
+import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 import 'package:abaad/helper/responsive_helper.dart';
 import 'package:abaad/helper/user_type.dart';
+import 'package:abaad/util/app_constants.dart';
 import 'package:abaad/util/dimensions.dart';
 import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
@@ -23,12 +26,13 @@ import 'package:get/get.dart';
 
 class ChatScreen extends StatefulWidget {
   final NotificationBody notificationBody;
-  final Userinfo user;
-  final int conversationID;
+  final Userinfo  user;
+  final int    conversationID;
   final int index;
   final String  estate_id;
   final String link;
-  const ChatScreen({@required this.notificationBody, @required this.user, this.conversationID, this.index,this.estate_id,this.link});
+  final Estate estate;
+  const ChatScreen({@required this.notificationBody, @required this.user, this.conversationID, this.index,this.estate_id,this.link,this.estate});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -48,17 +52,9 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
 
-    print('-------------------------------estate_id${widget.estate_id==0}');
+    print('-------------------------------estate_id${widget.estate_id}');
 
-    _isLoggedIn = Get.find<AuthController>().isLoggedIn();
-
-    if(_isLoggedIn) {
-      Get.find<ChatController>().getMessages(1, widget.notificationBody, widget.user, widget.conversationID, firstLoad: true);
-
-      if(Get.find<UserController>().userInfoModel == null || Get.find<UserController>().userInfoModel.agent == null) {
-        Get.find<UserController>().getUserInfo();
-      }
-    }
+    initCall();
 
     if(widget.link=="null"){
 
@@ -72,12 +68,9 @@ class _ChatScreenState extends State<ChatScreen> {
       _inputMessageController.text=widget.link;
     }
     //
-    // _timer = Timer.periodic(Duration(seconds: 5), (timer){
-    //   Get.find<ChatController>().getMessages(1, widget.notificationBody, widget.user, widget.conversationID, firstLoad: true);
-    //
-    //   _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-    //       duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    // });
+    startFetchingMessages();
+
+
 
   }
 
@@ -86,6 +79,34 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
     _stream?.cancel();
   }
+
+
+
+  void startFetchingMessages() {
+    // Define the interval for refreshing data
+    const duration = Duration(seconds: 30); // Adjust the duration as needed
+
+    // Fetch messages immediately
+    Get.find<ChatController>().getMessages(1, widget.notificationBody, widget.user, widget.conversationID, firstLoad: true);
+
+    // Start the timer
+    _timer = Timer.periodic(duration, (Timer t) {
+      Get.find<ChatController>().getMessages(1, widget.notificationBody, widget.user, widget.conversationID);
+    });
+  }
+
+  void initCall(){
+    _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+    if(Get.find<AuthController>().isLoggedIn()) {
+      Get.find<ChatController>().getMessages(1, widget.notificationBody, widget.user, widget.conversationID, firstLoad: true);
+
+      if(Get.find<UserController>().userInfoModel == null || Get.find<UserController>().userInfoModel.userinfo == null) {
+        Get.find<UserController>().getUserInfo();
+      }
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,33 +123,41 @@ class _ChatScreenState extends State<ChatScreen> {
       }
 
       return Scaffold(
-        appBar:
 
 
-        ResponsiveHelper.isDesktop(context) ? WebMenuBar() : AppBar(
-          title: Text(chatController.messageModel != null ? '${chatController.messageModel.conversation.sender.name}' : 'receiver_name'.tr),
-          backgroundColor: Theme.of(context).primaryColor,
-          actions: <Widget>[
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 40, height: 40, alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(width: 2,color: Theme.of(context).cardColor),
-                    color: Theme.of(context).cardColor,
-                  ),
-                  child: ClipOval(child: CustomImage(
-                    image:'$_baseUrl'
-                        '/${chatController.messageModel != null ? chatController.messageModel.conversation.sender.image : ''}',
-                    fit: BoxFit.cover, height: 40, width: 40,
-                  )),
-                ),
-              ),
-            )
-          ],
-        ),
+      //   appBar: (ResponsiveHelper.isDesktop(context) ?  WebMenuBar() : AppBar(
+      //   leading: IconButton(
+      //     // onPressed: () {
+      //     //   if(widget.fromNotification) {
+      //     //     Get.offAllNamed(RouteHelper.getInitialRoute());
+      //     //   }else {
+      //     //     Get.back();
+      //     //   }
+      //     // },
+      //     icon: const Icon(Icons.arrow_back_ios),
+      //   ),
+      //   title: Text(chatController.messageModel != null ? '${chatController.messageModel.conversation.receiver.name}'
+      //       ' ${chatController.messageModel.conversation.receiver.name}' : 'receiver_name'.tr),
+      //   backgroundColor: Theme.of(context).primaryColor,
+      //   actions: <Widget>[
+      //     Padding(
+      //       padding: const EdgeInsets.all(8.0),
+      //       child: Container(
+      //         width: 40, height: 40, alignment: Alignment.center,
+      //         decoration: BoxDecoration(
+      //           borderRadius: BorderRadius.circular(50),
+      //           border: Border.all(width: 2,color: Theme.of(context).cardColor),
+      //           color: Theme.of(context).cardColor,
+      //         ),
+      //         child: ClipOval(child: CustomImage(
+      //           image:'${AppConstants.BASE_URL}'
+      //               '/${chatController.messageModel != null ? chatController.messageModel.conversation.receiver.image : ''}',
+      //           fit: BoxFit.cover, height: 40, width: 40,
+      //         )),
+      //       ),
+      //     )
+      //   ],
+      // )),
 
         body: _isLoggedIn ?
         GetBuilder<UserController>(builder: (userController) {
@@ -137,7 +166,64 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               width: ResponsiveHelper.isDesktop(context) ? Dimensions.WEB_MAX_WIDTH : MediaQuery.of(context).size.width,
               child: Column(children: [
+                widget.link!="null"?   Container(
+                  height: 60.0,
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.red,
+                        height: 60.0,
+                        child: Container(
 
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1.0),
+                              border: Border.all(
+                                  color: Colors.grey.withOpacity(0.5), width: 1.0),
+                              color: Theme.of(context).primaryColor,),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  // onPressed: () {
+                                  //   if(widget.fromNotification) {
+                                  //     Get.offAllNamed(RouteHelper.getInitialRoute());
+                                  //   }else {
+                                  //     Get.back();
+                                  //   }
+                                  // },
+                                  icon: const Icon(Icons.arrow_back_ios),
+                                ),
+
+                                Text(chatController.messageModel != null ? '${chatController.messageModel.conversation.receiver.name}'
+                                    ' ${chatController.messageModel.conversation.receiver.name}' : 'receiver_name'.tr,style: TextStyle(color: Theme.of(context).disabledColor,),),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: 40, height: 40, alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(width: 2,color: Theme.of(context).cardColor),
+                                      color: Theme.of(context).cardColor,
+                                    ),
+                                    child: ClipOval(child: CustomImage(
+                                      image:'${AppConstants.BASE_URL}'
+                                          '/${chatController.messageModel != null ? chatController.messageModel.conversation.receiver.image : ''}',
+                                      fit: BoxFit.cover, height: 40, width: 40,
+                                    )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ):Container(
+                  // child:   Text(widget.estate.shortDescription),
+                ),
                 GetBuilder<ChatController>(builder: (chatController) {
                   return Expanded(child: chatController.messageModel != null ? chatController.messageModel.messages.length > 0 ? SingleChildScrollView(
                     controller: _scrollController,
@@ -280,15 +366,15 @@ class _ChatScreenState extends State<ChatScreen> {
                         ) : InkWell(
                           onTap: () async {
 
-                            if(chatController.isSendButtonActive) {
+                            // if(chatController.isSendButtonActive ||  widget.estate_id==null) {
                               await chatController.sendMessage(
                                 message: _inputMessageController.text, notificationBody: widget.notificationBody,
                                 conversationID: widget.conversationID, index: widget.index,estate_id: widget.estate_id
                               );
                               _inputMessageController.clear();
-                            }else {
-                              showCustomSnackBar('write_something'.tr);
-                            }
+                            // }else {
+                            //   showCustomSnackBar('write_something'.tr);
+                            // }
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),

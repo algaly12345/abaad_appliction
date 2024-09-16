@@ -144,6 +144,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         ),
                         child: CustomInkWell(
                           onTap: () {
+
+
+                            print("-------------------------------------${ _conversation.conversations[index].receiver.name}");
                             if(_user != null) {
                               Get.toNamed(RouteHelper.getChatRoute(
                                 notificationBody: NotificationBody(
@@ -155,7 +158,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 ),
                                 conversationID: _conversation.conversations[index].id,
                                 index: index,
-                                estate_id: 3
+                                estate_id: 3,
+                                estate: _conversation.conversations[index].estate
                               ));
                             }else {
                               showCustomSnackBar('${_type.tr} ${'not_found'.tr}');

@@ -221,7 +221,11 @@
   "profile_updated_successfully": "profile updated successfully",
   "call_the_advertiser": "Contact the advertiser",
   "contact_whatsApp": "Contact WhatsApp",
-  "Chat_inside_the_app": "Chat inside the app"
+  "Chat_inside_the_app": "Chat inside the app",
+  "your_account_is_not_verified_verify_the_account_through_nafath": "Your account is not verified. Verify the account through Nafath",
+  "account_verification": "Account verification",
+  "verification": "verification",
+  "click_on_confirm_the_authentication_process": "Click on confirm the authentication process"
 
 
 

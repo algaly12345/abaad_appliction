@@ -226,7 +226,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
     return Scaffold(
         key: _key,
-        appBar: WebMenuBar(ontop:()=>     _key.currentState.openDrawer(),),
+        appBar: WebMenuBar(ontop:()=>     _key.currentState.openDrawer(),fromPage: "main"),
         drawer: DrawerMenu(),
         body:
         GetBuilder<CategoryController>(builder: (categoryController) {
@@ -1327,7 +1327,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
               Timer(Duration(seconds: 4), () {
 
-                cardKey.currentState.toggleCard();
+               // cardKey.currentState.toggleCard();
              //  cardTapped=false ;
               });
 

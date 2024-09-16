@@ -10,7 +10,8 @@ import 'package:get/get.dart';
 
 class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
   final Function ontop;
-  WebMenuBar({@required this.ontop});
+  final  String fromPage;
+  WebMenuBar({@required this.ontop,@required this.fromPage});
   @override
   Widget build(BuildContext context) {
     return Center(child: Container(
@@ -41,7 +42,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
               InkWell(
                 child: GetBuilder<NotificationController>(builder: (notificationController) {
                   return Stack(children: [
-                    Icon(Icons.notifications_active_outlined, size: 37, color: Theme.of(context).textTheme.bodyText1.color),
+                    Icon(fromPage=="main"?Icons.home_outlined: Icons.notifications_active_outlined, size: 37, color: Theme.of(context).textTheme.bodyText1.color),
                     notificationController.hasNotification ? Positioned(top: 0, right: 0, child: Container(
                       height: 10, width: 10, decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor, shape: BoxShape.circle,
@@ -50,7 +51,7 @@ class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
                     )) : SizedBox(),
                   ]);
                 }),
-                onTap: () => Get.toNamed(RouteHelper.getNotificationRoute()),
+                onTap: () =>fromPage=="main"?  Get.toNamed(RouteHelper.getInitialRoute()):Get.toNamed(RouteHelper.getNotificationRoute()),
               ),
             ],
           );

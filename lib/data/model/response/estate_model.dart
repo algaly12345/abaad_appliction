@@ -355,7 +355,7 @@ class ServiceOffers {
   String   id;
   String title;
   String expiryDate;
-  int   servicePrice;
+  String    servicePrice;
   String description;
   String   discount;
   String sendedAt;
@@ -533,7 +533,7 @@ class Users {
   String membershipType;
   String advertiserNo;
 
-  Users({this.name, this.email, this.phone, this.image,this.membershipType,this.advertiserNo});
+  Users({this.id ,this.name, this.email, this.phone, this.image,this.membershipType,this.advertiserNo});
 
   Users.fromJson(Map<String, dynamic> json) {
     id = json['id'];

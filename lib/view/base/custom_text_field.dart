@@ -32,6 +32,7 @@ class CustomTextField extends StatefulWidget {
   final bool divider;
   final bool isPhone;
   final String countryDialCode;
+  final int maxLength;
   final Function(CountryCode countryCode) onCountryChanged;
 
   const CustomTextField(
@@ -62,6 +63,8 @@ class CustomTextField extends StatefulWidget {
         this.isPhone = false,
         this.countryDialCode,
         this.onCountryChanged,
+        this.maxLength
+
       }) : super(key: key);
 
   @override
@@ -93,6 +96,7 @@ class CustomTextFieldState extends State<CustomTextField> {
           textCapitalization: widget.capitalization,
           enabled: widget.isEnabled,
           autofocus: false,
+          maxLength: widget.maxLength,
           obscureText: widget.isPassword ? _obscureText : false,
           inputFormatters: widget.inputType == TextInputType.phone ? <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp('[0-9]'))]
               : widget.isAmount ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))] : widget.isNumber ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))] : null,

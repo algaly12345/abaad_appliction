@@ -132,7 +132,7 @@ class RouteHelper {
 
 
 
-  static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id,String link}) {
+  static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id,String link, Estate estate,}) {
     String _notificationBody = 'null';
     if(notificationBody != null) {
       _notificationBody = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));
@@ -141,7 +141,13 @@ class RouteHelper {
     if(user != null) {
       _user = base64Encode(utf8.encode(jsonEncode(user.toJson())));
     }
-    return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index&estate_id=$estate_id&link=$link';
+
+
+    String _estate = 'null';
+    if(estate != null) {
+      _estate = base64Encode(utf8.encode(jsonEncode(estate.toJson())));
+    }
+    return '$messages?notification=$_notificationBody&user=$_user&conversation_id=$conversationID&index=$index&estate_id=$estate_id&link=$link&estate=$_estate';
   }
   static String getProfileAgentRoute(int id,int isMyProfile) => '$marketer?id=$id&isMyProfile=$isMyProfile';
   static List<GetPage> routes = [
@@ -216,6 +222,7 @@ class RouteHelper {
         _notificationBody = NotificationBody.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['notification'].replaceAll(' ', '+')))));
       }
       Userinfo _user;
+      Estate _estate;
       if(Get.parameters['user'] != 'null') {
         _user = Userinfo.fromJson(jsonDecode(utf8.decode(base64Url.decode(Get.parameters['user'].replaceAll(' ', '+')))));
       }
@@ -223,7 +230,7 @@ class RouteHelper {
         notificationBody: _notificationBody,
         user: _user, index: Get.parameters['index'] != 'null' ? int.parse(Get.parameters['index']) : null,
         conversationID: (Get.parameters['conversation_id'] != null && Get.parameters['conversation_id'] != 'null') ? int.parse(Get.parameters['conversation_id']) : null,
-        estate_id:  Get.parameters['estate_id'] != 'null' ?Get.parameters['estate_id']: null ,link:Get.parameters['like'] != 'null' ?Get.parameters['link']: null );
+        estate_id:  Get.parameters['estate_id'] != 'null' ?Get.parameters['estate_id']: null ,link:Get.parameters['like'] != 'null' ?Get.parameters['link']: null,estate: _estate, );
     }),
     GetPage(name: estate, page: () {
       return Get.arguments ?? EstateDetails(estate: Estate(id: int.parse(Get.parameters['id'])) ,);

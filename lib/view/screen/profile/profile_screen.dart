@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // _isLoggedIn = Get.find<AuthController>().isLoggedIn();
+    _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
     if(_isLoggedIn && Get.find<UserController>().userInfoModel == null) {
       Get.find<UserController>().getUserInfo();

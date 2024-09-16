@@ -45,6 +45,7 @@ class DashboardScreen extends StatefulWidget {
     }
 
     Get.find<UserController>().getUserInfo();
+
     Get.find<CategoryController>().getSubCategoryList("0");
     Get.find<ZoneController>().getCategoryList();
 
@@ -312,6 +313,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
+
+
+                           Text(
+                          "account_verification".tr,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.2,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 5,),
+
+                        Text(
+                          "your_account_is_not_verified_verify_the_account_through_nafath".tr,
+                          style:const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.2,
+                            color: Colors.black87,
+                          ),
+                        ),
+
+
+                        SizedBox(height: 5,),
+
                         Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -323,16 +350,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: Column(
                             children: <Widget>[
                               CustomTextField(
-                                hintText: '500000000',
+                                hintText: '000000000',
                                 controller: _phoneController,
                                 inputType: TextInputType.phone,
+                                maxLength: 10,
+                                textAlign: TextAlign.center,
+
                                 divider: false,
                               ),
 
 
 
 
-                              !userController.isLoading ? CustomButton(
+                            !userController.isLoading  ? CustomButton(
                                 onPressed: () {
           userController.validateNafath(_phoneController.text.toString(),context);
           if(userController.codeStatus==200){
@@ -341,7 +371,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
           },
                                 margin: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                                buttonText: 'update'.tr,
+                                buttonText: 'verification'.tr,
                               ) : Center(child: CircularProgressIndicator()),
                             ],
                           ),

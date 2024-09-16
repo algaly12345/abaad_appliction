@@ -254,6 +254,7 @@ class UserController extends GetxController implements GetxService {
 
   void validateNafath(String idNumber,BuildContext context) async {
     _isLoading = true;
+    update();
     try {
       final response = await userRepo.validateNafath(idNumber);
 
@@ -295,9 +296,12 @@ class UserController extends GetxController implements GetxService {
           headerAnimationLoop: false,
           animType: AnimType.BOTTOMSLIDE,
           title: '${random}',
-          desc: 'This Dialog can be dismissed touching outside',
+          desc: 'click_on_confirm_the_authentication_process'.tr,
           showCloseIcon: true,
-          btnOkOnPress: () {},
+          btnOkOnPress: () {
+            print("--------------------------------------------idNumber-${idNumber}random  ${random} transId${transId} ");
+            checkRequestStatus(idNumber,transId,random.toString());
+          },
         ).show();
 
       }
@@ -310,4 +314,26 @@ class UserController extends GetxController implements GetxService {
   }
 
 
+
+
+
+
+  Future<ResponseModel> checkRequestStatus(String nationalId, String transId, String random) async {
+    final response = await userRepo.checkRequestStatus(nationalId,transId,random);
+
+    if (response.statusCode == 200) {
+      Get.offAllNamed(RouteHelper.getInitialRoute() );
+      showCustomSnackBar('registration_successful'.tr, isError: false);
+
+    } else {
+      final errorMessage = response.body['message']['message'].toString();
+    //  Get.snackbar('Error', errorMessage);
+      showCustomSnackBar(errorMessage);
+      print("=============================================${errorMessage}");
+      print("=============================================${response.body}");
+      //throw Exception('Failed to check status: ${response.body}');
+    }
+  }
 }
+
+

@@ -43,4 +43,14 @@ class UserRepo {
     return await apiClient.postData(AppConstants.nafath, {"id_number": idNumber});
   }
 
+
+
+
+  Future<Response> checkRequestStatus(String nationalId,String transId,String random ) async {
+    return await apiClient.postData(AppConstants.check_request_status,
+        {'nationalId': nationalId,
+      'transId': transId,
+      'random': random,});
+  }
+
 }

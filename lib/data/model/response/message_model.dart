@@ -5,7 +5,7 @@ class MessageModel {
   int totalSize;
   int limit;
   int offset;
-  bool status;
+  int  status;
   Conversation conversation;
   List<Message> messages;
   String estate_id;

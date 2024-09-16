@@ -1,5 +1,6 @@
 
 
+import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/data/model/response/message_model.dart';
 import 'package:abaad/data/model/response/userinfo_model.dart';
 
@@ -51,6 +52,7 @@ class Conversation {
   int estate_id;
   Userinfo sender;
   Userinfo receiver;
+  Estate estate;
   Message lastMessage;
 
   Conversation(
@@ -67,7 +69,9 @@ class Conversation {
         this.sender,
         this.receiver,
         this.lastMessage,
-        this.estate_id
+        this.estate_id,
+        this.estate
+
       });
 
   Conversation.fromJson(Map<String, dynamic> json) {
@@ -108,6 +112,10 @@ class Conversation {
     }
     if (this.lastMessage != null) {
       data['last_message'] = this.lastMessage.toJson();
+    }
+
+    if (this.estate != null) {
+      data['estate'] = this.estate.toJson();
     }
     return data;
   }

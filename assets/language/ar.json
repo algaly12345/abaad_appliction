@@ -219,7 +219,11 @@
   "profile_updated_successfully": "تم تحديث الملف الشخصي بنجاح",
   "call_the_advertiser": "اتصل بالمعلن",
   "contact_whatsApp": "تواصل واتساب",
-  "Chat_inside_the_app": "الدردشة داخل التطبيق "
+  "Chat_inside_the_app": "الدردشة داخل التطبيق ",
+  "your_account_is_not_verified_verify_the_account_through_nafath": "حسابك غير موثق قم بتوثيق الحساب عن طريق نفاذ",
+  "account_verification": "توثيق الحساب",
+  "verification": "توثيق",
+  "click_on_confirm_the_authentication_process": "قم بالضغط علي تاكيد  عملية التوثيق"
 
 
 }
