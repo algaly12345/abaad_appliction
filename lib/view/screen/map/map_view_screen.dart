@@ -260,7 +260,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                         height: 19,
                         width: 19,
                         decoration: BoxDecoration(
-                          borderRadius : BorderRadius.only(
+                          borderRadius : const BorderRadius.only(
                             topLeft: Radius.circular(8520),
                             topRight: Radius.circular(8520),
                             bottomLeft: Radius.circular(8520),

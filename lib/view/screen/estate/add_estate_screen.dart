@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/controller/estate_controller.dart';
@@ -39,6 +41,7 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 
@@ -105,6 +108,27 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   final TextEditingController _westController = TextEditingController();
   final TextEditingController _eastController = TextEditingController();
   final TextEditingController _southController = TextEditingController();
+
+
+  //  الهيئية
+  final TextEditingController _regionController = TextEditingController();
+  final TextEditingController _regionCodeController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _cityCodeController = TextEditingController();
+  final TextEditingController _districtController = TextEditingController();
+  final TextEditingController _districtCodeController = TextEditingController();
+  final TextEditingController _streetController = TextEditingController();
+  final TextEditingController _postalCodeController = TextEditingController();
+  final TextEditingController _buildingNumberController = TextEditingController();
+  final TextEditingController _additionalNumberController = TextEditingController();
+  final TextEditingController _longitudeController = TextEditingController();
+  final TextEditingController _latitudeController = TextEditingController();
+
+  final TextEditingController _propertyTypeController = TextEditingController();
+  final TextEditingController _propertyAgeController = TextEditingController();
+  final TextEditingController _advertisementTypeController = TextEditingController();
+
+//
 
 
   TextEditingController _textEditingController = TextEditingController();
@@ -233,10 +257,42 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   }
 
 
-  GoogleMapController _mapController;
-  CameraPosition _cameraPosition;
-  LatLng _initialPosition;
 
+
+  GoogleMapController mapController;
+  LatLng location; // الإحداثيات
+  double latitude;
+  double longitude;
+
+
+  Future<void> loadCachedLocation() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String jsonString = prefs.getString('license_data');
+    if (jsonString != null) {
+      final data = jsonDecode(jsonString);
+      final lat = double.tryParse(data['location']['latitude'].toString());
+      final lng = double.tryParse(data['location']['longitude'].toString());
+
+      if (lat != null && lng != null) {
+        setState(() {
+          location = LatLng(lat, lng);
+        });
+      }
+    }
+  }
+
+
+  Future<void> loadCoordinates() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String jsonString = prefs.getString('license_data');
+    if (jsonString != null) {
+      final data = jsonDecode(jsonString);
+      setState(() {
+        latitude = double.tryParse(data['location']['latitude'].toString());
+        longitude = double.tryParse(data['location']['longitude'].toString());
+      });
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -244,8 +300,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     Get.find<AuthController>().getZoneList();
     Get.find<CategoryController>().getFacilitiesList(true);
     Get.find<CategoryController>().getAdvantages(true);
-    if (Get
-        .find<CategoryController>().categoryList == null) {
+    if (Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
 
       Get.find<CategoryController>().getPropertiesList(1);
@@ -261,13 +316,103 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     Get.find<AuthController>().resetBusiness();
     Get.find<AuthController>().getPackageList();
 
-    _initialPosition = LatLng(
-      double.parse(Get.find<SplashController>().configModel.defaultLocation.lat ?? '0'),
-      double.parse(Get.find<SplashController>().configModel.defaultLocation.lng ?? '0'),
-    );
+
     Get.find<LocationController>().getCategoryList();
 
+
+    loadCachedDataToControllers();
+    loadCachedLocation();
+    loadCoordinates();
+
+    loadLocationDataFromCache();
+
   }
+
+  Future<Map<String, dynamic>> getCachedLicenseData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String jsonString = prefs.getString('license_data');
+    if (jsonString != null) {
+      return jsonDecode(jsonString);
+    }
+    return null;
+  }
+
+
+  Future<void> loadLocationDataFromCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('license_data');
+
+    if (jsonString != null) {
+      final data = jsonDecode(jsonString);
+      final location = data['location'];
+
+      _regionController.text = location['region'] ?? '';
+      _regionCodeController.text = location['regionCode']?.toString() ?? '';
+      _cityController.text = location['city'] ?? '';
+      _cityCodeController.text = location['cityCode']?.toString() ?? '';
+      _districtController.text = location['district'] ?? '';
+      _districtCodeController.text = location['districtCode']?.toString() ?? '';
+      _streetController.text = location['street'] ?? '';
+      _postalCodeController.text = location['postalCode']?.toString() ?? '';
+      _buildingNumberController.text = location['buildingNumber']?.toString() ?? '';
+      _additionalNumberController.text = location['additionalNumber']?.toString() ?? '';
+      _longitudeController.text = location['longitude']?.toString() ?? '';
+      _latitudeController.text = location['latitude']?.toString() ?? '';
+    }
+  }
+
+
+  void loadCachedDataToControllers() async {
+    Map<String, dynamic> data = await getCachedLicenseData();
+    if (data != null) {
+      _firstNameController.text = data['advertiserName'] ?? '';
+      _phoneController.text = data['phoneNumber'] ?? '';
+      _documentNumberController.text = data['deedNumber'] ?? '';
+      _AdNumberFocus.requestFocus(); // اختياري إذا أردت تركيز المؤشر
+
+      _addNumberController.text = data['adLicenseNumber'] ?? '';
+      _userTypeController.text = data['advertisementType'] ?? '';
+      _authorizedController.text = data['brokerageAndMarketingLicenseNumber'] ?? '';
+
+      _spaceController.text = data['propertyArea']?.toString() ?? '';
+      _widthStreetController.text = data['streetWidth']?.toString() ?? '';
+      _buildSpaceController.text = data['propertyArea']?.toString() ?? '';
+
+      _priceController.text = data['propertyPrice']?.toString() ?? '';
+
+
+      _propertyTypeController.text = data['propertyType'] ?? '';
+      _propertyAgeController.text = data['propertyAge'] ?? '';
+      _advertisementTypeController.text = data['advertisementType'] ?? '';
+
+      // واجهات العقار
+      _northController.text = '';
+      _southController.text = '';
+      _eastController.text = '';
+      _westController.text = '';
+
+      // الموقع
+      if (data['location'] != null) {
+        Map<String, dynamic> location = data['location'];
+        _textEditingController.text = location['district'] ?? '';
+      }
+
+      // وصف مختصر وطويل
+      _shortDescController.text = 'عقار ${data['propertyType'] ?? ''} للبيع في ${data['location']['district'] ?? ''}';
+      _longDescController.text = 'تفاصيل العقار:\n'
+          'المساحة: ${data['propertyArea']} م²\n'
+          'السعر: ${data['propertyPrice']} ريال\n'
+          'واجهة: ${data['propertyFace'] ?? ''}';
+
+
+
+
+
+    } else {
+      print('لا توجد بيانات محفوظة في الكاش');
+    }
+  }
+
 
   static const _locale = 'en';
   String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(double.parse(s));
@@ -332,115 +477,234 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start, children: [
                   SizedBox(
                       height: 35),
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     Text("type_property".tr, style: robotoRegular.copyWith(
+                  //         fontSize: Dimensions.fontSizeDefault, color: Theme
+                  //         .of(context)
+                  //         .hintColor),),
+                  //     SizedBox(height: 7),
+                  //     GetBuilder<CategoryController>(
+                  //         builder: (categoryController) {
+                  //           return (categoryController.categoryList != null) ?
+                  //           SizedBox(
+                  //             height: 40,
+                  //             child: ListView.builder(
+                  //                 scrollDirection: Axis.horizontal,
+                  //                 itemCount: categoryController.categoryList
+                  //                     .length,
+                  //                 padding: EdgeInsets.only(
+                  //                     left: Dimensions.PADDING_SIZE_SMALL),
+                  //                 physics: BouncingScrollPhysics(),
+                  //                 itemBuilder: (context, index) {
+                  //                   String _baseUrl = Get
+                  //                       .find<SplashController>()
+                  //                       .configModel
+                  //                       .baseUrls
+                  //                       .categoryImageUrl;
+                  //                   return Column(
+                  //                     children: [
+                  //
+                  //                       Padding(
+                  //                         padding: const EdgeInsets.only(
+                  //                             right: 5, left: 5),
+                  //                         child: InkWell(
+                  //                           onTap: () {
+                  //                             restController.setCategoryIndex(categoryController.categoryList[index].id);
+                  //                             restController.setCategoryPostion(int.parse(categoryController.categoryList[index].position));
+                  //                             setState(() {
+                  //                               type_properties=categoryController.categoryList[index].name;
+                  //                             });
+                  //
+                  //                   },
+                  //                           child: Container(
+                  //                             height: 40,
+                  //                             padding: const EdgeInsets.only(
+                  //                                 left: 4.0, right: 4.0),
+                  //                             decoration: BoxDecoration(
+                  //                               border: Border.all(
+                  //                                   color: categoryController.categoryList[index].id ==
+                  //                                       restController
+                  //                                           .categoryIndex
+                  //                                       ? Theme
+                  //                                       .of(context)
+                  //                                       .primaryColor : Colors
+                  //                                       .black12,
+                  //                                 width: 2
+                  //                               ),
+                  //                               borderRadius: BorderRadius
+                  //                                   .circular(2.0),
+                  //                               color: Colors.white,
+                  //
+                  //                             ),
+                  //                             child:
+                  //
+                  //                             Row(
+                  //                               children: [
+                  //                                 Container(
+                  //                                   height: 26,
+                  //                                   color: Colors.white,
+                  //                                   child: Text(
+                  //                                   isArabic?  categoryController.categoryList[index].nameAr:categoryController.categoryList[index].name,
+                  //                                     style: categoryController.categoryList[index].id ==
+                  //                                         restController
+                  //                                             .categoryIndex
+                  //                                         ? robotoBlack
+                  //                                         .copyWith(
+                  //                                         fontSize: 17)
+                  //                                         : robotoRegular
+                  //                                         .copyWith(
+                  //                                         fontSize: Dimensions
+                  //                                             .fontSizeDefault,
+                  //                                         fontStyle: FontStyle
+                  //                                             .normal,
+                  //                                         color: Theme
+                  //                                             .of(context)
+                  //                                             .disabledColor),),
+                  //                                 ),
+                  //                                 SizedBox(width: 5),
+                  //
+                  //                                 CustomImage(
+                  //                                     image: '$_baseUrl/${categoryController
+                  //                                         .categoryList[index]
+                  //                                         .image}',
+                  //                                     height: 25,
+                  //                                     width: 25,
+                  //                                     colors: categoryController.categoryList[index].id ==
+                  //                                         restController
+                  //                                             .categoryIndex
+                  //                                         ? Theme
+                  //                                         .of(context)
+                  //                                         .primaryColor
+                  //                                         : Colors.black12),
+                  //                               ],
+                  //                             ),
+                  //                           ),
+                  //                         ),
+                  //                       )
+                  //                     ],
+                  //                   );
+                  //                 }),
+                  //           ) : Container();
+                  //         }),
+                  //   ],
+                  // ),
+
+
+
+
+
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("type_property".tr, style: robotoRegular.copyWith(
-                          fontSize: Dimensions.fontSizeDefault, color: Theme
-                          .of(context)
-                          .hintColor),),
-                      SizedBox(height: 7),
-                      GetBuilder<CategoryController>(
-                          builder: (categoryController) {
-                            return (categoryController.categoryList != null) ?
-                            SizedBox(
-                              height: 40,
-                              child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: categoryController.categoryList
-                                      .length,
-                                  padding: EdgeInsets.only(
-                                      left: Dimensions.PADDING_SIZE_SMALL),
-                                  physics: BouncingScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    String _baseUrl = Get
-                                        .find<SplashController>()
-                                        .configModel
-                                        .baseUrls
-                                        .categoryImageUrl;
-                                    return Column(
-                                      children: [
 
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 5, left: 5),
-                                          child: InkWell(
-                                            onTap: () {
-                                              restController.setCategoryIndex(categoryController.categoryList[index].id);
-                                              restController.setCategoryPostion(int.parse(categoryController.categoryList[index].position));
-                                              setState(() {
-                                                type_properties=categoryController.categoryList[index].name;
-                                              });
 
-                                    },
-                                            child: Container(
-                                              height: 40,
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0, right: 4.0),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: categoryController.categoryList[index].id ==
-                                                        restController
-                                                            .categoryIndex
-                                                        ? Theme
-                                                        .of(context)
-                                                        .primaryColor : Colors
-                                                        .black12,
-                                                  width: 2
-                                                ),
-                                                borderRadius: BorderRadius
-                                                    .circular(2.0),
-                                                color: Colors.white,
+                      MyTextField(
+                        hintText: 'نوع العقار',
+                        controller: _propertyTypeController,
+                        inputType: TextInputType.text,
+                        showBorder: true,
 
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    height: 26,
-                                                    color: Colors.white,
-                                                    child: Text(
-                                                    isArabic?  categoryController.categoryList[index].nameAr:categoryController.categoryList[index].name,
-                                                      style: categoryController.categoryList[index].id ==
-                                                          restController
-                                                              .categoryIndex
-                                                          ? robotoBlack
-                                                          .copyWith(
-                                                          fontSize: 17)
-                                                          : robotoRegular
-                                                          .copyWith(
-                                                          fontSize: Dimensions
-                                                              .fontSizeDefault,
-                                                          fontStyle: FontStyle
-                                                              .normal,
-                                                          color: Theme
-                                                              .of(context)
-                                                              .disabledColor),),
-                                                  ),
-                                                  SizedBox(width: 5),
+                      ),
 
-                                                  CustomImage(
-                                                      image: '$_baseUrl/${categoryController
-                                                          .categoryList[index]
-                                                          .image}',
-                                                      height: 25,
-                                                      width: 25,
-                                                      colors: categoryController.categoryList[index].id ==
-                                                          restController
-                                                              .categoryIndex
-                                                          ? Theme
-                                                          .of(context)
-                                                          .primaryColor
-                                                          : Colors.black12),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    );
-                                  }),
-                            ) : Container();
-                          }),
+                      SizedBox(height: 8),
+
+                      MyTextField(
+                        hintText: 'عمر العقار',
+                        controller: _propertyAgeController,
+                        inputType: TextInputType.text,
+                        showBorder: true,
+
+                      ),
+
+                      SizedBox(height: 8),
+
+                      MyTextField(
+                        hintText: 'نوع الإعلان',
+                        controller: _advertisementTypeController,
+                        inputType: TextInputType.text,
+                        showBorder: true,
+
+                      ),
+
+
+                      //     Padding(
+                      //       padding: const EdgeInsets.only(
+                      //           right: 5, left: 5),
+                      //       child: InkWell(
+                      //         onTap: () {
+                      //           restController.setCategoryIndex(categoryController.categoryList[index].id);
+                      //           restController.setCategoryPostion(int.parse(categoryController.categoryList[index].position));
+                      //           setState(() {
+                      //             type_properties=categoryController.categoryList[index].name;
+                      //           });
+                      //
+                      // },
+                      //         child: Container(
+                      //           height: 40,
+                      //           padding: const EdgeInsets.only(
+                      //               left: 4.0, right: 4.0),
+                      //           decoration: BoxDecoration(
+                      //             border: Border.all(
+                      //                 color: categoryController.categoryList[index].id ==
+                      //                     restController
+                      //                         .categoryIndex
+                      //                     ? Theme
+                      //                     .of(context)
+                      //                     .primaryColor : Colors
+                      //                     .black12,
+                      //               width: 2
+                      //             ),
+                      //             borderRadius: BorderRadius
+                      //                 .circular(2.0),
+                      //             color: Colors.white,
+                      //
+                      //           ),
+                      //           child:
+                      //
+                      //           Row(
+                      //             children: [
+                      //               Container(
+                      //                 height: 26,
+                      //                 color: Colors.white,
+                      //                 child: Text(
+                      //                 isArabic?  categoryController.categoryList[index].nameAr:categoryController.categoryList[index].name,
+                      //                   style: categoryController.categoryList[index].id ==
+                      //                       restController
+                      //                           .categoryIndex
+                      //                       ? robotoBlack
+                      //                       .copyWith(
+                      //                       fontSize: 17)
+                      //                       : robotoRegular
+                      //                       .copyWith(
+                      //                       fontSize: Dimensions
+                      //                           .fontSizeDefault,
+                      //                       fontStyle: FontStyle
+                      //                           .normal,
+                      //                       color: Theme
+                      //                           .of(context)
+                      //                           .disabledColor),),
+                      //               ),
+                      //               SizedBox(width: 5),
+                      //
+                      //               CustomImage(
+                      //                   image: '$_baseUrl/${categoryController
+                      //                       .categoryList[index]
+                      //                       .image}',
+                      //                   height: 25,
+                      //                   width: 25,
+                      //                   colors: categoryController.categoryList[index].id ==
+                      //                       restController
+                      //                           .categoryIndex
+                      //                       ? Theme
+                      //                       .of(context)
+                      //                       .primaryColor
+                      //                       : Colors.black12),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     )
                     ],
                   ),
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -451,31 +715,129 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                   ),
 
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                      boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
-                    ),
-                    child: DropdownButton<int>(
-                      value: _value1,
-                      items: locationController.zoneIds==null?Container():locationController.zoneIds.map((int value) {
-                        return DropdownMenuItem<int>(
-                          value: locationController.zoneIds.indexOf(value),
-                          child: isArabic?Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].nameAr : 'حدد المنطقة'):Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name   : 'select zone'),
-                        );
-                      }).toList(),
-                      onChanged: (int value) {
-                        setState(() {
-                          _value1 = value;
-                        });
-                        locationController.setCategoryIndex(value, true);
-                  //      restController.getSubCategoryList(value != 0 ? restController.categoryList[value-1].id : 0, null);
-                      },
-                      isExpanded: true,
-                      underline: SizedBox(),
+                  // Container(
+                  //   padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                  //   decoration: BoxDecoration(
+                  //     color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                  //     boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
+                  //   ),
+                  //   child: DropdownButton<int>(
+                  //     value: _value1,
+                  //     items: locationController.zoneIds==null?Container():locationController.zoneIds.map((int value) {
+                  //       return DropdownMenuItem<int>(
+                  //         value: locationController.zoneIds.indexOf(value),
+                  //         child: isArabic?Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].nameAr : 'حدد المنطقة'):Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name   : 'select zone'),
+                  //       );
+                  //     }).toList(),
+                  //     onChanged: (int value) {
+                  //       setState(() {
+                  //         _value1 = value;
+                  //       });
+                  //       locationController.setCategoryIndex(value, true);
+                  // //      restController.getSubCategoryList(value != 0 ? restController.categoryList[value-1].id : 0, null);
+                  //     },
+                  //     isExpanded: true,
+                  //     underline: SizedBox(),
+                  //   ),
+                  // ),
+
+
+
+                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                  Text(
+                    'موقع العقار',
+                    style: robotoRegular.copyWith(
+                      fontSize: Dimensions.fontSizeLarge,
+                      color: Theme.of(context).disabledColor,
                     ),
                   ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyTextField(
+                          hintText: 'المنطقة',
+                          controller: _regionController,
+                          inputType: TextInputType.text,
+                          showBorder: true,
+                          isEnabled: false,
+                        ),
+                      ),
+                      SizedBox(width: 3),
+                      Expanded(
+                        child: MyTextField(
+                          hintText: 'المدينة',
+                          controller: _cityController,
+                          inputType: TextInputType.text,
+                          showBorder: true,
+                          isEnabled: false,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 8),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyTextField(
+                          hintText: 'الحي',
+                          controller: _districtController,
+                          inputType: TextInputType.text,
+                          showBorder: true,
+                          isEnabled: false,
+                        ),
+                      ),
+                      SizedBox(width: 3),
+                      Expanded(
+                        child: MyTextField(
+                          hintText: 'الشارع',
+                          controller: _streetController,
+                          inputType: TextInputType.text,
+                          showBorder: true,
+                          isEnabled: false,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 8),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyTextField(
+                          hintText: 'رقم المبنى',
+                          controller: _buildingNumberController,
+                          inputType: TextInputType.number,
+                          showBorder: true,
+                          isEnabled: false,
+                        ),
+                      ),
+                      SizedBox(width: 3),
+                      Expanded(
+                        child: MyTextField(
+                          hintText: 'كود المنطقة',
+                          controller: _regionCodeController,
+                          inputType: TextInputType.number,
+                          showBorder: true,
+
+                        ),
+                      ),
+                      SizedBox(width: 3),
+                      Expanded(
+                        child: MyTextField(
+                          hintText: 'خط الطول',
+                          controller: _longitudeController,
+                          inputType: TextInputType.number,
+                          showBorder: true,
+                        ),
+                      ),
+                    ],
+                  ),
+
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                      Container(
                     height: 140,
@@ -490,94 +852,23 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
                       borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                       child: Stack(clipBehavior: Clip.none, children: [
-                        GoogleMap(
-                          mapType: MapType.satellite,
-                          initialCameraPosition: CameraPosition(target: _initialPosition, zoom: 17),
-                          minMaxZoomPreference: MinMaxZoomPreference(0, 30),
-                          onTap: (latLng) {
+      GoogleMap(
+      initialCameraPosition: CameraPosition(
+      target: location,
+      zoom: 16.0,
+      ),
+      markers: {
+      Marker(
+      markerId: const MarkerId("propertyLocation"),
+      position: location,
+      infoWindow: const InfoWindow(title: "موقع العقار"),
+      ),
+      },
+      onMapCreated: (GoogleMapController controller) {
+      mapController = controller;
+      },
+      ),
 
-
-                              if( _value1==0){
-                                showCustomSnackBar('حدد المنطقة'.tr);
-                              }else{
-                                Get.toNamed(
-                                  RouteHelper.getPickMapRoute('add-address', false),
-                                  arguments: PickMapScreen(
-                                    fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
-                                    route: null, canRoute: false,
-                                  ),
-                                );}
-
-
-                          },
-                          zoomControlsEnabled: false,
-                          compassEnabled: false,
-                          indoorViewEnabled: true,
-                          mapToolbarEnabled: false,
-                          onCameraIdle: () {
-                            locationController.updatePosition(_cameraPosition, true);
-                          },
-                          onCameraMove: ((position) => _cameraPosition = position),
-                          onMapCreated: (GoogleMapController controller) {
-                            locationController.setMapController(controller);
-
-                              if( _value1==0){
-                                showCustomSnackBar('حدد المنطقة'.tr);
-                              }else{
-                                Get.toNamed(
-                                  RouteHelper.getPickMapRoute('add-address', false),
-                                  arguments: PickMapScreen(
-                                    fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
-                                    route: null, canRoute: false,
-                                  ),
-                                );}
-
-                            // if(widget.address == null) {
-                         //     locationController.getCurrentLocation(true, mapController: controller);
-                            // }
-                          },
-                        ),
-                        locationController.loading ? Center(child: CircularProgressIndicator()) : SizedBox(),
-                        Center(child: !locationController.loading ? Image.asset(Images.pick_marker, height: 50, width: 50)
-                            : CircularProgressIndicator()),
-                        Positioned(
-                          bottom: 10, right: 0,
-                          child: InkWell(
-                            onTap: () => _checkPermission(() {
-
-                              // locationController.getCurrentLocation(true, mapController: locationController.mapController);
-                            }),
-                            child: Container(
-                              width: 30, height: 30,
-                              margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
-                              child: Icon(Icons.my_location, color: Theme.of(context).primaryColor, size: 20),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 10, right: 0,
-                          child: InkWell(
-                            onTap: () {
-                              if( _value1==0){
-                                showCustomSnackBar('حدد المنطقة'.tr);
-                              }else{
-                              Get.toNamed(
-                                RouteHelper.getPickMapRoute('add-address', false),
-                                arguments: PickMapScreen(
-                                  fromAddAddress: true, fromSignUp: false, googleMapController: locationController.mapController,
-                                  route: null, canRoute: false,
-                                ),
-                              );}
-                            },
-                            child: Container(
-                              width: 30, height: 30,
-                              margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), color: Colors.white),
-                              child: Icon(Icons.fullscreen, color: Theme.of(context).primaryColor, size: 20),
-                            ),
-                          ),
-                        ),
                       ]),
                     )),
 
@@ -2191,8 +2482,6 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                             showCustomSnackBar('enter_short_desc'.tr);
                           }else if(restController.pickedIdentities.length ==null) {
                             showCustomSnackBar('pleace select image estate'.tr);
-                          }else if( locationController.pickAddress==''){
-                            showCustomSnackBar('اضف الموقع من الخريطة'.tr);
                           }
 
                           else {
@@ -2277,6 +2566,9 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
 
 
+
+
+
                             restController.addEstate(
                               EstateBody(
                                   address: "${locationController.address}",
@@ -2288,8 +2580,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
                                   arPath: _textEditingController.text,
                                   districts: district,
                                   floors: "4545",
-                                  latitude: locationController.pickPosition.latitude.toString(),
-                                  longitude: locationController.pickPosition.longitude.toString(),
+                                  latitude: latitude.toString(),
+                                  longitude: longitude.toString(),
                                   near: "near",
                                   networkType:"$_interests",
                                   ownershipType: _djectivePresenter==1?"مالك":'مفوض',

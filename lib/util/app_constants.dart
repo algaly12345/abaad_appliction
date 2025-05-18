@@ -90,6 +90,11 @@ class AppConstants {
   static const String nafath = '/api/v1/customer/nafath-validation';
   static const String check_request_status = '/api/v1/customer/check-request-status';
   static const googleMapKey='AIzaSyAFuZIjGVfo57sJk3EmCSV0SpP7qVgg7n4';
+
+
+  static const String   verifyLicense='/api/v1/estate/check-license';
+
+
   static List<int> tips = [0, 5, 10, 15, 20, 30, 50];
 
 

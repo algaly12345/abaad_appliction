@@ -106,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }),
               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
               ProfileButtonMode(icon: Icons.dark_mode, title: 'dark_mode'.tr, isButtonActive: Get.isDarkMode, onTap: () {
-                // Get.find<ThemeController>().toggleTheme();
+                Get.find<ThemeController>().toggleTheme();
               }),
 
               SizedBox(height: _isLoggedIn ? Dimensions.PADDING_SIZE_SMALL : 5),
@@ -209,3 +209,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
 }
+

@@ -174,7 +174,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 if(userController.userInfoModel != null) {
                   if (userController.userInfoModel.accountVerification != "0") {
-                    Get.toNamed(RouteHelper.getAddEstateRoute());
+                    Get.toNamed(RouteHelper.getAddLicenseRoute());
+                    // Get.toNamed(RouteHelper.getAddEstateRoute());
                   } else {
 
                     showBottomSheet(context);

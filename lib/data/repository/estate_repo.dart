@@ -166,4 +166,26 @@ class EstateRepo {
 
 
 
+  Future<Response> verifyLicense(String licenseNumber,String advertiserId,int entityType) async {
+    return await apiClient.postData(AppConstants.verifyLicense,
+      {
+        'adLicenseNumber': licenseNumber,
+        'advertiserId': advertiserId,
+        'entityType': entityType
+
+      }, // البيانات المرسلة
+    );
+  }
+
+
+
+
+
+  Future<Response> addWishList(int id, bool isRestaurant) async {
+    return await apiClient.postData('${AppConstants.ADD_WISH_LIST_URI}estate_id=$id', null);
+  }
+
+
+
+
 }

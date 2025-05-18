@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:abaad/controller/auth_controller.dart';
 import 'package:abaad/controller/category_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';
@@ -118,6 +120,24 @@ class EstateController extends GetxController implements GetxService {
   Estate get restaurant => _restaurant;
   List<String> get reportList => _reportList;
   RxBool isLoading2 = false.obs;
+
+
+
+
+  int advertiserType = 0; // القيمة الافتراضية 0
+
+  void setAdvertiserType(String type) {
+    if (type == 'فرد') {
+      advertiserType = 1;
+    } else if (type == 'منشأة') {
+      advertiserType = 2;
+    } else {
+      advertiserType = 0; // قيمة افتراضية إذا لم يتم تحديد النوع
+    }
+    update(); // تحديث واجهة المستخدم
+  }
+
+
   Future<void> getEstateList(int offset, bool reload ,int categoryId) async {
     if (reload) {
       _estateModel = null;
@@ -477,5 +497,60 @@ class EstateController extends GetxController implements GetxService {
       _isLoading = false;
     }
   }
+
+
+  Map<String, dynamic> licenseData = {};
+
+  void setIsLoading(bool loading) {
+    _isLoading = loading;
+    update();
+  }
+
+
+
+  Future<bool> verifyLicense(String licenseNumber, String  _advertiserNumber ,int type) async {
+    try {
+      final response = await estateRepo.verifyLicense(licenseNumber,_advertiserNumber,type);
+
+      if (response.statusCode == 200) {
+        // التحقق من البيانات القادمة من API
+        print("API response: ${response.body}");
+        // التأكد من أن الاستجابة تحتوي على بيانات صحيحة
+        if (response.body['success'] == true) {
+          licenseData = response.body['data']; // تخزين البيانات في الـ controller
+          print('${ response.body['data']}');
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String licenseJson = jsonEncode(licenseData);
+          await prefs.setString('license_data', licenseJson);
+          return true;
+        } else {
+          print('Error: ${response.body['message']}');
+          return false;
+        }
+      } else {
+        print('API error: ${response.statusCode} - ${response.statusText}');
+        // print('Error: API request failed');
+        return false;
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return false;
+    }
+  }
+
+
+
+// void addToWishList(Estate restaurant, bool isRestaurant) async {
+  //   Response response = await wishListRepo.addWishList( restaurant.id, isRestaurant);
+  //   if (response.statusCode == 200) {
+  //     _wishRestIdList.add(restaurant.id);
+  //     _wishRestList.add(restaurant);
+  //
+  //     showCustomSnackBar(response.body['message'], isError: false);
+  //   } else {
+  //     ApiChecker.checkApi(response);
+  //   }
+  //   update();
+  // }
 
 }

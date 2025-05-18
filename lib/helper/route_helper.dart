@@ -16,6 +16,7 @@ import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
 import 'package:abaad/view/screen/chat/chat_screen.dart';
 import 'package:abaad/view/screen/chat/conversation_screen.dart';
+import 'package:abaad/view/screen/estate/ad_license_screen.dart';
 import 'package:abaad/view/screen/estate/add_estate_screen.dart';
 import 'package:abaad/view/screen/estate/confiram_screen.dart';
 import 'package:abaad/view/screen/estate/business_plan/business_plan.dart';
@@ -75,6 +76,8 @@ class RouteHelper {
   static const String payment = '/payment';
   static const String sucess2 = '/success';
 
+  static const String addLicense = '/add-license';
+
   static const String editEstate = '/edite-estate';
 
 
@@ -116,6 +119,7 @@ class RouteHelper {
 
   static String getAccessLocationRoute(String page) => '$accessLocation?page=$page';
   static String getAddEstateRoute() => '$addEstate';
+  static String getAddLicenseRoute() => '$addLicense';
   static String getAddEstateRouteTow() => '$addEstateTow';
   static String getAgentRegister() => '$agent';
   static String getBusinessPlanRoute(int restaurantId) => '$businessPlan?id=$restaurantId';
@@ -163,6 +167,8 @@ class RouteHelper {
     GetPage(name: language, page: () => ChooseLanguageScreen(fromMenu: Get.parameters['page'] == 'menu')),
     GetPage(name: onBoarding, page: () => OnboardingScreen()),
     GetPage(name: addEstate, page: () => AddEstateScreen()),
+
+    GetPage(name: addLicense, page: () => AdLicenseScreen()),
     GetPage(name: addEstateTow, page: () => AddEstateScreenTow()),
 
     GetPage(name: agent, page: () => AgentRegistrationScreen()),

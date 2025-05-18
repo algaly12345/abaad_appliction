@@ -7,8 +7,10 @@ class SignUpBody {
   int zone_id;
   int city_id;
   String membershipType;
+  String userType;
+  String unifiedNumber;
 
-  SignUpBody({this.fName, this.phone, this.email='', this.password, this.refCode = '',this.zone_id,this.city_id,this.membershipType});
+  SignUpBody({this.fName, this.phone, this.email='', this.password, this.refCode = '',this.zone_id,this.city_id,this.membershipType,this.unifiedNumber});
 
   SignUpBody.fromJson(Map<String, dynamic> json) {
     fName = json['name'];
@@ -19,6 +21,7 @@ class SignUpBody {
     zone_id = json['zone_id'];
     city_id = json['city_id'];
     membershipType = json['membership_type'];
+    unifiedNumber=json['unified_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +34,7 @@ class SignUpBody {
     data['zone_id'] = this.zone_id;
     data['city_id'] = this.refCode;
     data['membership_type'] = this.membershipType;
+    data['unified_number']=this.unifiedNumber;
     return data;
   }
 }

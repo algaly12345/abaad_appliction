@@ -40,8 +40,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _referCodeController = TextEditingController();
+  String _registrationType = 'individual';
+  final TextEditingController _unifiedNumberController = TextEditingController();
+
   String _countryDialCode;
   String _membershipType;
+  String _selectedUserType;
 
   @override
   void initState() {
@@ -177,6 +181,120 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Padding(padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE), child: Divider(height: 1)),
 
+
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'نوع المستخدم',
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[Get.isDarkMode ? 800 : 200],
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                ),
+                              ],
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                value: _selectedUserType,
+                                hint: Text(
+                                  'اختر نوع المستخدم',
+                                  style: robotoRegular.copyWith(
+                                    fontSize: Dimensions.fontSizeLarge,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),
+                                icon: Icon(Icons.keyboard_arrow_down),
+                                items: [
+                                  DropdownMenuItem(
+                                    value: 'باحث عن عقار',
+                                    child: Text('باحث عن عقار'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'مسوق عقاري',
+                                    child: Text('مسوق عقاري'),
+                                  ),
+                                ],
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    _selectedUserType = newValue;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'نوع التسجيل',
+                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
+                          ),
+                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                              border: Border.all(color: Theme.of(context).disabledColor),
+                            ),
+                            child: DropdownButton<String>(
+                              value: _registrationType,
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  _registrationType = newValue;
+                                });
+                              },
+                              isExpanded: true,
+                              underline: SizedBox(),
+                              items: <DropdownMenuItem<String>>[
+                                DropdownMenuItem(
+                                  value: 'individual',
+                                  child: Text('فرد'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'organization',
+                                  child: Text('منشأة'),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+
+                          // الرقم الموحد (يظهر فقط إذا كانت منشأة)
+                          if (_registrationType == 'organization')
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'الرقم الموحد',
+                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
+                                ),
+                                CustomTextField(
+                                  hintText: 'ادخل الرقم الموحد',
+                                  controller: _unifiedNumberController,
+                                  inputType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                        ],
+                      )
+
+
                       // CustomTextField(
                       //   hintText: 'password'.tr,
                       //   controller: _passwordController,
@@ -289,12 +407,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // }else if (_password != _confirmPassword) {
     //   showCustomSnackBar('confirm_password_does_not_matched'.tr);
     // }
+    else if (_selectedUserType == null || _selectedUserType.isEmpty) {
+      showCustomSnackBar('يرجى اختيار نوع المستخدم');
+    }
     else if (_referCode.isNotEmpty && _referCode.length != 10) {
       showCustomSnackBar('invalid_refer_code'.tr);
     }else {
       SignUpBody signUpBody = SignUpBody(
         fName: _fullName, email: _email, phone: _numberWithCountryCode, password: "1234567",
         refCode: _referCode,zone_id:  0,
+        membershipType: _selectedUserType,
+        unifiedNumber: _registrationType == 'organization' ? _unifiedNumberController.text.trim() : null,
       );
       authController.registration(signUpBody).then((status) async {
         if (status.isSuccess) {
