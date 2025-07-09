@@ -1,12 +1,14 @@
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/dimensions.dart';
+import 'package:abaad/util/images.dart';
 import 'package:abaad/util/styles.dart';
 import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/screen/map/widget/service_offer.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 class ServiceProviderItem extends StatelessWidget {
   final Estate estate;
 
@@ -84,6 +86,10 @@ class ServiceProviderItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 4.0),
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+
+
+
                         Container(
 
                           child:  Text(
@@ -91,6 +97,16 @@ class ServiceProviderItem extends StatelessWidget {
                             style: robotoBlack.copyWith(fontSize: 11),
                           ),
                         ),
+                        Container(
+
+                          child:  Text(
+                            '${estate.serviceOffers[index].provider_name}',
+                            style: robotoBlack.copyWith(fontSize: 11),
+                          ),
+                        ),
+
+
+
                         const SizedBox(height: 3.0),
                         Row(
                           children: [
@@ -109,8 +125,88 @@ class ServiceProviderItem extends StatelessWidget {
                                 ),
                               ),
                             ):Text(" ${estate.serviceOffers[index].servicePrice} ريال "  ,style: robotoBlack.copyWith(fontSize: 11)),
+
+                            const SizedBox(width: 8),
+                            // أيقونة الاتصال
+                            InkWell(
+                              onTap: () async{
+                                final phoneNumber = estate.serviceOffers[index].phoneProvider;
+                               // print("----------${phoneNumber}");// رقم الهاتف بدون "+" وبصيغة دولية
+                                final estateId = estate.id; // تأكد أن الـ ID موجود لديك
+                                final estateUrl = 'https://abaad.com/estate/$estateId';
+                                final message = Uri.encodeComponent(
+                                  "عرض داخل العقار مقدم من منصة أبعاد\n$estateUrl",
+                                );
+                                final url = "https://wa.me/$phoneNumber?text=$message";
+
+                                if (await canLaunchUrl(Uri.parse(url))) {
+                                await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                } else {
+                                print("لا يمكن فتح واتساب");
+                                }
+
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade700,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.whatsapp, color: Colors.white, size: 12),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+
+                            // أيقونة الواتساب
+                            InkWell(
+                              onTap: () async{
+                                final phoneNumber = estate.serviceOffers[index].phoneProvider;
+                                final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+
+                                if (await canLaunchUrl(phoneUri)) {
+                                await launchUrl(phoneUri);
+                                } else {
+                                print("لا يمكن فتح الاتصال");
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.phone, color: Colors.white, size: 12),
+                              ),
+                            ),
+
                           ],
                         ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         // const RatingStars(
                         //   value: 3* 1.0,
                         //   starCount: 5,

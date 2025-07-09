@@ -95,7 +95,7 @@ class _ConfirmMapViewState extends State<ConfirmMapView> {
                 ),
                 widget.fromView ? Positioned(
                   top: 10, right: 0,
-                  child: InkWell(
+                  child:      InkWell(
                     onTap: () {
                       Get.to(ConfirmMapView(fromView: false, mapController: _mapController));
                     },

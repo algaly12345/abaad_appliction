@@ -23,6 +23,7 @@ import 'package:abaad/view/screen/favourite/favourite_screen.dart';
 import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:abaad/view/screen/map/map_view_screen.dart';
 import 'package:abaad/view/screen/qr.dart';
+import 'package:abaad/view/screen/zones/zones_screen.dart';
 // import 'package:abaad/view/screen/map/map_view_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -93,7 +94,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     _screens = [
       MapViewScreen(),
-      HomeScreen(),
+      ZonesScreen(),
+      // HomeScreen(),
       ConversationScreen(),
       FavouriteScreen(),
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+
 class VideoPlayerWidgetState extends StatefulWidget {
   String videoPath;
   VideoPlayerWidgetState({Key key,@required this.videoPath}) : super(key: key);

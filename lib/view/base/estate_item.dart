@@ -111,9 +111,9 @@ class EstateItem extends StatelessWidget {
                               ),
                               IconButton(
                                 onPressed: ()async {
-                                  Get.find<EstateController>().currentIndex==0;
-                                  Get.find<EstateController>().categoryIndex==0;
-                                  await       Get.toNamed(RouteHelper.getEditEstatRoute(estate));
+                                  // Get.find<EstateController>().currentIndex==0;
+                                  // Get.find<EstateController>().categoryIndex==0;
+                                  // await       Get.toNamed(RouteHelper.getEditEstatRoute(estate));
 
                                   // Get.dialog(EditDialog(estate:estate));
                                 },
@@ -145,9 +145,17 @@ class EstateItem extends StatelessWidget {
 
                                        Text("price".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
                                        SizedBox(width: 11.0),
-                                       Text(" ${estate.price}"  ,style: robotoBlack.copyWith(fontSize: 11)),
+                                       Text(
+                                         formatPrice(
+                                             estate.categoryName == "ارض"
+                                                 ? estate.totalPrice
+                                                 : estate.price
+                                         ),
+                                         style: robotoBlack.copyWith(fontSize: 11),
+                                       ),
+
                                        SizedBox(width: 2.0),
-                                     Text("currency".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall))
+                                     // Text("currency".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall))
                                      ],
                                    )
 ,
@@ -167,6 +175,8 @@ class EstateItem extends StatelessWidget {
                                               return InkWell(
                                                 onTap: () {
                                                   if(Get.find<AuthController>().isLoggedIn()) {
+
+                                                    print("removed id ------------------omer-------${estate.id}");
                                                     _isWished ? wishController.removeFromWishList(estate.estate_id) : wishController.addToWishList(estate, true);
                                                   }else {
                                                     showCustomSnackBar('you_are_not_logged_in'.tr);
@@ -210,28 +220,52 @@ class EstateItem extends StatelessWidget {
                                 const SizedBox(
                                   height: 3.0,
                                 ),
-                                Text(   isArabic ? "${estate.categoryNameAr} -${estate.zoneNameAr} -${estate.districts??''}":"${estate.categoryName} -${estate.zoneName} -${estate.districts}",
-                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                                Row(
+                                  children: [
+                                    Text(   isArabic ? "${estate.categoryNameAr} -${estate.city} -${estate.districts??''}":"${estate.categoryName} -${estate.zoneName} -${estate.districts}",
+                                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                                    Container(
+                                      padding: const EdgeInsets.only(right: 4,left: 4),
+                                      decoration:  BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              4),
+                                          color:  Colors.blue),
+                                      child:  Row(
+                                        children: [
+                                          Text(
+                                              "${estate.advertisementType}",
+                                              style: robotoRegular.copyWith(
+                                                fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor,
+                                              )
+                                          ),
+                                          SizedBox(width: 2,),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(
                                   height: 3.0,
                                 ),
+
+
                                 Row(
                                   children: [
-                                    Text("national_address".tr,
+                                    Text("رقم ترخيض الإعلان".tr,
                                         style: robotoBlack.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.black26)),
-                                    Text(": ${estate.nationalAddress}",
-                                        style: robotoBlack.copyWith(fontSize: 11,color: Colors.black26)),
+
                                   ],
 
                                 ),
                                 Container(
                                   child: Row(
                                     children: [
-                                      Text("ad_number".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                     // /
                                       SizedBox(
                                         width: 4.0,
                                       ),
-                                      Text(": ${estate.adNumber}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                                      Text(" ${estate.adLicenseNumber}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
                                       // IconButton(onPressed:(){
                                       //   FlutterClipboard.copy(estate.adNumber.toString()).then(( value ) {
                                       //     showCustomSnackBar('تم النسخ'.tr, isError: false);
@@ -486,4 +520,19 @@ estate.category!="5"?     estate.property  != null ?Center(
     );
 
   }
+
+
+ String formatPrice(String priceStr) {
+   final num price = num.tryParse(priceStr);
+   if (price == null) return priceStr;
+
+   if (price >= 1000000) {
+     return "${(price / 1000000).toStringAsFixed(2)} مليون";
+   } else if (price >= 1000) {
+     return "${(price / 1000).toStringAsFixed(2)} ألف";
+   } else {
+     return price.toString();
+   }
+ }
+
 }

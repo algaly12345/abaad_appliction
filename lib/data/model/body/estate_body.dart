@@ -35,6 +35,22 @@ class EstateBody {
   String property_type;
   String estate_type;
   String  authorization_number;
+  String propertyFace;
+  String deedNumber;
+  String categoryName;
+  String totalPrice;
+  String advertisementType;
+  String postalCode;
+  String planNumber;
+  String northLimit;
+  String eastLimit;
+  String westLimit;
+  String southLimit;
+
+   String licenseNumber;
+   String advertiserNumber;
+   String idType;
+
 
 
   EstateBody(
@@ -74,8 +90,24 @@ class EstateBody {
         this.feature,
         this.property_type,
         this.estate_type,
-        this.authorization_number
-        });
+        this.authorization_number,
+
+        this.propertyFace,
+        this.deedNumber,
+        this.categoryName,
+        this.totalPrice,
+        this.advertisementType,
+        this.postalCode,
+        this.planNumber,
+        this.northLimit,
+        this.eastLimit,
+        this.westLimit,
+        this.southLimit,
+        this.licenseNumber,
+        this.advertiserNumber,
+        this.idType
+
+      });
 
   EstateBody.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -118,6 +150,24 @@ class EstateBody {
     property_type= json['property_type'];
     estate_type=json['estate_type'];
     authorization_number=json["authorization_number"];
+
+
+    propertyFace = json['property_face'];
+    deedNumber = json['deed_number'];
+    categoryName = json['category_name'];
+    totalPrice = json['total_price'];
+    advertisementType = json['advertisement_type'];
+    postalCode = json['postal_code'];
+    planNumber = json['plan_number'];
+    northLimit = json['north_limit'];
+    eastLimit = json['east_limit'];
+    westLimit = json['west_limit'];
+    southLimit = json['south_limit'];
+
+    licenseNumber = json['license_number'];
+    advertiserNumber = json['advertiser_number'];
+    idType = json['idType'];
+
 
 
 
@@ -163,6 +213,25 @@ class EstateBody {
     data['property_type']=this.property_type;
     data['estate_type']=this.estate_type;
     data["authorization_number"]=this.authorization_number;
+
+    data['property_face'] = this.propertyFace;
+    data['deed_number'] = this.deedNumber;
+    data['category_name'] = this.categoryName;
+    data['total_price'] = this.totalPrice;
+    data['advertisement_type'] = this.advertisementType;
+    data['postal_code'] = this.postalCode;
+    data['plan_number'] = this.planNumber;
+    data['north_limit'] = this.northLimit;
+    data['east_limit'] = this.eastLimit;
+    data['west_limit'] = this.westLimit;
+    data['south_limit'] = this.southLimit;
+
+
+
+    data['license_number'] = this.licenseNumber;
+    data['advertiser_number'] = this.advertiserNumber;
+    data['idType'] = this.idType;
+
     return data;
   }
 }

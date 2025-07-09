@@ -18,9 +18,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'widet/banner_view.dart';
 
 class HomeScreen extends StatefulWidget {
+
+  int zoneId;
+
+  HomeScreen( {@required this.zoneId});
 
   final ScrollController scrollController = ScrollController();
   final bool _ltr = Get.find<LocalizationController>().isLtr;
@@ -29,9 +34,10 @@ class HomeScreen extends StatefulWidget {
   ConfigModel _configModel = Get.find<SplashController>().configModel;
 
 
+
   static Future<void> loadData(bool reload) async {
     Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", "0",0,0);
+          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", "0",0,0,"");
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(true);
     }
@@ -57,7 +63,7 @@ class HomeScreen extends StatefulWidget {
       offset++;
       print('end of the page');
       Get.find<CategoryController>().showBottomLoader();
-      Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString(),0,0);
+      Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString(),0,0,"");
   }}
 
   @override
@@ -71,10 +77,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _loadSavedZone();
 
 
   }
 
+  String selectedZoneName;
+
+  void _loadSavedZone() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedZoneName = prefs.getString('zone_name');
+    });
+  }
   static const _locale = 'en';
   String result = "Scan a QR Code"; // Initialize with a default message
   bool isFlashOn = false;
@@ -111,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
     bool _isNull = true;
     int _length = 0;
 
+
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
@@ -137,7 +153,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Padding(
             padding: const EdgeInsets.only(right: 5, left: 5),
             child:  Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+
                 Row(
                   children: [
                     SafeArea(
@@ -151,6 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
+
+
                                 Row(
                                   children: [
                                     _textField(
@@ -225,6 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       })
                                   ],
                                 ),
+
                               ],
                             ),
                           ),
@@ -233,11 +254,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                Container(
-                  height: 150.0,
-                  child: BannerView(),
-                ),
+                // Container(
+                //   height: 150.0,
+                //   child: BannerView(),
+                // ),
 
+
+
+                SizedBox(height: 8),
                 (categoryController.subCategoryList != null ) ? Center(child: Container(
                     height: 40,
 
@@ -252,7 +276,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Padding(
                           padding: const EdgeInsets.only(right: 6,left: 6),
                           child: InkWell(
-                            onTap: () => categoryController.setSubCategoryIndex(index),
+                            onTap: ()async {
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              int savedZoneId = prefs.getInt('zone_id');
+                              categoryController.setSubCategoryIndex(index,savedZoneId);
+                             //  categoryController.subCategoryIndex==index;
+
+                                 _loadSavedZone();
+
+                             // Get.find<CategoryController>().setFilterIndex(savedZoneId,categoryController.categoryList[index].id,"0","0",0,0,0,"0");
+
+                            },
                             child: Container(
 
                               padding: EdgeInsets.only(
@@ -305,6 +339,40 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     )  )) : SizedBox(),
+                 SizedBox(height: 6),
+                selectedZoneName != null
+                    ? Container(
+                  margin: EdgeInsets.only(bottom: 6),
+                  padding: EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: Colors.blue),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        selectedZoneName,
+                        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 5),
+                      InkWell(
+                        onTap: () async {
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          await prefs.remove('zone_name');
+                          await prefs.remove('zone_id');
+                          setState(() {
+                            selectedZoneName = null;
+                            //_value1 = 0; // إعادة تعيين dropdown
+                          });
+                        },
+                        child: Icon(Icons.close, color: Colors.red, size: 18),
+                      )
+                    ],
+                  ),
+                )
+                    : SizedBox.shrink(),
 
 
                 !_isNull ?_products.length>0?         Container(

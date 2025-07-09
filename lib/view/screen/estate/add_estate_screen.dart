@@ -80,11 +80,12 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     }
   }
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _totalPriceController = TextEditingController();
   final TextEditingController _addNumberController = TextEditingController();
 
   final TextEditingController _shortDescController = TextEditingController();
   final TextEditingController _longDescController = TextEditingController();
-  final TextEditingController _documentNumberController  = TextEditingController();
+  final TextEditingController _deedNumberController  = TextEditingController();
 
   final TextEditingController _spaceController = TextEditingController();
   final FocusNode _firstNameFocus = FocusNode();
@@ -127,6 +128,43 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   final TextEditingController _propertyTypeController = TextEditingController();
   final TextEditingController _propertyAgeController = TextEditingController();
   final TextEditingController _advertisementTypeController = TextEditingController();
+
+  final TextEditingController _addressController = TextEditingController();
+
+
+
+  final TextEditingController _planNumberController = TextEditingController();
+
+
+
+
+  TextEditingController northNameController = TextEditingController();
+  TextEditingController northDescController = TextEditingController();
+  TextEditingController northLengthController = TextEditingController();
+
+  TextEditingController eastNameController = TextEditingController();
+  TextEditingController eastDescController = TextEditingController();
+  TextEditingController eastLengthController = TextEditingController();
+
+
+  TextEditingController _arPathController = TextEditingController();
+
+  TextEditingController _propertyFaceController = TextEditingController();
+
+
+
+  TextEditingController _licenseNumberController = TextEditingController();
+  TextEditingController _advertiserNumberController = TextEditingController();
+  TextEditingController _advertiserTypeController = TextEditingController();
+
+
+
+// نفس الشيء للـ west و south...
+
+
+  // final TextEditingController _propertyUsagesController = TextEditingController();
+
+
 
 //
 
@@ -326,6 +364,9 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
     loadLocationDataFromCache();
 
+
+    loadSavedLicenseData();
+
   }
 
   Future<Map<String, dynamic>> getCachedLicenseData() async {
@@ -358,16 +399,23 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
       _additionalNumberController.text = location['additionalNumber']?.toString() ?? '';
       _longitudeController.text = location['longitude']?.toString() ?? '';
       _latitudeController.text = location['latitude']?.toString() ?? '';
+
+
+      _addressController.text = ' ${location['region'] ?? ''}   مدينة  ${location['city'] ?? ''}  حي  ${location['district'] ?? ''} ${location['street'] ?? ''}';
     }
   }
 
 
   void loadCachedDataToControllers() async {
     Map<String, dynamic> data = await getCachedLicenseData();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+// تحميل بيانات data2 من الكاش
+    String data2String = prefs.getString('license_data2');
     if (data != null) {
       _firstNameController.text = data['advertiserName'] ?? '';
       _phoneController.text = data['phoneNumber'] ?? '';
-      _documentNumberController.text = data['deedNumber'] ?? '';
+      _deedNumberController.text = data['deedNumber'] ?? '';
       _AdNumberFocus.requestFocus(); // اختياري إذا أردت تركيز المؤشر
 
       _addNumberController.text = data['adLicenseNumber'] ?? '';
@@ -376,15 +424,20 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
       _spaceController.text = data['propertyArea']?.toString() ?? '';
       _widthStreetController.text = data['streetWidth']?.toString() ?? '';
-      _buildSpaceController.text = data['propertyArea']?.toString() ?? '';
+
 
       _priceController.text = data['propertyPrice']?.toString() ?? '';
+      _totalPriceController.text = data['landTotalPrice']?.toString() ?? '';
 
 
       _propertyTypeController.text = data['propertyType'] ?? '';
       _propertyAgeController.text = data['propertyAge'] ?? '';
       _advertisementTypeController.text = data['advertisementType'] ?? '';
 
+
+      _propertyFaceController.text = data['propertyFace'] ?? '';
+      _planNumberController.text= data['planNumber'] ?? '';
+      //_propertyUsagesController.text = data['propertyUsages'] ?? '';
       // واجهات العقار
       _northController.text = '';
       _southController.text = '';
@@ -397,6 +450,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
         _textEditingController.text = location['district'] ?? '';
       }
 
+
+
       // وصف مختصر وطويل
       _shortDescController.text = 'عقار ${data['propertyType'] ?? ''} للبيع في ${data['location']['district'] ?? ''}';
       _longDescController.text = 'تفاصيل العقار:\n'
@@ -404,15 +459,40 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
           'السعر: ${data['propertyPrice']} ريال\n'
           'واجهة: ${data['propertyFace'] ?? ''}';
 
+      SharedPreferences prefs = await SharedPreferences.getInstance();
 
+// تحميل بيانات data2 من الكاش
+      String data2String = prefs.getString('license_data2');
+      if (data2String != null) {
+        Map<String, dynamic> data2 = jsonDecode(data2String);
 
+        _northController.text =
+        '${data2['northLimitName'] ?? ''} ${data2['northLimitDescription'] ?? ''} ${data2['northLimitLengthChar'] ?? ''}';
 
+        _southController.text =
+        '${data2['southLimitName'] ?? ''} ${data2['southLimitDescription'] ?? ''} ${data2['southLimitLengthChar'] ?? ''}';
+
+        _eastController.text =
+        '${data2['eastLimitName'] ?? ''} ${data2['eastLimitDescription'] ?? ''} ${data2['eastLimitLengthChar'] ?? ''}';
+
+        _westController.text =
+        '${data2['westLimitName'] ?? ''} ${data2['westLimitDescription'] ?? ''} ${data2['westLimitLengthChar'] ?? ''}';
+      }
+
+print("-------------------------------${data2String}");
 
     } else {
       print('لا توجد بيانات محفوظة في الكاش');
     }
   }
 
+
+  void loadSavedLicenseData() async {
+    final prefs = await SharedPreferences.getInstance();
+    _licenseNumberController.text = prefs.getString('numberLicense') ?? '';
+    _advertiserNumberController.text = prefs.getString('advertiserNumber') ?? '';
+    _advertiserTypeController.text = (prefs.getInt('advertiserTypeInput')?.toString() ?? '');
+  }
 
   static const _locale = 'en';
   String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(double.parse(s));
@@ -436,2200 +516,1861 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
       body: Get.find<AuthController>().isLoggedIn() ? SingleChildScrollView(
         child:
-      GetBuilder<AuthController>(builder: (authController) {
+        GetBuilder<AuthController>(builder: (authController) {
 
-              return GetBuilder<EstateController>(builder: (restController) {
-                return GetBuilder<CategoryController>(
-               builder: (categoryController) {
-       return GetBuilder<UserController>(builder: (userController) {
-           if(userController.userInfoModel != null && _phoneController.text.isEmpty) {
-             _firstNameController.text = userController.userInfoModel.name ?? '';
-             _phoneController.text = userController.userInfoModel.phone ?? '';
-         //    _userTypeController.text = userController.userInfoModel.userType ?? '';
-           }
-
-
-    return    GetBuilder<LocationController>(builder: (locationController) {
-
-
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            currentStep != 5? const SizedBox(height: 30):Container(),
-           currentStep == 5?Container():   NumberStepper(
-              totalSteps: stepLength,
-              width: MediaQuery.of(context).size.width,
-              curStep: currentStep,
-              stepCompleteColor: Colors.blue,
-              currentStepColor: Color(0xffdbecff),
-              inactiveColor: Color(0xffbababa),
-              lineWidth: 3.5,
-            ),
-
-            Container(
-
-
-              child: currentStep <= stepLength
-                  ? currentStep==1?
-              Container(
-                padding: const EdgeInsets.only(right: 7.0,left: 7.0),
-                child:  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  SizedBox(
-                      height: 35),
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     Text("type_property".tr, style: robotoRegular.copyWith(
-                  //         fontSize: Dimensions.fontSizeDefault, color: Theme
-                  //         .of(context)
-                  //         .hintColor),),
-                  //     SizedBox(height: 7),
-                  //     GetBuilder<CategoryController>(
-                  //         builder: (categoryController) {
-                  //           return (categoryController.categoryList != null) ?
-                  //           SizedBox(
-                  //             height: 40,
-                  //             child: ListView.builder(
-                  //                 scrollDirection: Axis.horizontal,
-                  //                 itemCount: categoryController.categoryList
-                  //                     .length,
-                  //                 padding: EdgeInsets.only(
-                  //                     left: Dimensions.PADDING_SIZE_SMALL),
-                  //                 physics: BouncingScrollPhysics(),
-                  //                 itemBuilder: (context, index) {
-                  //                   String _baseUrl = Get
-                  //                       .find<SplashController>()
-                  //                       .configModel
-                  //                       .baseUrls
-                  //                       .categoryImageUrl;
-                  //                   return Column(
-                  //                     children: [
-                  //
-                  //                       Padding(
-                  //                         padding: const EdgeInsets.only(
-                  //                             right: 5, left: 5),
-                  //                         child: InkWell(
-                  //                           onTap: () {
-                  //                             restController.setCategoryIndex(categoryController.categoryList[index].id);
-                  //                             restController.setCategoryPostion(int.parse(categoryController.categoryList[index].position));
-                  //                             setState(() {
-                  //                               type_properties=categoryController.categoryList[index].name;
-                  //                             });
-                  //
-                  //                   },
-                  //                           child: Container(
-                  //                             height: 40,
-                  //                             padding: const EdgeInsets.only(
-                  //                                 left: 4.0, right: 4.0),
-                  //                             decoration: BoxDecoration(
-                  //                               border: Border.all(
-                  //                                   color: categoryController.categoryList[index].id ==
-                  //                                       restController
-                  //                                           .categoryIndex
-                  //                                       ? Theme
-                  //                                       .of(context)
-                  //                                       .primaryColor : Colors
-                  //                                       .black12,
-                  //                                 width: 2
-                  //                               ),
-                  //                               borderRadius: BorderRadius
-                  //                                   .circular(2.0),
-                  //                               color: Colors.white,
-                  //
-                  //                             ),
-                  //                             child:
-                  //
-                  //                             Row(
-                  //                               children: [
-                  //                                 Container(
-                  //                                   height: 26,
-                  //                                   color: Colors.white,
-                  //                                   child: Text(
-                  //                                   isArabic?  categoryController.categoryList[index].nameAr:categoryController.categoryList[index].name,
-                  //                                     style: categoryController.categoryList[index].id ==
-                  //                                         restController
-                  //                                             .categoryIndex
-                  //                                         ? robotoBlack
-                  //                                         .copyWith(
-                  //                                         fontSize: 17)
-                  //                                         : robotoRegular
-                  //                                         .copyWith(
-                  //                                         fontSize: Dimensions
-                  //                                             .fontSizeDefault,
-                  //                                         fontStyle: FontStyle
-                  //                                             .normal,
-                  //                                         color: Theme
-                  //                                             .of(context)
-                  //                                             .disabledColor),),
-                  //                                 ),
-                  //                                 SizedBox(width: 5),
-                  //
-                  //                                 CustomImage(
-                  //                                     image: '$_baseUrl/${categoryController
-                  //                                         .categoryList[index]
-                  //                                         .image}',
-                  //                                     height: 25,
-                  //                                     width: 25,
-                  //                                     colors: categoryController.categoryList[index].id ==
-                  //                                         restController
-                  //                                             .categoryIndex
-                  //                                         ? Theme
-                  //                                         .of(context)
-                  //                                         .primaryColor
-                  //                                         : Colors.black12),
-                  //                               ],
-                  //                             ),
-                  //                           ),
-                  //                         ),
-                  //                       )
-                  //                     ],
-                  //                   );
-                  //                 }),
-                  //           ) : Container();
-                  //         }),
-                  //   ],
-                  // ),
+          return GetBuilder<EstateController>(builder: (restController) {
+            return GetBuilder<CategoryController>(
+                builder: (categoryController) {
+                  return GetBuilder<UserController>(builder: (userController) {
+                    if(userController.userInfoModel != null && _phoneController.text.isEmpty) {
+                      _firstNameController.text = userController.userInfoModel.name ?? '';
+                      _phoneController.text = userController.userInfoModel.phone ?? '';
+                      //    _userTypeController.text = userController.userInfoModel.userType ?? '';
+                    }
 
 
 
 
 
-                  Column(
-                    children: [
-
-
-                      MyTextField(
-                        hintText: 'نوع العقار',
-                        controller: _propertyTypeController,
-                        inputType: TextInputType.text,
-                        showBorder: true,
-
-                      ),
-
-                      SizedBox(height: 8),
-
-                      MyTextField(
-                        hintText: 'عمر العقار',
-                        controller: _propertyAgeController,
-                        inputType: TextInputType.text,
-                        showBorder: true,
-
-                      ),
-
-                      SizedBox(height: 8),
-
-                      MyTextField(
-                        hintText: 'نوع الإعلان',
-                        controller: _advertisementTypeController,
-                        inputType: TextInputType.text,
-                        showBorder: true,
-
-                      ),
-
-
-                      //     Padding(
-                      //       padding: const EdgeInsets.only(
-                      //           right: 5, left: 5),
-                      //       child: InkWell(
-                      //         onTap: () {
-                      //           restController.setCategoryIndex(categoryController.categoryList[index].id);
-                      //           restController.setCategoryPostion(int.parse(categoryController.categoryList[index].position));
-                      //           setState(() {
-                      //             type_properties=categoryController.categoryList[index].name;
-                      //           });
-                      //
-                      // },
-                      //         child: Container(
-                      //           height: 40,
-                      //           padding: const EdgeInsets.only(
-                      //               left: 4.0, right: 4.0),
-                      //           decoration: BoxDecoration(
-                      //             border: Border.all(
-                      //                 color: categoryController.categoryList[index].id ==
-                      //                     restController
-                      //                         .categoryIndex
-                      //                     ? Theme
-                      //                     .of(context)
-                      //                     .primaryColor : Colors
-                      //                     .black12,
-                      //               width: 2
-                      //             ),
-                      //             borderRadius: BorderRadius
-                      //                 .circular(2.0),
-                      //             color: Colors.white,
-                      //
-                      //           ),
-                      //           child:
-                      //
-                      //           Row(
-                      //             children: [
-                      //               Container(
-                      //                 height: 26,
-                      //                 color: Colors.white,
-                      //                 child: Text(
-                      //                 isArabic?  categoryController.categoryList[index].nameAr:categoryController.categoryList[index].name,
-                      //                   style: categoryController.categoryList[index].id ==
-                      //                       restController
-                      //                           .categoryIndex
-                      //                       ? robotoBlack
-                      //                       .copyWith(
-                      //                       fontSize: 17)
-                      //                       : robotoRegular
-                      //                       .copyWith(
-                      //                       fontSize: Dimensions
-                      //                           .fontSizeDefault,
-                      //                       fontStyle: FontStyle
-                      //                           .normal,
-                      //                       color: Theme
-                      //                           .of(context)
-                      //                           .disabledColor),),
-                      //               ),
-                      //               SizedBox(width: 5),
-                      //
-                      //               CustomImage(
-                      //                   image: '$_baseUrl/${categoryController
-                      //                       .categoryList[index]
-                      //                       .image}',
-                      //                   height: 25,
-                      //                   width: 25,
-                      //                   colors: categoryController.categoryList[index].id ==
-                      //                       restController
-                      //                           .categoryIndex
-                      //                       ? Theme
-                      //                       .of(context)
-                      //                       .primaryColor
-                      //                       : Colors.black12),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     )
-                    ],
-                  ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-
-                  Text(
-                    'المنطقة'.tr,
-                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                  ),
-
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  // Container(
-                  //   padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                  //   decoration: BoxDecoration(
-                  //     color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                  //     boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], spreadRadius: 2, blurRadius: 5, offset: Offset(0, 5))],
-                  //   ),
-                  //   child: DropdownButton<int>(
-                  //     value: _value1,
-                  //     items: locationController.zoneIds==null?Container():locationController.zoneIds.map((int value) {
-                  //       return DropdownMenuItem<int>(
-                  //         value: locationController.zoneIds.indexOf(value),
-                  //         child: isArabic?Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].nameAr : 'حدد المنطقة'):Text(value != 0 ? locationController.categoryList[(locationController.zoneIds.indexOf(value)-1)].name   : 'select zone'),
-                  //       );
-                  //     }).toList(),
-                  //     onChanged: (int value) {
-                  //       setState(() {
-                  //         _value1 = value;
-                  //       });
-                  //       locationController.setCategoryIndex(value, true);
-                  // //      restController.getSubCategoryList(value != 0 ? restController.categoryList[value-1].id : 0, null);
-                  //     },
-                  //     isExpanded: true,
-                  //     underline: SizedBox(),
-                  //   ),
-                  // ),
-
-
-
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-                  Text(
-                    'موقع العقار',
-                    style: robotoRegular.copyWith(
-                      fontSize: Dimensions.fontSizeLarge,
-                      color: Theme.of(context).disabledColor,
-                    ),
-                  ),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MyTextField(
-                          hintText: 'المنطقة',
-                          controller: _regionController,
-                          inputType: TextInputType.text,
-                          showBorder: true,
-                          isEnabled: false,
-                        ),
-                      ),
-                      SizedBox(width: 3),
-                      Expanded(
-                        child: MyTextField(
-                          hintText: 'المدينة',
-                          controller: _cityController,
-                          inputType: TextInputType.text,
-                          showBorder: true,
-                          isEnabled: false,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 8),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MyTextField(
-                          hintText: 'الحي',
-                          controller: _districtController,
-                          inputType: TextInputType.text,
-                          showBorder: true,
-                          isEnabled: false,
-                        ),
-                      ),
-                      SizedBox(width: 3),
-                      Expanded(
-                        child: MyTextField(
-                          hintText: 'الشارع',
-                          controller: _streetController,
-                          inputType: TextInputType.text,
-                          showBorder: true,
-                          isEnabled: false,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 8),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MyTextField(
-                          hintText: 'رقم المبنى',
-                          controller: _buildingNumberController,
-                          inputType: TextInputType.number,
-                          showBorder: true,
-                          isEnabled: false,
-                        ),
-                      ),
-                      SizedBox(width: 3),
-                      Expanded(
-                        child: MyTextField(
-                          hintText: 'كود المنطقة',
-                          controller: _regionCodeController,
-                          inputType: TextInputType.number,
-                          showBorder: true,
-
-                        ),
-                      ),
-                      SizedBox(width: 3),
-                      Expanded(
-                        child: MyTextField(
-                          hintText: 'خط الطول',
-                          controller: _longitudeController,
-                          inputType: TextInputType.number,
-                          showBorder: true,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                     Container(
-                    height: 140,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                      border: Border.all(width: 2, color: Theme.of(context).primaryColor),
-                    ),
-                    child: ClipRRect(
-
-
-
-                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                      child: Stack(clipBehavior: Clip.none, children: [
-      GoogleMap(
-      initialCameraPosition: CameraPosition(
-      target: location,
-      zoom: 16.0,
-      ),
-      markers: {
-      Marker(
-      markerId: const MarkerId("propertyLocation"),
-      position: location,
-      infoWindow: const InfoWindow(title: "موقع العقار"),
-      ),
-      },
-      onMapCreated: (GoogleMapController controller) {
-      mapController = controller;
-      },
-      ),
-
-                      ]),
-                    )),
-
-
-                  // authController.zoneList != null ? SelectLocationView(
-                  //     fromView: true) : Center(
-                  //     child: CircularProgressIndicator()),
-                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                  Text(
-                    'price'.tr,
-                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                  ),
-                  Row(children: [
-                    Expanded(
-
-                      child:Column(children: [
-
-                        SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                        MyTextField(
-                          hintText: 'price'.tr,
-                          size: 20,
-                          controller: _priceController,
-                          focusNode: _priceFocus,
-                          nextFocus: _shorDesFocus,
-                          inputType: TextInputType.number,
-                          showBorder: true,
-                          onChanged: (string) {
-                            string = _formatNumber(string.replaceAll(',', ''));
-                            _priceController.value = TextEditingValue(
-                              text: string,
-                              selection: TextSelection.collapsed(offset: string.length),
-                            );
-                          },
-                          capitalization: TextCapitalization.words,
-                        ),
-                      ],)
-                    ),
-
-
-
-
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                    Expanded(child:
-                    Container(
-                      height: 70,
-                      padding: EdgeInsets.only(
-                        right: 4, left: 4, top: 16,bottom: 4),
-                      child: ToggleButtons(
-                        borderColor: Theme
-                            .of(context)
-                            .primaryColor,
-                        fillColor: Theme
-                            .of(context)
-                            .secondaryHeaderColor,
-                        borderWidth: 2,
-                        selectedBorderColor: Theme
-                            .of(context)
-                            .primaryColor,
-                        selectedColor: Colors.white,
-                        borderRadius: BorderRadius.circular(7),
-                        onPressed: (int index) {
-                          setState(() {
-                            for (int buttonIndex = 0;
-                            buttonIndex < isSelected2.length;
-                            buttonIndex++) {
-                              if (buttonIndex == index) {
-                                isSelected2[buttonIndex] = true;
-                                negotiation=true;
-                              } else {
-                                isSelected2[buttonIndex] = false;
-                                negotiation=false;
-                              }
-                            }
-                          });
-                        },
-                        isSelected: isSelected2,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'negotiate'.tr,
-                              style: robotoBlack.copyWith(fontSize: 11),
-                            ),
+                     return  Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          currentStep != 5? const SizedBox(height: 30):Container(),
+                          currentStep == 5?Container():   NumberStepper(
+                            totalSteps: stepLength,
+                            width: MediaQuery.of(context).size.width,
+                            curStep: currentStep,
+                            stepCompleteColor: Colors.blue,
+                            currentStepColor: Color(0xffdbecff),
+                            inactiveColor: Color(0xffbababa),
+                            lineWidth: 3.5,
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'non_negotiable'.tr,
-                              style: robotoBlack.copyWith(fontSize: 11),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ),
-                  ]),
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-                  Text(
-                    'space'.tr,
-                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MyTextField(
-                          hintText:restController.getCategoryPostion()==1?"ادخل مساحة الارض (بامتر مربع)": 'enter_the_area'.tr,
-                          size: 17,
-                          controller: _spaceController,
-                          focusNode: _firstNameFocus,
-                          nextFocus: _phoneFocus,
-                          inputType: TextInputType.number,
-                          showBorder: true,
-                          capitalization: TextCapitalization.words,
-                        ),
-                      ),
-                     SizedBox(width: 3,),
-                    restController.getCategoryPostion()==1? Expanded(child:  MyTextField(
-                       hintText: 'ادخل مساحة البناء(بامتر مربع)'.tr,
-                       size: 17,
-                       controller: _buildSpaceController,
-                       focusNode: _buildSpaceFocus,
-                       nextFocus: _phoneFocus,
-                       inputType: TextInputType.number,
-                       showBorder: true,
-                       capitalization: TextCapitalization.words,
-                     ),):Container()
-                    ],
-                  ),
+                          Container(
 
 
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-                  Text(
-                    'add_photo_estate'.tr,
-                    style: robotoRegular.copyWith(
-                        fontSize: Dimensions.fontSizeSmall),
-                  ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  SizedBox(
-                    height: 120,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount:restController .pickedIdentities.length + 1,
-                      itemBuilder: (context, index) {
-                        XFile _file = index ==
-                            restController.pickedIdentities.length
-                            ? null
-                            : restController.pickedIdentities[index];
-                        if (index == restController.pickedIdentities.length) {
-                          return InkWell(
-                            onTap: () =>
-                                restController.pickDmImage(false, false),
-                            child: Container(
-                              height: 299,
-                              width: 200,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    Dimensions.RADIUS_SMALL),
-                                border: Border.all(color: Theme
-                                    .of(context)
-                                    .primaryColor, width: 2),
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.all(
-                                    Dimensions.PADDING_SIZE_DEFAULT),
-                                decoration: BoxDecoration(
-                                  border: Border.all(width: 2, color: Theme
-                                      .of(context)
-                                      .primaryColor),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(Icons.camera_alt, color: Theme
-                                    .of(context)
-                                    .primaryColor),
-                              ),
-                            ),
-                          );
-                        }
-                        return Container(
-                          margin: EdgeInsets.only(
-                              right: Dimensions.PADDING_SIZE_SMALL),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Theme
-                                .of(context)
-                                .primaryColor, width: 2),
-                            borderRadius: BorderRadius.circular(
-                                Dimensions.RADIUS_SMALL),
-                          ),
-                          child: Stack(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  Dimensions.RADIUS_SMALL),
-                              child: GetPlatform.isWeb ? Image.network(
-                                _file.path, width: 150,
-                                height: 120,
-                                fit: BoxFit.cover,
-                              ) : Image.file(
-                                File(_file.path), width: 150,
-                                height: 120,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              right: 0, top: 0,
-                              child: InkWell(
-                                onTap: () =>
-                                    restController.removeIdentityImage(index),
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                      Dimensions.PADDING_SIZE_SMALL),
-                                  child: Icon(Icons.delete_forever,
-                                      color: Colors.red),
-                                ),
-                              ),
-                            ),
-                          ]),
-                        );
-                      },
-                    ),
-                  ),
+                            child: currentStep <= stepLength
+                                ? currentStep==1?
+                            Container(
+                              padding: const EdgeInsets.only(right: 7.0,left: 7.0),
+                              child:  Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                SizedBox(
+                                    height: 35),
 
 
 
-                  Text(
-                    'shot_description'.tr,
-                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                  ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  MyTextField(
-                    hintText: 'enter_shot_description'.tr,
-                    controller: _shortDescController,
-                    focusNode: _shorDesFocus,
-                    nextFocus: _longDescFocus ,
-                    inputType: TextInputType.text,
-                    size: 17,
-                    capitalization: TextCapitalization.sentences,
-                    showBorder: true,
-                  ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
 
-
-                  Text(
-                    'long_description'.tr,
-                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                  ),
-                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-               //    MyTextField(
-               //      hintText: 'enter_long_desc'.tr,
-               //      controller: _longDescController,
-               // //     focusNode: _longDescFocus,
-               //
-               //      // nextFocus: _vatFocus,
-               //      size: 17,
-               //      maxLines: 4,
-               //
-               //      inputType: TextInputType.multiline,
-               //      capitalization: TextCapitalization.sentences,
-               //     // showBorder: true,
-               //    ),
-
-
-
-                  TextField(
-                    controller: _longDescController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 4,
-                      focusNode: _longDescFocus,
-
-
-                      cursorColor: Theme.of(context).primaryColor,
-                      decoration: InputDecoration(
-                        hintText: 'enter_long_desc'.tr,
-                        isDense: true,
-                        filled: true,
-                        fillColor: Theme.of(context).cardColor,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), borderSide: BorderSide.none),
-                        hintStyle: robotoRegular.copyWith(color: Theme.of(context).hintColor),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 1, color: Colors.grey)
-                          )
-
-                      )
-
-                  ),
-
-
-
-
-
-
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-
-
-
-
-
-                ]),):currentStep==2?
-              Container(
-                  padding: const EdgeInsets.only(right: 10.0,left: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-                            Text(
-                              'إرفاق صور المخطط'.tr,
-                              style: robotoRegular.copyWith(
-                                  fontSize: Dimensions.fontSizeSmall),
-                            ),
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            SizedBox(
-                              height: 120,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                physics: BouncingScrollPhysics(),
-                                itemCount:restController .pickPlaned.length + 1,
-                                itemBuilder: (context, index) {
-                                  XFile _file = index ==
-                                      restController.pickPlaned.length
-                                      ? null
-                                      : restController.pickPlaned[index];
-                                  if (index == restController.pickPlaned.length) {
-                                    return InkWell(
-                                      onTap: () =>
-                                          restController.pickPlanedImage(false, false),
-                                      child: Container(
-                                        height: 299,
-                                        width: 200,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              Dimensions.RADIUS_SMALL),
-                                          border: Border.all(color: Theme
-                                              .of(context)
-                                              .primaryColor, width: 2),
-                                        ),
-                                        child: Container(
-                                          padding: EdgeInsets.all(
-                                              Dimensions.PADDING_SIZE_DEFAULT),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(width: 2, color: Theme
-                                                .of(context)
-                                                .primaryColor),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(Icons.camera_alt, color: Theme
-                                              .of(context)
-                                              .primaryColor),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  return Container(
-                                    margin: EdgeInsets.only(
-                                        right: Dimensions.PADDING_SIZE_SMALL),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Theme
-                                          .of(context)
-                                          .primaryColor, width: 2),
-                                      borderRadius: BorderRadius.circular(
-                                          Dimensions.RADIUS_SMALL),
-                                    ),
-                                    child: Stack(children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            Dimensions.RADIUS_SMALL),
-                                        child: GetPlatform.isWeb ? Image.network(
-                                          _file.path, width: 150,
-                                          height: 120,
-                                          fit: BoxFit.cover,
-                                        ) : Image.file(
-                                          File(_file.path), width: 150,
-                                          height: 120,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        right: 0, top: 0,
-                                        child: InkWell(
-                                          onTap: () =>
-                                              restController.removePlanedImage(index),
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(
-                                                Dimensions.PADDING_SIZE_SMALL),
-                                            child: Icon(Icons.delete_forever,
-                                                color: Colors.red),
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                  );
-                                },
-                              ),
-                            ),
-
-
-
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-                            restController.getCategoryPostion()==1?    Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "type_property".tr,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          _selectionTypeEstate = 1;
-                                        });
-                                      },
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Container(
-                                            height: 40,
-                                            color: _selectionTypeEstate == 1 ? Colors.green : Colors.white,
-                                          ),
-                                          Row(
-                                            children: <Widget>[
-                                              Radio(
-                                                focusColor: Colors.white,
-                                                groupValue: _selectionTypeEstate,
-                                                onChanged: selectTypeEstate,
-                                                value: 1,
-                                              ),
+                                    // نوع العقار + نوع الإعلان
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
                                               Text(
-                                                "residential".tr,
+                                                'نوع العقار',
+                                                style: robotoRegular.copyWith(
+                                                  fontSize: Dimensions.fontSizeSmall,
+                                                  color: Theme.of(context).disabledColor,
+                                                ),
+                                              ),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+                                                hintText: 'اكتب نوع العقار',
+                                                controller: _propertyTypeController,
+                                                inputType: TextInputType.text,
+                                                showBorder: true,
+                                                isEnabled: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'نوع الإعلان',
+                                                style: robotoRegular.copyWith(
+                                                  fontSize: Dimensions.fontSizeSmall,
+                                                  color: Theme.of(context).disabledColor,
+                                                ),
+                                              ),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+                                                hintText: 'اكتب نوع الإعلان',
+                                                controller: _advertisementTypeController,
+                                                inputType: TextInputType.text,
+                                                showBorder: true,
+                                                isEnabled: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 12),
+
+                                    // المنطقة + المدينة
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('المنطقة', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+                                                hintText: 'اسم المنطقة',
+                                                controller: _regionController,
+                                                inputType: TextInputType.text,
+                                                showBorder: true,
+                                                isEnabled: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('المدينة', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+                                                hintText: 'اسم المدينة',
+                                                controller: _cityController,
+                                                inputType: TextInputType.text,
+                                                showBorder: true,
+                                                isEnabled: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 12),
+
+                                    // الحي + الشارع
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('الحي', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+                                                hintText: 'اسم الحي',
+                                                controller: _districtController,
+                                                inputType: TextInputType.text,
+                                                showBorder: true,
+                                                isEnabled: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('الشارع', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+                                                hintText: 'اسم الشارع',
+                                                controller: _streetController,
+                                                inputType: TextInputType.text,
+                                                showBorder: true,
+                                                isEnabled: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 12),
+
+                                    // رقم المبنى + كود المنطقة + خط الطول
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('المخطط', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+
+                                                controller: _planNumberController,
+                                                inputType: TextInputType.number,
+                                                showBorder: true,
+                                                isEnabled: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('كود المنطقة', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+                                                hintText: 'كود المنطقة',
+                                                controller: _regionCodeController,
+                                                inputType: TextInputType.number,
+                                                showBorder: true,
+                                                isEnabled: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(' الرمز البريدي', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+
+                                                controller:_postalCodeController,
+                                                inputType: TextInputType.number,
+                                                showBorder: true,
+                                                isEnabled: false,
+
+
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
+                                    Text(
+                                      'العنوان',
+                                      style: robotoRegular.copyWith(
+                                        fontSize: Dimensions.fontSizeLarge,
+                                        color: Theme.of(context).disabledColor,
+                                      ),
+                                    ),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                    MyTextField(
+
+                                      controller: _addressController,
+
+                                       isEnabled: false,
+
+                                      inputType: TextInputType.text,
+                                      size: 17,
+                                      capitalization: TextCapitalization.sentences,
+                                      showBorder: true,
+
+                                    ),
+                                    SizedBox(height: 16),
+
+
+                                  ],
+                                )
+
+                                ,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                    Text('الحد الشمالي', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 4),
+                                    MyTextField(
+                                      controller: _northController,
+                                      isEnabled: false,
+                                      inputType: TextInputType.text,
+                                      size: 17,
+                                      capitalization: TextCapitalization.sentences,
+                                      showBorder: true,
+
+                                    ),
+                                    SizedBox(height: 16),
+
+                                    Text('الحد الجنوبي', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 4),
+                                    MyTextField(
+                                      controller: _southController,
+                                      isEnabled: false,
+                                      inputType: TextInputType.text,
+                                      size: 17,
+                                      capitalization: TextCapitalization.sentences,
+                                      showBorder: true,
+
+                                    ),
+                                    SizedBox(height: 16),
+
+                                    Text('الحد الشرقي', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 4),
+                                    MyTextField(
+                                      controller: _eastController,
+                                      isEnabled: false,
+                                      inputType: TextInputType.text,
+                                      size: 17,
+                                      capitalization: TextCapitalization.sentences,
+                                      showBorder: true,
+
+                                    ),
+                                    SizedBox(height: 16),
+
+                                    Text('الحد الغربي', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 4),
+                                    MyTextField(
+                                      controller: _westController,
+                                      isEnabled: false,
+                                      inputType: TextInputType.text,
+                                      size: 17,
+                                      capitalization: TextCapitalization.sentences,
+                                      showBorder: true,
+                                    ),
+                                    SizedBox(height: 16),
+                                  Text('واجهة العقار ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 4),
+                                    MyTextField(
+                                      controller: _propertyFaceController,
+                                      isEnabled: false,
+                                      inputType: TextInputType.text,
+                                      size: 17,
+
+                                      capitalization: TextCapitalization.sentences,
+                                      showBorder: true,
+                                    ),
+                                    SizedBox(height: 16),
+                                  ],
+                                ),
+
+
+                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                Container(
+                                    height: 140,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                      border: Border.all(width: 2, color: Theme.of(context).primaryColor),
+                                    ),
+                                    child: ClipRRect(
+
+
+
+                                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                      child: Stack(clipBehavior: Clip.none, children: [
+                                        GoogleMap(
+                                          initialCameraPosition: CameraPosition(
+                                            target: location,
+                                            zoom: 16.0,
+                                          ),
+                                          markers: {
+                                            Marker(
+                                              markerId: const MarkerId("propertyLocation"),
+                                              position: location,
+                                              infoWindow: const InfoWindow(title: "موقع العقار"),
+                                            ),
+                                          },
+                                          onMapCreated: (GoogleMapController controller) {
+                                            mapController = controller;
+                                          },
+                                        ),
+
+                                      ]),
+                                    )),
+
+
+                                // authController.zoneList != null ? SelectLocationView(
+                                //     fromView: true) : Center(
+                                //     child: CircularProgressIndicator()),
+                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                                _propertyTypeController.text.toString()=="ارض"?
+
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+
+
+
+                                    // الوصف المختصر (حقل مفرد)
+                                    Text(
+                                      'العنوان'.tr,
+                                      style: robotoRegular.copyWith(
+                                        fontSize: Dimensions.fontSizeLarge,
+                                        color: Theme.of(context).disabledColor,
+                                      ),
+                                    ),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                    MyTextField(
+                                      hintText: 'adree',
+                                      controller: _shortDescController,
+                                      focusNode: _shorDesFocus,
+                                      nextFocus: _longDescFocus,
+                                      inputType: TextInputType.text,
+                                      isEnabled: false,
+                                      size: 17,
+                                      capitalization: TextCapitalization.sentences,
+                                      showBorder: true,
+                                    ),
+
+
+                                  ],
+                                )    :Container(),
+                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+                                Text(
+                                  'space'.tr,
+                                  style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                ),
+
+
+                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+
+
+
+
+
+
+
+
+
+
+                              ]),):currentStep==2?
+                            Container(
+                                padding: const EdgeInsets.only(right: 10.0,left: 10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+
+                                          Text(
+
+                                            _propertyTypeController.text.toString()!="ارض"?     'price'.tr:"سعر المتر ",
+                                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                          ),
+                                          Row(children: [
+                                            Expanded(
+
+                                                child:Column(children: [
+
+                                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                  MyTextField(
+                                                    hintText: 'price'.tr,
+                                                    size: 20,
+                                                    controller: _priceController,
+                                                    focusNode: _priceFocus,
+                                                    nextFocus: _shorDesFocus,
+                                                    inputType: TextInputType.number,
+                                                    showBorder: true,
+                                                    isEnabled: false,
+                                                    onChanged: (string) {
+                                                      string = _formatNumber(string.replaceAll(',', ''));
+                                                      _priceController.value = TextEditingValue(
+                                                        text: string,
+                                                        selection: TextSelection.collapsed(offset: string.length),
+                                                      );
+                                                    },
+                                                    capitalization: TextCapitalization.words,
+                                                  ),
+                                                ],)
+                                            ),
+
+
+
+
+                                            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                            Expanded(child:
+                                            Container(
+                                              height: 70,
+                                              padding: EdgeInsets.only(
+                                                  right: 4, left: 4, top: 16,bottom: 4),
+                                              child: ToggleButtons(
+                                                borderColor: Theme
+                                                    .of(context)
+                                                    .primaryColor,
+                                                fillColor: Theme
+                                                    .of(context)
+                                                    .secondaryHeaderColor,
+                                                borderWidth: 2,
+                                                selectedBorderColor: Theme
+                                                    .of(context)
+                                                    .primaryColor,
+                                                selectedColor: Colors.white,
+                                                borderRadius: BorderRadius.circular(7),
+                                                onPressed: (int index) {
+                                                  setState(() {
+                                                    for (int buttonIndex = 0;
+                                                    buttonIndex < isSelected2.length;
+                                                    buttonIndex++) {
+                                                      if (buttonIndex == index) {
+                                                        isSelected2[buttonIndex] = true;
+                                                        negotiation=true;
+                                                      } else {
+                                                        isSelected2[buttonIndex] = false;
+                                                        negotiation=false;
+                                                      }
+                                                    }
+                                                  });
+                                                },
+                                                isSelected: isSelected2,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                      'negotiate'.tr,
+                                                      style: robotoBlack.copyWith(fontSize: 11),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                      'non_negotiable'.tr,
+                                                      style: robotoBlack.copyWith(fontSize: 11),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            ),
+                                          ]),
+
+
+
+
+
+
+
+                                          _propertyTypeController.text.toString()=="ارض"?
+
+
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                                          Text(            'إجمالي االسعر الارض ',
+                                            style: robotoRegular.copyWith(
+                                              fontSize: Dimensions.fontSizeLarge,
+                                              color: Theme.of(context).disabledColor,
+
+                                            ),
+                                          ),
+                                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                          MyTextField(
+
+                                            controller: _totalPriceController,
+                                            isEnabled: false,
+
+                                            inputType: TextInputType.text,
+                                            size: 17,
+                                            capitalization: TextCapitalization.sentences,
+                                            showBorder: true,
+                                          )
+
+                    ],
+                    ):Container(),
+
+
+                                          Text(
+                                            'shot_description'.tr,
+                                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                          ),
+                                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                          MyTextField(
+                                            hintText: 'enter_shot_description'.tr,
+                                            controller: _shortDescController,
+                                            focusNode: _shorDesFocus,
+                                            nextFocus: _longDescFocus ,
+                                            inputType: TextInputType.text,
+                                            size: 17,
+
+                                            capitalization: TextCapitalization.sentences,
+                                            showBorder: true,
+                                          ),
+                                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+
+                                          Text(
+                                            'long_description'.tr,
+                                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                          ),
+                                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                          //    MyTextField(
+                                          //      hintText: 'enter_long_desc'.tr,
+                                          //      controller: _longDescController,
+                                          // //     focusNode: _longDescFocus,
+                                          //
+                                          //      // nextFocus: _vatFocus,
+                                          //      size: 17,
+                                          //      maxLines: 4,
+                                          //
+                                          //      inputType: TextInputType.multiline,
+                                          //      capitalization: TextCapitalization.sentences,
+                                          //     // showBorder: true,
+                                          //    ),
+
+
+
+                                          TextField(
+                                              controller: _longDescController,
+                                              keyboardType: TextInputType.multiline,
+                                              maxLines: 4,
+                                              focusNode: _longDescFocus,
+
+
+                                              cursorColor: Theme.of(context).primaryColor,
+                                              decoration: InputDecoration(
+                                                  hintText: 'enter_long_desc'.tr,
+                                                  isDense: true,
+                                                  filled: true,
+                                                  fillColor: Theme.of(context).cardColor,
+                                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL), borderSide: BorderSide.none),
+                                                  hintStyle: robotoRegular.copyWith(color: Theme.of(context).hintColor),
+                                                  focusedBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(width: 1, color: Colors.grey)
+                                                  )
+
+                                              )
+
+                                          ),
+
+
+
+
+
+
+
+
+
+
+
+                                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                                          _propertyTypeController.text.toString()!="ارض"?    Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+
+
+                                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                              Text(
+                                                "number_rooms".tr,
                                                 style: const TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          _selectionTypeEstate = 2;
-                                        });
-                                      },
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Container(
-                                            height: 40,
-                                            color: _selectionTypeEstate == 2 ? Colors.green : Colors.white,
-                                          ),
-                                          Row(
-                                            children: <Widget>[
-                                              Radio(
-                                                focusColor: Colors.white,
-                                                groupValue: _selectionTypeEstate,
-                                                onChanged: selectTypeEstate,
-                                                value: 2,
+                                              Container(
+
+                                                height: 50,
+                                                child: ListView.builder(
+                                                    scrollDirection: Axis.horizontal,
+                                                    // ignore: missing_return
+                                                    itemCount:  _roomList.length, itemBuilder: (context, index) {
+
+                                                  return   InkWell(
+                                                    onTap: (){
+                                                      _onSelected(index);
+
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      child: Card(
+                                                        color: _selectedRoomIndex != null && _selectedRoomIndex == index
+                                                            ? Theme
+                                                            .of(context)
+                                                            .primaryColor
+                                                            : Colors.grey,
+                                                        child: Container(
+                                                          child: Center(child: Text("${_roomList[index]==10?"9+":_roomList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+
+                                                }),
                                               ),
+
+
+                                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                               Text(
-                                                "commercial".tr,
-                                                style:const TextStyle(
+                                                "number_toilets".tr,
+                                                style: const TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                              Container(
+
+                                                height: 50,
+                                                child: ListView.builder(
+                                                    scrollDirection: Axis.horizontal,
+                                                    // ignore: missing_return
+                                                    itemCount:  _bathroomsList.length, itemBuilder: (context, index) {
 
 
-                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                Text(
-                                  "number_rooms".tr,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
+                                                  return   InkWell(
+                                                    onTap: (){
+                                                      _onSelectedBathrooms(index);
 
-                                  height: 50,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      // ignore: missing_return
-                                      itemCount:  _roomList.length, itemBuilder: (context, index) {
-
-                                      return   InkWell(
-                                        onTap: (){
-                                          _onSelected(index);
-
-                                        },
-                                        child: Container(
-                                          width: 50,
-                                          child: Card(
-                                            color: _selectedRoomIndex != null && _selectedRoomIndex == index
-                                                ? Theme
-                                                .of(context)
-                                                .primaryColor
-                                                : Colors.grey,
-                                            child: Container(
-                                              child: Center(child: Text("${_roomList[index]==10?"9+":_roomList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-
-                                  }),
-                                ),
-
-
-                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                Text(
-                                  "number_toilets".tr,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
-
-                                  height: 50,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      // ignore: missing_return
-                                      itemCount:  _bathroomsList.length, itemBuilder: (context, index) {
-
-
-                                      return   InkWell(
-                                        onTap: (){
-                                          _onSelectedBathrooms(index);
-
-                                        },
-                                        child: Container(
-                                          width: 50,
-                                          child: Card(
-                                            color: _selectedBathroomsIndex != null && _selectedBathroomsIndex == index
-                                                ? Theme
-                                                .of(context)
-                                                .primaryColor
-                                                : Colors.grey,
-                                            child: Container(
-                                              child: Center(child: Text("${_bathroomsList[index]==10?"9+":_bathroomsList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-
-                                  }),
-                                ),
-
-
-
-                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                Text(
-                                  "عدد الصالات",
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(.02),
-                                        blurRadius: 10.0,
-                                        spreadRadius: 10.0,
-                                      )
-                                    ],
-                                  ),
-                                  height: 50,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      // ignore: missing_return
-                                      itemCount:  _loungeList.length, itemBuilder: (context, index) {
-
-
-                                    return   InkWell(
-                                      onTap: (){
-                                        _onSelectedlounge(index);
-
-                                      },
-                                      child: Container(
-                                        width: 50,
-                                        child: Card(
-                                          color: _selectedLounge != null && _selectedLounge == index
-                                              ? Theme
-                                              .of(context)
-                                              .primaryColor
-                                              : Colors.grey,
-                                          child: Container(
-                                            child: Center(child: Text("${_loungeList[index]==10?"9+":_loungeList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-
-                                  }),
-                                ),
-
-
-                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                Text(
-                                  "عدد المطابخ",
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(.02),
-                                        blurRadius: 10.0,
-                                        spreadRadius: 10.0,
-                                      )
-                                    ],
-                                  ),
-                                  height: 50,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      // ignore: missing_return
-                                      itemCount:  _kitchenList.length, itemBuilder: (context, index) {
-
-
-                                    return   InkWell(
-                                      onTap: (){
-                                        _onSelectedkitchen(index);
-
-                                      },
-                                      child: Container(
-                                        width: 50,
-                                        child: Card(
-                                          color: _selectedkitchen != null && _selectedkitchen == index
-                                              ? Theme
-                                              .of(context)
-                                              .primaryColor
-                                              : Colors.grey,
-                                          child: Container(
-                                            child: Center(child: Text("${_kitchenList[index]==10?"9+":_kitchenList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-
-                                  }),
-                                ),
-
-                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-
-                                    Container(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                                      Text(
-                                        " الواجهة".tr,
-                                        style: const TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 50,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: _interfaceist.length,
-                                          itemBuilder: (context, index) {
-                                            final item = _interfaceist[index];
-
-                                            return  Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: TextButton(
-                                                  style:  ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
-                                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-
-                                                      RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(4),
-
-                                                          side: BorderSide(color:Theme.of(context).primaryColor)
-                                                      ),),),
-                                                  onPressed: (){
-                                                    setState(() {
-                                                      if (_selectedInterfaceistItems.contains(item)) {
-                                                        _selectedInterfaceistItems.remove(item);
-                                                        if(item=="الواجهة الشمالية") {
-                                                          north = 0;
-                                                          _northController.clear();
-                                                        }else if(item=="الواجهة الشرقية"){
-                                                          east=0;
-                                                          _eastController.clear();
-
-                                                        }
-                                                        else if(item=="الواجهة الغربية"){
-                                                          west=0;
-                                                          _westController.clear();
-
-                                                        }
-                                                        else if(item=="الواجهة الجنوبية"){
-                                                          south=0;
-                                                          _southController.clear();
-
-                                                        }
-                                                      } else {
-                                                        _selectedInterfaceistItems.add(item);
-                                                        if(item=="الواجهة الشمالية") {
-                                                          north = 1;
-                                                        }else if(item=="الواجهة الشرقية"){
-                                                          east=1;
-
-                                                        }
-                                                        else if(item=="الواجهة الغربية"){
-                                                          west=1;
-
-                                                        }
-                                                        else if(item=="الواجهة الجنوبية"){
-                                                          south=1;
-
-                                                        }
-                                                      }
-                                                    });
-                                                  },
-                                                  child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor :Theme.of(context).primaryColor,fontSize: 15.0),)
-                                              ),
-                                            );
-
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          north==1?   Expanded( // Place `Expanded` inside `Row`
-                                            child: MyTextField(
-                                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
-                                              controller: _northController,
-                                              focusNode: _northFocus,
-                                              maxLines: 1,
-                                              inputType: TextInputType.number,
-                                              capitalization: TextCapitalization.sentences,
-                                              showBorder: true,
-                                            ),
-                                          ):SizedBox(),
-                                          SizedBox(width: 3,),
-                                          east==1?  Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
-                                            child: MyTextField(
-                                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
-                                              controller: _eastController,
-                                              focusNode: _eastFocus,
-                                              nextFocus: _westDesFocus,
-                                              maxLines: 1,
-                                              inputType: TextInputType.number,
-                                              capitalization: TextCapitalization.sentences,
-                                              showBorder: true,
-                                            ),
-                                          ):SizedBox(),
-                                          SizedBox(width: 3,),
-                                          west==1? Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
-                                            child: MyTextField(
-                                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
-                                              controller: _westController,
-                                              focusNode: _westDesFocus,
-                                              nextFocus: _southFocus,
-                                              maxLines: 1,
-                                              inputType: TextInputType.number,
-                                              capitalization: TextCapitalization.sentences,
-                                              showBorder: true,
-                                            ),
-                                          ):SizedBox(),
-                                          SizedBox(width: 3,),
-                                          south==1?   Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
-                                            child: MyTextField(
-                                              hintText: 'ادخل عرض الشارع بالمتر'.tr,
-                                              controller: _southController ,
-                                              focusNode: _southFocus,
-                                              nextFocus: _vatFocus,
-                                              maxLines: 1,
-                                              inputType: TextInputType.number,
-                                              capitalization: TextCapitalization.sentences,
-                                              showBorder: true,
-                                            ),
-                                          ):SizedBox(),
-                                        ],
-                                      ),
-
-                                      const SizedBox(
-                                          height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-
-                                    ],
-                                  ),
-                                ),
-
-                                Text(
-                                  'age_of_the_property'.tr,
-                                  style: robotoRegular.copyWith(
-                                      fontSize: Dimensions.fontSizeSmall),
-                                ),
-                                const SizedBox(
-                                    height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                  decoration: BoxDecoration(
-                                    color: Theme
-                                        .of(context)
-                                        .cardColor,
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.RADIUS_SMALL),
-                                    boxShadow: [
-                                      BoxShadow(color: Colors.grey[Get.isDarkMode
-                                          ? 800
-                                          : 200],
-                                          spreadRadius: 2,
-                                          blurRadius: 5,
-                                          offset: Offset(0, 5))
-                                    ],
-                                  ),
-                                  child: DropdownButton<String>(
-                                    focusColor: Colors.white,
-                                    value: _ageValue,
-                                    isExpanded: true,
-                                    underline: SizedBox(),
-                                    //elevation: 5,
-                                    style: robotoRegular.copyWith(
-                                        fontSize: Dimensions.fontSizeLarge,
-                                        color: Colors.black),
-                                    iconEnabledColor: Colors.black,
-                                    items: <String>[
-                                      'اقل من سنة',
-                                      'سنة',
-                                      'سنتين',
-                                      '3 سنوات',
-                                      '4 سنوات',
-                                      '5 سنوات',
-                                      '6 سنوات',
-                                      '7 سنوات',
-                                      '8 سنوات',
-                                      '9 سنوات',
-                                      '10 سنوات',
-                                      'اكثر من 10',
-                                      'اكثر من 20'
-                                    ].map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value, style: const TextStyle(
-                                            color: Colors.black),),
-                                      );
-                                    }).toList(),
-                                    hint: Text(
-                                      "select_age_of_the_property".tr,
-                                      style: robotoRegular.copyWith(
-                                          fontSize: Dimensions.fontSizeLarge,
-                                          color: Colors.black),
-                                    ),
-                                    onChanged: (String value) {
-                                      setState(() {
-                                        _ageValue = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                Container(
-
-                                  child:     categoryController.facilitiesList.length!=null?    Column(
-                                    children: [
-                                      ExpansionTile(
-                                        title: const Text("إضافة تغطية"), //add icon//children padding
-                                        children: [
-                                          Center(
-                                            child: Container(
-                                              height: 240,
-                                              child:GridView.builder(
-                                                physics: BouncingScrollPhysics(),
-                                                itemCount: categoryController.facilitiesList.length,
-                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 3 ,
-                                                  childAspectRatio: (1/0.50),
-                                                ),
-                                                itemBuilder: (context, index) {
-                                                  return InkWell(
-                                                    onTap: () => categoryController.addInterestSelection(index),
+                                                    },
                                                     child: Container(
-                                                      margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                                      padding: EdgeInsets.symmetric(
-                                                        vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: categoryController.interestSelectedList[index] ? Theme.of(context).primaryColor
-                                                            : Theme.of(context).cardColor,
-                                                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                                        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
-                                                      ),
-                                                      alignment: Alignment.center,
-                                                      child:   Row(
-
-                                                        children: [
-                                                          CustomImage(
-                                                            image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
-                                                                '/${categoryController.facilitiesList[index].image}',
-                                                            height: 30, width: 30,
-                                                          ),
-                                                          SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                                          Flexible(child: Text(
-                                                            categoryController.facilitiesList[index].name,
-                                                            style: robotoMedium.copyWith(
-                                                              fontSize: Dimensions.fontSizeExtraSmall,
-                                                              color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
-                                                                  : Theme.of(context).textTheme.bodyText1.color,
-                                                            ),
-                                                            maxLines: 2, overflow: TextOverflow.ellipsis,
-                                                          )),
-                                                        ],
+                                                      width: 50,
+                                                      child: Card(
+                                                        color: _selectedBathroomsIndex != null && _selectedBathroomsIndex == index
+                                                            ? Theme
+                                                            .of(context)
+                                                            .primaryColor
+                                                            : Colors.grey,
+                                                        child: Container(
+                                                          child: Center(child: Text("${_bathroomsList[index]==10?"9+":_bathroomsList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
+                                                        ),
                                                       ),
                                                     ),
                                                   );
-                                                },
+
+                                                }),
                                               ),
-                                            ),
-                                          ),
 
 
-                                        ],
-                                      ),
 
-                                    ],
-                                  ):Container(),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-
-                                    categoryController.advanList.length!=null?    Column(
-                                      children: [
-                                        ExpansionTile(
-                                          title:Text("other_advantages".tr), //add icon//children padding
-                                          children: [
-                                            Center(
-                                              child: Container(
-                                                height: 240,
-                                                child:GridView.builder(
-                                                  physics: BouncingScrollPhysics(),
-                                                  itemCount: categoryController.advanList.length,
-                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 3 ,
-                                                    childAspectRatio: (1/0.50),
-                                                  ),
-                                                  itemBuilder: (context, index) {
-                                                    return InkWell(
-                                                      onTap: () => categoryController.addAdvantSelection(index),
-                                                      child: Container(
-                                                        margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                                        padding: EdgeInsets.symmetric(
-                                                          vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                                        ),
-                                                        decoration: BoxDecoration(
-                                                          color: categoryController.advanSelectedList[index] ? Theme.of(context).primaryColor
-                                                              : Theme.of(context).cardColor,
-                                                          borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                                          boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
-                                                        ),
-                                                        alignment: Alignment.center,
-                                                        child:   Row(
-
-                                                          children: [
-                                                            Flexible(child: Text(
-                                                              categoryController.advanList[index].name,
-                                                              style: robotoMedium.copyWith(
-                                                                fontSize: Dimensions.fontSizeSmall,
-                                                                color: categoryController.advanSelectedList[index] ? Theme.of(context).cardColor
-                                                                    : Theme.of(context).textTheme.bodyText1.color,
-                                                              ),
-                                                              maxLines: 2, overflow: TextOverflow.ellipsis,
-                                                            )),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
+                                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                              Text(
+                                                "عدد الصالات",
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                            ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black.withOpacity(.02),
+                                                      blurRadius: 10.0,
+                                                      spreadRadius: 10.0,
+                                                    )
+                                                  ],
+                                                ),
+                                                height: 50,
+                                                child: ListView.builder(
+                                                    scrollDirection: Axis.horizontal,
+                                                    // ignore: missing_return
+                                                    itemCount:  _loungeList.length, itemBuilder: (context, index) {
 
 
-                                          ],
-                                        ),
+                                                  return   InkWell(
+                                                    onTap: (){
+                                                      _onSelectedlounge(index);
 
-                                      ],
-                                    ):Container(),
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      child: Card(
+                                                        color: _selectedLounge != null && _selectedLounge == index
+                                                            ? Theme
+                                                            .of(context)
+                                                            .primaryColor
+                                                            : Colors.grey,
+                                                        child: Container(
+                                                          child: Center(child: Text("${_loungeList[index]==10?"9+":_loungeList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+
+                                                }),
+                                              ),
+
+
+                                              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                              Text(
+                                                "عدد المطابخ",
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black.withOpacity(.02),
+                                                      blurRadius: 10.0,
+                                                      spreadRadius: 10.0,
+                                                    )
+                                                  ],
+                                                ),
+                                                height: 50,
+                                                child: ListView.builder(
+                                                    scrollDirection: Axis.horizontal,
+                                                    // ignore: missing_return
+                                                    itemCount:  _kitchenList.length, itemBuilder: (context, index) {
+
+
+                                                  return   InkWell(
+                                                    onTap: (){
+                                                      _onSelectedkitchen(index);
+
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      child: Card(
+                                                        color: _selectedkitchen != null && _selectedkitchen == index
+                                                            ? Theme
+                                                            .of(context)
+                                                            .primaryColor
+                                                            : Colors.grey,
+                                                        child: Container(
+                                                          child: Center(child: Text("${_kitchenList[index]==10?"9+":_kitchenList[index].toString()}", style: TextStyle(color: Colors.white, fontSize: 20.0),)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+
+                                                }),
+                                              ),
+
+                                              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+
+                                              Container(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                                                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                                                    Text(
+                                                      " الواجهة".tr,
+                                                      style: const TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 50,
+                                                      child: ListView.builder(
+                                                        scrollDirection: Axis.horizontal,
+                                                        itemCount: _interfaceist.length,
+                                                        itemBuilder: (context, index) {
+                                                          final item = _interfaceist[index];
+
+                                                          return  Padding(
+                                                            padding: const EdgeInsets.all(5.0),
+                                                            child: TextButton(
+                                                                style:  ButtonStyle(
+                                                                  backgroundColor: MaterialStateProperty.all<Color>(  _selectedInterfaceistItems.contains(item) ? Theme.of(context).primaryColor : null),
+                                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+
+                                                                    RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(4),
+
+                                                                        side: BorderSide(color:Theme.of(context).primaryColor)
+                                                                    ),),),
+                                                                onPressed: (){
+                                                                  setState(() {
+                                                                    if (_selectedInterfaceistItems.contains(item)) {
+                                                                      _selectedInterfaceistItems.remove(item);
+                                                                      if(item=="الواجهة الشمالية") {
+                                                                        north = 0;
+                                                                        _northController.clear();
+                                                                      }else if(item=="الواجهة الشرقية"){
+                                                                        east=0;
+                                                                        _eastController.clear();
+
+                                                                      }
+                                                                      else if(item=="الواجهة الغربية"){
+                                                                        west=0;
+                                                                        _westController.clear();
+
+                                                                      }
+                                                                      else if(item=="الواجهة الجنوبية"){
+                                                                        south=0;
+                                                                        _southController.clear();
+
+                                                                      }
+                                                                    } else {
+                                                                      _selectedInterfaceistItems.add(item);
+                                                                      if(item=="الواجهة الشمالية") {
+                                                                        north = 1;
+                                                                      }else if(item=="الواجهة الشرقية"){
+                                                                        east=1;
+
+                                                                      }
+                                                                      else if(item=="الواجهة الغربية"){
+                                                                        west=1;
+
+                                                                      }
+                                                                      else if(item=="الواجهة الجنوبية"){
+                                                                        south=1;
+
+                                                                      }
+                                                                    }
+                                                                  });
+                                                                },
+                                                                child: Text(item,style: TextStyle(color: _selectedInterfaceistItems.contains(item) ? Theme.of(context).cardColor :Theme.of(context).primaryColor,fontSize: 15.0),)
+                                                            ),
+                                                          );
+
+                                                        },
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      children: [
+                                                        north==1?   Expanded( // Place `Expanded` inside `Row`
+                                                          child: MyTextField(
+                                                            hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                                                            controller: _northController,
+                                                            focusNode: _northFocus,
+                                                            maxLines: 1,
+                                                            inputType: TextInputType.number,
+                                                            capitalization: TextCapitalization.sentences,
+                                                            showBorder: true,
+                                                          ),
+                                                        ):SizedBox(),
+                                                        SizedBox(width: 3,),
+                                                        east==1?  Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                                                          child: MyTextField(
+                                                            hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                                                            controller: _eastController,
+                                                            focusNode: _eastFocus,
+                                                            nextFocus: _westDesFocus,
+                                                            maxLines: 1,
+                                                            inputType: TextInputType.number,
+                                                            capitalization: TextCapitalization.sentences,
+                                                            showBorder: true,
+                                                          ),
+                                                        ):SizedBox(),
+                                                        SizedBox(width: 3,),
+                                                        west==1? Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                                                          child: MyTextField(
+                                                            hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                                                            controller: _westController,
+                                                            focusNode: _westDesFocus,
+                                                            nextFocus: _southFocus,
+                                                            maxLines: 1,
+                                                            inputType: TextInputType.number,
+                                                            capitalization: TextCapitalization.sentences,
+                                                            showBorder: true,
+                                                          ),
+                                                        ):SizedBox(),
+                                                        SizedBox(width: 3,),
+                                                        south==1?   Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                                                          child: MyTextField(
+                                                            hintText: 'ادخل عرض الشارع بالمتر'.tr,
+                                                            controller: _southController ,
+                                                            focusNode: _southFocus,
+                                                            nextFocus: _vatFocus,
+                                                            maxLines: 1,
+                                                            inputType: TextInputType.number,
+                                                            capitalization: TextCapitalization.sentences,
+                                                            showBorder: true,
+                                                          ),
+                                                        ):SizedBox(),
+                                                      ],
+                                                    ),
+
+                                                    const SizedBox(
+                                                        height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+
+                                                  ],
+                                                ),
+                                              ),
+
+                                              Text(
+                                                'عمر العقار',  // لابل (label)
+                                                style: robotoRegular.copyWith(
+                                                  fontSize: Dimensions.fontSizeSmall,
+                                                  color: Theme.of(context).disabledColor,
+                                                ),
+                                              ),
+                                              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                              MyTextField(
+                                                hintText: 'ادخل عمر العقار',
+                                                controller: _propertyAgeController,
+                                                inputType: TextInputType.number,
+                                                showBorder: true,
+                                              ),
+
+                                              Container(
+
+                                                child:     categoryController.facilitiesList.length!=null?    Column(
+                                                  children: [
+                                                    ExpansionTile(
+                                                      title: const Text("إضافة تغطية"), //add icon//children padding
+                                                      children: [
+                                                        Center(
+                                                          child: Container(
+                                                            height: 240,
+                                                            child:GridView.builder(
+                                                              physics: BouncingScrollPhysics(),
+                                                              itemCount: categoryController.facilitiesList.length,
+                                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                crossAxisCount: 3 ,
+                                                                childAspectRatio: (1/0.50),
+                                                              ),
+                                                              itemBuilder: (context, index) {
+                                                                return InkWell(
+                                                                  onTap: () => categoryController.addInterestSelection(index),
+                                                                  child: Container(
+                                                                    margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                                    padding: EdgeInsets.symmetric(
+                                                                      vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                                                    ),
+                                                                    decoration: BoxDecoration(
+                                                                      color: categoryController.interestSelectedList[index] ? Theme.of(context).primaryColor
+                                                                          : Theme.of(context).cardColor,
+                                                                      borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                                                      boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                                                    ),
+                                                                    alignment: Alignment.center,
+                                                                    child:   Row(
+
+                                                                      children: [
+                                                                        CustomImage(
+                                                                          image: '${Get.find<SplashController>().configModel.baseUrls.categoryImageUrl}'
+                                                                              '/${categoryController.facilitiesList[index].image}',
+                                                                          height: 30, width: 30,
+                                                                        ),
+                                                                        SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                                        Flexible(child: Text(
+                                                                          categoryController.facilitiesList[index].name,
+                                                                          style: robotoMedium.copyWith(
+                                                                            fontSize: Dimensions.fontSizeExtraSmall,
+                                                                            color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
+                                                                                : Theme.of(context).textTheme.bodyText1.color,
+                                                                          ),
+                                                                          maxLines: 2, overflow: TextOverflow.ellipsis,
+                                                                        )),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+
+
+                                                      ],
+                                                    ),
+
+                                                  ],
+                                                ):Container(),
+                                              ),
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+
+                                                  categoryController.advanList.length!=null?    Column(
+                                                    children: [
+                                                      ExpansionTile(
+                                                        title:Text("other_advantages".tr), //add icon//children padding
+                                                        children: [
+                                                          Center(
+                                                            child: Container(
+                                                              height: 240,
+                                                              child:GridView.builder(
+                                                                physics: BouncingScrollPhysics(),
+                                                                itemCount: categoryController.advanList.length,
+                                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                  crossAxisCount: 3 ,
+                                                                  childAspectRatio: (1/0.50),
+                                                                ),
+                                                                itemBuilder: (context, index) {
+                                                                  return InkWell(
+                                                                    onTap: () => categoryController.addAdvantSelection(index),
+                                                                    child: Container(
+                                                                      margin: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                                      padding: EdgeInsets.symmetric(
+                                                                        vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                                                      ),
+                                                                      decoration: BoxDecoration(
+                                                                        color: categoryController.advanSelectedList[index] ? Theme.of(context).primaryColor
+                                                                            : Theme.of(context).cardColor,
+                                                                        borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                                                        boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                                                                      ),
+                                                                      alignment: Alignment.center,
+                                                                      child:   Row(
+
+                                                                        children: [
+                                                                          Flexible(child: Text(
+                                                                            categoryController.advanList[index].name,
+                                                                            style: robotoMedium.copyWith(
+                                                                              fontSize: Dimensions.fontSizeSmall,
+                                                                              color: categoryController.advanSelectedList[index] ? Theme.of(context).cardColor
+                                                                                  : Theme.of(context).textTheme.bodyText1.color,
+                                                                            ),
+                                                                            maxLines: 2, overflow: TextOverflow.ellipsis,
+                                                                          )),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+
+
+                                                        ],
+                                                      ),
+
+                                                    ],
+                                                  ):Container(),
+
+                                                ],
+                                              ),
+
+
+                                              const SizedBox(
+                                                  height: Dimensions.PADDING_SIZE_LARGE),
+
+                                            ],
+                                          ):Container(),
+
+
+
+
+
+
+
+
+
+                                        ]),
 
                                   ],
-                                ),
-
-
-                                 //
-                                // Text(
-                                //   'age_of_the_property'.tr,
-                                //   style: robotoRegular.copyWith(
-                                //       fontSize: Dimensions.fontSizeSmall),
-                                // ),
-                                //  const SizedBox(
-                                //     height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                // Container(
-                                //   padding: const EdgeInsets.symmetric(
-                                //       horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                //   decoration: BoxDecoration(
-                                //     color: Theme
-                                //         .of(context)
-                                //         .cardColor,
-                                //     borderRadius: BorderRadius.circular(
-                                //         Dimensions.RADIUS_SMALL),
-                                //     boxShadow: [
-                                //       BoxShadow(color: Colors.grey[Get.isDarkMode
-                                //           ? 800
-                                //           : 200],
-                                //           spreadRadius: 2,
-                                //           blurRadius: 5,
-                                //           offset: Offset(0, 5))
-                                //     ],
-                                //   ),
-                                //   child: DropdownButton<String>(
-                                //     focusColor: Colors.white,
-                                //     value: _ageValue,
-                                //     isExpanded: true,
-                                //     underline: SizedBox(),
-                                //     //elevation: 5,
-                                //     style: robotoRegular.copyWith(
-                                //         fontSize: Dimensions.fontSizeLarge,
-                                //         color: Colors.black),
-                                //     iconEnabledColor: Colors.black,
-                                //     items: <String>[
-                                //       'جديد',
-                                //       'سنة',
-                                //       'سنتين',
-                                //       '3 سنوات',
-                                //       '4 سنوات',
-                                //       '5 سنوات',
-                                //       '6 سنوات',
-                                //       '7 سنوات',
-                                //       '8 سنوات',
-                                //       '9 سنوات',
-                                //       '10 سنوات',
-                                //       'اكثر من 10',
-                                //       'اكثر من 20'
-                                //     ].map<DropdownMenuItem<String>>((String value) {
-                                //       return DropdownMenuItem<String>(
-                                //         value: value,
-                                //         child: Text(value, style: const TextStyle(
-                                //             color: Colors.black),),
-                                //       );
-                                //     }).toList(),
-                                //     hint: Text(
-                                //       "select_age_of_the_property".tr,
-                                //       style: robotoRegular.copyWith(
-                                //           fontSize: Dimensions.fontSizeLarge,
-                                //           color: Colors.black),
-                                //     ),
-                                //     onChanged: (String value) {
-                                //       setState(() {
-                                //         _ageValue = value;
-                                //       });
-                                //     },
-                                //   ),
-                                // ),
-                                const SizedBox(
-                                    height: Dimensions.PADDING_SIZE_LARGE),
-
-                              ],
-                            ):Container(),
 
 
 
+                                )):currentStep==3?
+                            Container(
+                              padding: EdgeInsets.only(right: 10 ,left: 10),
+                              child:
 
-
-
-
-
-
-                          ]),
-
-                    ],
-
-
-
-                  )):currentStep==3?
-              Container(
-                padding: EdgeInsets.only(right: 10 ,left: 10),
-                child:
-
-                Container(
-                  child: Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-                    Row(children: [
-
-                      Text(
-                        'advertiser_name'.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                      ),
-                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                      Text('(${'non_changeable'.tr})', style: robotoRegular.copyWith(
-                        fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).errorColor,
-                      )),
-                    ]),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    MyTextField(
-                      hintText: 'full_name'.tr,
-                      controller: _firstNameController,
-                      focusNode: _firstNameFocus,
-                      nextFocus: _phoneFocus,
-                      inputType: TextInputType.name,
-                      showBorder: true,
-                      isEnabled: false,
-                      capitalization: TextCapitalization.words,
-                    ),
-
-
-
-
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-
-
-
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    MyTextField(
-                      hintText: 'phone'.tr,
-                      controller: _phoneController,
-                      focusNode: _phoneFocus,
-                      inputType: TextInputType.phone,
-                      showBorder: true,
-                      isEnabled: true,
-                    ),
-
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                        Text("نوع المعلن", style: robotoRegular.copyWith(
-                            fontSize: Dimensions.fontSizeDefault, color: Theme
-                            .of(context)
-                            .hintColor),),
-                        SizedBox(height: 7),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded( // Place `Expanded` inside `Row`
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() => _djectivePresenter = 0);
-                                },
-                                child: Container(
-                                  height: 41,
-                                  decoration: BoxDecoration(
-                                      color: _djectivePresenter == 0 ? Theme
-                                          .of(context)
-                                          .secondaryHeaderColor : Colors
-                                          .transparent,
-                                      border: Border.all(
-                                        width: 1, color: Colors.blue[500],),
-                                      borderRadius: BorderRadius.circular(2,)
-                                  ),
-
-                                  child: Center(child: Text('authorized'.tr,
-                                    style: robotoBlack.copyWith(fontSize: 16,
-                                        color: _djectivePresenter == 0
-                                            ? Colors.white
-                                            : Colors.blue),)),
-
-
-                                ),
-                              ),
-                           ),
-                            SizedBox(width: 3,),
-                            Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() => _djectivePresenter = 1);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: _djectivePresenter == 1 ? Theme
-                                          .of(context)
-                                          .secondaryHeaderColor : Colors
-                                          .transparent,
-                                      border: Border.all(
-                                        width: 1, color: Colors.blue[500],),
-                                      borderRadius: BorderRadius.circular(2,)
-                                  ),
-                                  height: 39,
-                                  // color: _value == 1 ? Colors.grey : Colors.transparent,
-                                  child: Center(child: Text('owner'.tr,
-                                    style: robotoBlack.copyWith(fontSize: 16,
-                                        color: _djectivePresenter == 1
-                                            ? Colors.white
-                                            : Colors.blue),)),
-
-
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        _djectivePresenter==0?Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                            Text(
-                              'authorization_number'.tr,
-                              style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                            ),
-
-
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            MyTextField(
-                              hintText: 'authorization_number'.tr,
-                              controller: _authorizedController,
-                              inputType: TextInputType.phone,
-
-                              isEnabled: true,
-                              showBorder: true,
-                            ),
-                          ],
-                        ):Container(),
-
-
-                      ],
-                    ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    Text(
-                      'document_number'.tr,
-                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                    ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    MyTextField(
-                      hintText: 'enter_the_document_number'.tr,
-                      controller: _documentNumberController,
-                      focusNode: _documentNumberFocus,
-
-                      inputType: TextInputType.number,
-                      size: 17,
-                      capitalization: TextCapitalization.sentences,
-                      showBorder: true,
-                    ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                    Text(
-                      'ad_number'.tr,
-                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                    ),
-                         MyTextField(
-                      hintText: 'enter_the_advertisement_number'.tr,
-                      controller: _addNumberController,
-
-                      inputType: TextInputType.number,
-                      size: 17,
-                      capitalization: TextCapitalization.sentences,
-                      showBorder: true,
-                    ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-
-
-                    Row(children: [
-                      Expanded(
-
-                          child:Column(children: [
-
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            MyTextField(
-                              hintText: 'enter_virtual_tour_link'.tr,
-                              size: 20,
-                       controller: _textEditingController,
-      onChanged: (value) {
-      setState(() {
-      isButtonEnabled = value.isNotEmpty;
-      });
-      },
-                              inputType: TextInputType.text,
-                              showBorder: true,
-
-                              capitalization: TextCapitalization.words,
-                            ),
-                          ],)
-                      ),
-
-
-
-
-                      SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                      Container(
-                        height: 70,
-                        padding: EdgeInsets.only(
-                            right: 4, left: 4, top: 16,bottom: 4),
-                        child:    ElevatedButton(
-                          onPressed: isButtonEnabled
-                              ? () {
-                            String url = _textEditingController.text;
-                            if (url.isNotEmpty) {
-                              _showWebViewDialog(context, url);
-                            } else {
-                              // Handle empty URL input
-                              print('URL is empty');
-                            }
-                          }
-                              : null,
-                          child: Text('View'),
-                        ),
-                      ),
-
-                    ]),
-                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                  ]))),
-
-                )
-
-,
-
-              ):currentStep==4?
-              Container(
-
-                child:   Container(
-                    child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
-                      child: Column(children: [
-
-                        SizedBox(height: 20,),
-                        Container(
-                          padding: EdgeInsets.only(right: 10 ,left: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
                               Container(
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20),
+                                child: Center(child: SizedBox(width: Dimensions.WEB_MAX_WIDTH, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                                  Row(children: [
+
+                                    Text(
+                                      'advertiser_name'.tr,
+                                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                    ),
+                                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                    Text('(${'non_changeable'.tr})', style: robotoRegular.copyWith(
+                                      fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).errorColor,
+                                    )),
+                                  ]),
+                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  MyTextField(
+                                    hintText: 'full_name'.tr,
+                                    controller: _firstNameController,
+                                    focusNode: _firstNameFocus,
+                                    nextFocus: _phoneFocus,
+                                    inputType: TextInputType.name,
+                                    showBorder: true,
+                                    isEnabled: false,
+                                    capitalization: TextCapitalization.words,
                                   ),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [Colors.blue.shade700, Colors.blue.shade400],
+
+
+
+
+                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+
+
+
+                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  MyTextField(
+                                    hintText: 'phone'.tr,
+                                    controller: _phoneController,
+                                    focusNode: _phoneFocus,
+                                    inputType: TextInputType.phone,
+                                    showBorder: true,
+                                    isEnabled: false,
                                   ),
-                                ),
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+
+
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Icon(
-                                        Icons.question_mark    ,
-                                        size: 64,
-                                        color: Colors.white,
+                                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                      Text("نوع المعلن", style: robotoRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault, color: Theme
+                                          .of(context)
+                                          .hintColor),),
+                                      SizedBox(height: 7),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Expanded( // Place `Expanded` inside `Row`
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() => _djectivePresenter = 0);
+                                              },
+                                              child: Container(
+                                                height: 41,
+                                                decoration: BoxDecoration(
+                                                    color: _djectivePresenter == 0 ? Theme
+                                                        .of(context)
+                                                        .secondaryHeaderColor : Colors
+                                                        .transparent,
+                                                    border: Border.all(
+                                                      width: 1, color: Colors.blue[500],),
+                                                    borderRadius: BorderRadius.circular(2,)
+                                                ),
+
+                                                child: Center(child: Text('authorized'.tr,
+                                                  style: robotoBlack.copyWith(fontSize: 16,
+                                                      color: _djectivePresenter == 0
+                                                          ? Colors.white
+                                                          : Colors.blue),)),
+
+
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 3,),
+                                          Expanded( // Place 2 `Expanded` mean: they try to get maximum size and they will have same size
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() => _djectivePresenter = 1);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: _djectivePresenter == 1 ? Theme
+                                                        .of(context)
+                                                        .secondaryHeaderColor : Colors
+                                                        .transparent,
+                                                    border: Border.all(
+                                                      width: 1, color: Colors.blue[500],),
+                                                    borderRadius: BorderRadius.circular(2,)
+                                                ),
+                                                height: 39,
+                                                // color: _value == 1 ? Colors.grey : Colors.transparent,
+                                                child: Center(child: Text('owner'.tr,
+                                                  style: robotoBlack.copyWith(fontSize: 16,
+                                                      color: _djectivePresenter == 1
+                                                          ? Colors.white
+                                                          : Colors.blue),)),
+
+
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        'dimension_services_request'.tr,
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                      _djectivePresenter==0?Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                                          Text(
+                                            'authorization_number'.tr,
+                                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                                          ),
+
+
+                                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                          MyTextField(
+                                            hintText: 'authorization_number'.tr,
+                                            controller: _authorizedController,
+                                            inputType: TextInputType.phone,
+
+                                            isEnabled: false,
+                                            showBorder: true,
+                                          ),
+                                        ],
+                                      ):Container(),
+
+
                                     ],
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                child: Column(
-                                  children: [
+                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  Text(
+                                    '  رقم وثيقة الملكية',
+                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                  ),
+                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  MyTextField(
+                                    hintText: 'enter_the_document_number'.tr,
+                                    controller: _deedNumberController,
+                                    focusNode: _documentNumberFocus,
 
-                                    buildTabContent(
-                                      isArabic ?"${Get.find<SplashController>().configModel.featureAr}":"${Get.find<SplashController>().configModel.feature}",
+                                    inputType: TextInputType.number,
+                                    size: 17,
+                                    capitalization: TextCapitalization.sentences,
+                                    showBorder: true,
+                                    isEnabled: false,
+                                  ),
+                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                  Text(
+                                    'رقم رخصة الاعلان',
+                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                                  ),
+                                  MyTextField(
+                                    hintText: 'enter_the_advertisement_number'.tr,
+                                    controller: _addNumberController,
+
+                                    inputType: TextInputType.number,
+                                    size: 17,
+                                    capitalization: TextCapitalization.sentences,
+                                    showBorder: true,
+                                    isEnabled: false,
+                                  ),
+                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+
+                                  SizedBox(height: 16),
+                                  Text('هوية الملعن'),
+                                  SizedBox(height: 8),
+                                  MyTextField(
+                                    hintText: 'هوية الملعن',
+                                    controller: _advertiserNumberController,
+                                    inputType: TextInputType.text,
+                                    showBorder: true,
+                                    isEnabled: false,
+                                  ),
+
+                                  SizedBox(height: 16),
+                                  // Text('نوع المعلن'),
+                                  // SizedBox(height: 8),
+                                  // MyTextField(
+                                  //   // hintText: 'نوع المعلن',
+                                  //   controller: _advertiserTypeController,
+                                  //   inputType: TextInputType.number,
+                                  //   showBorder: true,
+                                  //   isEnabled: false,
+                                  //   // هنا مثلا نخلي نص الحقل يظهر حسب قيمة الكونترولر
+                                  //   // مثلاً لو MyTextField يسمح بتغيير النص المعروض
+                                  //   // لو هو مجرد TextField عادي ممكن تستخدم decoration.hintText
+                                  //   // لكن في حالتك، ممكن تعمل الآتي:
+                                  //   // مثلاً لو MyTextField يعتمد على hintText فقط،
+                                  //   // فممكن تغير hintText حسب القيمة
+                                  //   hintText: (_advertiserTypeController.text == '1') ? 'فرد' :
+                                  //   (_advertiserTypeController.text == '2') ? 'شركة' : 'نوع المعلن',
+                                  // ),
+
+
+
+                                  Row(children: [
+                                    Expanded(
+
+                                        child:Column(children: [
+
+                                          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                          MyTextField(
+                                            hintText: 'enter_virtual_tour_link'.tr,
+                                            size: 20,
+                                            controller: _arPathController,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                isButtonEnabled = value.isNotEmpty;
+                                              });
+                                            },
+                                            inputType: TextInputType.text,
+                                            showBorder: true,
+                                            isEnabled: false,
+
+                                            capitalization: TextCapitalization.words,
+                                          ),
+                                        ],)
                                     ),
-                                    SizedBox(height: 15),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Checkbox(
-                                          value: isCheckBoxChecked,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              isCheckBoxChecked = value;
-                                            });
-                                          },
-                                        ),
-                                        Text('i_agree_with'.tr),
-                                      ],
-                                    ),
-                                    SizedBox(height: 15),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: isCheckBoxChecked
-                                              ? () {
-                                            next(); // Close the dialog
+
+
+
+
+                                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                    Container(
+                                      height: 70,
+                                      padding: EdgeInsets.only(
+                                          right: 4, left: 4, top: 16,bottom: 4),
+                                      child:    ElevatedButton(
+                                        onPressed: isButtonEnabled
+                                            ? () {
+                                          String url = _arPathController.text;
+                                          if (url.isNotEmpty) {
+                                            _showWebViewDialog(context, url);
+                                          } else {
+                                            // Handle empty URL input
+                                            print('URL is empty');
                                           }
-                                              : null,
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.green,
-                                            padding: EdgeInsets.symmetric(horizontal: 30),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'yes_want'.tr,
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                        ),
-                                        SizedBox(width: 20),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            next();
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.red,
-                                            padding: EdgeInsets.symmetric(horizontal: 30),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'i_dont_want'.tr,
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                        ),
-                                      ],
+                                        }
+                                            : null,
+                                        child: Text('View'),
+                                      ),
                                     ),
-                                    SizedBox(height: 20), // Added spacing
-                                  ],
+
+                                  ]),
+                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                ]))),
+
+                              )
+
+                              ,
+
+                            ):currentStep==4?
+                            Container(
+
+                                child:   Container(
+                                    child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
+                                      child: Column(children: [
+
+                                        SizedBox(height: 20,),
+                                        Container(
+                                          padding: EdgeInsets.only(right: 10 ,left: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                height: 120,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.vertical(
+                                                    top: Radius.circular(20),
+                                                  ),
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                    colors: [Colors.blue.shade700, Colors.blue.shade400],
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.question_mark    ,
+                                                        size: 64,
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Text(
+                                                        'dimension_services_request'.tr,
+                                                        style: TextStyle(
+                                                          fontSize: 24,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                                child: Column(
+                                                  children: [
+
+                                                    buildTabContent(
+                                                      isArabic ?"${Get.find<SplashController>().configModel.featureAr}":"${Get.find<SplashController>().configModel.feature}",
+                                                    ),
+                                                    SizedBox(height: 15),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Checkbox(
+                                                          value: isCheckBoxChecked,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              isCheckBoxChecked = value;
+                                                            });
+                                                          },
+                                                        ),
+                                                        Text('i_agree_with'.tr),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 15),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        ElevatedButton(
+                                                          onPressed: isCheckBoxChecked
+                                                              ? () {
+                                                            next(); // Close the dialog
+                                                          }
+                                                              : null,
+                                                          style: ElevatedButton.styleFrom(
+                                                            primary: Colors.green,
+                                                            padding: EdgeInsets.symmetric(horizontal: 30),
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(10),
+                                                            ),
+                                                          ),
+                                                          child: Text(
+                                                            'yes_want'.tr,
+                                                            style: TextStyle(fontSize: 16),
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 20),
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            next();
+                                                          },
+                                                          style: ElevatedButton.styleFrom(
+                                                            primary: Colors.red,
+                                                            padding: EdgeInsets.symmetric(horizontal: 30),
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(10),
+                                                            ),
+                                                          ),
+                                                          child: Text(
+                                                            'i_dont_want'.tr,
+                                                            style: TextStyle(fontSize: 16),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 20), // Added spacing
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+
+
+
+                                      ]),
+                                    ))
+
+                            ):currentStep==5?
+                            Container(
+
+                                child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
+                                  child: Column(children: [
+                                    // Container(
+                                    //   height: 200,
+                                    //   child: HeaderWidget(200, true), //let's create a common header widget
+                                    // ),
+
+                                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10,left: 10),
+                                      child: DataView(title: 'ad_typ'.tr,value: _typeProperties==0?"for_rent".tr:"for_sell".tr,
+                                      ),
+                                    ),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                    type_properties!=null?  Padding(
+                                      padding: const EdgeInsets.only(right: 10,left: 10),
+                                      child: DataView(title: 'type_property'.tr,value: type_properties,
+                                      ),
+                                    ):Container(),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 10,left: 10),
+                                      child: ConfirmMapView(
+                                          fromView: true,lat: authController.estateLocation.latitude, lot: authController.estateLocation.longitude,add: add),
+                                    ),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10,left: 10),
+                                      child: DataView(title:  _propertyTypeController.text.toString()!="ارض"?'price'.tr:"سعر المتر",value: _priceController.text.toString(),
+                                      ),
+                                    ),
+
+                                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                    _propertyTypeController.text.toString()=="ارض"?
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10,left: 10),
+                                      child: DataView(title: 'اجمالي سعر الارض'.tr,value: _totalPriceController.text.toString(),
+                                      ),
+                                    ):Container(),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10,left: 10),
+                                      child: DataView(title: 'space'.tr,value: _spaceController.text.toString(),
+                                      ),
+                                    ),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10,left: 10),
+                                      child: DataView(title: 'shot_description'.tr,value: _shortDescController.text.toString(),
+                                      ),
+                                    ),
+                                    SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                    _propertyTypeController.text.toString()!="ارض"?Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 10,left: 10),
+                                          child: DataView(title: 'number_rooms'.tr,value: _selectedRoomIndex.toString(),
+                                          ),
+                                        ),
+                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 10,left: 10),
+                                          child: DataView(title: 'number_toilets'.tr,value:_selectedBathroomsIndex.toString(),
+                                          ),
+                                        ),
+                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        network_type!=null?  Padding(
+                                          padding: const EdgeInsets.only(right: 10,left: 10),
+                                          child: DataView(title: 'network_type'.tr,value:network_type,
+                                          ),
+                                        ):Container(),
+                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+
+
+                                      ],
+                                    ):Container()
+
+                                  ]),
+                                )
+                            ):Container()
+                                : Column(
+                              children: [
+                                ProfileBgWidget(),
+                              ],
+                            ),
+
+
+                          ),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            padding: const EdgeInsets.only(right: 7.0,left: 7.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: CustomButton(
+
+                                    onPressed: currentStep == 1
+                                        ? null
+                                        : () {
+                                      back();
+                                    },
+                                    buttonText:'back'.tr,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
+                                SizedBox(width: 6),
+                                Expanded(
+                                  child:  !restController.isLoading ?  CustomButton(
+                                    onPressed: () {
+                                      String _price;
+                                      String _shortDesc;
+                                      String _space;
+                                      String _authorized;
+                                      String _adNumber;
+                                      _authorized=_authorizedController.text.trim();
+                                      _price = _priceController.text.trim();
+                                      _shortDesc = _shortDescController.text.trim();
+                                      _space = _spaceController.text.trim();
+                                      _adNumber= _addNumberController.text.trim();
+                                      //   print("----------------------lat${authController.estateLocation}");
+                                      //    showCustomSnackBar("----------------------lat${authController.estateLocation.longitude}");
+
+                                      //     String property = '{"room": "44", "bathroom": 30}';
+                                      String  property ='[{"name":"حمام", "number":"$_selectedBathroomsIndex"},{"name":"غرف نوم", "number":"$_selectedRoomIndex"},{"name":"صالات", "number":"$_selectedLounge"},{"name":"مطبخ", "number":"$_selectedkitchen"}]';
+
+                                      if(currentStep==1) {
+
+                                        if (_price.isEmpty) {
+                                          showCustomSnackBar('enter_price'.tr);
+                                        }
+                                        else if (_space.isEmpty) {
+                                          showCustomSnackBar('enter_space'.tr);
+                                        } else if (_shortDesc.isEmpty) {
+                                          showCustomSnackBar('enter_short_desc'.tr);
+                                        }else if(restController.pickedIdentities.length ==null) {
+                                          showCustomSnackBar('pleace select image estate'.tr);
+                                        }
+
+                                        else {
+                                          next();
+                                        }
+                                      }
+                                      else if(currentStep==2){
+
+                                        next();
+
+
+                                      }
+                                      else if(currentStep==3){
+
+                                        if(_djectivePresenter==0&&_authorized.isEmpty){
+                                          showCustomSnackBar('ادخل رقم التفويض');
+                                        }else if(_adNumber.isEmpty){
+                                          showCustomSnackBar('ادخل رقم الإعلان'.tr);
+                                        }
+                                        else{
+                                          List<Map<String, dynamic >> _interests = [];
+                                          for(int index=0; index<categoryController.facilitiesList.length; index++) {
+                                            if(categoryController.interestSelectedList[index]) {
+
+                                              _interests.add ({'"' + "name" + '"':'"' + categoryController.facilitiesList[index].name + '"','"' + "image" + '"':'"' + categoryController.facilitiesList[index].image + '"'});
+                                            }
+                                          }
 
 
 
-                      ]),
-                    ))
+                                          next();
+                                        }
 
-              ):currentStep==5?
-              Container(
 
-                  child: authController.businessPlanStatus == 'complete' ? SuccessWidget() : Center(
-                    child: Column(children: [
-                      // Container(
-                      //   height: 200,
-                      //   child: HeaderWidget(200, true), //let's create a common header widget
-                      // ),
+                                      }
+                                      else if(currentStep==4){
 
-                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10,left: 10),
-                        child: DataView(title: 'ad_typ'.tr,value: _typeProperties==0?"for_rent".tr:"for_sell".tr,
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      type_properties!=null?  Padding(
-                        padding: const EdgeInsets.only(right: 10,left: 10),
-                        child: DataView(title: 'type_property'.tr,value: type_properties,
-                        ),
-                      ):Container(),
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                       Padding(
-                        padding: EdgeInsets.only(right: 10,left: 10),
-                        child: ConfirmMapView(
-                            fromView: true,lat: authController.estateLocation.latitude, lot: authController.estateLocation.longitude,add: add),
-                      ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        //  authController.submitBusinessPlan(estateId: 1);
 
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10,left: 10),
-                        child: DataView(title: 'price'.tr,value: _priceController.text.toString(),
-                        ),
-                      ),
+                                        next();
+                                        // next();
+                                      }
+                                      else if(currentStep==5){
+                                        List<Map<String, dynamic >> _interests = [];
+                                        for(int index=0; index<categoryController.facilitiesList.length; index++) {
+                                          if(categoryController.interestSelectedList[index]) {
 
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10,left: 10),
-                        child: DataView(title: 'space'.tr,value: _spaceController.text.toString(),
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10,left: 10),
-                        child: DataView(title: 'shot_description'.tr,value: _shortDescController.text.toString(),
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      restController.getCategoryPostion()==1?Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10,left: 10),
-                            child: DataView(title: 'number_rooms'.tr,value: _selectedRoomIndex.toString(),
+                                            _interests.add ({'"' + "name" + '"':'"' + categoryController.facilitiesList[index].name + '"','"' + "image" + '"':'"' + categoryController.facilitiesList[index].image + '"'});
+                                          }
+                                        }
+
+
+                                        List<Map<String, dynamic >> _advan= [];
+                                        for(int index=0; index<categoryController.advanList.length; index++) {
+                                          if(categoryController.advanSelectedList[index]) {
+
+                                            _advan.add ({'"' + "name" + '"':'"' + categoryController.advanList[index].name + '"'});
+                                          }
+                                        }
+
+                                        List<Map<String, dynamic >> _interface= [];
+                                        setState(() {
+                                          for (final item in _selectedInterfaceistItems) {
+                                            _interface.add({'"' + "name" + '"':'"' + item + '"','"' + "space" + '"':   item=="الواجهة الشمالية"? '"${_northController.text.toString()}"':  item=="الواجهة الشرقية"? '"${_eastController.text.toString()}"': item=="الواجهة الغربية"?'"${_westController.text.toString()}"':item=="الواجهة الجنوبية"?'"${_southController.text.toString()}"':""  });
+
+                                          }
+                                        });
+
+
+
+
+
+
+
+                                        restController.addEstate(
+
+                                            EstateBody(
+                                                address: _addressController.text.toString(),
+                                                space: _space,
+                                                longDescription: _longDescController.text.toString(),
+                                                shortDescription: _shortDesc,
+                                                // categoryId:"1",
+                                                ageEstate: _propertyAgeController.text.toString(),
+                                                arPath: _arPathController.text,
+                                                districts: _districtController.text.toString(),
+                                                floors: "4545",
+                                                latitude: latitude.toString(),
+                                                longitude: longitude.toString(),
+                                                near: "near",
+                                                networkType:"$_interests",
+                                                ownershipType: _djectivePresenter==1?"مالك":'مفوض',
+                                                property: property,
+                                                serviceOffers: "serviceOffers",
+                                                facilities: "$_interests",
+                                                territoryId: "1",
+                                                zoneId: _regionCodeController.text.toString(),
+                                                nationalAddress: "234234",
+                                                user_id: userController.userInfoModel.id.toString(),
+                                                city: _cityController.text.toString(),
+                                                otherAdvantages: "$_advan",
+                                                interface: "$_interface",
+                                                streetSpace: "${_widthStreetController.text.toString()}",
+
+                                                price: _priceController.text.toString(),
+                                                buildSpace: _buildSpaceController.text.toString(),
+                                                documentNumber: _deedNumberController.text.toString(),
+                                                estate_type: _selectionTypeEstate.toString(),
+                                                adNumber: _addNumberController.text.toString(),
+                                                priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ,
+                                                authorization_number: _authorizedController.text.toString(),
+
+
+                                                feature:"$isCheckBoxChecked",
+
+
+
+                                              propertyFace: _propertyFaceController.text.toString(),
+                                              deedNumber: _deedNumberController.text.toString(),
+                                              categoryName: _propertyTypeController.text.toString(),
+                                              totalPrice: _totalPriceController.text.toString(),
+                                              advertisementType: _advertisementTypeController.text.toString(),
+                                              postalCode: _postalCodeController.text.toString(),
+                                              planNumber: _planNumberController.text.toString(),
+                                              northLimit: _northController.text.toString(),
+                                              eastLimit: _eastController.text.toString(),
+                                              westLimit: _westController.text.toString(),
+                                              southLimit: _southController.text.toString(),
+                                              licenseNumber:_licenseNumberController.text.toString(),
+
+
+                                                advertiserNumber :_advertiserNumberController.text.toString(),
+
+                                                idType:_advertiserTypeController.text.toString(),
+
+
+
+
+                                            )
+
+                                        );
+
+                                        // authController.submitBusinessPlan(restaurantId: 1);
+                                        //  next();
+                                      }
+
+
+                                    },
+                                    buttonText:
+                                    currentStep == stepLength ? 'confirm'.tr : 'next'.tr,
+
+                                  ): Center(child: CircularProgressIndicator()),
+                                )
+                              ],
                             ),
-                          ),
-                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10,left: 10),
-                            child: DataView(title: 'number_toilets'.tr,value:_selectedBathroomsIndex.toString(),
-                            ),
-                          ),
-                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                          network_type!=null?  Padding(
-                            padding: const EdgeInsets.only(right: 10,left: 10),
-                            child: DataView(title: 'network_type'.tr,value:network_type,
-                            ),
-                          ):Container(),
-                          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-
-
+                          )
                         ],
-                      ):Container()
-
-                    ]),
-                  )
-              ):Container()
-                  : Column(
-                children: [
-                  ProfileBgWidget(),
-                ],
-              ),
-
-
-            ),
-               Container(
-                 alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.only(right: 7.0,left: 7.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: CustomButton(
-
-                      onPressed: currentStep == 1
-                          ? null
-                          : () {
-                        back();
-                      },
-                      buttonText:'back'.tr,
-                    ),
-                  ),
-                  SizedBox(width: 6),
-                  Expanded(
-                    child:  !restController.isLoading ?  CustomButton(
-                      onPressed: () {
-                        String _price;
-                        String _shortDesc;
-                        String _space;
-                        String _authorized;
-                        String _adNumber;
-                        _authorized=_authorizedController.text.trim();
-                        _price = _priceController.text.trim();
-                        _shortDesc = _shortDescController.text.trim();
-                        _space = _spaceController.text.trim();
-                        _adNumber= _addNumberController.text.trim();
-                     //   print("----------------------lat${authController.estateLocation}");
-                   //    showCustomSnackBar("----------------------lat${authController.estateLocation.longitude}");
-
-                   //     String property = '{"room": "44", "bathroom": 30}';
-                        String  property ='[{"name":"حمام", "number":"$_selectedBathroomsIndex"},{"name":"غرف نوم", "number":"$_selectedRoomIndex"},{"name":"صلات", "number":"$_selectedLounge"},{"name":"مطبخ", "number":"$_selectedkitchen"}]';
-
-                        if(currentStep==1) {
-
-                          if (restController.categoryIndex == 0) {
-
-                            showCustomSnackBar('select_category'.tr);
-                          } else if (_price.isEmpty) {
-                            showCustomSnackBar('enter_price'.tr);
-                          }
-                          else if (_space.isEmpty) {
-                            showCustomSnackBar('enter_space'.tr);
-                          } else if (_shortDesc.isEmpty) {
-                            showCustomSnackBar('enter_short_desc'.tr);
-                          }else if(restController.pickedIdentities.length ==null) {
-                            showCustomSnackBar('pleace select image estate'.tr);
-                          }
-
-                          else {
-                            next();
-                          }
-                        }
-                        else if(currentStep==2){
-                          if(restController.getCategoryPostion()==1&&_ageValue==null){
-
-                           showCustomSnackBar('اختر عمر العقار'.tr);
-         // List<String> _interests = [];
-         // for(int index=0; index<categoryController.categoryList.length; index++) {
-         //   if (categoryController.interestSelectedList[index]) {
-         //     _interests.add(categoryController.facilitiesList[index].name);
-         //   }
-         //
-         // }
-                         }
-                         else{
-                           getAddressFromLatLang(locationController.pickPosition.latitude,locationController.pickPosition.longitude);
-                           next();
-                         }
-
-
-                        }
-                        else if(currentStep==3){
-
-                          if(_djectivePresenter==0&&_authorized.isEmpty){
-                            showCustomSnackBar('ادخل رقم التفويض');
-                          }else if(_adNumber.isEmpty){
-                            showCustomSnackBar('ادخل رقم الإعلان'.tr);
-                          }
-                          else{
-                            List<Map<String, dynamic >> _interests = [];
-                            for(int index=0; index<categoryController.facilitiesList.length; index++) {
-                              if(categoryController.interestSelectedList[index]) {
-
-                                _interests.add ({'"' + "name" + '"':'"' + categoryController.facilitiesList[index].name + '"','"' + "image" + '"':'"' + categoryController.facilitiesList[index].image + '"'});
-                              }
-                            }
-
-
-
-                            next();
-                          }
-
-
-                        }
-                        else if(currentStep==4){
-
-                     //  authController.submitBusinessPlan(estateId: 1);
-
-                          next();
-                         // next();
-                        }
-                        else if(currentStep==5){
-                          List<Map<String, dynamic >> _interests = [];
-                          for(int index=0; index<categoryController.facilitiesList.length; index++) {
-                            if(categoryController.interestSelectedList[index]) {
-
-                              _interests.add ({'"' + "name" + '"':'"' + categoryController.facilitiesList[index].name + '"','"' + "image" + '"':'"' + categoryController.facilitiesList[index].image + '"'});
-                            }
-                          }
-
-
-                          List<Map<String, dynamic >> _advan= [];
-                          for(int index=0; index<categoryController.advanList.length; index++) {
-                            if(categoryController.advanSelectedList[index]) {
-
-                              _advan.add ({'"' + "name" + '"':'"' + categoryController.advanList[index].name + '"'});
-                            }
-                          }
-
-                          List<Map<String, dynamic >> _interface= [];
-                          setState(() {
-                            for (final item in _selectedInterfaceistItems) {
-                              _interface.add({'"' + "name" + '"':'"' + item + '"','"' + "space" + '"':   item=="الواجهة الشمالية"? '"${_northController.text.toString()}"':  item=="الواجهة الشرقية"? '"${_eastController.text.toString()}"': item=="الواجهة الغربية"?'"${_westController.text.toString()}"':item=="الواجهة الجنوبية"?'"${_southController.text.toString()}"':""  });
-
-                            }
-                          });
 
 
 
 
-
-
-
-                            restController.addEstate(
-                              EstateBody(
-                                  address: "${locationController.address}",
-                                  space: _space,
-                                  longDescription: _longDescController.text,
-                                  shortDescription: _shortDesc,
-                                  categoryId:restController.getCategoryIndex().toString(),
-                                  ageEstate: _ageValue??"null",
-                                  arPath: _textEditingController.text,
-                                  districts: district,
-                                  floors: "4545",
-                                  latitude: latitude.toString(),
-                                  longitude: longitude.toString(),
-                                  near: "near",
-                                  networkType:"$_interests",
-                                  ownershipType: _djectivePresenter==1?"مالك":'مفوض',
-                                  property: property,
-                                  serviceOffers: "serviceOffers",
-                                  facilities: "$_interests",
-                                  territoryId: "1",
-                                  zoneId: locationController.categoryList[locationController.categoryIndex-1].id.toString(),
-                                  nationalAddress: "234234",
-                                  user_id: userController.userInfoModel.id.toString(),
-                                  city: city,
-                                  otherAdvantages: "$_advan",
-                                  interface: "$_interface",
-                                  streetSpace: "${_widthStreetController.text.toString()}",
-
-                                  price: _priceController.text.toString(),
-                                buildSpace: _buildSpaceController.text.toString(),
-                                documentNumber: _documentNumberController.text.toString(),
-                                  estate_type: _selectionTypeEstate.toString(),
-                                adNumber: _addNumberController.text.toString(),
-                                priceNegotiation: negotiation==true?"غير قابل للتفاوض":"قابل للتفاوض" ,
-                                  authorization_number: _authorizedController.text.toString(),
-
-                                  feature:"$isCheckBoxChecked"));
-                         // authController.submitBusinessPlan(restaurantId: 1);
-                         //  next();
-                        }
-
-
-                      },
-                      buttonText:
-                      currentStep == stepLength ? 'confirm'.tr : 'next'.tr,
-
-                    ): Center(child: CircularProgressIndicator()),
-                  )
-                ],
-              ),
-            )
-          ],
-
-
-
-
-       );    });
-       });
-    });
-    });
-    }),
+                      );
+                  });
+                });
+          });
+        }),
 
       ): NotLoggedInScreen(),
 

@@ -222,11 +222,11 @@ class PropertyCard extends StatelessWidget {
                         Container(
                           child: Row(
                             children: [
-                              Text("رقم رخصة الإعلان",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                              Text("ad_number".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
                               SizedBox(
                                 width: 4.0,
                               ),
-                              Text("${estate.adLicenseNumber}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
+                              Text("${estate.adNumber}",style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor)),
                               // IconButton(onPressed:(){
                               //   FlutterClipboard.copy(estate.adNumber.toString()).then(( value ) {
                               //     showCustomSnackBar('تم النسخ'.tr, isError: false);

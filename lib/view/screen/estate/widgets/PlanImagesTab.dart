@@ -1,26 +1,27 @@
-
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
-import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/app_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-class PlannedTab extends StatefulWidget {
-  final int index;
-  Estate estate;
+class PlanImagesTab extends StatefulWidget {
+  final int estateId;
 
-  PlannedTab({@required this.index,@required this.estate});
+  const PlanImagesTab({ @required this.estateId});
 
   @override
-  State<PlannedTab> createState() => _PlannedTabState();
+  State<PlanImagesTab> createState() => _PlanImagesTabState();
 }
-class _PlannedTabState extends State<PlannedTab> {
+
+class _PlanImagesTabState extends State<PlanImagesTab> {
+
+
   List<XFile> _plannedFiles = [];
   List<String> _existingPlannedUrls = [];
   int _currentIndex = 0;
@@ -39,8 +40,8 @@ class _PlannedTabState extends State<PlannedTab> {
   @override
   void initState() {
     super.initState();
-    print("--------------------------${widget.estate.id}");
-    _fetchExistingPlanned(widget.estate.id);
+    print("--------------------------${widget.estateId}");
+    _fetchExistingPlanned(widget.estateId);
   }
 
   Future<void> _pickPlanned() async {
@@ -73,8 +74,9 @@ class _PlannedTabState extends State<PlannedTab> {
       if (response.statusCode == 200) {
         print('Images uploaded successfully');
         _plannedFiles.clear();
-        Get.find<UserController>().getEstateByUser(1, false,widget.estate.userId);
-        _fetchExistingPlanned(widget.estate.id);
+        // Get.find<UserController>().getEstateByUser(1, false,widget.estate.userId);
+        Get.find<UserController>().getEstateByUser(1, false,widget.estateId);
+        _fetchExistingPlanned(widget.estateId);
       } else {
         print('Image upload failed');
       }
@@ -139,9 +141,10 @@ class _PlannedTabState extends State<PlannedTab> {
   }
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+
+    return    GestureDetector(
       onTap: () {
-        print('Tab tapped: ${widget.index}');
+        print('Tab tapped: ${widget.estateId}');
       },
       child: Center(child:Column(
         children: [
@@ -174,7 +177,7 @@ class _PlannedTabState extends State<PlannedTab> {
             width: double.infinity,
             color: Colors.transparent,
             child: OutlinedButton.icon(
-                onPressed:()=>_uploadPlanned(widget.estate.id),
+                onPressed:()=>_uploadPlanned(widget.estateId),
                 icon:Icon(Icons.drive_folder_upload,color:Theme.of(context).primaryColor ),
                 label:  Text("upload_images".tr)),
           ),
@@ -191,7 +194,7 @@ class _PlannedTabState extends State<PlannedTab> {
               itemCount: _existingPlannedUrls.length,
               itemBuilder: (context, index) {
                 final imageUrl = _existingPlannedUrls[index];
-                return _buildPlannedTile(imageUrl, widget.estate.id); // Replace 123 with the actual id
+                return _buildPlannedTile(imageUrl, widget.estateId); // Replace 123 with the actual id
               },
             ),
           )
@@ -199,6 +202,6 @@ class _PlannedTabState extends State<PlannedTab> {
 
         ],
       ),),
-    );
+    );;
   }
 }

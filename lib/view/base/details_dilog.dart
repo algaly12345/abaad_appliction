@@ -90,63 +90,189 @@ class _DettailsDilogState extends State<DettailsDilog> {
                         //   'title'.tr,
                         //   style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault),
                         // ),
-                        Row(
-                          children: [
-                            Text(isArabic ? "${widget.estate.categoryNameAr} -${widget.estate.zoneNameAr} -${widget.estate.districts??''}":"${widget.estate.categoryName} -${widget.estate.zoneName??''} ",
-                                style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
-                          ],
-                        ),
 
-                        Text(
-                          'shot_description'.tr,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                        ),
-                        Text("${widget.estate.shortDescription}",
-                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+
+
+
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
 
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child:  Container(
-                                padding: const EdgeInsets.only(right: 4,left: 4),
-                                decoration:  BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        4),
-                                    color:  Colors.blue),
-                                child:  Row(
-                                  children: [
-
-                                    Text(
-                                        "price".tr,
-                                        style: robotoRegular.copyWith(
-                                          fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).cardColor,
-                                        )),
-                                    SizedBox(width: 2,),
-                                    Text(
-                                        "${widget.estate.price}",
-                                        style: robotoRegular.copyWith(
-                                          fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).cardColor,
-                                        ),
-
-                                    ),
-
-                                    SizedBox(width: 2.0),
-                                    Text("currency".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall,color: Colors.white),)
-                                  ],
+                            // 📌 التصنيف - المنطقة - الحي
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue, // 🎨 خلفية زرقاء
+                                  borderRadius: BorderRadius.circular(8), // حواف دائرية ناعمة
+                                ),
+                                child: Text(
+                                  isArabic
+                                      ? "${widget.estate.categoryNameAr} - ${widget.estate.zoneNameAr} - ${widget.estate.districts ?? ''} - ${widget.estate.advertisementType}"
+                                      : "${widget.estate.categoryName} - ${widget.estate.zoneName ?? ''}",
+                                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                                  style: robotoMedium.copyWith(
+                                    fontSize: Dimensions.fontSizeLarge,
+                                    color: Colors.white, // ✅ لون الخط أبيض
+                                  ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        Text(
-                          'long_description'.tr,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                        ),
 
-                        Text("${widget.estate.longDescription}",
-                            style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: Colors.blue,
+                                    ),
+                                    child:Row(
+                                      children: [
+                                        // عنوان السعر
+                                        Text(
+                                          widget.estate.categoryName != "ارض"
+                                              ? "price".tr
+                                              : "سعر المتر",
+                                          style: robotoRegular.copyWith(
+                                            fontSize: Dimensions.fontSizeDefault,
+                                            color: Theme.of(context).cardColor,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+
+                                        // السعر
+                                        Text(
+                                          formatPrice(widget.estate.price ?? "0"),
+                                          style: robotoRegular.copyWith(
+                                            fontSize: Dimensions.fontSizeDefault,
+                                            color: Theme.of(context).cardColor,
+                                          ),
+                                        ),
+
+                                        const SizedBox(width: 4),
+
+                                        // صورة شعار الريال
+                                        Image.asset(
+                                          'assets/image/riyals.png',
+                                          width: 16,
+                                          height: 16,
+                                          color: Theme.of(context).cardColor, // لإعطاء نفس لون النص إن رغبت
+                                        ),
+
+                                        // إجمالي السعر إذا كان "أرض"
+                                        if (widget.estate.categoryName == "ارض") ...[
+                                          const SizedBox(width: 12),
+                                          if (widget.estate.totalPrice != null &&widget.estate.totalPrice != "undefined")
+                                            Text(
+                                              "إجمالي السعر",
+                                              style: robotoRegular.copyWith(
+                                                fontSize: Dimensions.fontSizeDefault,
+                                                color: Theme.of(context).cardColor,
+                                              ),
+                                            ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            formatPrice(widget.estate.totalPrice ?? "0"),
+                                            style: robotoRegular.copyWith(
+                                              fontSize: Dimensions.fontSizeDefault,
+                                              color: Theme.of(context).cardColor,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Image.asset(
+                                            'assets/image/riyals.png',
+                                            width: 16,
+                                            height: 16,
+                                            color: Theme.of(context).cardColor,
+                                          ),
+                                        ],
+                                      ],
+                                    )
+                                    ,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+
+                            Text(
+                              'shot_description'.tr,
+                              style: robotoBold.copyWith(
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+
+                            const SizedBox(height: 6),
+
+                            Text(
+                              widget.estate.shortDescription ?? '',
+                              style: robotoRegular.copyWith(
+                                fontSize: Dimensions.fontSizeSmall,
+                                height: 1.5,
+                                color: Colors.black87,
+                              ),
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            // 📝 العنوان: وصف طويل
+                            Text(
+                              'long_description'.tr,
+                              style: robotoBold.copyWith(
+                                fontSize: Dimensions.fontSizeLarge,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+
+                            const SizedBox(height: 6),
+
+                            Text(
+                              widget.estate.longDescription ?? '',
+                              style: robotoRegular.copyWith(
+                                fontSize: Dimensions.fontSizeDefault,
+                                height: 1.5,
+                                color: Colors.black87,
+                              ),
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            // 📝 العنوان: وصف قصير
+
+                          ],
+                        )
+
+
+                        //
+                        // Row(
+                        //   children: [
+                        //     Text(isArabic ? "${widget.estate.categoryNameAr} -${widget.estate.zoneNameAr} -${widget.estate.districts??''}":"${widget.estate.categoryName} -${widget.estate.zoneName??''} ",
+                        //         style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
+                        //   ],
+                        // ),
+                        // Text(
+                        //   'long_description'.tr,
+                        //   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
+                        // ),
+                        //
+                        // Text("${widget.estate.longDescription}",
+                        //     style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                        //
+                        // Text(
+                        //   'shot_description'.tr,
+                        //   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                        // ),
+                        //
+                        // Text("${widget.estate.shortDescription}",
+                        //     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
                       ],
                     ),
                   ),
@@ -446,7 +572,98 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             style: robotoBlack.copyWith(fontSize: 14),
                           ),
                           SizedBox(height: 10,),
-                          Container(
+                          SizedBox(height: 13),
+                          // تاريخ الإنشاء
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF2252A1), // كحلي غامق، يمكنك تغييره لأي درجة
+                                border: Border.all(color: Colors.grey, width: 1.5),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                "معلومات الإعلان",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white, // لون النص أبيض
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 13),
+                          // Container(
+                          //   height: 50,
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(4.0),
+                          //     boxShadow: [
+                          //       BoxShadow(
+                          //         color: Theme.of(context).backgroundColor,
+                          //         spreadRadius: 1,
+                          //         blurRadius: 2,
+                          //         offset: Offset(0, 0.5), // changes position of shadow
+                          //       ),
+                          //
+                          //     ],
+                          //
+                          //   ),
+                          //   child: Row(
+                          //
+                          //     children: [
+                          //       Expanded( flex: 1,
+                          //           child: Container(
+                          //               padding: EdgeInsets.all(10),child:  Text("type_property".tr))),
+                          //       VerticalDivider(width: 1.0),
+                          //       Expanded(flex: 1,
+                          //           child: Container(
+                          //               padding: EdgeInsets.all(10),child:  Text( widget.estate.estate_type=="1"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
+                          //     ],
+                          //   ),
+                          // ),
+
+
+
+                          // نوع الإعلان
+                          if (widget.estate.advertisementType != null)
+                            buildInfoTile(context, label: "advertisement_type".tr, value: widget.estate.advertisementType),
+
+
+                          // نوع الصك
+                          if (widget.estate.titleDeedTypeName != null)
+                            buildInfoTile(context, label: "نوع وثيقة الملكية".tr, value: widget.estate.titleDeedTypeName),
+
+
+
+                          // رقم رخصة الإعلان
+                          if (widget.estate.adLicenseNumber != null)
+                            buildInfoTile(context, label: "ad_license_number".tr, value: widget.estate.adLicenseNumber),
+
+
+
+                          if (widget.estate.planNumber != null)
+                            buildInfoTile(context, label: "تاريح ترخيص الإعلان", value: widget.estate.creationDate),
+
+
+
+
+                          if (widget.estate.endDate != null)
+                            buildColoredInfoRow(
+                              context,
+                              label: "تاريخ إنتهاء ترخيص الإعلان",
+                              value: widget.estate.endDate,
+                              isExpired: DateTime.tryParse(widget.estate.endDate)?.isBefore(DateTime.now()) ?? false,
+                            ),
+
+
+
+
+                          widget.estate.categoryName!=null?    Container(
                             height: 50,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -465,16 +682,90 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             child: Row(
 
                               children: [
-                                Expanded( flex: 1,
+                                Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("type_property".tr))),
+                                        padding: EdgeInsets.all(10),child:  Text("نوع العقار".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text( widget.estate.estate_type=="1"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
+                                        padding: EdgeInsets.all(10),child: Text("${ widget.estate.categoryName}",  style: robotoBlack.copyWith(fontSize: 14)))),
                               ],
                             ),
-                          ),
+                          ):Container(),
+
+
+
+                          // رقم المخطط
+                          if (widget.estate.planNumber != null)
+                            buildInfoTile(context, label: "plan_number".tr, value: widget.estate.planNumber),
+
+
+
+                          widget.estate.property_type!="ارض"? Column(
+                            children: [
+                              widget.estate.ageEstate!=null?    Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).backgroundColor,
+                                      spreadRadius: 1,
+                                      blurRadius: 2,
+                                      offset: Offset(0, 0.5), // changes position of shadow
+                                    ),
+
+                                  ],
+
+                                ),
+                                child: Row(
+
+                                  children: [
+                                    Expanded(flex: 1,child: Container(
+                                        padding: EdgeInsets.all(10),child:  Text("age_of_the_property".tr))),
+                                    VerticalDivider(width: 1.0),
+                                    Expanded(flex: 1,child: Container(
+                                        padding: EdgeInsets.all(10),child: Text("${widget.estate.ageEstate}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                  ],
+                                ),
+                              ):Container(),
+                            ],
+                          ):Container(),
+
+
+
+                          widget.estate.guaranteesAndTheirDuration != null
+                              ? buildInfoRow(context, "الضمانات ", widget.estate.guaranteesAndTheirDuration)
+                              : SizedBox(),
+
+
+
+                          if (widget.estate.mainLandUseTypeName != null)
+                            buildInfoTile(context, label: "استخدام العقار".tr, value: widget.estate.mainLandUseTypeName),
+
+
+
+
+                          widget.estate.landNumber != null
+                              ? buildInfoRow(context, "رقم القطعة", widget.estate.landNumber)
+                              : SizedBox(),
+
+
+
+
+                          widget.estate.numberOfRooms != null
+                              ? buildInfoRow(context, "عدد الغرف", widget.estate.numberOfRooms)
+                              : SizedBox(),
+
+
+
+
+                          widget.estate.obligationsOnTheProperty != null
+                              ? buildInfoRow(context, "الالتزامات ", widget.estate.obligationsOnTheProperty)
+                              : SizedBox(),
+
+
                           widget.estate.space!=null?  Container(
                             height: 50,
                             decoration: BoxDecoration(
@@ -504,6 +795,102 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               ],
                             ),
                           ):Container(),
+
+
+                          // الواجهة
+                          if (widget.estate.propertyFace != null)
+                            buildInfoTile(context, label: "property_face".tr, value: widget.estate.propertyFace),
+
+
+
+                          if (widget.estate.streetWidth != null)
+                            buildInfoTile(context, label: "street_width".tr, value: widget.estate.streetWidth.toString()),
+
+
+
+
+                          widget.estate.propertyUtilities!=null?    Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).backgroundColor,
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 0.5), // changes position of shadow
+                                ),
+
+                              ],
+
+                            ),
+                            child: Row(
+
+                              children: [
+                                Expanded(flex: 1,
+                                    child: Container(
+                                        padding: EdgeInsets.all(10),child:  Text("خدمات العقار".tr))),
+                                VerticalDivider(width: 1.0),
+                                Expanded(flex: 1,
+                                    child: Container(
+                                        padding: EdgeInsets.all(10),child: Text("${ widget.estate.propertyUtilities}",  style: robotoBlack.copyWith(fontSize: 8)))),
+                              ],
+                            ),
+                          ):Container(),
+
+
+                          widget.estate.locationDescriptionOnMOJDeed != null?  Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).backgroundColor,
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 0.5), // changes position of shadow
+                                ),
+
+                              ],
+
+                            ),
+                            child: Row(
+
+                              children: [
+                                Expanded(flex: 1,
+                                    child: Container(
+                                        padding: EdgeInsets.all(10),child:  Text("وصف العقار حسب الصك".tr))),
+                                VerticalDivider(width: 1.0),
+                                Expanded(flex: 1,
+                                    child: Container(
+                                        padding: EdgeInsets.all(10),child: Text("${ widget.estate.locationDescriptionOnMOJDeed}",  style: robotoBlack.copyWith(fontSize: 8)))),
+                              ],
+                            ),
+                          ):Container(),
+
+
+
+                          if (widget.estate.zoneNameAr != null)
+                            buildInfoTile(
+                              context,
+                              label: "المنطقة",
+                              value: widget.estate.zoneNameAr,
+                            ),
+
+                          if (widget.estate.city != null)
+                            buildInfoTile(
+                              context,
+                              label: "المدينة",
+                              value: widget.estate.city,
+                            ),
+                          if (widget.estate.districts != null)
+                            buildInfoTile(
+                                context,
+                                label: "الحي",
+                                value: widget.estate.districts
+                            ),
 
                           widget.estate.streetSpace!=null?    Container(
                             height: 50,
@@ -563,6 +950,9 @@ class _DettailsDilogState extends State<DettailsDilog> {
                               ],
                             ),
                           ):Container(),
+
+
+
 
 
                           widget.estate.priceNegotiation!=null?    Container(
@@ -625,37 +1015,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             ),
                           ):Container(),
 
-                          widget.estate.category!="5"? Column(
-                            children: [
-                              widget.estate.ageEstate!=null?    Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Theme.of(context).backgroundColor,
-                                      spreadRadius: 1,
-                                      blurRadius: 2,
-                                      offset: Offset(0, 0.5), // changes position of shadow
-                                    ),
 
-                                  ],
-
-                                ),
-                                child: Row(
-
-                                  children: [
-                                    Expanded(flex: 1,child: Container(
-                                        padding: EdgeInsets.all(10),child:  Text("age_of_the_property".tr))),
-                                    VerticalDivider(width: 1.0),
-                                    Expanded(flex: 1,child: Container(
-                                        padding: EdgeInsets.all(10),child: Text("${widget.estate.ageEstate}",  style: robotoBlack.copyWith(fontSize: 14)))),
-                                  ],
-                                ),
-                              ):Container(),
-                            ],
-                          ):Container(),
                           widget.estate.users.name!=null?    Container(
                             height: 50,
                             decoration: BoxDecoration(
@@ -684,7 +1044,10 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             ),
                           ):Container(),
 
-                          widget.estate.nationalAddress!=null?    Container(
+
+
+
+                          widget.estate.deedNumber!=null?    Container(
                             height: 50,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -704,22 +1067,191 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
                               children: [
                                 Expanded(flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text("short_national_code".tr))),
+                                    padding: EdgeInsets.all(10),child:  Text("deed_number".tr))),
                                 VerticalDivider(width: 1.0),
                                 Expanded(flex: 1,child: Container(
-                                    padding: EdgeInsets.all(10),child: Row(
-                                  children: [
-                                    Text("${ widget.estate.nationalAddress}",  style: robotoBlack.copyWith(fontSize: 14)),
-                                    IconButton(onPressed:(){
-                                      FlutterClipboard.copy(widget.estate.nationalAddress.toString()).then(( value ) {
-                                        showCustomSnackBar('copied'.tr, isError: false);
-                                      });
-                                    }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,size: 15,)),
-                                  ],
-                                ))),
+                                    padding: EdgeInsets.all(10),child: Text("${ widget.estate.deedNumber}",  style: robotoBlack.copyWith(fontSize: 14)))),
                               ],
                             ),
                           ):Container(),
+
+                          SizedBox(height: 10), // مسافة بين العنوان
+
+
+                          SizedBox(height: 10), // مسافة بين العنوان
+
+
+
+                          Column(
+                            children: [
+                              SizedBox(height: 13),
+                              // تاريخ الإنشاء
+
+                              SizedBox(height: 13),
+
+                              // // تاريخ الإنشاء
+                              // if (widget.estate.creationDate != null)
+                              //   buildInfoTile(context, label: "creation_date".tr, value: widget.estate.creationDate),
+
+                              // تاريخ الانتهاء
+                              // if (widget.estate.endDate != null)
+                              //   buildInfoTile(context, label: "end_date".tr, value: widget.estate.endDate),
+
+
+
+
+
+
+
+
+                              // رقم ترخيص الوساطة والتسويق
+                              if (widget.estate.brokerageAndMarketingLicenseNumber != null)
+                                buildInfoTile(context, label: "brokerage_marketing_license".tr, value: widget.estate.brokerageAndMarketingLicenseNumber),
+
+                              // نوع الصك
+
+                              // الحد الشمالي
+                              // if (widget.estate.northLimit != null)
+                              //   buildInfoTile(context, label: "north_limit".tr, value: widget.estate.northLimit),
+                              //
+                              // // الحد الشرقي
+                              // if (widget.estate.eastLimit != null)
+                              //   buildInfoTile(context, label: "east_limit".tr, value: widget.estate.eastLimit),
+                              //
+                              // // الحد الغربي
+                              // if (widget.estate.westLimit != null)
+                              //   buildInfoTile(context, label: "west_limit".tr, value: widget.estate.westLimit),
+                              //
+                              // // الحد الجنوبي
+                              // if (widget.estate.southLimit != null)
+                              //   buildInfoTile(context, label: "south_limit".tr, value: widget.estate.southLimit),
+
+                              // عرض الشارع
+
+                              // نوع الإعلان
+
+                              // رقم الترخيص
+                              if (widget.estate.licenseNumber != null)
+                                buildInfoTile(context, label: "رقم رخصة فال".tr, value: widget.estate.licenseNumber),
+
+
+
+
+
+
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF2252A1), // كحلي غامق، يمكنك تغييره لأي درجة
+                                    border: Border.all(color: Colors.grey, width: 1.5),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    "معلومات  حدود العقار",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white, // لون النص أبيض
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+
+
+                              // الحد الشمالي
+                              widget.estate.northLimit != null
+                                  ? buildInfoRow(context, "الحد الشمالي", widget.estate.northLimit)
+                                  : SizedBox(),
+
+// الحد الجنوبي
+                              widget.estate.southLimit != null
+                                  ? buildInfoRow(context, "الحد الجنوبي", widget.estate.southLimit)
+                                  : SizedBox(),
+
+// الحد الشرقي
+                              widget.estate.eastLimit != null
+                                  ? buildInfoRow(context, "الحد الشرقي", widget.estate.eastLimit)
+                                  : SizedBox(),
+
+// الحد الغربي
+                              widget.estate.westLimit != null
+                                  ? buildInfoRow(context, "الحد الغربي", widget.estate.westLimit)
+                                  : SizedBox(),
+
+// // عرض الشارع
+//                               widget.estate.streetWidth != null
+//                                   ? buildInfoRow(context, "عرض الشارع", widget.estate.streetWidth)
+//                                   : SizedBox(),
+
+// واجهة العقار
+//                               widget.estate.propertyFace != null
+//                                   ? buildInfoRow(context, "واجهة العقار", widget.estate.propertyFace)
+//                                   : SizedBox(),
+
+
+
+
+
+
+
+
+
+
+                              // widget.estate.mainLandUseTypeName != null
+                              //     ? buildInfoRow(context, "الاستخدام ", widget.estate.mainLandUseTypeName)
+                              //     : SizedBox(),
+
+
+
+
+
+
+
+
+
+                            ],
+                          ),
+                          // widget.estate.nationalAddress!=null?    Container(
+                          //   height: 50,
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(4.0),
+                          //     boxShadow: [
+                          //       BoxShadow(
+                          //         color: Theme.of(context).backgroundColor,
+                          //         spreadRadius: 1,
+                          //         blurRadius: 2,
+                          //         offset: Offset(0, 0.5), // changes position of shadow
+                          //       ),
+                          //
+                          //     ],
+                          //
+                          //   ),
+                          //   child: Row(
+                          //
+                          //     children: [
+                          //       Expanded(flex: 1,child: Container(
+                          //           padding: EdgeInsets.all(10),child:  Text("short_national_code".tr))),
+                          //       VerticalDivider(width: 1.0),
+                          //       Expanded(flex: 1,child: Container(
+                          //           padding: EdgeInsets.all(10),child: Row(
+                          //         children: [
+                          //           Text("${ widget.estate.nationalAddress}",  style: robotoBlack.copyWith(fontSize: 14)),
+                          //           IconButton(onPressed:(){
+                          //             FlutterClipboard.copy(widget.estate.nationalAddress.toString()).then(( value ) {
+                          //               showCustomSnackBar('copied'.tr, isError: false);
+                          //             });
+                          //           }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,size: 15,)),
+                          //         ],
+                          //       ))),
+                          //     ],
+                          //   ),
+                          // ):Container(),
 
 
                           widget.estate.networkType. length >0?    NetworkTypeItem(estate: widget.estate,restaurants: widget.estate.networkType):Container(),
@@ -901,12 +1433,12 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children:  <Widget>[
-                                  Text('ad_number'.tr),
+                                  Text('رقم رخصة الإعلان'),
                                   SizedBox(width: 20),
-                                  Text(widget.estate.adNumber.toString()),
+                                  Text(widget.estate.adLicenseNumber.toString()),
 
                                   IconButton(onPressed:(){
-                                    FlutterClipboard.copy(widget.estate.adNumber.toString()).then(( value ) {
+                                    FlutterClipboard.copy(widget.estate.adLicenseNumber.toString()).then(( value ) {
                                       showCustomSnackBar('copied'.tr, isError: false);
                                     });
                                   }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,)),
@@ -936,11 +1468,11 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children:  <Widget>[
-                                  Text('short_national_code'.tr),
+                                  Text('رقم وثيقة الملكية'.tr),
 
-                                  Text('${widget.estate.nationalAddress}'),
+                                  Text('${widget.estate.deedNumber}'),
                                   IconButton(onPressed:(){
-                                    FlutterClipboard.copy(widget.estate.nationalAddress).then(( value ) {
+                                    FlutterClipboard.copy(widget.estate.deedNumber).then(( value ) {
                                       showCustomSnackBar('copied'.tr, isError: false);
                                     });
                                   }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,)),
@@ -1018,7 +1550,7 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             ),
                             SizedBox(width: 20),
                             Text(
-                              "${widget.estate.users.advertiserNo==null?"":widget.estate.users.advertiserNo}",
+                              "${widget.estate.users.phone==null?"":widget.estate.users.phone}",
                               style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                             ),
                           ],
@@ -1379,9 +1911,193 @@ class _DettailsDilogState extends State<DettailsDilog> {
 
     );
   }
+  Widget buildEndDateWithStatusBadge(BuildContext context, {
+     String label,
+     String value,
+     bool isExpired,
+  }) {
+    return Container(
+      height: 60,
+      margin: EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4.0),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).backgroundColor,
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 0.5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // اسم الحقل (مثل: تاريخ الانتهاء)
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
+            ),
+          ),
+
+          VerticalDivider(width: 1.0),
+
+          // التاريخ + الملصق
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  // التاريخ
+                  Expanded(
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+
+                  // الملصق
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isExpired ? Colors.red : Colors.green,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      isExpired ? "غير نشط" : "نشط",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
 
+  Widget buildColoredInfoRow(BuildContext context, {
+     String label,
+     String value,
+     bool isExpired,
+  }) {
+    return Container(
+      height: 50,
+      margin: EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4.0),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).backgroundColor,
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 0.5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
+            ),
+          ),
+          VerticalDivider(width: 1.0),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: isExpired ? Colors.red : Colors.green,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+
+  Widget buildInfoTile(BuildContext context, {String label, @required String value}) {
+    return Container(
+      height: 50,
+      margin: EdgeInsets.only(bottom: 8), // مسافة بسيطة بين الحقول
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4.0),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).backgroundColor,
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(0, 0.5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Text(label),
+            ),
+          ),
+          VerticalDivider(width: 1.0),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "$value",
+                      style: robotoBlack.copyWith(fontSize: 14),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      FlutterClipboard.copy(value ?? "").then((v) {
+                        showCustomSnackBar('copied'.tr, isError: false);
+                      });
+                    },
+                    icon: Icon(
+                      Icons.copy,
+                      color: Theme.of(context).primaryColor,
+                      size: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
 
 
@@ -1420,6 +2136,60 @@ class _DettailsDilogState extends State<DettailsDilog> {
     }
     // await Share.share(desc, subject: title,);
 
+  }
+}
+
+
+
+Widget buildInfoRow(BuildContext context, String label, String value) {
+  return Container(
+    height: 50,
+    margin: EdgeInsets.only(bottom: 8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(4.0),
+      boxShadow: [
+        BoxShadow(
+          color: Theme.of(context).backgroundColor,
+          spreadRadius: 1,
+          blurRadius: 2,
+          offset: Offset(0, 0.5),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
+          ),
+        ),
+        VerticalDivider(width: 1.0),
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(8),
+            child: Text(value, style: TextStyle(fontSize: 12 , fontWeight: FontWeight.bold)),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+String formatPrice(String priceStr) {
+  final num price = num.tryParse(priceStr);
+  if (price == null) return priceStr;
+
+  if (price >= 1000000) {
+    return "${(price / 1000000).toStringAsFixed(2)} مليون";
+  } else if (price >= 1000) {
+    return "${(price / 1000).toStringAsFixed(2)} ألف";
+  } else {
+    return price.toString();
   }
 }
 

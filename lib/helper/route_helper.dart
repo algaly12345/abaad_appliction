@@ -16,6 +16,7 @@ import 'package:abaad/view/screen/auth/sign_up_screen.dart';
 import 'package:abaad/view/screen/auth/verification_screen.dart';
 import 'package:abaad/view/screen/chat/chat_screen.dart';
 import 'package:abaad/view/screen/chat/conversation_screen.dart';
+import 'package:abaad/view/screen/estate/UploadScreen.dart';
 import 'package:abaad/view/screen/estate/ad_license_screen.dart';
 import 'package:abaad/view/screen/estate/add_estate_screen.dart';
 import 'package:abaad/view/screen/estate/confiram_screen.dart';
@@ -74,6 +75,12 @@ class RouteHelper {
   static const String webview = '/webview';
   static const String support = '/help-and-support';
   static const String payment = '/payment';
+
+
+  static const String upload_screen = '/upload_screen';
+
+
+
   static const String sucess2 = '/success';
 
   static const String addLicense = '/add-license';
@@ -125,6 +132,11 @@ class RouteHelper {
   static String getBusinessPlanRoute(int restaurantId) => '$businessPlan?id=$restaurantId';
 
   static String getPaymentRoute(int id) => '$payment?id=$id';
+
+
+  static String getUploadRoute(int id) => '$upload_screen?id=$id';
+
+
 
   static String getSuccesstRoute(int id) => '$sucess2?id=$id';
 
@@ -260,6 +272,8 @@ class RouteHelper {
     }),
 
     GetPage(name: payment, page: () => SuccessScreen(estate_id: int.parse(Get.parameters['id']),)),
+
+    GetPage(name: upload_screen, page: () => UploadScreen(estateId: int.parse(Get.parameters['id']),)),
 
     GetPage(name: sucess2, page: () => SuccessScreen2(estate_id: int.parse(Get.parameters['id']),)),
   ];

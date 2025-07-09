@@ -206,7 +206,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
               //     ), zoom: 11)));
               // Future.delayed(Duration(seconds: 1), () {
               // Get.offNamed(RouteHelper.getAccessLocationRoute('verification'));
-              Get.find<CategoryController>().setFilterIndex(zone[index].id,0,"0","0",0,0,0);
+              Get.find<CategoryController>().setFilterIndex(zone[index].id,0,"0","0",0,0,0,"");
               Get.toNamed(RouteHelper.getCategoryRoute(zone[index].id,zone[index].latitude,zone[index].longitude));
               // });
 

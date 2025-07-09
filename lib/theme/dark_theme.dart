@@ -11,5 +11,6 @@ ThemeData dark = ThemeData(
   hintColor: Color(0xFFbebebe),
   cardColor: Colors.black,
   colorScheme: ColorScheme.dark(primary: Color(0xFFffbd5c), secondary: Color(0xFFffbd5c)),
-  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: Color(0xFFffbd5c))),
+  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(backgroundColor: Color(
+      0xff034a77))),
 );

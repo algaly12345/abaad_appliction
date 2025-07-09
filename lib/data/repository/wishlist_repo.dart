@@ -16,7 +16,7 @@ class WishListRepo {
   }
 
   Future<Response> removeWishList(int id) async {
-    print("removed id -------------------------$id");
+
     return await apiClient.deleteData( '${AppConstants.REMOVE_WISH_LIST_URI}?estate_id=$id');
   }
 

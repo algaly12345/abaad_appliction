@@ -223,7 +223,23 @@
   "your_account_is_not_verified_verify_the_account_through_nafath": "حسابك غير موثق قم بتوثيق الحساب عن طريق نفاذ",
   "account_verification": "توثيق الحساب",
   "verification": "توثيق",
-  "click_on_confirm_the_authentication_process": "قم بالضغط علي تاكيد  عملية التوثيق"
+  "click_on_confirm_the_authentication_process": "قم بالضغط علي تاكيد  عملية التوثيق",
+  "creation_date": "تاريخ الإنشاء",
+  "end_date": "تاريخ الانتهاء",
+  "ad_license_number": "رقم رخصة الإعلان",
+  "deed_number": "رقم الصك",
+  "brokerage_marketing_license": "رقم ترخيص الوساطة والتسويق",
+  "title_deed_type_name": "نوع الصك",
+  "north_limit": "الحد الشمالي",
+  "east_limit": "الحد الشرقي",
+  "west_limit": "الحد الغربي",
+  "south_limit": "الحد الجنوبي",
+  "street_width": "عرض الشارع",
+  "property_face": "واجهة العقار",
+  "advertisement_type": "نوع الإعلان",
+  "license_number": "رقم الترخيص",
+  "plan_number": "رقم المخطط"
+
 
 
 }

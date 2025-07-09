@@ -1,37 +1,43 @@
-
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
-import 'package:abaad/data/model/response/estate_model.dart';
 import 'package:abaad/util/app_constants.dart';
+import 'package:flutter/material.dart';
+
+import 'package:flutter/material.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-class PlannedTab extends StatefulWidget {
-  final int index;
-  Estate estate;
 
-  PlannedTab({@required this.index,@required this.estate});
+class ImageTab extends StatefulWidget {
+  final int estateId;
+
+   ImageTab({ @required this.estateId});
 
   @override
-  State<PlannedTab> createState() => _PlannedTabState();
+  State<ImageTab> createState() => _ImageTabState();
 }
-class _PlannedTabState extends State<PlannedTab> {
-  List<XFile> _plannedFiles = [];
-  List<String> _existingPlannedUrls = [];
-  int _currentIndex = 0;
 
-  Future<void> _fetchExistingPlanned(int id) async {
-    final response = await http.get(Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/etch-existing-planned/$id'));
+class _ImageTabState extends State<ImageTab> {
+  List<XFile> _imageFiles = [];
+
+  List<String> _existingImageUrls = [];
+
+ // int _currentIndex = 0;
+
+
+  Future<void> _fetchExistingImages(int id) async {
+    final response = await http.get(Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/etch-existing-images/$id'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
-        _existingPlannedUrls = List<String>.from(data['image_data']);
+        _existingImageUrls = List<String>.from(data['image_data']);
       });
     }
   }
@@ -39,19 +45,20 @@ class _PlannedTabState extends State<PlannedTab> {
   @override
   void initState() {
     super.initState();
-    print("--------------------------${widget.estate.id}");
-    _fetchExistingPlanned(widget.estate.id);
+    print("--------------------------${widget.estateId}");
+    _fetchExistingImages(widget.estateId);
+
   }
 
-  Future<void> _pickPlanned() async {
+  Future<void> _pickImages() async {
     final List<XFile> selectedImages = await ImagePicker().pickMultiImage();
     setState(() {
-      _plannedFiles = selectedImages;
+      _imageFiles = selectedImages;
     });
   }
 
-  Future<void> _uploadPlanned(int id) async {
-    if (_plannedFiles == null || _plannedFiles.isEmpty) return;
+  Future<void> _uploadImages(int id) async {
+    if (_imageFiles == null || _imageFiles.isEmpty) return;
 
     final ProgressDialog pr = ProgressDialog(context);
     pr.style(message: 'Uploading Images...');
@@ -60,21 +67,22 @@ class _PlannedTabState extends State<PlannedTab> {
 
     try {
       List<http.MultipartFile> imageFiles = [];
-      for (var imageFile in _plannedFiles) {
+      for (var imageFile in _imageFiles) {
         List<int> imageBytes = await imageFile.readAsBytes();
-        imageFiles.add(http.MultipartFile.fromBytes('planned[]', imageBytes, filename: imageFile.name));
+        imageFiles.add(http.MultipartFile.fromBytes('images[]', imageBytes, filename: imageFile.name));
       }
 
-      final Uri uploadUri = Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/upload-planned/$id');
+      final Uri uploadUri = Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/upload-images/$id');
       var request = http.MultipartRequest('POST', uploadUri);
       request.files.addAll(imageFiles);
 
       var response = await request.send();
       if (response.statusCode == 200) {
         print('Images uploaded successfully');
-        _plannedFiles.clear();
-        Get.find<UserController>().getEstateByUser(1, false,widget.estate.userId);
-        _fetchExistingPlanned(widget.estate.id);
+        _imageFiles.clear();
+        Get.find<UserController>().getEstateByUser(1, false,widget.estateId);
+        _fetchExistingImages(widget.estateId);
+        _fetchExistingImages(widget.estateId);
       } else {
         print('Image upload failed');
       }
@@ -85,18 +93,18 @@ class _PlannedTabState extends State<PlannedTab> {
     }
   }
 
-  Future<void> _deletePlanned(String imageUrl, int id) async {
+  Future<void> _deleteImage(String imageUrl, int id) async {
     final ProgressDialog pr = ProgressDialog(context);
     pr.style(message: 'Deleting Image...');
 
     await pr.show();
 
     try {
-      final response = await http.delete(Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/delete-planned/$id/$imageUrl'));
+      final response = await http.delete(Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/delete-image/$id/$imageUrl'));
 
       if (response.statusCode == 200) {
         setState(() {
-          _existingPlannedUrls.remove(imageUrl);
+          _existingImageUrls.remove(imageUrl);
         });
       }
     } catch (e) {
@@ -105,9 +113,27 @@ class _PlannedTabState extends State<PlannedTab> {
       pr.hide();
     }
   }
+  //
+  // Widget _buildTabButton(String title, int index) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       print('Tab tapped: $index');
+  //       setState(() {
+  //         _currentIndex = index;
+  //       });
+  //     },
+  //     child: Container(
+  //       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+  //       color: _currentIndex == index ? Colors.blue : Colors.transparent,
+  //       child: Text(
+  //         title,
+  //         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-
-  Widget _buildPlannedTile(String imageUrl, int id) {
+  Widget _buildImageTile(String imageUrl, int id) {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
@@ -128,7 +154,7 @@ class _PlannedTabState extends State<PlannedTab> {
               child: Container(
                 child: IconButton(
                   icon: Icon(Icons.delete,color: Colors.white,),
-                  onPressed: () => _deletePlanned(imageUrl, id),
+                  onPressed: () => _deleteImage(imageUrl, id),
                 ),
               ),
             ),
@@ -137,11 +163,25 @@ class _PlannedTabState extends State<PlannedTab> {
       ),
     );
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return     GestureDetector(
       onTap: () {
-        print('Tab tapped: ${widget.index}');
+        print('Tab tapped: ${widget.estateId}');
       },
       child: Center(child:Column(
         children: [
@@ -150,7 +190,7 @@ class _PlannedTabState extends State<PlannedTab> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                  onPressed: _pickPlanned,style: ElevatedButton.styleFrom(
+                  onPressed: _pickImages,style: ElevatedButton.styleFrom(
                   primary:Theme.of(context).primaryColor),
                   child:  Text('browse_and_add_photos'.tr)),),
           ),
@@ -158,12 +198,12 @@ class _PlannedTabState extends State<PlannedTab> {
             height: 130,
 
             child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
               ),
-              itemCount: _plannedFiles?.length ?? 0,
+              itemCount: _imageFiles?.length ?? 0,
               itemBuilder: (context, index) {
-                final imageFile = _plannedFiles[index];
+                final imageFile = _imageFiles[index];
                 return Image.file(File(imageFile.path));
               },
             ),
@@ -174,12 +214,12 @@ class _PlannedTabState extends State<PlannedTab> {
             width: double.infinity,
             color: Colors.transparent,
             child: OutlinedButton.icon(
-                onPressed:()=>_uploadPlanned(widget.estate.id),
+                onPressed:()=>_uploadImages(widget.estateId),
                 icon:Icon(Icons.drive_folder_upload,color:Theme.of(context).primaryColor ),
                 label:  Text("upload_images".tr)),
           ),
           SizedBox(height: 10),
-          _existingPlannedUrls != null && _existingPlannedUrls.isNotEmpty
+          _existingImageUrls != null && _existingImageUrls.isNotEmpty
               ? Expanded(
             child:GridView.builder(
               padding: const EdgeInsets.all(16),
@@ -188,10 +228,10 @@ class _PlannedTabState extends State<PlannedTab> {
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
               ),
-              itemCount: _existingPlannedUrls.length,
+              itemCount: _existingImageUrls.length,
               itemBuilder: (context, index) {
-                final imageUrl = _existingPlannedUrls[index];
-                return _buildPlannedTile(imageUrl, widget.estate.id); // Replace 123 with the actual id
+                final imageUrl = _existingImageUrls[index];
+                return _buildImageTile(imageUrl, widget.estateId); // Replace 123 with the actual id
               },
             ),
           )
@@ -199,6 +239,7 @@ class _PlannedTabState extends State<PlannedTab> {
 
         ],
       ),),
-    );
+    );;
   }
+
 }

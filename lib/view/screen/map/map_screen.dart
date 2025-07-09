@@ -56,6 +56,7 @@ class _MapViewScreenState extends State<MapScreen> {
   Uint8List imageDataBytes;
   var markerIcon;
   // GlobalKey iconKey = GlobalKey();
+  String selectedOption = 'بيع';
 
 
   int _reload = 0;
@@ -434,7 +435,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                                   // _customMarkers.clear();
 
                                                   //     categoryController.setFilterIndex(0,index,"0","0",0,"0");
-                                                  categoryController.setSubCategoryIndex(index);
+                                                  categoryController.setSubCategoryIndex(index,widget.mainCategory.id);
 
                                                   setState(() {
 
@@ -507,6 +508,9 @@ class _MapViewScreenState extends State<MapScreen> {
 
 
                                   ),
+
+
+
 
 
 
@@ -587,11 +591,43 @@ class _MapViewScreenState extends State<MapScreen> {
                     //       child:nearbyPlacesList(_products),
                     //     ))
                     //     : Container(),
+
+
+                    // Positioned(
+                    //   bottom: 5,
+                    //   right: 5,
+                    //   child: GestureDetector(
+                    //     onTap: () {
+                    //       if(cardTapped==true){
+                    //
+                    //         cardTapped=false;
+                    //       }else if(cardTapped==false){
+                    //         cardTapped=true;
+                    //       }
+                    //
+                    //       setState(() {
+                    //
+                    //       });
+                    //     },
+                    //     child: Container(
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.grey.shade300,
+                    //         shape: BoxShape.circle,
+                    //       ),
+                    //       padding: const EdgeInsets.all(4),
+                    //       child: const Icon(
+                    //         Icons.close,
+                    //         size: 16,
+                    //         color: Colors.black,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     cardTapped
                         ? Positioned(
                         top: 100.0,
                         left: 15.0,
-                        child: FlipCard(
+                        child:FlipCard(
                           front: Container(
                             height: 180.0,
                             width: 175.0,
@@ -814,6 +850,48 @@ class _MapViewScreenState extends State<MapScreen> {
                                     ),
                                   ],
                                 ),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    // زر بيع
+                                    RaisedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedOption = 'بيع';
+
+                                          Get.find<CategoryController>().setFilterIndex(widget.mainCategory.id,0,"0","0",0,0,0,selectedOption);
+                                        });
+                                      },
+                                      color: selectedOption == 'بيع' ? Colors.blue : Colors.white,
+                                      textColor: selectedOption == 'بيع' ? Colors.white : Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(color: Colors.blue),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text('بيع'),
+                                    ),
+
+                                    SizedBox(width: 10),
+
+                                    // زر إيجار
+                                    RaisedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedOption = 'إيجار';
+                                          Get.find<CategoryController>().setFilterIndex(widget.mainCategory.id,0,"0","0",0,0,0,selectedOption);
+                                        });
+                                      },
+                                      color: selectedOption == 'إيجار' ? Colors.blue : Colors.white,
+                                      textColor: selectedOption == 'إيجار' ? Colors.white : Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(color: Colors.blue),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text('إيجار'),
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(
                                   height: 5,),
 
@@ -838,17 +916,11 @@ class _MapViewScreenState extends State<MapScreen> {
                                                   // _customMarkers.clear();
 
 
-                                                  categoryController.setSubCategoryIndex(index);
+                                                  categoryController.setSubCategoryIndex(index,widget.mainCategory.id);
                                                   //categoryController.setFilterIndex(0,index,"0","0",0,"0");
                                                   setState(() {
 
-
-
-
                                                     _setMarkers(_products);
-
-
-
 
                                                   });
 
@@ -974,12 +1046,14 @@ class _MapViewScreenState extends State<MapScreen> {
                       ),
                     ),
 
+
+
                     cardTapped
                         ? Positioned(
                         top: 100.0,
                         left: 15.0,
                         child: FlipCard(
-                           key: cardKey,
+                          key: cardKey,
                           front: Container(
                             height: 180.0,
                             width: 175.0,
@@ -989,6 +1063,37 @@ class _MapViewScreenState extends State<MapScreen> {
                                 BorderRadius.all(Radius.circular(8.0))),
                             child: SingleChildScrollView(
                               child: Column(children: [
+
+                                Positioned(
+                                  bottom: 5,
+                                  right: 5,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if(cardTapped==true){
+
+                                        cardTapped=false;
+                                      }else if(cardTapped==false){
+                                        cardTapped=true;
+                                      }
+
+                                      setState(() {
+
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: const EdgeInsets.all(4),
+                                      child: const Icon(
+                                        Icons.close,
+                                        size: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 Container(
                                   height: 100.0,
                                   width: 175.0,
@@ -1029,7 +1134,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                   borderRadius: BorderRadius.circular(8.0)),
                               child:Column(
                                 children: [
-                                    ServiceProviderItem(estate:estate),
+                                  ServiceProviderItem(estate:estate),
                                 ],
                               )
 
@@ -1148,9 +1253,16 @@ class _MapViewScreenState extends State<MapScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(currentCoordinate.price.length ==5? '${currentCoordinate.price } الف':currentCoordinate.price.length ==4? '${currentCoordinate.price } الف':currentCoordinate.price.length ==7? '${currentCoordinate.price } الف':currentCoordinate.price.length ==6? '${currentCoordinate.price } الف':currentCoordinate.price.length >=9? '${currentCoordinate.price } مليون':currentCoordinate.price,
-                          style:robotoBlack.copyWith(fontSize: 9)
+                      Text(
+                        formatPrice(
+                            currentCoordinate.categoryName == "ارض"
+                                ? currentCoordinate.totalPrice
+                                : currentCoordinate.price
+                        ),
+                        style: robotoBlack.copyWith(fontSize: 9),
                       ),
+
+
                       Image.asset(currentCoordinate.serviceOffers.isEmpty?Images.image:Images.vt_offer, height: 8, width: 8),
                     ],
 
@@ -1452,6 +1564,21 @@ if(cardTapped==true){
           );
 
         });
+  }
+
+
+
+  String formatPrice(String priceStr) {
+    final num price = num.tryParse(priceStr);
+    if (price == null) return priceStr;
+
+    if (price >= 1000000) {
+      return "${(price / 1000000).toStringAsFixed(2)} مليون";
+    } else if (price >= 1000) {
+      return "${(price / 1000).toStringAsFixed(2)} ألف";
+    } else {
+      return price.toString();
+    }
   }
 
 

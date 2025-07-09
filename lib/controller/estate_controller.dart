@@ -324,6 +324,38 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
+
+  // Future<void> addEstate(EstateBody estateBody, List<MultipartDocument> additionalDocument) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   _isLoading = true;
+  //   update();
+  //   List<MultipartBody> _multiParts = [];
+  //   _multiParts.add(MultipartBody('image', _pickedImage));
+  //   for (XFile file in _pickedIdentities) {
+  //     _multiParts.add(MultipartBody('identity_image[]', file));
+  //   }
+  //
+  //   _multiParts.add(MultipartBody('image', _pickedPlanedImage));
+  //   for (XFile file in _pickPlaned) {
+  //     _multiParts.add(MultipartBody('planed_image[]', file));
+  //   }
+  //   Response response = await estateRepo.createEstate(
+  //       estateBody, _multiParts,additionalDocument );
+  // //  prefs.setString('estate_id', response.body["message"].toString());
+  //
+  //   if (response.statusCode == 200) {
+  //     _isLoading=false;
+  //
+  //     Get.offNamed(RouteHelper.getPaymentRoute(161));
+  //     //   Get.offAllNamed(RouteHelper.getSuccess());
+  //   } else {
+  //     ApiChecker.checkApi(response);
+  //     print("error estate---------------------------------------------------${response.body}");
+  //   }
+  //   _isLoading = false;
+  //   update();
+  // }
+
   Future<void> addEstate(EstateBody estateBody) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _isLoading = true;
@@ -339,24 +371,71 @@ class EstateController extends GetxController implements GetxService {
       _multiParts.add(MultipartBody('planed_image[]', file));
     }
 
-    Response response = await estateRepo.createEstate(
-        estateBody, _multiParts);
-   prefs.setString('estate_id', response.body["message"].toString());
+    Response response = await estateRepo.addEstate(
+        estateBody,_multiParts);
+  prefs.setString('estate_id', response.body["estate_id"].toString());
     _pickPlaned.clear();
     if (response.statusCode == 200) {
       _isLoading=false;
       _pickPlaned.clear();
       _pickedIdentities.clear();
       _categoryIndex=0;
-      Get.offNamed(RouteHelper.getPaymentRoute(161));
+    //  Get.offNamed(RouteHelper.getUploadRoute(161));
+
+
+      String estateIdStr = response.body["estate_id"].toString();
+
+      if (estateIdStr != null) {
+        int estateId = int.tryParse(estateIdStr) ?? 0;
+        Get.offNamed(RouteHelper.getUploadRoute(estateId));
+      } else {
+        // معالجة في حال لم يكن هناك قيمة محفوظة
+        print('No estate_id found in SharedPreferences');
+      }
+
    //   Get.offAllNamed(RouteHelper.getSuccess());
     } else {
       ApiChecker.checkApi(response);
-      print("error estate---------------------------------------------------${response.body}");
+            // print("🔴 Error: Status Code: ${response.body["message"].toString()}");
+      print("🔴 Error Body: ${response.statusText}");
+      print("🔴 Error Body2: ${response.statusCode}");
+   //   print("error estate---------------------------------------------------${response}");
     }
     _isLoading = false;
     update();
   }
+
+
+  // Future<void> addEstate(EstateBody estatetBody) async {
+  //   _isLoading = true;
+  //   update();
+  //   List<MultipartBody> _multiParts = [];
+  //   _multiParts.add(MultipartBody('image', _pickedImage));
+  //   for (XFile file in _pickedIdentities) {
+  //     _multiParts.add(MultipartBody('identity_image[]', file));
+  //   }
+  //
+  //   _multiParts.add(MultipartBody('image', _pickedPlanedImage));
+  //   for (XFile file in _pickPlaned) {
+  //     _multiParts.add(MultipartBody('planed_image[]', file));
+  //   }
+  //   Response response = await estateRepo.addEstate(estatetBody,_multiParts);
+  //
+  //   if (response.statusCode == 200) {
+  //     Get.offAllNamed(RouteHelper.getProfileRoute());
+  //     showCustomSnackBar('update_successful'.tr, isError: false);
+  //     update();
+  //
+  //   } else {
+  //     ApiChecker.checkApi(response);
+  //     print("error estate---------------------------------------------------${response.body}");
+  //   }
+  //   _isLoading = false;
+  //   update();
+  // }
+
+
+
   Future<void> updatEstate(EstateBody estatetBody) async {
     _isLoading = true;
     update();
@@ -507,36 +586,63 @@ class EstateController extends GetxController implements GetxService {
   }
 
 
-
-  Future<bool> verifyLicense(String licenseNumber, String  _advertiserNumber ,int type) async {
+  Future<bool> verifyLicense(String licenseNumber, String _advertiserNumber, int type) async {
     try {
-      final response = await estateRepo.verifyLicense(licenseNumber,_advertiserNumber,type);
+      final response = await estateRepo.verifyLicense(licenseNumber, _advertiserNumber, type);
 
       if (response.statusCode == 200) {
-        // التحقق من البيانات القادمة من API
-        print("API response: ${response.body}");
-        // التأكد من أن الاستجابة تحتوي على بيانات صحيحة
+        print("📦 Raw API response body:");
+        print(jsonEncode(response.body)); // هذا يطبع كل شيء كـ JSON
+
         if (response.body['success'] == true) {
-          licenseData = response.body['data']; // تخزين البيانات في الـ controller
-          print('${ response.body['data']}');
+          // طباعة البيانات المتداخلة بشكل منسق
+          print("✅ Success: License verified");
+
+          // طباعة كل المفاتيح مع القيم
+          print("🔍 Full parsed response:");
+          Map<String, dynamic> fullResponse = response.body;
+          fullResponse.forEach((key, value) {
+            print("------------------------------------------------------------------------------------------$key: ${jsonEncode(value)}");
+          });
+
+          licenseData = response.body['data'];
+          var licenseBorders = response.body['data2'];
+
           SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          // تخزين البيانات
           String licenseJson = jsonEncode(licenseData);
           await prefs.setString('license_data', licenseJson);
+
+          String data2Json = jsonEncode(response.body['data2']);
+          await prefs.setString('license_data2', data2Json);
+
+          String bordersJson = jsonEncode(licenseBorders);
+          await prefs.setString('license_borders', bordersJson);
+
+          // يمكنك أيضًا تخزين data3 إذا أردت:
+          String data3Json = jsonEncode(response.body['data3']);
+          await prefs.setString('license_data3', data3Json);
+
+          print('✅ Stored data2: $data2Json');
+          print('✅ Stored data3: $data3Json');
+
           return true;
         } else {
-          print('Error: ${response.body['message']}');
+          print('❌ Error: ${response.body['message']}');
           return false;
         }
       } else {
-        print('API error: ${response.statusCode} - ${response.statusText}');
-        // print('Error: API request failed');
+        print('❌ API error: ${response.statusCode} - ${response.statusText}');
         return false;
       }
     } catch (e) {
-      print('Exception: $e');
+      print('⚠️ Exception: $e');
       return false;
     }
   }
+
+
 
 
 

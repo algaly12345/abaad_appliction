@@ -69,6 +69,10 @@ class _AdLicenseScreenState extends State<AdLicenseScreen> {
                   ),
 
                   SizedBox(height: 20),
+                  Text(
+                    'هوية المعلن',
+                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
+                  ),
                   MyTextField(
                     hintText: 'ادخل رقم المعلن',
                     controller: _idNumberController, // تأكد من تعريف هذا المتغير
@@ -139,6 +143,12 @@ class _AdLicenseScreenState extends State<AdLicenseScreen> {
                await prefs.setString('advertiserName', data['advertiserName']);
                await prefs.setString('phoneNumber', data['phoneNumber']);
                await prefs.setInt('advertiserType', estateController.advertiserType);
+
+
+               // حفظ القيم المطلوبة أيضًا
+               await prefs.setString('numberLicense', _numberLicense);
+               await prefs.setString('advertiserNumber', _advertiserNumber);
+               await prefs.setInt('advertiserTypeInput', advertiserType); // هذا المدخل من المستخدم
 
 
 

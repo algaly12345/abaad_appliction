@@ -6,7 +6,7 @@ import 'package:get/get_connect/http/src/response/response.dart';
 
 class EstateRepo {
   final ApiClient apiClient;
-  EstateRepo({@required this.apiClient});
+  EstateRepo({ this.apiClient});
 
   Future<Response>  getEstateList(int offset, String filterBy,int userId,categoryId) async {
     return await apiClient.getData('${AppConstants.CATEGORY_ESTATEURI}/all?category_id=$categoryId&offset=$offset&user_id=$userId');
@@ -61,14 +61,20 @@ class EstateRepo {
       "ar_path":estate.arPath,
       "age_estate":estate.ageEstate,
       "estate_type":estate.estate_type,
-      "authorization_number":estate.authorization_number
+      "authorization_number":estate.authorization_number,
+
+      "license_number": estate.licenseNumber,
+      "advertiser_number": estate.advertiserNumber,
+      "id_type": estate.idType,
 
 
 
     });
-
     return apiClient.postMultipartData(AppConstants.CREATE_ESATE_URI, _body,multiParts);
+    // return apiClient.postMultipartData(AppConstants.CREATE_ESATE_URI, _body,multiParts);
   }
+
+
 
 
   Future<Response> updateEstate(EstateBody estate) async {
@@ -109,6 +115,67 @@ class EstateRepo {
     });
 
     return apiClient.postData(AppConstants.UPDATE_ESATE_URI, _body);
+  }
+
+
+
+  Future<Response> addEstate(EstateBody estate,List<MultipartBody> multiParts) async {
+    Map<String, String> _body = Map();
+    _body.addAll(<String, String>{
+      'id':estate.id,
+      'address': estate.address,
+      'property': estate.property,
+      'space': estate.space,
+      'category_id': estate.categoryId,
+      'price': estate.price,
+      'long_description':estate.longDescription,
+      'national_address':estate.nationalAddress,
+      "zone_id":estate.zoneId,
+      "districts":estate.districts,
+      "network_type":estate.networkType,
+      "latitude":estate.latitude,
+      "longitude":estate.longitude,
+      "short_description":estate.shortDescription,
+      "ownership_type":estate.ownershipType,
+      "user_id":estate.user_id,
+      'price_negotiation':estate.priceNegotiation,
+      "facilities":estate.facilities,
+      "city":estate.city,
+      "other_advantages":estate.otherAdvantages,
+      "interface":estate.interface,
+      "street_space":estate.streetSpace,
+      "build_space":estate.buildSpace,
+      "document_number":estate.documentNumber,
+      "ad_number":estate.adNumber,
+      "ar_path":estate.arPath,
+      "age_estate":estate.ageEstate,
+      "estate_type":estate.estate_type,
+      "authorization_number":estate.authorization_number
+,
+
+       // ✅ الحقول الجديدة
+      "property_face": estate.propertyFace,
+      "deed_number": estate.deedNumber,
+      "category_name": estate.categoryName,
+      "total_price": estate.totalPrice,
+      "advertisement_type": estate.advertisementType,
+      "postal_code": estate.postalCode,
+      "plan_number": estate.planNumber,
+      "north_limit": estate.northLimit,
+      "east_limit": estate.eastLimit,
+      "west_limit": estate.westLimit,
+      "south_limit": estate.southLimit,
+
+
+      "license_number": estate.licenseNumber,
+      "advertiser_number": estate.advertiserNumber,
+      "idType": estate.idType,
+
+    });
+
+    return await apiClient.postData(AppConstants.CREATE_ESATE_URI, _body);
+   // return apiClient.postMultipartData(AppConstants.CREATE_ESATE_URI, _body,multiParts);
+
   }
 
 

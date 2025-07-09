@@ -9,9 +9,11 @@ import 'package:abaad/view/base/custom_image.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/screen/draw.dart';
 import 'package:abaad/view/screen/fillter/widgets/slider_view.dart';
+import 'package:abaad/view/screen/home/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'widgets/popular_filter_list.dart';
 
@@ -29,6 +31,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
   String type_properties;
   String ctiy_name;
   String districts;
+  int zone_id;
+  String zone_name;
 
   RangeValues _values = const RangeValues(100, 600);
   double distValue = 0;
@@ -36,6 +40,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   int _value1=0;
 
   List<String> selectedFilters = [];
+  String selectedPropertyType = 'بيع';
 
 
   @override
@@ -54,7 +59,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           offset++;
           print('end of the page');
           Get.find<CategoryController>().showBottomLoader();
-          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString(),0,0);
+          Get.find<CategoryController>().getCategoryProductList(0,"0", 0,'0',"0","0","0", offset.toString(),0,0,"");
         }
       }
     });
@@ -94,6 +99,49 @@ class _FiltersScreenState extends State<FiltersScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
 
+                            Row(
+                              children: [
+                                // زر البيع
+                                RaisedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedPropertyType = 'بيع';
+                                      Get.find<CategoryController>().setFilterIndex(
+                                          0, 0, "0", "0", 0, 0, 0, selectedPropertyType
+                                      );
+                                    });
+                                  },
+                                  color: selectedPropertyType == 'بيع' ? Colors.blue : Colors.white,
+                                  textColor: selectedPropertyType == 'بيع' ? Colors.white : Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(color: Colors.blue),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text('بيع'),
+                                ),
+
+                                SizedBox(width: 10),
+
+                                // زر الإيجار
+                                RaisedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedPropertyType = 'إيجار';
+                                      Get.find<CategoryController>().setFilterIndex(
+                                          0, 0, "0", "0", 0, 0, 0, selectedPropertyType
+                                      );
+                                    });
+                                  },
+                                  color: selectedPropertyType == 'إيجار' ? Colors.blue : Colors.white,
+                                  textColor: selectedPropertyType == 'إيجار' ? Colors.white : Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(color: Colors.blue),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text('إيجار'),
+                                ),
+                              ],
+                            ),
                             SizedBox(height: 7),
                             Text("type_property".tr, style: robotoRegular.copyWith(
                                 fontSize: Dimensions.fontSizeDefault, color: Theme
@@ -230,13 +278,38 @@ class _FiltersScreenState extends State<FiltersScreen> {
                                   child: isArabic? Text(value != 0 ? zoneController.categoryList[(zoneController.zoneIds.indexOf(value)-1)].nameAr : 'اختر المنطقة'): Text(value != 0 ? zoneController.categoryList[(zoneController.zoneIds.indexOf(value)-1)].nameEn : 'select zone'),
                                 );
                               }).toList(),
-                              onChanged: (int value) {
+                              onChanged: (int value) async {
                                 setState(() {
                                   _value1 = value;
+                                  zone_id = value;
                                 });
+
                                 zoneController.setCategoryIndex(value, true);
-                                zoneController.getSubCategoryList(value != 0 ? zoneController.categoryList[value-1].regionId : 0);
+                                zoneController.getSubCategoryList(
+                                    value != 0 ? zoneController.categoryList[value - 1].regionId : 0
+                                );
+
+                                // حفظ الاسم والمعرف في SharedPreferences
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                                if (value != 0) {
+                                  String zoneName = isArabic
+                                      ? zoneController.categoryList[value - 1].nameAr
+                                      : zoneController.categoryList[value - 1].nameEn;
+                                  int zoneId = zoneController.categoryList[value - 1].regionId;
+
+                                  await prefs.setString('zone_name', zoneName);
+                                  await prefs.setInt('zone_id', zoneId);
+                                } else {
+                                  await prefs.remove('zone_name');
+                                  await prefs.remove('zone_id');
+                                }
+                                
+                                
+                              //  HomeScreen.loadData(false);
                               },
+                              
+
                               isExpanded: true,
                               underline: SizedBox(),
                             ),
@@ -375,7 +448,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     child: InkWell(
                       borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                       highlightColor: Colors.transparent,
-                      onTap: () {
+                      onTap: () async{
                      //
                      //    String value;
                      //    for (int i = 0; i < accomodationListData.length; i++) {
@@ -393,7 +466,12 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
                         showCustomSnackBar("${selectedFilters.join(', ')}");
 
-               categoryController.setFilterIndex(0,restController.getCategoryIndex(),ctiy_name,districts,distValue~/10,selectedFilters.join(', ')=='virtual_ture'.tr?1:0,selectedFilters.join(', ')=='it_includes_offers'.tr?1:0);
+
+                       print("-----------------------------------------${zone_id}");
+                       SharedPreferences prefs = await SharedPreferences.getInstance();
+                       int savedZoneId = prefs.getInt('zone_id');
+
+               categoryController.setFilterIndex(savedZoneId,restController.getCategoryIndex(),ctiy_name,districts,distValue~/10,selectedFilters.join(', ')=='virtual_ture'.tr?1:0,selectedFilters.join(', ')=='it_includes_offers'.tr?1:0,"");
               Navigator.pop(context);
                        },
                       child: const Center(

@@ -225,7 +225,23 @@
   "your_account_is_not_verified_verify_the_account_through_nafath": "Your account is not verified. Verify the account through Nafath",
   "account_verification": "Account verification",
   "verification": "verification",
-  "click_on_confirm_the_authentication_process": "Click on confirm the authentication process"
+  "click_on_confirm_the_authentication_process": "Click on confirm the authentication process",
+  "creation_date": "Creation Date",
+  "end_date": "End Date",
+  "ad_license_number": "Ad License Number",
+  "deed_number": "Deed Number",
+  "brokerage_marketing_license": "Brokerage and Marketing License Number",
+  "title_deed_type_name": "Title Deed Type",
+  "north_limit": "North Limit",
+  "east_limit": "East Limit",
+  "west_limit": "West Limit",
+  "south_limit": "South Limit",
+  "street_width": "Street Width",
+  "property_face": "Property Face",
+  "advertisement_type": "Advertisement Type",
+  "license_number": "License Number",
+  "plan_number": "Plan Number"
+
 
 
 

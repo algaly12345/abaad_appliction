@@ -89,53 +89,102 @@ class _ServiceProivderViewState extends State<ServiceProivderView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Container(
+                    //   child: Text(
+                    //     '${widget.estate.serviceOffers[currentIndex].title}',
+                    //     style: robotoBlack.copyWith(fontSize: 11, color: Colors.white),
+                    //   ),
+                    // ),
+
                     Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF033D75), // كود اللون الكحلي
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       child: Text(
                         '${widget.estate.serviceOffers[currentIndex].title}',
-                        style: robotoBlack.copyWith(fontSize: 11, color: Colors.white),
+                        style: robotoBold.copyWith(
+                          fontSize: 12,
+                          color: Colors.white,
+                          height: 1.2,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
 
+
                     const SizedBox(height: 3.0),
+
+
                     Row(
                       children: [
-                        widget.estate.serviceOffers[currentIndex].servicePrice != null
-                            ? Text(
-                          "price".tr,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white),
-                        )
-                            : Text(
-                          "discount".tr,
-                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white),
-                        ),
-                        SizedBox(width: 11.0),
-                        widget.estate.serviceOffers[currentIndex].discount != null
-                            ? SizedBox(
-                          height: 16,
-                          width: 44,
-                          child: CustomPaint(
-                            painter: PriceTagPaint(),
-                            child: Center(
-                              child: Text(
-                                "${widget.estate.serviceOffers[currentIndex].discount}%",
-                                style: robotoBlack.copyWith(fontSize: 10, color: Colors.white),
-                              ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF033D75), // لون كُحلي
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            widget.estate.serviceOffers[currentIndex].servicePrice != null
+                                ? "price".tr
+                                : "discount".tr,
+                            style: robotoMedium.copyWith(
+                              fontSize: Dimensions.fontSizeSmall,
+                              color: Colors.white,
                             ),
                           ),
-                        )
-                            : Text(
-                          " ${widget.estate.serviceOffers[currentIndex].servicePrice} ريال ",
-                          style: robotoBlack.copyWith(fontSize: 11, color: Colors.white),
                         ),
+                        const SizedBox(width: 8.0),
+
+                        // السعر أو الخصم
+                        widget.estate.serviceOffers[currentIndex].discount != null
+                            ? Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF033D75), // لون كُحلي
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            "${widget.estate.serviceOffers[currentIndex].discount}%",
+                            style: robotoBold.copyWith(fontSize: 11, color: Colors.white),
+                          ),
+                        )
+                            : Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF033D75), // لون كُحلي
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            "${widget.estate.serviceOffers[currentIndex].servicePrice} ريال",
+                            style: robotoBold.copyWith(fontSize: 11, color: Colors.white),
+                          ),
+                        ),
+
+
+
+
+
+
                       ],
                     ),
 
-                    Text(
-                      widget.estate.serviceOffers[currentIndex].description.length > 100 ? widget.estate.serviceOffers[currentIndex].description.substring(0, 40)+'...' : widget.estate.serviceOffers[currentIndex].description,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                    const SizedBox(height:10),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF033D75), // لون كُحلي
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        widget.estate.serviceOffers[currentIndex].description.length > 100 ? widget.estate.serviceOffers[currentIndex].description.substring(0, 40)+'...' : widget.estate.serviceOffers[currentIndex].description,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
 

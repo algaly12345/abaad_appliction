@@ -144,6 +144,7 @@ class Userinfo {
   String phone;
   String createdAt;
   String  updatedAt;
+  String falLicenseNumber;
 
   Userinfo(
       {this.id,

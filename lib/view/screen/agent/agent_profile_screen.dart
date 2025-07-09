@@ -54,7 +54,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
       backgroundColor: Theme.of(context).cardColor,
       body: GetBuilder<UserController>(builder: (userController) {
     return   GetBuilder<UserController>(builder: (restController) {
-        return (_isLoggedIn && userController.agentInfoModel == null &&userController.agentInfoModel.name == null) ? Center(child: CircularProgressIndicator()) :( restController.estateModel != null &&restController.estateModel.estates != null) ?  Padding(
+        return (_isLoggedIn && userController.agentInfoModel == null ) ? Center(child: CircularProgressIndicator()) :( restController.estateModel != null &&restController.estateModel.estates != null) ?  Padding(
           padding: const EdgeInsets.only(right: 0.0,left: 0.0),
           child: ProfileBgWidget(
 
@@ -171,13 +171,13 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                         Row(
                           children: [
                             Text(
-                              "number_estate_authority".tr,
+                              "رقم رخصة فال ".tr,
                               style:  robotoRegular.copyWith(
                                   fontSize: Dimensions.fontSizeSmall),
                             ),
                             SizedBox(width: 7,),
                             Text(
-                                '${userController.agentInfoModel.advertiserNo??''}' ,
+                                '${userController.agentInfoModel.agent.identity??''}' ,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
                           ],
                         ),

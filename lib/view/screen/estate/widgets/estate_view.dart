@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EstateView extends StatefulWidget {
   final bool fromView;
@@ -123,19 +124,20 @@ class _EstateViewState extends State<EstateView> {
                               SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
                               GestureDetector(
-                                onTap: (){
-                                 if( widget.estate.images.length  >0) {
-                                   buildDynamicLinks(widget.estate.title, "${Get
-                                       .find<SplashController>()
-                                       .configModel
-                                       .baseUrls
-                                       .estateImageUrl}/${widget.estate
-                                        .images[0] ?? ''}",
-                                       widget.estate.id.toString());
-                                 }else {
-                                   buildDynamicLinks(widget.estate.title, "",
-                                       widget.estate.id.toString());
-                                 }
+                                onTap: ()async {
+                                  final String estateLink = 'https://app.abaadapp.sa/details/${widget.estate.id}'; // ضع رابط العقار هنا
+                                  final String message = 'شاهد هذا العقار: $estateLink';
+
+                                  final Uri whatsappUrl = Uri.parse("https://wa.me/?text=${Uri.encodeComponent(message)}");
+
+                                  if (await canLaunchUrl(whatsappUrl)) {
+                                  await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+                                  } else {
+                                  // التعامل مع الخطأ
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text("لا يمكن فتح واتساب"),
+                                  ));
+                                  }
                                 },
                                   child: Icon(Icons.share, size: 23, color: Theme.of(context).textTheme.bodyText1.color)),
                             ]),

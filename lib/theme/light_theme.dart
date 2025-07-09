@@ -6,10 +6,11 @@ ThemeData light = ThemeData(
   secondaryHeaderColor: Color(0xFF58B3F5),
   disabledColor: Color(0xFFBABFC4),
   backgroundColor: Color(0xFFF3F3F3),
-  errorColor: Color(0xFFE84D4F),
+  errorColor: Color(0xFF034A77),
   brightness: Brightness.light,
   hintColor: Color(0xFF9F9F9F),
   cardColor: Colors.white,
   colorScheme: ColorScheme.light(primary: Color(0xFFEF7822), secondary: Color(0xFFEF7822)),
-  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: Color(0xFFEF7822))),
+  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(backgroundColor: Color(
+      0xFFFFFFFF))),
 );

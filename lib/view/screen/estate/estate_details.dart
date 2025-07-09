@@ -107,57 +107,159 @@ class _EstateDetailsState extends State<EstateDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      Container(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
 
-                        child:  Row(
-                          children: [
-                            Text(
-                                "price".tr,
-                                style: robotoRegular.copyWith(
-                                  fontSize: Dimensions.fontSizeDefault,
-                                )),
-                            SizedBox(width: 2,),
-                            Text(
-                                "${estateController.estate.price}",
-                                style: robotoRegular.copyWith(
-                                  fontSize: Dimensions.fontSizeDefault,
+                          // 📌 التصنيف - المنطقة - الحي
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.blue, // 🎨 خلفية زرقاء
+                                borderRadius: BorderRadius.circular(8), // حواف دائرية ناعمة
+                              ),
+                              child: Text(
+                                isArabic
+                                    ? "${estateController.estate.categoryNameAr} - ${estateController.estate.zoneNameAr} - ${estateController.estate.districts ?? ''} - ${estateController.estate.advertisementType}"
+                                    : "${estateController.estate.categoryName} - ${estateController.estate.zoneName ?? ''}",
+                                textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                                style: robotoMedium.copyWith(
+                                  fontSize: Dimensions.fontSizeLarge,
+                                  color: Colors.white, // ✅ لون الخط أبيض
                                 ),
-
+                              ),
                             ),
-                            SizedBox(width: 2.0),
-                            Text("currency".tr  , style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall,color: Colors.white),)
-                          ],
-                        ),
+                          ),
 
-                      ),
-                      SizedBox(height: 6,),
-                      Row(
-                        children: [
-                          Text(isArabic ? "${estateController.estate.categoryNameAr} -${estateController.estate.zoneNameAr} -${estateController.estate.districts}":"${estateController.estate.categoryName} -${estateController.estate.zoneName} -${estateController.estate.districts}",
-                              style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.blue,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      // عنوان السعر
+                                      Text(
+                                        estateController.estate.categoryName != "ارض"
+                                            ? "price".tr
+                                            : "سعر المتر",
+                                        style: robotoRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: Theme.of(context).cardColor,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+
+                                      // السعر
+                                      Text(
+                                        formatPrice( estateController.estate.price ?? "0"),
+                                        style: robotoRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: Theme.of(context).cardColor,
+                                        ),
+                                      ),
+
+                                      const SizedBox(width: 4),
+
+                                      // صورة شعار الريال
+                                      Image.asset(
+                                        'assets/image/riyals.png',
+                                        width: 16,
+                                        height: 16,
+                                        color: Theme.of(context).cardColor, // لإعطاء نفس لون النص إن رغبت
+                                      ),
+
+                                      // إجمالي السعر إذا كان "أرض"
+                                      if ( estateController.estate.categoryName == "ارض") ...[
+                                        const SizedBox(width: 12),
+                                        if (estateController.estate.totalPrice != null &&estateController  .estate.totalPrice != "undefined")
+                                          Text(
+                                            "إجمالي السعر",
+                                            style: robotoRegular.copyWith(
+                                              fontSize: Dimensions.fontSizeDefault,
+                                              color: Theme.of(context).cardColor,
+                                            ),
+                                          ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          formatPrice( estateController.estate.totalPrice ?? "0"),
+                                          style: robotoRegular.copyWith(
+                                            fontSize: Dimensions.fontSizeDefault,
+                                            color: Theme.of(context).cardColor,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Image.asset(
+                                          'assets/image/riyals.png',
+                                          width: 16,
+                                          height: 16,
+                                          color: Theme.of(context).cardColor,
+                                        ),
+                                      ],
+                                    ],
+                                  )
+                                  ,
+                                ),
+                              ),
+                            ],
+                          ),
+
+
+                          Text(
+                            'shot_description'.tr,
+                            style: robotoBold.copyWith(
+                              fontSize: Dimensions.fontSizeDefault,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+
+                          const SizedBox(height: 6),
+
+                          Text(
+                            estateController.estate.shortDescription ?? '',
+                            style: robotoRegular.copyWith(
+                              fontSize: Dimensions.fontSizeSmall,
+                              height: 1.5,
+                              color: Colors.black87,
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // 📝 العنوان: وصف طويل
+                          Text(
+                            'long_description'.tr,
+                            style: robotoBold.copyWith(
+                              fontSize: Dimensions.fontSizeLarge,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+
+                          const SizedBox(height: 6),
+
+                          Text(
+                            estateController.estate.longDescription ?? '',
+                            style: robotoRegular.copyWith(
+                              fontSize: Dimensions.fontSizeDefault,
+                              height: 1.5,
+                              color: Colors.black87,
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          // 📝 العنوان: وصف قصير
+
                         ],
-                      ),
-
-
-                      Text(
-                        'shot_description'.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("${estateController.estate.shortDescription}",
-                              style: robotoBlack.copyWith(fontSize: 14)),
-
-                        ],
-                      ),
-                      Text(
-                        'long_description'.tr,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
-                      ),
-
-                      Text("${estateController.estate.longDescription}",
-                          style:  robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                      )
                     ],
                   ),
                 ),
@@ -457,6 +559,36 @@ class _EstateDetailsState extends State<EstateDetails> {
                         style: robotoBlack.copyWith(fontSize: 14),
                       ),
                       SizedBox(height: 10,),
+                      // Container(
+                      //   height: 50,
+                      //   decoration: BoxDecoration(
+                      //     color: Colors.white,
+                      //     borderRadius: BorderRadius.circular(4.0),
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: Theme.of(context).backgroundColor,
+                      //         spreadRadius: 1,
+                      //         blurRadius: 2,
+                      //         offset: Offset(0, 0.5), // changes position of shadow
+                      //       ),
+                      //
+                      //     ],
+                      //
+                      //   ),
+                      //   child: Row(
+                      //
+                      //     children: [
+                      //       Expanded( flex: 1,
+                      //           child: Container(
+                      //           padding: EdgeInsets.all(10),child:  Text("type_property".tr))),
+                      //       VerticalDivider(width: 1.0),
+                      //       Expanded(flex: 1,
+                      //           child: Container(
+                      //               padding: EdgeInsets.all(10),child:  Text( widget.estate.estate_type=="1"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
+                      //     ],
+                      //   ),
+                      // ),
+
                       Container(
                         height: 50,
                         decoration: BoxDecoration(
@@ -478,44 +610,44 @@ class _EstateDetailsState extends State<EstateDetails> {
                           children: [
                             Expanded( flex: 1,
                                 child: Container(
-                                padding: EdgeInsets.all(10),child:  Text("type_property".tr))),
+                                    padding: EdgeInsets.all(10),child:  Text("نوع العقار"))),
                             VerticalDivider(width: 1.0),
                             Expanded(flex: 1,
                                 child: Container(
-                                    padding: EdgeInsets.all(10),child:  Text( widget.estate.estate_type=="1"?"residential".tr:"commercial".tr,  style: robotoBlack.copyWith(fontSize: 14)))),
+                                    padding: EdgeInsets.all(10),child:  Text( estateController.estate.categoryName??"",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
                       ),
-                      estateController.estate.space!=null?  Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).backgroundColor,
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(0, 0.5), // changes position of shadow
-                            ),
-
-                          ],
-
-                        ),
-                        child: Row(
-
-                          children: [
-                            Expanded(flex: 1,
-                                child: Container(
-                                padding: EdgeInsets.all(10),child:    Text("space".tr))),
-                            VerticalDivider(width: 1.0),
-                            Expanded(flex: 1,
-                                child: Container(
-                                padding: EdgeInsets.all(10),child: Text("${estateController.estate.space}",  style: robotoBlack.copyWith(fontSize: 14)))),
-                          ],
-                        ),
-                      ):Container(),
-
+                      // estateController.estate.space!=null?  Container(
+                      //   height: 50,
+                      //   decoration: BoxDecoration(
+                      //     color: Colors.white,
+                      //     borderRadius: BorderRadius.circular(4.0),
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: Theme.of(context).backgroundColor,
+                      //         spreadRadius: 1,
+                      //         blurRadius: 2,
+                      //         offset: Offset(0, 0.5), // changes position of shadow
+                      //       ),
+                      //
+                      //     ],
+                      //
+                      //   ),
+                      //   child: Row(
+                      //
+                      //     children: [
+                      //       Expanded(flex: 1,
+                      //           child: Container(
+                      //           padding: EdgeInsets.all(10),child:    Text("space".tr))),
+                      //       VerticalDivider(width: 1.0),
+                      //       Expanded(flex: 1,
+                      //           child: Container(
+                      //           padding: EdgeInsets.all(10),child: Text("${estateController.estate.space}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                      //     ],
+                      //   ),
+                      // ):Container(),
+                      //
 
 
                       estateController.estate.space!=null?  Container(
@@ -702,12 +834,258 @@ class _EstateDetailsState extends State<EstateDetails> {
                                 padding: EdgeInsets.all(10),child:  Text("advertiser_phone".tr))),
                             VerticalDivider(width: 1.0),
                             Expanded(flex: 1,child: Container(
-                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.ownershipType}",  style: robotoBlack.copyWith(fontSize: 14)))),
+                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.users.phone}",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
                       ):Container(),
 
-                      estateController.estate.nationalAddress!=null?    Container(
+                      // estateController.estate.nationalAddress!=null?    Container(
+                      //   height: 50,
+                      //   decoration: BoxDecoration(
+                      //     color: Colors.white,
+                      //     borderRadius: BorderRadius.circular(4.0),
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: Theme.of(context).backgroundColor,
+                      //         spreadRadius: 1,
+                      //         blurRadius: 2,
+                      //         offset: Offset(0, 0.5), // changes position of shadow
+                      //       ),
+                      //
+                      //     ],
+                      //
+                      //   ),
+                      //   child: Row(
+                      //
+                      //     children: [
+                      //       Expanded(flex: 1,child: Container(
+                      //           padding: EdgeInsets.all(10),child:  Text("short_national_code".tr))),
+                      //       VerticalDivider(width: 1.0),
+                      //       Expanded(flex: 1,child: Container(
+                      //           padding: EdgeInsets.all(10),child: Row(
+                      //         children: [
+                      //           Text("${ estateController.estate.nationalAddress}",  style: robotoBlack.copyWith(fontSize: 14)),
+                      //           IconButton(onPressed:(){
+                      //             FlutterClipboard.copy(estateController.estate.nationalAddress.toString()).then(( value ) {
+                      //               showCustomSnackBar('copied'.tr, isError: false);
+                      //             });
+                      //           }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,size: 15,)),
+                      //         ],
+                      //       ))),
+                      //     ],
+                      //   ),
+                      // ):Container(),
+                      //
+                      //
+
+
+
+                      Column(
+                        children: [
+                          SizedBox(height: 13),
+                          // تاريخ الإنشاء
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF2252A1), // كحلي غامق، يمكنك تغييره لأي درجة
+                                border: Border.all(color: Colors.grey, width: 1.5),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                "معلومات ترخيص الإعلان",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white, // لون النص أبيض
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 13),
+                          if (widget.estate.adLicenseNumber != null)
+                            buildInfoTile(context, label: "ad_license_number".tr, value: widget.estate.adLicenseNumber),
+
+
+                          // // تاريخ الإنشاء
+                          // if (widget.estate.creationDate != null)
+                          //   buildInfoTile(context, label: "creation_date".tr, value: widget.estate.creationDate),
+
+                          // تاريخ الانتهاء
+                          if (widget.estate.endDate != null)
+                            buildInfoTile(context, label: "end_date".tr, value: widget.estate.endDate),
+
+                          //   buildInfoTile(context, label: "end_date".tr, value: widget.estate.endDate),
+                          if (categoryController.estate.zoneNameAr != null)
+                            buildInfoTile(
+                              context,
+                              label: "المنطقة",
+                              value: categoryController.estate.zoneNameAr,
+                            ),
+
+                          if (categoryController.estate.city != null)
+                            buildInfoTile(
+                              context,
+                              label: "المدينة",
+                              value: categoryController.estate.city,
+                            ),
+                          if (categoryController.estate.districts != null)
+                            buildInfoTile(
+                                context,
+                                label: "الحي",
+                                value: categoryController.estate.districts
+                            ),
+
+
+
+                          if (widget.estate.endDate != null)
+                            buildColoredInfoRow(
+                              context,
+                              label: "تاريخ الانتهاء",
+                              value: widget.estate.endDate,
+                              isExpired: DateTime.tryParse(widget.estate.endDate)?.isBefore(DateTime.now()) ?? false,
+                            ),
+
+
+                          if (widget.estate.endDate != null)
+                            buildEndDateWithStatusBadge(
+                              context,
+                              label: "تاريخ الانتهاء",
+                              value: widget.estate.endDate,
+                              isExpired: DateTime.tryParse(widget.estate.endDate)?.isBefore(DateTime.now()) ?? false,
+                            ),
+
+
+                          // رقم رخصة الإعلان
+                          if (widget.estate.adLicenseNumber != null)
+                            buildInfoTile(context, label: "ad_license_number".tr, value: widget.estate.adLicenseNumber),
+
+
+                          // رقم ترخيص الوساطة والتسويق
+                          if (widget.estate.brokerageAndMarketingLicenseNumber != null)
+                            buildInfoTile(context, label: "brokerage_marketing_license".tr, value: widget.estate.brokerageAndMarketingLicenseNumber),
+
+                          // نوع الصك
+                          if (widget.estate.titleDeedTypeName != null)
+                            buildInfoTile(context, label: "title_deed_type_name".tr, value: widget.estate.titleDeedTypeName),
+
+
+
+                          // الحد الشمالي
+                          // if (widget.estate.northLimit != null)
+                          //   buildInfoTile(context, label: "north_limit".tr, value: widget.estate.northLimit),
+                          //
+                          // // الحد الشرقي
+                          // if (widget.estate.eastLimit != null)
+                          //   buildInfoTile(context, label: "east_limit".tr, value: widget.estate.eastLimit),
+                          //
+                          // // الحد الغربي
+                          // if (widget.estate.westLimit != null)
+                          //   buildInfoTile(context, label: "west_limit".tr, value: widget.estate.westLimit),
+                          //
+                          // // الحد الجنوبي
+                          // if (widget.estate.southLimit != null)
+                          //   buildInfoTile(context, label: "south_limit".tr, value: widget.estate.southLimit),
+
+                          // عرض الشارع
+                          // if (widget.estate.streetWidth != null)
+                          //   buildInfoTile(context, label: "street_width".tr, value: widget.estate.streetWidth.toString()),
+                          //
+                          // // الواجهة
+                          // if (widget.estate.propertyFace != null)
+                          //   buildInfoTile(context, label: "property_face".tr, value: widget.estate.propertyFace),
+
+                          // نوع الإعلان
+
+                          // رقم الترخيص
+                          if (widget.estate.licenseNumber != null)
+                            buildInfoTile(context, label: "رقم رخصة فال".tr, value: widget.estate.licenseNumber),
+
+                          // رقم المخطط
+                          if (widget.estate.planNumber != null)
+                            buildInfoTile(context, label: "plan_number".tr, value: widget.estate.planNumber),
+
+
+
+
+
+                          if (widget.estate.planNumber != null)
+                            buildInfoTile(context, label: "تاريح إنشاء الإعلان", value: widget.estate.createdAt),
+
+
+              // estateController
+
+                          widget.estate.obligationsOnTheProperty != null
+                              ? buildInfoTile(context, label: "الالتزامات ",value:  widget.estate.obligationsOnTheProperty)
+                              : SizedBox(),
+
+                          widget.estate.guaranteesAndTheirDuration != null
+                              ? buildInfoTile(context,label:  "الضمانات ", value: widget.estate.guaranteesAndTheirDuration)
+                              : SizedBox(),
+
+                          widget.estate.locationDescriptionOnMOJDeed != null
+                              ? buildInfoTile(context,label: "وصف العقار حسب صك  :	", value: widget.estate.locationDescriptionOnMOJDeed)
+                              : SizedBox(),
+
+                          widget.estate.numberOfRooms != null
+                              ? buildInfoTile(context, label: "عدد الغرف", value: widget.estate.numberOfRooms)
+                              : SizedBox(),
+
+                          widget.estate.mainLandUseTypeName != null
+                              ? buildInfoTile(context,label:  "الاستخدام ",value:  widget.estate.mainLandUseTypeName)
+                              : SizedBox(),
+
+                          widget.estate.landNumber != null
+                              ? buildInfoTile(context,label:  "رقم القطعة",value:  widget.estate.landNumber)
+                              : SizedBox(),
+
+
+
+
+
+                          widget.estate.propertyUtilities!=null?    Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).backgroundColor,
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 0.5), // changes position of shadow
+                                ),
+
+                              ],
+
+                            ),
+                            child: Row(
+
+                              children: [
+                                Expanded(flex: 1,
+                                    child: Container(
+                                        padding: EdgeInsets.all(10),child:  Text("خدمات العقار".tr))),
+                                VerticalDivider(width: 1.0),
+                                Expanded(flex: 1,
+                                    child: Container(
+                                        padding: EdgeInsets.all(10),child: Text("${ widget.estate.propertyUtilities}",  style: robotoBlack.copyWith(fontSize: 9)))),
+                              ],
+                            ),
+                          ):Container(),
+
+
+
+
+
+
+
+                        ],
+                      ),
+                      estateController.estate.deedNumber!=null?    Container(
                         height: 50,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -727,25 +1105,113 @@ class _EstateDetailsState extends State<EstateDetails> {
 
                           children: [
                             Expanded(flex: 1,child: Container(
-                                padding: EdgeInsets.all(10),child:  Text("short_national_code".tr))),
+                                padding: EdgeInsets.all(10),child:  Text("deed_number".tr))),
                             VerticalDivider(width: 1.0),
                             Expanded(flex: 1,child: Container(
-                                padding: EdgeInsets.all(10),child: Row(
-                              children: [
-                                Text("${ estateController.estate.nationalAddress}",  style: robotoBlack.copyWith(fontSize: 14)),
-                                IconButton(onPressed:(){
-                                  FlutterClipboard.copy(estateController.estate.nationalAddress.toString()).then(( value ) {
-                                    showCustomSnackBar('copied'.tr, isError: false);
-                                  });
-                                }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,size: 15,)),
-                              ],
-                            ))),
+                                padding: EdgeInsets.all(10),child: Text("${ estateController.estate.deedNumber}",  style: robotoBlack.copyWith(fontSize: 14)))),
                           ],
                         ),
                       ):Container(),
 
 
-                    estateController.estate.networkType. length >0&& estateController.estate.networkType  == null?    NetworkTypeItem(estate: estateController.estate,restaurants: estateController.estate.networkType):Container(),
+
+
+
+
+
+                      Column(
+                        children: [
+
+                          // تاريخ الإنشاء
+                          // if (estateController.estate.creationDate != null)
+                          //   buildInfoTile(context, label: "creation_date".tr, value: estateController.estate.creationDate),
+                          //
+                          // // تاريخ الانتهاء
+                          // if (estateController.estate.endDate != null)
+                          //   buildInfoTile(context, label: "end_date".tr, value: estateController.estate.endDate),
+
+                          // رقم رخصة الإعلان
+                          if (estateController.estate.adLicenseNumber != null)
+                            buildInfoTile(context, label: "ad_license_number".tr, value: estateController.estate.adLicenseNumber),
+
+                          // رقم الصك
+
+
+                          // رقم ترخيص الوساطة والتسويق
+                          if (estateController.estate.brokerageAndMarketingLicenseNumber != null)
+                            buildInfoTile(context, label: "brokerage_marketing_license".tr, value: estateController.estate.brokerageAndMarketingLicenseNumber),
+
+
+
+
+                          SizedBox(height: 10), // مسافة بين العنوان
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF2252A1), // كحلي
+                                border: Border.all(color: Colors.grey, width: 1.5),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                "معلومات حدود العقار",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 10), // مسافة بين العنوان
+                          // نوع الصك
+                          if (estateController.estate.titleDeedTypeName != null)
+                            buildInfoTile(context, label: "title_deed_type_name".tr, value: estateController.estate.titleDeedTypeName),
+
+                          // الحد الشمالي
+                          if (estateController.estate.northLimit != null)
+                            buildInfoTile(context, label: "north_limit".tr, value: estateController.estate.northLimit),
+
+                          // الحد الشرقي
+                          if (estateController.estate.eastLimit != null)
+                            buildInfoTile(context, label: "east_limit".tr, value: estateController.estate.eastLimit),
+
+                          // الحد الغربي
+                          if (estateController.estate.westLimit != null)
+                            buildInfoTile(context, label: "west_limit".tr, value: estateController.estate.westLimit),
+
+                          // الحد الجنوبي
+                          if (estateController.estate.southLimit != null)
+                            buildInfoTile(context, label: "south_limit".tr, value: estateController.estate.southLimit),
+
+                          // عرض الشارع
+                          if (estateController.estate.streetWidth != null)
+                            buildInfoTile(context, label: "street_width".tr, value: estateController.estate.streetWidth.toString()),
+
+                          // الواجهة
+                          if (estateController.estate.propertyFace != null)
+                            buildInfoTile(context, label: "property_face".tr, value: estateController.estate.propertyFace),
+
+                          // نوع الإعلان
+                          if (estateController.estate.advertisementType != null)
+                            buildInfoTile(context, label: "advertisement_type".tr, value: estateController.estate.advertisementType),
+
+                          // رقم الترخيص
+                          if (estateController.estate.licenseNumber != null)
+                            buildInfoTile(context, label: "license_number".tr, value: estateController.estate.licenseNumber),
+
+                          // رقم المخطط
+                          if (estateController.estate.planNumber != null)
+                            buildInfoTile(context, label: "plan_number".tr, value: estateController.estate.planNumber),
+
+                        ],
+                      ),
+
+                      estateController.estate.networkType. length >0&& estateController.estate.networkType  == null?    NetworkTypeItem(estate: estateController.estate,restaurants: estateController.estate.networkType):Container(),
                       estateController.estate.interface!=null? InterfaceItem(estate: estateController.estate,restaurants:   estateController.estate.interface)   :Container(),
                       const MapDetailsView(
                           fromView: true),
@@ -794,6 +1260,8 @@ class _EstateDetailsState extends State<EstateDetails> {
                             },
                           )
                       ),
+
+
 
 
                       Divider(height: 1,),
@@ -921,12 +1389,12 @@ class _EstateDetailsState extends State<EstateDetails> {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children:  <Widget>[
-                              Text('ad_number'.tr),
+                              Text('رقم رخصة الإعلان'.tr),
                               SizedBox(width: 20),
-                              Text(estateController.estate.adNumber.toString()),
+                              Text(estateController.estate.adLicenseNumber.toString()),
 
                               IconButton(onPressed:(){
-                                FlutterClipboard.copy(estateController.estate.adNumber.toString()).then(( value ) {
+                                FlutterClipboard.copy(estateController.estate.adLicenseNumber.toString()).then(( value ) {
                                   showCustomSnackBar('copied'.tr, isError: false);
                                 });
                               }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,)),
@@ -953,14 +1421,14 @@ class _EstateDetailsState extends State<EstateDetails> {
 
                         ),
 
-                        child: Row(
+                        child:  Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children:  <Widget>[
-                              Text('short_national_code'.tr),
+                              Text('رقم وثيقة الملكية'.tr),
 
-                              Text('${estateController.estate.nationalAddress}'),
+                              Text('${estateController.estate.deedNumber}'),
                               IconButton(onPressed:(){
-                                FlutterClipboard.copy(estateController.estate.nationalAddress).then(( value ) {
+                                FlutterClipboard.copy(estateController.estate.deedNumber).then(( value ) {
                                   showCustomSnackBar('copied'.tr, isError: false);
                                 });
                               }, icon: Icon(Icons.copy,color: Theme.of(context).primaryColor,)),
@@ -1031,7 +1499,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                                  ),
                                  SizedBox(width: 20),
                                  Text(
-                                  "${ estateController.estate.users.advertiserNo}",
+                                  "${ estateController.estate.users.phone}",
                                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).disabledColor),
                                  ),
                                ],
@@ -1132,6 +1600,206 @@ class _EstateDetailsState extends State<EstateDetails> {
   }
 }
 
+
+Widget buildInfoTile(BuildContext context, {String label, @required String value}) {
+  return Container(
+    height: 50,
+    margin: EdgeInsets.only(bottom: 8), // مسافة بسيطة بين الحقول
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(4.0),
+      boxShadow: [
+        BoxShadow(
+          color: Theme.of(context).backgroundColor,
+          spreadRadius: 1,
+          blurRadius: 2,
+          offset: Offset(0, 0.5),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Text(label),
+          ),
+        ),
+        VerticalDivider(width: 1.0),
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    "$value",
+                    style: robotoBlack.copyWith(fontSize: 14),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    FlutterClipboard.copy(value ?? "").then((v) {
+                      showCustomSnackBar('copied'.tr, isError: false);
+                    });
+                  },
+                  icon: Icon(
+                    Icons.copy,
+                    color: Theme.of(context).primaryColor,
+                    size: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+Widget buildEndDateWithStatusBadge(BuildContext context, {
+  String label,
+  String value,
+  bool isExpired,
+}) {
+  return Container(
+    height: 60,
+    margin: EdgeInsets.only(bottom: 8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(4.0),
+      boxShadow: [
+        BoxShadow(
+          color: Theme.of(context).backgroundColor,
+          spreadRadius: 1,
+          blurRadius: 2,
+          offset: Offset(0, 0.5),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        // اسم الحقل (مثل: تاريخ الانتهاء)
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
+          ),
+        ),
+
+        VerticalDivider(width: 1.0),
+
+        // التاريخ + الملصق
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                // التاريخ
+                Expanded(
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+
+                // الملصق
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isExpired ? Colors.red : Colors.green,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    isExpired ? "غير نشط" : "نشط",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+Widget buildColoredInfoRow(BuildContext context, {
+  String label,
+  String value,
+  bool isExpired,
+}) {
+  return Container(
+    height: 50,
+    margin: EdgeInsets.only(bottom: 8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(4.0),
+      boxShadow: [
+        BoxShadow(
+          color: Theme.of(context).backgroundColor,
+          spreadRadius: 1,
+          blurRadius: 2,
+          offset: Offset(0, 0.5),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
+          ),
+        ),
+        VerticalDivider(width: 1.0),
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: isExpired ? Colors.red : Colors.green,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+String formatPrice(String priceStr) {
+  final num price = num.tryParse(priceStr);
+  if (price == null) return priceStr;
+
+  if (price >= 1000000) {
+    return "${(price / 1000000).toStringAsFixed(2)} مليون";
+  } else if (price >= 1000) {
+    return "${(price / 1000).toStringAsFixed(2)} ألف";
+  } else {
+    return price.toString();
+  }
+}
 openDialPad(String phoneNumber) async {
   Uri url = Uri(scheme: "tel", path: phoneNumber);
   if (await canLaunchUrl(url)) {

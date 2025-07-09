@@ -89,6 +89,34 @@ class Estate {
   String  authorization_number;
 
 
+  String creationDate;
+  String endDate;
+  String adLicenseNumber;
+  String deedNumber;
+  String brokerageAndMarketingLicenseNumber;
+  String titleDeedTypeName;
+  String northLimit;
+  String eastLimit;
+  String westLimit;
+  String southLimit;
+  String streetWidth;
+  String propertyFace;
+  String advertisementType;
+  String totalPrice;
+  String licenseNumber;
+  String planNumber;
+
+
+  String obligationsOnTheProperty;
+  String guaranteesAndTheirDuration;
+  String locationDescriptionOnMOJDeed;
+  String numberOfRooms;
+  String mainLandUseTypeName;
+  List<String> propertyUtilities;
+  String landNumber;
+
+
+
 
   Estate(
   {this.id,
@@ -144,7 +172,37 @@ class Estate {
     this.property_type,
     this.skyView,
     this.estate_type,
-    this.authorization_number
+    this.authorization_number,
+
+
+    this.creationDate,
+    this.endDate,
+    this.adLicenseNumber,
+    this.deedNumber,
+    this.brokerageAndMarketingLicenseNumber,
+    this.titleDeedTypeName,
+    this.northLimit,
+    this.eastLimit,
+    this.westLimit,
+    this.southLimit,
+    this.streetWidth,
+    this.propertyFace,
+    this.advertisementType,
+    this.licenseNumber,
+    this.planNumber,
+
+    this.obligationsOnTheProperty,
+    this.guaranteesAndTheirDuration,
+    this.locationDescriptionOnMOJDeed,
+    this.numberOfRooms,
+    this.mainLandUseTypeName,
+    this.propertyUtilities,
+    this.landNumber,
+
+
+
+
+
   });
 
   Estate.fromJson(Map<String, dynamic> json) {
@@ -237,6 +295,35 @@ class Estate {
 
 
 
+    creationDate = json['creation_date'];
+    endDate = json['end_date'];
+    adLicenseNumber = json['ad_license_number'];
+    deedNumber = json['deed_number'];
+    brokerageAndMarketingLicenseNumber = json['brokerageAndMarketingLicenseNumber'];
+    titleDeedTypeName = json['titleDeedTypeName'];
+    northLimit = json['north_limit'];
+    eastLimit = json['east_limit'];
+    westLimit = json['west_limit'];
+    southLimit = json['south_limit'];
+    streetWidth = json['street_width'];
+    propertyFace = json['property_face'];
+    advertisementType = json['advertisement_type'];
+    totalPrice = json['total_price'];
+    licenseNumber = json['license_number'];
+    planNumber = json['plan_number'];
+
+    obligationsOnTheProperty = json['obligationsOnTheProperty'];
+    guaranteesAndTheirDuration = json['guaranteesAndTheirDuration'];
+    locationDescriptionOnMOJDeed = json['locationDescriptionOnMOJDeed'];
+    numberOfRooms = json['numberOfRooms'];
+    mainLandUseTypeName = json['mainLandUseTypeName'];
+    propertyUtilities = json['propertyUtilities'] != null ? List<String>.from(json['propertyUtilities']) : [];
+    landNumber = json['landNumber'];
+
+
+
+
+
   }
 
   Map<String, dynamic> toJson() {
@@ -317,6 +404,35 @@ class Estate {
     data['property_type']=this.property_type;
     data['skyview']=this.skyView;
 
+
+
+
+    data['creation_date'] = this.creationDate;
+    data['end_date'] = this.endDate;
+    data['ad_license_number'] = this.adLicenseNumber;
+    data['deed_number'] = this.deedNumber;
+    data['brokerageAndMarketingLicenseNumber'] = this.brokerageAndMarketingLicenseNumber;
+    data['titleDeedTypeName'] = this.titleDeedTypeName;
+    data['north_limit'] = this.northLimit;
+    data['east_limit'] = this.eastLimit;
+    data['west_limit'] = this.westLimit;
+    data['south_limit'] = this.southLimit;
+    data['street_width'] = this.streetWidth;
+    data['property_face'] = this.propertyFace;
+    data['advertisement_type'] = this.advertisementType;
+    data['total_price'] = this.totalPrice;
+    data['license_number'] = this.licenseNumber;
+    data['plan_number'] = this.planNumber;
+
+    data['obligationsOnTheProperty'] = this.obligationsOnTheProperty;
+    data['guaranteesAndTheirDuration'] = this.guaranteesAndTheirDuration;
+    data['locationDescriptionOnMOJDeed'] = this.locationDescriptionOnMOJDeed;
+    data['numberOfRooms'] = this.numberOfRooms;
+    data['mainLandUseTypeName'] = this.mainLandUseTypeName;
+    data['propertyUtilities'] = this.propertyUtilities;
+    data['landNumber'] = this.landNumber;
+
+
     return data;
   }
 }
@@ -367,6 +483,7 @@ class ServiceOffers {
   String phoneProvider;
   String  category_id;
   String   offer_id;
+  String provider_name;
 
   ServiceOffers(
       {this.id,
@@ -385,7 +502,8 @@ class ServiceOffers {
 
         this.phoneProvider,
       this.category_id,
-      this.offer_id});
+      this.offer_id,
+      this.provider_name});
 
   ServiceOffers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -403,6 +521,11 @@ class ServiceOffers {
     phoneProvider  =json['phone_provider']  ;
     offer_id =json['offer_id']  ;
     category_id =json['category_id']  ;
+
+    provider_name =json['provider_name']  ;
+
+
+
   }
 
   Map<String, dynamic> toJson() {
@@ -422,6 +545,10 @@ class ServiceOffers {
     data['image'] = this.image;
     data['offer_id']=this.offer_id;
     data['category_id'] = this.category_id;
+
+    data['provider_name'] = this.provider_name;
+
+
 
     return data;
   }
@@ -532,8 +659,10 @@ class Users {
   String image;
   String membershipType;
   String advertiserNo;
+  String identity;
+  String falLicenseNumber;
 
-  Users({this.id ,this.name, this.email, this.phone, this.image,this.membershipType,this.advertiserNo});
+  Users({this.id ,this.name, this.email, this.phone, this.image,this.membershipType,this.advertiserNo,this.identity,this.falLicenseNumber});
 
   Users.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -543,6 +672,8 @@ class Users {
     image = json['image'];
     membershipType = json['membership_type'];
     advertiserNo=json['advertiser_no'];
+    identity=json['identity'];
+    falLicenseNumber=json['fal_license_number'];
 
   }
 
@@ -555,6 +686,8 @@ class Users {
     data['image'] = this.image;
     data['membership_type'] = this.membershipType;
     data['advertiser_no']=this.advertiserNo;
+    data['identity']=this.identity;
+    data['fal_license_number']=this.falLicenseNumber;
     return data;
   }
 }

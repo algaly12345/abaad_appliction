@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:abaad/controller/splash_controller.dart';
 import 'package:abaad/controller/user_controller.dart';
 import 'package:abaad/data/api/api_checker.dart';

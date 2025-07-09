@@ -207,34 +207,62 @@ class CategoryController extends GetxController implements GetxService {
       _subCategoryList.add(CategoryModel(id: int.parse(categoryID),nameAr: 'الكل'));
       _isLoading=false;
       response.body.forEach((category) => _subCategoryList.add(CategoryModel.fromJson(category)));
-      getCategoryProductList(0,categoryID, 0 ,'0',"0","0","0","1",0,0);
+      getCategoryProductList(0,categoryID, 0 ,'0',"0","0","0","1",0,0,"");
     } else {
       ApiChecker.checkApi(response);
     }
   }
 
-  void setSubCategoryIndex(int index) {
+  void setSubCategoryIndex(int index ,int zone_id) {
     _subCategoryIndex = index;
-    getCategoryProductList(0,_subCategoryList[index].id.toString(),  0,'0',"0","0","0","1",0,0);
+    getCategoryProductList(zone_id,_subCategoryList[index].id.toString(),  0,'0',"0","0","0","1",0,0,"");
     update();
 
   }
 
-  void setFilterIndex(int zoneId, int index,String cityName,String districts,int  space,int ar_path,int sv) {
+  // void setFilterIndex(int zoneId, int index,String cityName,String districts,int  space,int ar_path,int sv) {
+  //
+  //
+  //   getCategoryProductList(zoneId,index.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0","0","1",ar_path,sv);
+  //   //   update();
+  //
+  // }
 
-
-    getCategoryProductList(zoneId,index.toString(),0,cityName ?? "0",districts ?? "0",space.toString() ?? "0","0","1",ar_path,sv);
-    //   update();
-
+  void setFilterIndex(
+      int zoneId,
+      int index,
+      String cityName,
+      String districts,
+      int space,
+      int ar_path,
+      int sv,
+      String type // أضف هذا المعامل
+      ) {
+    getCategoryProductList(
+        zoneId,
+        index.toString(),
+        0,
+        cityName ?? "0",
+        districts ?? "0",
+        space.toString() ?? "0",
+        "0",
+        "1",
+        ar_path,
+        sv,
+        type // تمرير النوع هنا
+    );
   }
 
-  void getCategoryProductList(int zoneId,String categoryID,int userId,String city,String districts, String space,String typeAdd,String offset,int arPath,int sv) async {
+
+  void getCategoryProductList(int zoneId,String categoryID,int userId,String city,String districts, String space,String typeAdd,String offset,int arPath,int sv,String type) async {
     if(offset == '1') {
       _categoryProductList = null;
 
       _isSearching = false;
     }
-    Response response = await categoryRepo.getCategoryProductList(zoneId,categoryID,userId,city,districts,space,typeAdd, offset,arPath,sv);
+    Response response = await categoryRepo.getCategoryProductList(zoneId,categoryID,userId,city,districts,space,typeAdd, offset,arPath,sv,type);
+
+    print("-----------------------------------tt${type}");
     if (response.statusCode == 200) {
       if (offset == '1') {
         _categoryProductList = [];

@@ -36,12 +36,12 @@ class DrawerMenu extends StatelessWidget {
 
                 accountEmail:   Row(
                   children: [
+                    // Text(
+                    //   _isLoggedIn ? 'advertiser_no'.tr : 'guest'.tr,
+                    //   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.grey),
+                    // ),
                     Text(
-                      _isLoggedIn ? 'advertiser_no'.tr : 'guest'.tr,
-                      style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.grey),
-                    ),
-                    Text(
-                      _isLoggedIn ? '${userController.userInfoModel.advertiserNo}' : 'guest'.tr,
+                      _isLoggedIn ? '${userController.userInfoModel.phone}' : 'guest'.tr,
                       style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall,color: Colors.grey),
                     ),
                   ],
