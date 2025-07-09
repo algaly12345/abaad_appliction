@@ -158,7 +158,8 @@ class Userinfo {
         this.membershipType,
         this.identityType,
         this.createdAt,
-        this.updatedAt});
+        this.updatedAt,
+      this.falLicenseNumber});
 
   Userinfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -173,6 +174,7 @@ class Userinfo {
     identityType = json['identity_type'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    falLicenseNumber = json['fal_license_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -189,6 +191,7 @@ class Userinfo {
     data['identity_type'] = this.identityType;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['fal_license_number']=this.falLicenseNumber;
     return data;
   }
 }

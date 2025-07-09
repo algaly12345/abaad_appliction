@@ -177,7 +177,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                             ),
                             SizedBox(width: 7,),
                             Text(
-                                '${userController.agentInfoModel.agent.identity??''}' ,
+                                '${userController.agentInfoModel.agent.falLicenseNumber??''}' ,
                                 style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall)),
                           ],
                         ),
