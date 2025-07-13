@@ -796,7 +796,6 @@ class _DettailsDilogState extends State<DettailsDilog> {
                             ),
                           ):Container(),
 
-
                           // الواجهة
                           if (widget.estate.propertyFace != null)
                             buildInfoTile(context, label: "property_face".tr, value: widget.estate.propertyFace),
