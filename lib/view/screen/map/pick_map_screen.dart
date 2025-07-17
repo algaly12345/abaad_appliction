@@ -23,8 +23,8 @@ class PickMapScreen extends StatefulWidget {
   final String route;
   final GoogleMapController googleMapController;
   PickMapScreen({
-    @required this.fromSignUp, @required this.fromAddAddress, @required this.canRoute,
-    @required this.route, this.googleMapController,
+    required this.fromSignUp, required this.fromAddAddress, required this.canRoute,
+    required this.route, this.googleMapController,
   });
 
   @override

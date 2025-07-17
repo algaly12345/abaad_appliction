@@ -14,8 +14,8 @@ class PaginatedListView extends StatefulWidget {
   final bool enabledPagination;
   final bool reverse;
   const PaginatedListView({
-    Key key, @required this.scrollController, @required this.onPaginate, @required this.totalSize,
-    @required this.offset, @required this.productView, this.enabledPagination = true, this.reverse = false,
+    Key key, required this.scrollController, required this.onPaginate, required this.totalSize,
+    required this.offset, required this.productView, this.enabledPagination = true, this.reverse = false,
   }) : super(key: key);
 
   @override
@@ -23,8 +23,8 @@ class PaginatedListView extends StatefulWidget {
 }
 
 class _PaginatedListViewState extends State<PaginatedListView> {
-  int _offset;
-  List<int> _offsetList;
+  late int _offset;
+  late List<int> _offsetList;
   bool _isLoading = false;
 
   @override

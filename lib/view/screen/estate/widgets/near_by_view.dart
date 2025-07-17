@@ -19,8 +19,8 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 
 class NearByView extends StatefulWidget {
-  Estate esate;
-   NearByView({@required this.esate});
+   final Estate esate;
+  const NearByView({Key? key, required this.esate}) : super(key: key);
 
   @override
   State<NearByView> createState() => _NearByViewState();
@@ -35,9 +35,9 @@ class _NearByViewState extends State<NearByView> {
   double currentLat = 0.0;
   double currentLng = 0.0;
   String type = 'restaurant';
-  String type_value;
+  late String type_value;
 
-  Uint8List imageDataBytes;
+  late Uint8List imageDataBytes;
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor hospitalIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor restlIcon = BitmapDescriptor.defaultMarker;
@@ -241,12 +241,12 @@ class _NearByViewState extends State<NearByView> {
     );
   }
   Future<void> getCustomMarkerIcon(GlobalKey iconKey) async {
-    RenderRepaintBoundary boundary = iconKey.currentContext.findRenderObject();
+    RenderRepaintBoundary boundary = iconKey.currentContext!.findRenderObject();
     ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    var pngBytes = byteData.buffer.asUint8List();
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    var pngBytes = byteData?.buffer.asUint8List();
     setState(() {
-      markerIcon = BitmapDescriptor.fromBytes(pngBytes);
+      markerIcon = BitmapDescriptor.fromBytes(pngBytes!);
     });
   }
 
@@ -378,13 +378,13 @@ class RadioItem extends StatelessWidget {
 
             child:  Center(
               child:  Image.asset(_item.text,height: 24,width: 24,color: _item.isSelected
-                  ? Theme.of(context).backgroundColor
+                  ? Theme.of(context).colorScheme.background
                   : Colors.grey)),
             ),
           Container(
             margin:  EdgeInsets.all( 7.0),
             child:  Text(_item.buttonText,style: robotoBlack.copyWith(fontSize: 11, color: _item.isSelected
-                ? Theme.of(context).backgroundColor
+                ? Theme.of(context).colorScheme.background
                 : Colors.grey)),
           )
         ],

@@ -26,11 +26,11 @@ import 'package:http/http.dart' as http;
 import 'video_view.dart';
 class FeatureScreen extends StatefulWidget {
   final featureId;
-  final Estate estate;
+   Estate estate;
   String path ;
   String pathVideo;
   String skyView;
-  FeatureScreen({@required this.featureId,this.estate,this.path,this.pathVideo,this.skyView});
+  FeatureScreen({required this.featureId,required this.estate,required this.path,required this.pathVideo,required this.skyView});
 
   @override
   State<FeatureScreen> createState() => _FeatureScreenState();
@@ -40,15 +40,15 @@ class _FeatureScreenState extends State<FeatureScreen> {
   //String selectedUrl;
   double value = 0.0;
 
-  VideoPlayerController _controller;
-  VideoPlayerController _controllerSkyView;
-  String selectedUrl;
-  WebViewController controllerGlobal;
+  late VideoPlayerController _controller;
+  late VideoPlayerController _controllerSkyView;
+  late String selectedUrl;
+  late WebViewController controllerGlobal;
   bool _isLoading = true;
-  PullToRefreshController pullToRefreshController;
+  late PullToRefreshController pullToRefreshController;
 
-  StreetViewController streetViewController;
-  VideoPlayerController _controller1;
+  late StreetViewController streetViewController;
+  late VideoPlayerController _controller1;
 
   bool streetViewAvailable = true;
    double scale = 1.0;

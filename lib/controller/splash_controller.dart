@@ -6,11 +6,13 @@ import 'package:abaad/helper/route_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SplashController extends GetxController implements GetxService {
-  final SplashRepo splashRepo;
-  SplashController({@required this.splashRepo});
+class SplashController{
+   SplashRepo splashRepo;
+    const SplashController({required this.splashRepo});
 
-  ConfigModel _configModel;
+
+
+   ConfigModel _configModel;
   bool _firstTimeConnectionCheck = true;
   bool _hasConnection = true;
   int _nearestRestaurantIndex = -1;

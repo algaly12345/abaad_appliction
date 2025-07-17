@@ -20,7 +20,7 @@ class SkyView extends StatefulWidget {
   final int index;
   Estate estate;
 
-  SkyView({@required this.index,@required this.estate});
+  SkyView({required this.index,required this.estate});
 
   @override
   State<SkyView> createState() => _SkyViewState();
@@ -301,8 +301,8 @@ class VideoPlayerWidget extends StatefulWidget {
    bool isPlaying;
 
   VideoPlayerWidget({
-    @required this.videoUrl,
-    @required this.controller,
+    required this.videoUrl,
+    required this.controller,
    @ required this.isPlaying,
   });
 

@@ -11,7 +11,7 @@ class DiscountTag extends StatelessWidget {
   final bool inLeft;
   final bool freeDelivery;
   DiscountTag({
-    @required this.discount, @required this.discountType, this.fromTop = 10, this.fontSize, this.freeDelivery = false,
+    required this.discount, required this.discountType, this.fromTop = 10, this.fontSize, this.freeDelivery = false,
     this.inLeft = true,
   });
 

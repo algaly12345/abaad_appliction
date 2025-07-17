@@ -23,7 +23,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class VideoTab extends StatefulWidget {
   final int estateId;
 
-  const VideoTab({ @required this.estateId});
+  const VideoTab({ required this.estateId});
 
   @override
   State<VideoTab> createState() => _VideoTabState();

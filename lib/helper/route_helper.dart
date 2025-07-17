@@ -148,7 +148,7 @@ class RouteHelper {
 
 
 
-  static String getChatRoute({@required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id,String link, Estate estate,}) {
+  static String getChatRoute({required NotificationBody notificationBody, Userinfo user, int conversationID, int index,int estate_id,String link, Estate estate,}) {
     String _notificationBody = 'null';
     if(notificationBody != null) {
       _notificationBody = base64Encode(utf8.encode(jsonEncode(notificationBody.toJson())));

@@ -20,9 +20,9 @@ class FilterSwitch extends StatefulWidget {
   final bool initialValue;
 
   FilterSwitch({
-    @required this.label,
-    @required this.onChanged,
-    @required this.initialValue,
+    required this.label,
+    required this.onChanged,
+    required this.initialValue,
   });
 
   @override

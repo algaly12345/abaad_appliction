@@ -9,14 +9,14 @@ class DataView extends StatefulWidget {
   final String title;
   final bool isButtonActive;
   final Function onTap;
-  DataView({@required this.value, @required this.title, @required this.onTap, this.isButtonActive});
+  DataView({required this.value, required this.title, required this.onTap, this.isButtonActive});
 
   @override
   State<DataView> createState() => _DataViewState();
 }
 
 class _DataViewState extends State<DataView> {
-  bool _buttonActive;
+  late bool _buttonActive;
 
   @override
   void initState() {

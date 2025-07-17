@@ -21,7 +21,7 @@ import 'package:image_picker/image_picker.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
-  AuthController({@required this.authRepo}) {
+  AuthController({required this.authRepo}) {
     _notification = authRepo.isNotificationActive();
   }
 
@@ -414,7 +414,7 @@ class AuthController extends GetxController implements GetxService {
   }
 
 
-  Future<void> submitBusinessPlan({@required int estateId})async {
+  Future<void> submitBusinessPlan({required int estateId})async {
     String _businessPlan;
     print("ahmed ahemd$businessIndex");
     if(businessIndex == 0){

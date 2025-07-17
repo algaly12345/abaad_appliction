@@ -7,7 +7,7 @@ class ProfileBgUpdateWidget extends StatelessWidget {
   final Widget circularImage;
   final Widget mainWidget;
   final bool backButton;
-  ProfileBgUpdateWidget({@required this.mainWidget, @required this.circularImage, @required this.backButton});
+  ProfileBgUpdateWidget({required this.mainWidget, required this.circularImage, required this.backButton});
 
   @override
   Widget build(BuildContext context) {

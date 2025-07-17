@@ -20,7 +20,7 @@ import 'package:http/http.dart' as http;
 class EstateController extends GetxController implements GetxService {
   final EstateRepo estateRepo;
 
-  EstateController({@required this.estateRepo});
+  EstateController({required this.estateRepo});
 
   var currentStep = 0.obs;
   EstateModel _estateModel;

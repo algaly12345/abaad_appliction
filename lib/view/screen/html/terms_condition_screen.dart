@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 class WebViewDialog extends StatelessWidget {
   final String url;
 
-  WebViewDialog({@required this.url});
+  WebViewDialog({required this.url});
 
   @override
   Widget build(BuildContext context) {

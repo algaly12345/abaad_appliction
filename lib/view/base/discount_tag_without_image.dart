@@ -10,7 +10,7 @@ class DiscountTagWithoutImage extends StatelessWidget {
   final double fontSize;
   final bool freeDelivery;
   DiscountTagWithoutImage({
-    @required this.discount, @required this.discountType, this.fromTop = 10, this.fontSize, this.freeDelivery = false,
+    required this.discount, required this.discountType, this.fromTop = 10, this.fontSize, this.freeDelivery = false,
   });
 
   @override

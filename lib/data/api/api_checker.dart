@@ -6,7 +6,7 @@ import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:get/get.dart';
 
 class ApiChecker {
-  static void checkApi(Response response, {bool showToaster}) {
+  static void  checkApi(Response response, {required bool showToaster}) {
     if(response.statusCode == 401) {
       Get.find<AuthController>().clearSharedData();
      Get.find<WishListController>().removeWishes();

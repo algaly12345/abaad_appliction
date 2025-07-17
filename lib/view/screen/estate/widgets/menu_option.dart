@@ -6,7 +6,7 @@ class MenuOption extends StatelessWidget {
   final IconData iconData;
   final bool selected;
 
-  MenuOption({@required this.title, @required this.iconData, @required this.selected});
+  MenuOption({required this.title, required this.iconData, required this.selected});
 
   @override
   Widget build(BuildContext context) {

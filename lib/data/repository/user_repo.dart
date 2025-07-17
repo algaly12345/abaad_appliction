@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 class UserRepo {
   final ApiClient apiClient;
-  UserRepo({@required this.apiClient});
+  UserRepo({required this.apiClient});
 
   Future<Response> getUserInfo() async {
     return await apiClient.getData(AppConstants.CUSTOMER_INFO_URI);

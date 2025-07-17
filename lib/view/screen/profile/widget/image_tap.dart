@@ -15,7 +15,7 @@ class ImageTab extends StatefulWidget {
   final int index;
   Estate estate;
 
-  ImageTab({@required this.index,@required this.estate});
+  ImageTab({required this.index,required this.estate});
 
   @override
   State<ImageTab> createState() => _ImageTabState();

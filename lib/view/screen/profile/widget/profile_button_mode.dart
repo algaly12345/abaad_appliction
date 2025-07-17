@@ -8,7 +8,7 @@ class ProfileButtonMode extends StatelessWidget {
   final String title;
   final bool isButtonActive;
   final Function onTap;
-  ProfileButtonMode({@required this.icon, @required this.title, @required this.onTap, this.isButtonActive});
+  ProfileButtonMode({required this.icon, required this.title, required this.onTap, this.isButtonActive});
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ConversationScreen extends StatefulWidget {
-  const ConversationScreen({Key key}) : super(key: key);
+  const ConversationScreen() ;
 
   @override
   State<ConversationScreen> createState() => _ConversationScreenState();

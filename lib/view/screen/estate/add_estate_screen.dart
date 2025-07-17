@@ -52,12 +52,12 @@ class AddEstateScreen extends StatefulWidget {
 }
 
 class _AddEstateScreenState extends State<AddEstateScreen> {
-  int currentStep = 1;
+  late int currentStep = 1;
   int stepLength = 5;
-  bool complete;
-  bool _isLoggedIn;
-  String type_properties;
-  String network_type;
+  late  bool complete;
+  late bool _isLoggedIn;
+  late String type_properties;
+  late String network_type;
   bool isCheckBoxChecked = false;
 
 
@@ -257,12 +257,12 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   int _selectedLounge=0;
   int _selectedkitchen=0;
   List<String> _interests = [];
-  String interests;
+  late String interests;
   bool add=true;
   _onSelected(int index) {
     setState(() => _selectedRoomIndex = index);
   }
-  String item;
+  late String item;
 
   _onSelectedBathrooms(int index) {
     setState(() => _selectedBathroomsIndex = index);
@@ -279,8 +279,8 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
   int fieldCount = 0;
   int nextIndex = 0;
 
-  String district;
-  String city;
+  late String district;
+  late String city;
 
 
 
@@ -290,22 +290,22 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
     await placemarkFromCoordinates(lat, log);
     Placemark place = placemark[0];
     String  _address= 'Address : ${place.locality},${place.country}';
-    district=place.subLocality;
-    city=place.locality;
+    district=place.subLocality!;
+    city=place.locality!;
   }
 
 
 
 
-  GoogleMapController mapController;
-  LatLng location; // الإحداثيات
-  double latitude;
-  double longitude;
+  late GoogleMapController mapController;
+  late LatLng location; // الإحداثيات
+  late double latitude;
+  late double longitude;
 
 
   Future<void> loadCachedLocation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String jsonString = prefs.getString('license_data');
+    String? jsonString = prefs.getString('license_data');
     if (jsonString != null) {
       final data = jsonDecode(jsonString);
       final lat = double.tryParse(data['location']['latitude'].toString());
@@ -371,7 +371,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
 
   Future<Map<String, dynamic>> getCachedLicenseData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String jsonString = prefs.getString('license_data');
+    String? jsonString = prefs.getString('license_data');
     if (jsonString != null) {
       return jsonDecode(jsonString);
     }
@@ -462,7 +462,7 @@ class _AddEstateScreenState extends State<AddEstateScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
 // تحميل بيانات data2 من الكاش
-      String data2String = prefs.getString('license_data2');
+      String? data2String = prefs.getString('license_data2');
       if (data2String != null) {
         Map<String, dynamic> data2 = jsonDecode(data2String);
 
@@ -1562,7 +1562,7 @@ print("-------------------------------${data2String}");
                                                                           style: robotoMedium.copyWith(
                                                                             fontSize: Dimensions.fontSizeExtraSmall,
                                                                             color: categoryController.interestSelectedList[index] ? Theme.of(context).cardColor
-                                                                                : Theme.of(context).textTheme.bodyText1.color,
+                                                                                : Theme.of(context).textTheme.bodyLarge?.color,
                                                                           ),
                                                                           maxLines: 2, overflow: TextOverflow.ellipsis,
                                                                         )),
@@ -1624,7 +1624,7 @@ print("-------------------------------${data2String}");
                                                                             style: robotoMedium.copyWith(
                                                                               fontSize: Dimensions.fontSizeSmall,
                                                                               color: categoryController.advanSelectedList[index] ? Theme.of(context).cardColor
-                                                                                  : Theme.of(context).textTheme.bodyText1.color,
+                                                                                  : Theme.of(context).textTheme.bodyLarge!.color,
                                                                             ),
                                                                             maxLines: 2, overflow: TextOverflow.ellipsis,
                                                                           )),
@@ -2021,7 +2021,7 @@ print("-------------------------------${data2String}");
                                                           }
                                                               : null,
                                                           style: ElevatedButton.styleFrom(
-                                                            primary: Colors.green,
+                                                            backgroundColor: Colors.green,
                                                             padding: EdgeInsets.symmetric(horizontal: 30),
                                                             shape: RoundedRectangleBorder(
                                                               borderRadius: BorderRadius.circular(10),
@@ -2038,7 +2038,7 @@ print("-------------------------------${data2String}");
                                                             next();
                                                           },
                                                           style: ElevatedButton.styleFrom(
-                                                            primary: Colors.red,
+                                                            backgroundColor: Colors.red,
                                                             padding: EdgeInsets.symmetric(horizontal: 30),
                                                             shape: RoundedRectangleBorder(
                                                               borderRadius: BorderRadius.circular(10),
@@ -2077,13 +2077,13 @@ print("-------------------------------${data2String}");
                                     SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 10,left: 10),
-                                      child: DataView(title: 'ad_typ'.tr,value: _typeProperties==0?"for_rent".tr:"for_sell".tr,
+                                      child: DataView(title: 'ad_typ'.tr,value: _typeProperties==0?"for_rent".tr:"for_sell".tr, onTap: (){}
                                       ),
                                     ),
                                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                     type_properties!=null?  Padding(
                                       padding: const EdgeInsets.only(right: 10,left: 10),
-                                      child: DataView(title: 'type_property'.tr,value: type_properties,
+                                      child: DataView(title: 'type_property'.tr,value: type_properties, onTap: (){}
                                       ),
                                     ):Container(),
                                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -2097,7 +2097,7 @@ print("-------------------------------${data2String}");
                                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 10,left: 10),
-                                      child: DataView(title:  _propertyTypeController.text.toString()!="ارض"?'price'.tr:"سعر المتر",value: _priceController.text.toString(),
+                                      child: DataView(title:  _propertyTypeController.text.toString()!="ارض"?'price'.tr:"سعر المتر",value: _priceController.text.toString(), onTap: (){}
                                       ),
                                     ),
 
@@ -2105,19 +2105,19 @@ print("-------------------------------${data2String}");
                                     _propertyTypeController.text.toString()=="ارض"?
                                     Padding(
                                       padding: const EdgeInsets.only(right: 10,left: 10),
-                                      child: DataView(title: 'اجمالي سعر الارض'.tr,value: _totalPriceController.text.toString(),
+                                      child: DataView(title: 'اجمالي سعر الارض'.tr,value: _totalPriceController.text.toString(), onTap: (){}
                                       ),
                                     ):Container(),
                                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 10,left: 10),
-                                      child: DataView(title: 'space'.tr,value: _spaceController.text.toString(),
+                                      child: DataView(title: 'space'.tr,value: _spaceController.text.toString(), onTap: (){}
                                       ),
                                     ),
                                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                     Padding(
                                       padding: const EdgeInsets.only(right: 10,left: 10),
-                                      child: DataView(title: 'shot_description'.tr,value: _shortDescController.text.toString(),
+                                      child: DataView(title: 'shot_description'.tr,value: _shortDescController.text.toString(), onTap: (){},
                                       ),
                                     ),
                                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -2125,19 +2125,19 @@ print("-------------------------------${data2String}");
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.only(right: 10,left: 10),
-                                          child: DataView(title: 'number_rooms'.tr,value: _selectedRoomIndex.toString(),
+                                          child: DataView(title: 'number_rooms'.tr,value: _selectedRoomIndex.toString(),onTap: (){}
                                           ),
                                         ),
                                         SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         Padding(
                                           padding: const EdgeInsets.only(right: 10,left: 10),
-                                          child: DataView(title: 'number_toilets'.tr,value:_selectedBathroomsIndex.toString(),
+                                          child: DataView(title: 'number_toilets'.tr,value:_selectedBathroomsIndex.toString(),onTap: (){}
                                           ),
                                         ),
                                         SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         network_type!=null?  Padding(
                                           padding: const EdgeInsets.only(right: 10,left: 10),
-                                          child: DataView(title: 'network_type'.tr,value:network_type,
+                                          child: DataView(title: 'network_type'.tr,value:network_type, onTap: (){},
                                           ),
                                         ):Container(),
                                         SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -2152,7 +2152,7 @@ print("-------------------------------${data2String}");
                             ):Container()
                                 : Column(
                               children: [
-                                ProfileBgWidget(),
+                                ProfileBgWidget(circularImage: null,),
                               ],
                             ),
 
@@ -2382,12 +2382,12 @@ print("-------------------------------${data2String}");
 
   }
 
-  Widget paymentCart({@required String title, @required int index, @required Function onTap}){
+  Widget paymentCart({required String title, required int index, required Function onTap}){
     return GetBuilder<AuthController>(
         builder: (authController) {
           return Stack( clipBehavior: Clip.none, children: [
             InkWell(
-              onTap: onTap,
+              onTap: null,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT),
@@ -2457,9 +2457,9 @@ print("-------------------------------${data2String}");
       },
     );
   }
-  Widget baseCardWidget(AuthController authController, BuildContext context,{ @required String title, @required int index, @required Function onTap}){
+  Widget baseCardWidget(AuthController authController, BuildContext context,{ required String title, required int index, required Function onTap}){
     return InkWell(
-      onTap: onTap,
+      onTap: null,
       child: Stack(clipBehavior: Clip.none, children: [
 
         Container(
@@ -2467,7 +2467,7 @@ print("-------------------------------${data2String}");
               borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
               color: authController.businessIndex == index ? Theme.of(context).primaryColor.withOpacity(0.1) : Theme.of(context).cardColor,
               border: authController.businessIndex == index ? Border.all(color: Theme.of(context).primaryColor, width: 0.5) : null,
-              boxShadow: authController.businessIndex == index ? null : [BoxShadow(color: Colors.grey[200], offset: Offset(5, 5), blurRadius: 10)]
+              boxShadow: authController.businessIndex == index ? null : [BoxShadow(color: Colors.indigo, offset: Offset(5, 5), blurRadius: 10)]
           ),
           padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT, vertical: Dimensions.PADDING_SIZE_LARGE),
           child: Center(child: Text(title, style: robotoMedium.copyWith(color: authController.businessIndex == index ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyText1.color, fontSize: Dimensions.fontSizeDefault))),

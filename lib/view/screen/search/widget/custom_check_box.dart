@@ -7,7 +7,7 @@ class CustomCheckBox extends StatelessWidget {
   final String title;
   final bool value;
   final Function onClick;
-  CustomCheckBox({@required this.title, @required this.value, @required this.onClick});
+  CustomCheckBox({required this.title, required this.value, required this.onClick});
 
   @override
   Widget build(BuildContext context) {

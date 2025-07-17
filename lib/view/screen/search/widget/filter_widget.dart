@@ -11,7 +11,7 @@
 // class FilterWidget extends StatelessWidget {
 //   final double maxValue;
 //   final bool isRestaurant;
-//   FilterWidget({@required this.maxValue, @required this.isRestaurant});
+//   FilterWidget({required this.maxValue, required this.isRestaurant});
 //
 //   @override
 //   Widget build(BuildContext context) {

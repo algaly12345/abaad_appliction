@@ -29,7 +29,7 @@ class RadioItem extends StatelessWidget {
            Container(
 
             child:  Text(_item.buttonText,style: robotoBlack.copyWith(fontSize: 13, color: _item.isSelected
-                ? Theme.of(context).backgroundColor
+                ? Theme.of(context).colorScheme.background
                 : Colors.grey)),
           ),
           Container(

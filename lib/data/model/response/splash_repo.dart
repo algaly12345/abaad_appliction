@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SplashRepo {
   ApiClient apiClient;
   final SharedPreferences sharedPreferences;
-  SplashRepo({@required this.sharedPreferences, @required this.apiClient});
+  SplashRepo({required this.sharedPreferences, required this.apiClient});
 
   Future<Response> getConfigData() async {
     Response _response = await apiClient.getData(AppConstants.CONFIG_URI);

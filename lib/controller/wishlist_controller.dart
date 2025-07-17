@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 class WishListController extends GetxController implements GetxService {
   final WishListRepo wishListRepo;
-  WishListController({@required this.wishListRepo});
+  WishListController({required this.wishListRepo});
 
 
   List<Estate> _wishRestList;

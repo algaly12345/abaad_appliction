@@ -5,14 +5,14 @@ import 'package:abaad/util/images.dart';
 import 'on_boarding_data.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key key}) : super(key: key);
+  const OnboardingScreen({required Key key}) : super(key: key);
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-   PageController _controller;
+   late PageController _controller;
   int _currentPage = 0;
   @override
   void initState() {

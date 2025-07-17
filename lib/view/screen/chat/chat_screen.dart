@@ -32,7 +32,7 @@ class ChatScreen extends StatefulWidget {
   final String  estate_id;
   final String link;
   final Estate estate;
-  const ChatScreen({@required this.notificationBody, @required this.user, this.conversationID, this.index,this.estate_id,this.link,this.estate});
+  const ChatScreen({required this.notificationBody, required this.user, required this.conversationID, required this.index,required this.estate_id,required this.link,required this.estate});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -41,13 +41,13 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _inputMessageController = TextEditingController();
-  bool _isLoggedIn;
-  StreamSubscription _stream;
-  String url;
+  late bool _isLoggedIn;
+  late StreamSubscription _stream;
+  late String url;
   var data;
   final String _errorImage =
       "https://i.ytimg.com/vi/z8wrRRR7_qU/maxresdefault.jpg";
-  Timer _timer;
+  late Timer _timer;
   @override
   void initState() {
     super.initState();
@@ -192,7 +192,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   //     Get.back();
                                   //   }
                                   // },
-                                  icon: const Icon(Icons.arrow_back_ios),
+                                  icon: const Icon(Icons.arrow_back_ios), onPressed: () {  },
                                 ),
 
                                 Text(chatController.messageModel != null ? '${chatController.messageModel.conversation.receiver.name}'

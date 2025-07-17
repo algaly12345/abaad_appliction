@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class UpdateScreen extends StatelessWidget {
    bool isUpdate;
-  UpdateScreen({@required this.isUpdate});
+  UpdateScreen({required this.isUpdate});
 
   @override
   Widget build(BuildContext context) {

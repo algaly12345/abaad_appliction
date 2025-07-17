@@ -10,7 +10,7 @@ class LanguageWidget extends StatelessWidget {
   final LanguageModel languageModel;
   final LocalizationController localizationController;
   final int index;
-  LanguageWidget({@required this.languageModel, @required this.localizationController, @required this.index});
+  LanguageWidget({required this.languageModel, required this.localizationController, required this.index});
 
   @override
   Widget build(BuildContext context) {

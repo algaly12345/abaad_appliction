@@ -22,14 +22,14 @@ import '../profile/widget/profile_bg_widget.dart';
 
 class EstateScreen extends StatefulWidget {
   final Userinfo userInfo;
-   EstateScreen({ @required Key key,  this.userInfo}) : super(key: key);
+   EstateScreen({ required Key key,  required this.userInfo}) : super(key: key);
 
   @override
   State<EstateScreen> createState() => _EstateScreenState();
 }
 
 class _EstateScreenState extends State<EstateScreen> {
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -240,7 +240,7 @@ RatingBar(rating: 4, ratingCount: 4)     ,
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(1, 0.5), // changes position of shadow

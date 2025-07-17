@@ -9,7 +9,7 @@ class CustomImage extends StatelessWidget {
   final BoxFit fit;
   final Color colors;
   final String placeholder;
-  CustomImage({@required this.image, this.height, this.width, this.fit = BoxFit.cover, this.placeholder = Images.placeholder,this.colors});
+  CustomImage({required this.image, this.height, this.width, this.fit = BoxFit.cover, this.placeholder = Images.placeholder,this.colors});
 
   @override
   Widget build(BuildContext context) {

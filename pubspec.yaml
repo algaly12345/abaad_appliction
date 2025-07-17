@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.10.0 <3.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -40,21 +40,21 @@ dependencies:
   shared_preferences: ^2.0.16
   connectivity: ^3.0.6
   cupertino_icons: ^1.0.5
-  firebase_messaging: ^14.2.1
-  flutter_local_notifications: ^9.6.0
-  url_strategy: ^0.2.0
+  firebase_messaging: ^15.2.9
+  flutter_local_notifications: ^10.0.0-dev.1
+  url_strategy: ^0.3.0
   http: ^0.13.5
   path_provider: ^2.0.11
-  image_picker: ^0.8.6
+  image_picker: ^1.1.2
   phone_number: any
-  country_code_picker: ^2.0.2
-  geolocator: ^9.0.2
+  country_code_picker: ^3.3.0
+  geolocator: ^14.0.1
   google_maps_flutter: ^2.1.10
-  google_maps_flutter_web: ^0.4.0+4
+  google_maps_flutter_web: ^0.5.12+2
 
 #  flutter_typeahead: ^4.1.1
-  pin_code_fields: ^7.4.0
-  firebase_core_platform_interface: ^4.5.2
+  pin_code_fields: ^8.0.1
+  firebase_core_platform_interface: ^6.0.0
   custom_map_markers: ^0.0.2+1
   flutter_hex_color: ^2.0.0
   cached_network_image: any
@@ -63,46 +63,46 @@ dependencies:
   image_stack: ^2.1.1
   custom_info_window: ^1.0.1
   flutter_rating_stars:
-  clippy_flutter: ^1.1.1
-  carousel_slider: ^4.0.0
+  clippy_flutter: ^2.0.0-nullsafety.1
+  carousel_slider: ^5.1.1
   shimmer_animation: ^2.1.0+1
-  intl: ^0.15.7
+  intl: ^0.19.0
   #  flutter_plugin_android_lifecycle: ^2.0.7
   url_launcher: ^6.0.17
-  pointer_interceptor: ^0.9.0+1
-  card_swiper: ^2.0.4
+  pointer_interceptor: ^0.10.1+2
+  card_swiper: ^3.0.1
 #  sqflite: ^2.2.4+1
-  multiselect: ^0.0.4
-  clipboard: ^0.1.3
+  multiselect: ^0.1.1
+  clipboard: ^2.0.2
   image_compression_flutter: ^1.0.2
   geocoding: any
-  geocode: 1.0.1
+  geocode: ^1.0.3
   flutter_google_street_view: any
   flutter_inappwebview: any
   video_player: any
   flutter_google_places: ^0.3.0
   google_maps_webservice: ^0.0.19
-  animated_text_kit: ^1.1.0
+  animated_text_kit: ^4.2.3
   universal_html: ^2.0.8
-  universal_ui: ^0.0.8
-  flutter_widget_from_html_core: ^0.8.5+3
-  share_plus: ^4.0.9
-  firebase_dynamic_links: ^0.5.0+11
+#  universal_ui: ^0.0.8
+  flutter_widget_from_html_core: ^0.16.0
+  share_plus: ^11.0.0
+  firebase_dynamic_links: ^6.1.9
   share:
   marker_icon: any
   launch_review: ^3.0.1
   any_link_preview: ^3.0.0
   tutorial_coach_mark: ^1.2.4
-  file_picker: ^4.6.1
-  webview_flutter: ^2.0.9
-  progress_dialog_null_safe: ^1.0.7
+  file_picker: ^10.2.0
+  webview_flutter: ^4.13.0
+  progress_dialog_null_safe: ^3.0.0
   barcode_scan2: ^4.2.4
   camera: any
   multi_select_flutter: ^4.1.3
-  flutter_polyline_points: ^0.2.6
-  awesome_dialog: ^2.2.1
-  flutter_bloc: ^8.1.4
-  flutter_typeahead: ^3.2.4
+  flutter_polyline_points: ^1.0.0
+  awesome_dialog: ^3.2.1
+  flutter_bloc: ^9.1.1
+  flutter_typeahead: ^5.2.0
 
 
 

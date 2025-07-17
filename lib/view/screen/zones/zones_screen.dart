@@ -283,7 +283,7 @@ class _ZonesScreenState extends State<ZonesScreen> {
 class SliverDelegate extends SliverPersistentHeaderDelegate {
   Widget child;
 
-  SliverDelegate({@required this.child});
+  SliverDelegate({required this.child});
 
   @override
   Widget build(

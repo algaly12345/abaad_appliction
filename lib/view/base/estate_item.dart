@@ -22,7 +22,7 @@ class EstateItem extends StatelessWidget {
  final void Function() onPressed;
 
 
-  const EstateItem({@required this.estate,this.onPressed,this.fav,this.isMyProfile});
+  const EstateItem({required this.estate,required this.onPressed,required this.fav,required this.isMyProfile});
 
   @override
   Widget build(BuildContext context) {

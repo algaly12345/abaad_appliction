@@ -25,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 
   int zoneId;
 
-  HomeScreen( {@required this.zoneId});
+  HomeScreen( {required this.zoneId});
 
   final ScrollController scrollController = ScrollController();
   final bool _ltr = Get.find<LocalizationController>().isLtr;
@@ -82,12 +82,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
-  String selectedZoneName;
+  late String selectedZoneName;
 
   void _loadSavedZone() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      selectedZoneName = prefs.getString('zone_name');
+      selectedZoneName = prefs.getString('zone_name')!;
     });
   }
   static const _locale = 'en';
@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
 
-          _isNull = _products == null;
+          _isNull = _products! == null;
           if(!_isNull) {
             _length = _products.length;
           }
@@ -278,8 +278,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: InkWell(
                             onTap: ()async {
                               SharedPreferences prefs = await SharedPreferences.getInstance();
-                              int savedZoneId = prefs.getInt('zone_id');
-                              categoryController.setSubCategoryIndex(index,savedZoneId);
+                              int? savedZoneId = prefs.getInt('zone_id');
+                              categoryController.setSubCategoryIndex(index,savedZoneId!);
                              //  categoryController.subCategoryIndex==index;
 
                                  _loadSavedZone();
@@ -411,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
 class SliverDelegate extends SliverPersistentHeaderDelegate {
   Widget child;
 
-  SliverDelegate({@required this.child});
+  SliverDelegate({required this.child});
 
   @override
   Widget build(
@@ -434,14 +434,14 @@ class SliverDelegate extends SliverPersistentHeaderDelegate {
 }
 
 Widget _textField({
-  TextEditingController controller,
-  FocusNode focusNode,
-  String label,
-  String hint,
-  double width,
-  Icon prefixIcon,
+  required TextEditingController controller,
+  required FocusNode focusNode,
+  required String label,
+  required String hint,
+  required double width,
+  required Icon prefixIcon,
   suffixIcon,
-  Function(String) locationCallback,
+  required Function(String) locationCallback,
 }) {
   return Container(
     width: width * 0.7,

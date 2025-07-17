@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 class WalletBottomSheet extends StatefulWidget {
   final bool fromWallet;
-  const WalletBottomSheet({Key key, @required this.fromWallet}) : super(key: key);
+  const WalletBottomSheet({Key key, required this.fromWallet}) : super(key: key);
 
   @override
   State<WalletBottomSheet> createState() => _WalletBottomSheetState();

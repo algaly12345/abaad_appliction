@@ -19,7 +19,7 @@ import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
   final NotificationBody body;
-  SplashScreen({@required this.body});
+  SplashScreen({required this.body});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();

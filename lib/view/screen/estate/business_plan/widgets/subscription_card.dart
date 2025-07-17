@@ -12,7 +12,7 @@ class SubscriptionCard extends StatelessWidget {
   final Packages package;
   final AuthController authController;
   final Color color;
-  const SubscriptionCard({Key key, @required this.index, @required this.package, @required this.authController, @required this.color}) : super(key: key);
+  const SubscriptionCard({Key key, required this.index, required this.package, required this.authController, required this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 
-  Widget packageWidget({ @required String title}){
+  Widget packageWidget({ required String title}){
     return Column(children: [
       Padding(
         padding: EdgeInsets.only(left: ResponsiveHelper.isDesktop(Get.context) ? MediaQuery.of(Get.context).size.width * 0.05 : MediaQuery.of(Get.context).size.width * 0.15),
@@ -149,7 +149,7 @@ class CurveClipper extends CustomClipper<Path> {
 
 class CardPaint extends CustomPainter{
   final Color color;
-  const CardPaint({@required this.color});
+  const CardPaint({required this.color});
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()

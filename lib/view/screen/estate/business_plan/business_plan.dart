@@ -18,7 +18,7 @@ import 'package:get/get.dart';
 import 'widgets/subscription_card.dart';
 class BusinessPlanScreen extends StatefulWidget {
   final int estateId;
-  const  BusinessPlanScreen({Key key, @required this.estateId}) : super(key: key);
+  const  BusinessPlanScreen({Key key, required this.estateId}) : super(key: key);
 
   @override
   State<BusinessPlanScreen> createState() => _BusinessPlanScreenState();
@@ -234,7 +234,7 @@ class _BusinessPlanScreenState extends State<BusinessPlanScreen> {
     );
   }
 
-  Widget paymentCart({@required String title, @required int index, @required Function onTap}){
+  Widget paymentCart({required String title, required int index, required Function onTap}){
     return GetBuilder<AuthController>(
       builder: (authController) {
         return Stack( clipBehavior: Clip.none, children: [
@@ -268,7 +268,7 @@ class _BusinessPlanScreenState extends State<BusinessPlanScreen> {
     );
   }
 
-  Widget baseCardWidget(AuthController authController, BuildContext context,{ @required String title, @required int index, @required Function onTap}){
+  Widget baseCardWidget(AuthController authController, BuildContext context,{ required String title, required int index, required Function onTap}){
     return InkWell(
       onTap: onTap,
       child: Stack(clipBehavior: Clip.none, children: [

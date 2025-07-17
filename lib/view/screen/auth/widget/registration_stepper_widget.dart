@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'registration_stepper.dart';
 class RegistrationStepperWidget extends StatelessWidget {
   final String status;
-  const RegistrationStepperWidget({Key key, @required this.status}) : super(key: key);
+  const RegistrationStepperWidget({Key key, required this.status}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

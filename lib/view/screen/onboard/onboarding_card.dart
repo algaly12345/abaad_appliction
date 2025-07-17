@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 class OnBoardingCard extends StatelessWidget {
   const OnBoardingCard({
      key,
-     this.onboardingContent,
-     this.currentPage,
-     this.pageController,
+     required this.onboardingContent,
+     required this.currentPage,
+     required this.pageController,
   });
   //
   final int currentPage;

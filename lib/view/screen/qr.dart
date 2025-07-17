@@ -19,7 +19,7 @@ class Advantage {
   final int id;
   final String name;
 
-  Advantage({@required this.id, @required this.name});
+  Advantage({required this.id, required this.name});
 
   factory Advantage.fromJson(Map<String, dynamic> json) {
     return Advantage(id: json['id'], name: json['name']);
@@ -160,7 +160,7 @@ class _AdvantagesListState extends State<AdvantagesList> {
 class AdvantagesUpdateScreen extends StatelessWidget {
   final List<String> selectedAdvantages;
 
-  AdvantagesUpdateScreen({@required this.selectedAdvantages});
+  AdvantagesUpdateScreen({required this.selectedAdvantages});
 
   @override
   Widget build(BuildContext context) {

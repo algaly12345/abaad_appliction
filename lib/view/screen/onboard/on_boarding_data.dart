@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 
 class OnboardingModel {
   const OnboardingModel({
-  this.title,
-     this.image,
-     this.color,
+  required this.title,
+     required this.image,
+     required this.color,
   });
 
   ///

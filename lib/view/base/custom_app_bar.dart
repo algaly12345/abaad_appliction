@@ -10,12 +10,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isBackButtonExist;
   final Function onBackPressed;
   final bool showCart;
-  CustomAppBar({@required this.title, this.isBackButtonExist = true, this.onBackPressed, this.showCart = false});
+  CustomAppBar({required this.title, this.isBackButtonExist = true, required this.onBackPressed, this.showCart = false});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyText1.color)),
+      title: Text(title, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).textTheme.bodyLarge?.color)),
       centerTitle: true,
       leading: isBackButtonExist ? IconButton(
         icon: Center(
@@ -51,7 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           //       child: Icon(Icons.arrow_back_ios,size: 22),
           //     )),
         ),
-        color: Theme.of(context).textTheme.bodyText1.color,
+        color: Theme.of(context).textTheme.bodyLarge?.color,
         onPressed: () => onBackPressed != null ? onBackPressed() : Navigator.pop(context),
       ) : SizedBox(),
       backgroundColor: Theme.of(context).cardColor,
@@ -59,7 +59,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: showCart ? [
         IconButton(onPressed: () =>
             null,
-        icon: NotifIconWidget(color: Theme.of(context).textTheme.bodyText1.color, size: 25),
+        icon: NotifIconWidget(color:Theme.of(context).primaryColor, size: 25),
       )] : null,
     );
   }

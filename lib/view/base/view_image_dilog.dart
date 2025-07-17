@@ -19,7 +19,7 @@ import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 class ViewImageUploadScreen extends StatefulWidget {
   Estate estate;
-  ViewImageUploadScreen(@required this.estate);
+  ViewImageUploadScreen(this.estate);
   @override
   _ViewImageUploadScreenState createState() => _ViewImageUploadScreenState();
 }

@@ -13,8 +13,8 @@ class ConfirmationDialog extends StatelessWidget {
   final Function onYesPressed;
   final bool isLogOut;
   final Function onNoPressed;
-  ConfirmationDialog({@required this.icon, this.title, @required this.description, @required this.onYesPressed,
-    this.isLogOut = false, this.onNoPressed});
+  ConfirmationDialog({required this.icon, required this.title, required this.description, required this.onYesPressed,
+    this.isLogOut = false, required this.onNoPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class ConfirmationDialog extends StatelessWidget {
                       ),
                       child: Text(
                         isLogOut ? 'yes'.tr : 'no'.tr, textAlign: TextAlign.center,
-                        style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyText1.color),
+                        style: robotoBold.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
                       ),
                     )),
                     SizedBox(width: Dimensions.PADDING_SIZE_LARGE),
@@ -64,7 +64,7 @@ class ConfirmationDialog extends StatelessWidget {
                     Expanded(child: CustomButton(
                       buttonText: isLogOut ? 'no'.tr : 'yes'.tr,
                       onPressed: () => isLogOut ? Get.back() : onYesPressed(),
-                      radius: Dimensions.RADIUS_SMALL, height: 40,
+                      radius: Dimensions.RADIUS_SMALL, height: 40, fontSize: 12,icon: ,
                     )),
                   ]);
                 })

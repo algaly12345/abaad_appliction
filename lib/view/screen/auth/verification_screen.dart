@@ -19,16 +19,16 @@ class VerificationScreen extends StatefulWidget {
   final bool fromSignUp;
   final String token;
   final String password;
-  VerificationScreen({@required this.number, @required this.password, @required this.fromSignUp,
-    @required this.token});
+  VerificationScreen({required this.number, required this.password, required this.fromSignUp,
+    required this.token});
 
   @override
   _VerificationScreenState createState() => _VerificationScreenState();
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
-  String _number;
-  Timer _timer;
+  late String _number;
+  late Timer _timer;
   int _seconds = 0;
 
   @override
@@ -70,7 +70,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           padding: context.width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
           decoration: context.width > 700 ? BoxDecoration(
             color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], blurRadius: 5, spreadRadius: 1)],
+            boxShadow: [BoxShadow(color: Colors.indigo, blurRadius: 5, spreadRadius: 1)],
           ) : null,
           child: GetBuilder<AuthController>(builder: (authController) {
             return Column(children: [
@@ -79,7 +79,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 'for_demo_purpose'.tr, style: robotoRegular,
               ) : RichText(text: TextSpan(children: [
                 TextSpan(text: 'enter_the_verification_sent_to'.tr, style: robotoRegular.copyWith(color: Theme.of(context).disabledColor)),
-                TextSpan(text: ' $_number', style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyText1.color)),
+                TextSpan(text: ' $_number', style: robotoMedium.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color)),
               ])),
 
               Padding(
@@ -156,7 +156,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               Image.asset(Images.checked, width: 100, height: 100),
                               SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                               Text('verified'.tr, style: robotoBold.copyWith(
-                                fontSize: 30, color: Theme.of(context).textTheme.bodyText1.color,
+                                fontSize: 30, color: Theme.of(context).textTheme.bodyLarge?.color,
                                 decoration: TextDecoration.none,
                               )),
                             ]),
@@ -179,7 +179,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       }
                     });
                   }
-                },
+                }, fontSize: 10,
               ) : Center(child: CircularProgressIndicator()) : SizedBox.shrink(),
 
             ]);

@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthRepo {
   final ApiClient apiClient;
   final SharedPreferences sharedPreferences;
-  AuthRepo({@required this.apiClient, @required this.sharedPreferences});
+  AuthRepo({required this.apiClient, required this.sharedPreferences});
 
   Future<Response> registration(SignUpBody signUpBody) async {
     return await apiClient.postData(AppConstants.REGISTER_URI, signUpBody.toJson());

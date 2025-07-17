@@ -12,7 +12,7 @@ import 'package:image_picker/image_picker.dart';
 class UploadScreen extends StatefulWidget {
   final int estateId;
 
-  const UploadScreen({ @required this.estateId});
+  const UploadScreen({ required this.estateId});
 
   @override
   State<UploadScreen> createState() => _MediaTabScreenState();
@@ -20,7 +20,7 @@ class UploadScreen extends StatefulWidget {
 
 class _MediaTabScreenState extends State<UploadScreen>
     with TickerProviderStateMixin {
-   TabController _tabController;
+   late TabController _tabController;
 
 
    void _showUploadDialog() {
@@ -55,7 +55,7 @@ class _MediaTabScreenState extends State<UploadScreen>
                  Navigator.of(context).pop(); // نعم: لا تفعل شيء
                },
                style: ElevatedButton.styleFrom(
-                 primary: Color(0xFF003366),
+                 backgroundColor: Color(0xFF003366),
                  shape: RoundedRectangleBorder(
                    borderRadius: BorderRadius.circular(12),
                  ),
@@ -76,7 +76,7 @@ class _MediaTabScreenState extends State<UploadScreen>
                  Get.toNamed(RouteHelper.getProfileAgentRoute(userController.userInfoModel.id, 1));
                },
                style: ElevatedButton.styleFrom(
-                 primary: Color(0xFF003366),
+                 backgroundColor: Color(0xFF003366),
                  shape: RoundedRectangleBorder(
                    borderRadius: BorderRadius.circular(12),
                  ),
@@ -149,7 +149,7 @@ class _MediaTabScreenState extends State<UploadScreen>
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.indigo[800],
+                      backgroundColor: Colors.indigo[800],
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

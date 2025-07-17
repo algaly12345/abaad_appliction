@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 class WebMenuBar extends StatelessWidget implements PreferredSizeWidget {
   final Function ontop;
   final  String fromPage;
-  WebMenuBar({@required this.ontop,@required this.fromPage});
+  WebMenuBar({required this.ontop,required this.fromPage});
   @override
   Widget build(BuildContext context) {
     return Center(child: Container(

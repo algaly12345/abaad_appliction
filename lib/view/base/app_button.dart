@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
   const AppButton({
-    Key key,
-     this.label,
+    Key? key,
+     required this.label,
     this.roundness = 8.0,
-    this.btnColor,
+    required this.btnColor,
     this.fontWeight = FontWeight.bold,
     this.padding = const EdgeInsets.symmetric(vertical: 5),
-    this.trailingWidget,
-    this.titleColor,
-     this.onPressed,
+    required this.trailingWidget,
+    required this.titleColor,
+     required this.onPressed,
   }) : super(key: key);
 
   ///

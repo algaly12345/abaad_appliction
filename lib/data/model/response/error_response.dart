@@ -40,7 +40,7 @@ class Errors {
   String get message => _message;
 
   Errors({
-      String code, 
+      String code,
       String message}){
     _code = code;
     _message = message;

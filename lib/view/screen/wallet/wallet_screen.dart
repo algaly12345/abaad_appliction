@@ -19,7 +19,7 @@ import 'widget/wallet_bottom_sheet.dart';
 
 class WalletScreen extends StatefulWidget {
   final bool fromWallet;
-  WalletScreen({Key key, @required this.fromWallet}) : super(key: key);
+  WalletScreen({Key key, required this.fromWallet}) : super(key: key);
 
   @override
   State<WalletScreen> createState() => _WalletScreenState();
@@ -196,7 +196,7 @@ class _WalletScreenState extends State<WalletScreen> {
 }
 class WalletShimmer extends StatelessWidget {
   final WalletController walletController;
-  WalletShimmer({@required this.walletController});
+  WalletShimmer({required this.walletController});
 
   @override
   Widget build(BuildContext context) {

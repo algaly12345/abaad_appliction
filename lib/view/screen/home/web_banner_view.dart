@@ -15,7 +15,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 
 class WebBannerView extends StatelessWidget {
   final BannerController bannerController;
-  WebBannerView({@required this.bannerController});
+  WebBannerView({required this.bannerController});
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class WebBannerView extends StatelessWidget {
 
 class WebBannerShimmer extends StatelessWidget {
   final BannerController bannerController;
-  WebBannerShimmer({@required this.bannerController});
+  WebBannerShimmer({required this.bannerController});
 
   @override
   Widget build(BuildContext context) {

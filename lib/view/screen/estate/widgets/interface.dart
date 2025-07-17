@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class InterfaceItem extends StatelessWidget {
   final Estate estate;
   final List<Interface> restaurants;
-  const InterfaceItem({Key key,this.estate ,this.restaurants}) : super(key: key);
+  const InterfaceItem({required this.estate ,required this.restaurants}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class InterfaceItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(4.0),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             spreadRadius: 1,
             blurRadius: 2,
             offset: Offset(0, 0.5), // changes position of shadow
@@ -43,7 +43,7 @@ class InterfaceItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(4.0),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).backgroundColor,
+                  color: Theme.of(context).colorScheme.background,
                   spreadRadius: 1,
                   blurRadius: 2,
                   offset: Offset(0, 0.5), // changes position of shadow

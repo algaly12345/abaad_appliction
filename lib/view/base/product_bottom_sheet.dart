@@ -38,7 +38,7 @@ class ProductBottomSheet extends StatefulWidget {
   final CartModel cart;
   final int cartIndex;
   final bool inRestaurantPage;
-  ProductBottomSheet({@required this.product, this.isCampaign = false, this.cart, this.cartIndex, this.inRestaurantPage = false});
+  ProductBottomSheet({required this.product, this.isCampaign = false, this.cart, this.cartIndex, this.inRestaurantPage = false});
 
   @override
   State<ProductBottomSheet> createState() => _ProductBottomSheetState();

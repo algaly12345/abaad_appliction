@@ -5,7 +5,7 @@ import 'package:get/get_connect/http/src/response/response.dart';
 
 class WishListRepo {
   final ApiClient apiClient;
-  WishListRepo({@required this.apiClient});
+  WishListRepo({required this.apiClient});
 
   Future<Response> getWishList() async {
     return await apiClient.getData(AppConstants.WISH_LIST_GET_URI);

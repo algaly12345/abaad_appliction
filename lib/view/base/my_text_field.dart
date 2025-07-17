@@ -27,24 +27,24 @@ class MyTextField extends StatefulWidget {
 
   MyTextField(
       {this.hintText = '',
-        this.controller,
-        this.focusNode,
-        this.nextFocus,
+        required this.controller,
+        required this.focusNode,
+        required this.nextFocus,
         this.isEnabled = true,
         this.inputType = TextInputType.text,
         this.inputAction = TextInputAction.next,
         this.maxLines = 1,
-        this.onSubmit,
-        this.onChanged,
+        required this.onSubmit,
+        required this.onChanged,
         this.capitalization = TextCapitalization.none,
-        this.onTap,
-        this.fillColor,
+        required this.onTap,
+        required this.fillColor,
         this.isPassword = false,
         this.autoFocus = false,
         this.showBorder = false,
-        this.size,
+        required this.size,
         this.multiLine=false,
-        this.key});
+        required this.key});
 
   @override
   _MyTextFieldState createState() => _MyTextFieldState();

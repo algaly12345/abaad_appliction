@@ -24,7 +24,7 @@ import 'package:image_picker/image_picker.dart';
 
 class ChatController extends GetxController implements GetxService {
   final ChatRepo chatRepo;
-  ChatController({@required this.chatRepo});
+  ChatController({required this.chatRepo});
 
   List<bool> _showDate;
   bool _isSendButtonActive = false;
@@ -240,8 +240,8 @@ class ChatController extends GetxController implements GetxService {
     update();
   }
 
-  Future<Response> sendMessage({@required String message, @required NotificationBody notificationBody,
-    @required int conversationID, @required int index,@required String  estate_id}) async {
+  Future<Response> sendMessage({required String message, required NotificationBody notificationBody,
+    required int conversationID, required int index,required String  estate_id}) async {
     print("omeromeromer");
     Response _response;
     _isLoading = true;

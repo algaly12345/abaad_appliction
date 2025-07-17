@@ -10,7 +10,7 @@ class ProductView extends StatelessWidget {
 
 
   final String noDataText;
-  ProductView({@required this.restaurants,  this.noDataText});
+  ProductView({required this.restaurants,  this.noDataText});
 
   @override
   Widget build(BuildContext context) {

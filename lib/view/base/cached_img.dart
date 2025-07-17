@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 
 class CachedImage extends StatelessWidget {
   const CachedImage({
-    Key key,
-    this.imageUrl,
-    this.width,
-    this.height,
-    this.isCircle,
-    this.borderRadius,
-    this.fit,
+    Key? key,
+    required this.imageUrl,
+    required this.width,
+    required this.height,
+    required this.isCircle,
+    required this.borderRadius,
+    required this.fit,
   }) : super(key: key);
 
   ///
@@ -50,7 +50,7 @@ class CachedImage extends StatelessWidget {
       placeholder: (context, index) => PlaceHolderImage(
         width: width,
         height: height,
-        isCircle: isCircle,
+        isCircle: isCircle, borderRadius:BorderRadius.all(Radius.zero) ,
       ),
       // in error case
       errorWidget: (context, url, error) {
@@ -80,10 +80,10 @@ class CachedImage extends StatelessWidget {
 
 class PlaceHolderImage extends StatelessWidget {
   const PlaceHolderImage({
-    this.height,
-    this.width,
-    this.isCircle,
-    this.borderRadius,
+    required this.height,
+    required this.width,
+    required this.isCircle,
+    required this.borderRadius,
   });
   final double width, height;
   final bool isCircle;
@@ -110,12 +110,12 @@ class PlaceHolderImage extends StatelessWidget {
 
 class ShowDefaultImage extends StatelessWidget {
   const ShowDefaultImage({
-    Key key,
-    this.width,
-    this.height,
-    this.isCircle,
-    this.borderRadius,
-    this.fit,
+    Key? key,
+    required this.width,
+    required this.height,
+    required this.isCircle,
+    required this.borderRadius,
+    required this.fit,
   }) : super(key: key);
 
   final double width, height;

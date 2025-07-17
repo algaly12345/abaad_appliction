@@ -41,19 +41,19 @@ class MapScreen extends StatefulWidget {
   final bool canRoute;
   final String route;
   final GoogleMapController googleMapController;
-  MapScreen({Key key,@required this.mainCategory,@required this.fromSignUp, @required this.fromAddAddress, @required this.canRoute,
-    @required this.route, this.googleMapController,}) : super(key: key);
+  MapScreen({required Key key,required this.mainCategory,required this.fromSignUp, required this.fromAddAddress, required this.canRoute,
+    required this.route, required this.googleMapController,}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapViewScreenState();
 }
 
 class _MapViewScreenState extends State<MapScreen> {
-  GoogleMapController _controller;
+  late GoogleMapController _controller;
   List<MarkerData> _customMarkers = [];
-  CameraPosition _cameraPosition;
+  late  CameraPosition _cameraPosition;
   final ScrollController scrollController = ScrollController();
-  Uint8List imageDataBytes;
+  late Uint8List imageDataBytes;
   var markerIcon;
   // GlobalKey iconKey = GlobalKey();
   String selectedOption = 'بيع';
@@ -68,7 +68,7 @@ class _MapViewScreenState extends State<MapScreen> {
   bool radiusSlider = false;
   bool backProider= false;
 
-  LatLng _initialPosition;
+  late LatLng _initialPosition;
   var photoGalleryIndex = 0;
   final bool _ltr = Get.find<LocalizationController>().isLtr;
   MapType _currentMapType = MapType.satellite;
@@ -89,17 +89,17 @@ class _MapViewScreenState extends State<MapScreen> {
     });
   }
 
-  PageController _pageController;
+  late PageController _pageController;
   int prevPage = 0;
   bool showBlankCard = false;
   bool pressedNear = false;
 
   var radiusValue = 3000.0;
-  Timer _debounce;
+  late Timer _debounce;
   String tokenKey = '';
-  int index;
+  late int index;
   void _onScroll() {
-    if (_pageController.page.toInt() != prevPage) {
+    if (_pageController.page?.toInt() != prevPage) {
       prevPage = _pageController.page.toInt();
       cardTapped = false;
       photoGalleryIndex = 1;
@@ -112,7 +112,7 @@ class _MapViewScreenState extends State<MapScreen> {
   int selectedIndex = 0;
 
 
-  Estate estate;
+  late Estate estate;
   void _setCircle(LatLng point) async {
 
 
@@ -201,8 +201,8 @@ class _MapViewScreenState extends State<MapScreen> {
   Future<void> getCustomMarkerIcon(GlobalKey iconKey) async {
     RenderRepaintBoundary boundary = iconKey.currentContext.findRenderObject();
     ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    var pngBytes = byteData.buffer.asUint8List();
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    var pngBytes = byteData!.buffer.asUint8List();
     setState(() {
       markerIcon = BitmapDescriptor.fromBytes(pngBytes);
     });
@@ -227,7 +227,7 @@ class _MapViewScreenState extends State<MapScreen> {
 
     return Scaffold(
         key: _key,
-        appBar: WebMenuBar(ontop:()=>     _key.currentState.openDrawer(),fromPage: "main"),
+        appBar: WebMenuBar(ontop:()=>     _key.currentState!.openDrawer(),fromPage: "main"),
         drawer: DrawerMenu(),
         body:
         GetBuilder<CategoryController>(builder: (categoryController) {
@@ -364,7 +364,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                             ),
                                           ),
                                           SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                                          Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
+                                          Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyLarge!.color),
                                         ]),
                                       ),
                                     ),
@@ -805,7 +805,7 @@ class _MapViewScreenState extends State<MapScreen> {
                                             ),
                                           ),
                                           SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                                          Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyText1.color),
+                                          Icon(Icons.search, size: 25, color: Theme.of(context).textTheme.bodyLarge?.color),
                                         ]),
                                       ),
                                     ),
@@ -1569,7 +1569,7 @@ if(cardTapped==true){
 
 
   String formatPrice(String priceStr) {
-    final num price = num.tryParse(priceStr);
+    final num? price = num.tryParse(priceStr);
     if (price == null) return priceStr;
 
     if (price >= 1000000) {
@@ -1590,7 +1590,7 @@ if(cardTapped==true){
 class SliverDelegate extends SliverPersistentHeaderDelegate {
   Widget child;
 
-  SliverDelegate({@required this.child});
+  SliverDelegate({required this.child});
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {

@@ -16,7 +16,7 @@ class LocalizationController extends GetxController implements GetxService {
   final SharedPreferences sharedPreferences;
   final ApiClient apiClient;
 
-  LocalizationController({@required this.sharedPreferences, @required this.apiClient}) {
+  LocalizationController({required this.sharedPreferences, required this.apiClient}) {
     loadCurrentLanguage();
   }
 

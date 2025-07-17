@@ -18,7 +18,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class SelectLocationView extends StatefulWidget {
   final bool fromView;
   final GoogleMapController mapController;
-  const SelectLocationView({@required this.fromView, this.mapController});
+  const SelectLocationView({required this.fromView, this.mapController});
 
   @override
   State<SelectLocationView> createState() => _SelectLocationViewState();

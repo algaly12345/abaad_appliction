@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 class BtnOnBoarding extends StatelessWidget {
   const BtnOnBoarding({
      key,
-     this.currentPage,
-     this.pageController,
-    this.trailingWidget,
+     required this.currentPage,
+     required this.pageController,
+    required this.trailingWidget,
   });
   //
   final int currentPage;

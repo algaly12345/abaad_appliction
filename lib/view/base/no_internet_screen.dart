@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class NoInternetScreen extends StatelessWidget {
   final Widget child;
-  NoInternetScreen({this.child});
+  NoInternetScreen({required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class NoInternetScreen extends StatelessWidget {
             Image.asset(Images.no_internet, width: 150, height: 150),
             Text('oops'.tr, style: robotoBold.copyWith(
               fontSize: 30,
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             )),
             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
             Text(

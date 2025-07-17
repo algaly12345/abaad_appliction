@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class MapViewScreen extends StatefulWidget {
-  const MapViewScreen({Key key}) : super(key: key);
+  const MapViewScreen({required Key key}) : super(key: key);
   static Future<void> loadData(bool reload) async {
     int offset = 1;
     Get.find<AuthController>().getZoneList();
@@ -31,7 +31,7 @@ class MapViewScreen extends StatefulWidget {
 }
 
 class _MapViewScreenState extends State<MapViewScreen> {
-  GoogleMapController _controller;
+  late GoogleMapController _controller;
 
   List<MarkerData>  _customMarkersZone = [];
   int _reload = 0;

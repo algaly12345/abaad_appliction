@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class BannerController extends GetxController implements GetxService {
   final BannerRepo bannerRepo;
-  BannerController({@required this.bannerRepo});
+  BannerController({required this.bannerRepo});
 
   List<String> _bannerImageList;
   List<dynamic> _bannerDataList;

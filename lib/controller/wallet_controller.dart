@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 class WalletController extends GetxController implements GetxService{
   final WalletRepo walletRepo;
-  WalletController({@required this.walletRepo});
+  WalletController({required this.walletRepo});
 
   List<Transaction> _transactionList;
   List<String> _offsetList = [];

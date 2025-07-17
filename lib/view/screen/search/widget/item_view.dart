@@ -7,7 +7,7 @@
 //
 // class ItemView extends StatelessWidget {
 //   final bool isRestaurant;
-//   ItemView({@required this.isRestaurant});
+//   ItemView({required this.isRestaurant});
 //
 //   @override
 //   Widget build(BuildContext context) {

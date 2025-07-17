@@ -12,6 +12,7 @@ import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/custom_text_field.dart';
 import 'package:abaad/view/base/web_menu_bar.dart';
 import 'package:country_code_picker/country_code.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,9 +44,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _registrationType = 'individual';
   final TextEditingController _unifiedNumberController = TextEditingController();
 
-  String _countryDialCode;
-  String _membershipType;
-  String _selectedUserType;
+  late String _countryDialCode;
+  late String _membershipType;
+  late String _selectedUserType;
 
   @override
   void initState() {
@@ -57,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar() : null,
+      appBar: ResponsiveHelper.isDesktop(context) ? WebMenuBar(ontop: null,) : null,
       body: SafeArea(child: Scrollbar(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),

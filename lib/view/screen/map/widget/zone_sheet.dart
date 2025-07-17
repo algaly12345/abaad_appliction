@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class ZoneSheet extends StatelessWidget {
   final Function(int index) callback;
-  ZoneSheet({@required this.callback});
+  ZoneSheet({required this.callback});
 
   @override
   Widget build(BuildContext context) {

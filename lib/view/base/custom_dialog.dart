@@ -34,21 +34,21 @@ void showAnimatedDialog(BuildContext context, Widget dialog, {bool isFlip = fals
 
 class Rotation3DTransition extends AnimatedWidget {
   const Rotation3DTransition({
-    Key key,
-    @required Animation<double> turns,
+    Key? key,
+    required Animation<double> turns,
     this.alignment = Alignment.center,
-    this.child,
+    required this.child,
   })  : assert(turns != null),
         super(key: key, listenable: turns);
 
-  Animation<double> get turns => listenable;
+  Listenable get turns => listenable;
 
   final Alignment alignment;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final double turnsValue = turns.value;
+    final double turnsValue = turns.value!;
     final Matrix4 transform = Matrix4.identity()
       ..setEntry(3, 2, 0.0006)
       ..rotateY(turnsValue);
@@ -58,4 +58,8 @@ class Rotation3DTransition extends AnimatedWidget {
       child: child,
     );
   }
+}
+
+extension on Listenable {
+  get value => null;
 }

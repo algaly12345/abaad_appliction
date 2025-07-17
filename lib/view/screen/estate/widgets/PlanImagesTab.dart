@@ -13,7 +13,7 @@ import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 class PlanImagesTab extends StatefulWidget {
   final int estateId;
 
-  const PlanImagesTab({ @required this.estateId});
+  const PlanImagesTab({ required this.estateId});
 
   @override
   State<PlanImagesTab> createState() => _PlanImagesTabState();
@@ -154,7 +154,7 @@ class _PlanImagesTabState extends State<PlanImagesTab> {
               width: double.infinity,
               child: ElevatedButton(
                   onPressed: _pickPlanned,style: ElevatedButton.styleFrom(
-                  primary:Theme.of(context).primaryColor),
+                  backgroundColor: Theme.of(context).primaryColor),
                   child:  Text('browse_and_add_photos'.tr)),),
           ),
           Container(

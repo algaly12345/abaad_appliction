@@ -24,8 +24,8 @@ class CustomDropdown<T> extends StatefulWidget {
   const CustomDropdown({
     Key key,
     this.hideIcon = false,
-    @required this.child,
-    @required this.items,
+    required this.child,
+    required this.items,
     this.dropdownStyle = const DropdownStyle(),
     this.dropdownButtonStyle = const DropdownButtonStyle(),
     this.icon,

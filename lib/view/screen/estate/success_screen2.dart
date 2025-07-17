@@ -12,6 +12,7 @@ import 'package:abaad/view/base/custom_button.dart';
 import 'package:abaad/view/base/custom_dialog.dart';
 import 'package:abaad/view/base/custom_snackbar.dart';
 import 'package:abaad/view/base/dot.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +23,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class SuccessScreen2 extends StatefulWidget {
   final int  estate_id;
-  SuccessScreen2({@required this.estate_id});
+  SuccessScreen2({required this.estate_id});
 
   @override
   _SuccessScreenState createState() => _SuccessScreenState();
@@ -45,13 +46,13 @@ class _SuccessScreenState extends State<SuccessScreen2> {
   }
 
 
-  FilePickerResult _filePickerResult;
+  late FilePickerResult _filePickerResult;
   double _uploadProgress = 0.0;
   bool _uploading = false;
 
 
-  VideoPlayerController _videoSkeyController;
-  FilePickerResult _fileSkyPickerResult;
+  late  VideoPlayerController _videoSkeyController;
+  late FilePickerResult _fileSkyPickerResult;
   double _uploadSkyProgress = 0.0;
   bool _uploadingSky = false;
 
@@ -65,12 +66,12 @@ class _SuccessScreenState extends State<SuccessScreen2> {
 
   Future<void> pickSkyAndPreviewVideo() async {
 
-    FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.video);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
 
     if (result != null) {
       setState(() {
         _fileSkyPickerResult = result;
-        _videoSkeyController = VideoPlayerController.file(File(result.files.single.path))
+        _videoSkeyController = VideoPlayerController.file(File(result.files.single.path!))
           ..initialize().then((_) {
             setState(() {});
           });
@@ -83,12 +84,12 @@ class _SuccessScreenState extends State<SuccessScreen2> {
   Future<void> uploadSkyVideo() async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String  index_value = prefs.getString('estate_id');
+    String?  index_value = prefs.getString('estate_id');
     if (_fileSkyPickerResult != null) {
-      String filePath = _fileSkyPickerResult.files.single.path;
+      String? filePath = _fileSkyPickerResult.files.single.path;
       var request = http.MultipartRequest('POST', Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/upload-sky-view'));
       request.fields['id'] = "${index_value}";
-      request.files.add(await http.MultipartFile.fromPath('video', filePath));
+      request.files.add(await http.MultipartFile.fromPath('video', filePath!));
 
       setState(() {
         _uploadingSky = true;
@@ -98,7 +99,7 @@ class _SuccessScreenState extends State<SuccessScreen2> {
       response.stream.listen((event) {
         setState(() {
           _uploadSkyProgress = response.contentLength != null
-              ? event.length / response.contentLength
+              ? event.length / response.contentLength!
               : 0;
         });
       }).onDone(() {
@@ -233,7 +234,7 @@ class _SuccessScreenState extends State<SuccessScreen2> {
               icon: Icon(Icons.upload_file),  //icon data for elevated button
               label: Text("download_video".tr), //label text
               style: ElevatedButton.styleFrom(
-                  primary:Theme.of(context).primaryColor //elevated btton background color
+                  backgroundColor: Theme.of(context).primaryColor //elevated btton background color
               ),
             ),
             ElevatedButton(
@@ -242,7 +243,7 @@ class _SuccessScreenState extends State<SuccessScreen2> {
               }, //icon data for elevated button
               child: Text("i_don_t_want_upload".tr), //label text
               style: ElevatedButton.styleFrom(
-                  primary:Theme.of(context).primaryColor //elevated btton background color
+                  backgroundColor: Theme.of(context).primaryColor //elevated btton background color
               ),
             ),
             if (_uploadingSky)
@@ -264,6 +265,12 @@ class _SuccessScreenState extends State<SuccessScreen2> {
     ),
     ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<FilePickerResult>('_filePickerResult', _filePickerResult));
   }
 
 

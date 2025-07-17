@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class CategoryController extends GetxController implements GetxService {
   final CategoryRepo categoryRepo;
-  CategoryController({@required this.categoryRepo});
+  CategoryController({required this.categoryRepo});
 
   List<CategoryModel> _categoryList;
 

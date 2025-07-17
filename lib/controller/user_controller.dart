@@ -20,7 +20,7 @@ import 'package:image_picker/image_picker.dart';
 
 class UserController extends GetxController implements GetxService {
   final UserRepo userRepo;
-  UserController({@required this.userRepo});
+  UserController({required this.userRepo});
 
   UserInfoModel _userInfoModel;
   UserInfoModel _agentInfoModel;

@@ -16,7 +16,7 @@ class OfferList extends StatefulWidget {
   // Generate some dummy data
 
 
-  OfferList({Key key,this.estate}) : super(key: key);
+  OfferList({required this.estate}) ;
 
   @override
   State<OfferList> createState() => _OfferListState();
@@ -144,7 +144,7 @@ class _OfferListState extends State<OfferList> {
                                                             mainAxisAlignment: MainAxisAlignment
                                                                 .center, // I had added main axis allignment to be center to make to be at the center.
                                                             children: [
-                                                              Icon(Icons.whatsapp),
+                                                              Icon(Icons.chat),
                                                               const SizedBox(width: 3),
                                                               Text(
                                                                 "واتساب",
@@ -481,10 +481,10 @@ flex: 1,
         packageName: "sa.pdm.abaad.abaad",
         minimumVersion: 0,
       ),
-      iosParameters: IosParameters(
-        bundleId: "Bundle-ID",
-        minimumVersion: '0',
-      ),
+      // iosParameters: IosParameters(
+      //   bundleId: "Bundle-ID",
+      //   minimumVersion: '0',
+      // ),
       socialMetaTagParameters: SocialMetaTagParameters(
           description: '',
           imageUrl:
@@ -522,6 +522,10 @@ flex: 1,
       );
     }
   }
+}
+
+extension on DynamicLinkParameters {
+  buildShortLink() {}
 }
 
 openDialPad(String phoneNumber) async {

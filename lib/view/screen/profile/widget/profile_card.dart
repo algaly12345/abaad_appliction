@@ -8,7 +8,7 @@ class ProfileCard extends StatelessWidget {
   final String title;
   final String image;
   final int index;
-  ProfileCard({@required this.image, @required this.title, @required this.index});
+  ProfileCard({required this.image, required this.title, required this.index});
 
   @override
   Widget build(BuildContext context) {

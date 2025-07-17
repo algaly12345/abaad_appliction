@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 class ServiceProivderView extends StatefulWidget {
   final Estate estate;
   final bool fromView;
-  ServiceProivderView({@required this.estate,this.fromView});
+  ServiceProivderView({required this.estate,this.fromView});
 
   @override
   State<ServiceProivderView> createState() => _ServiceProivderViewState();

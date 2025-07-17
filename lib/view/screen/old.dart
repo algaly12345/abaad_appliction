@@ -9,7 +9,7 @@ class Todo {
   String title;
   bool completed;
 
-  Todo({@required this.id, @required this.title, @required this.completed});
+  Todo({required this.id, required this.title, required this.completed});
 
   factory Todo.fromJson(Map<String, dynamic> json) {
     return Todo(
@@ -49,7 +49,7 @@ class TodoService {
 class ViewTodoScreen extends StatelessWidget {
   final Todo todo;
 
-  ViewTodoScreen({@required this.todo});
+  ViewTodoScreen({required this.todo});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class ViewTodoScreen extends StatelessWidget {
 class UpdateTodoScreen extends StatefulWidget {
   final Todo todo;
 
-  UpdateTodoScreen({@required this.todo});
+  UpdateTodoScreen({required this.todo});
 
   @override
   _UpdateTodoScreenState createState() => _UpdateTodoScreenState();

@@ -5,7 +5,7 @@ class NotifIconWidget extends StatelessWidget {
   final Color color;
   final double size;
   final bool fromRestaurant;
-  NotifIconWidget({@required this.color, @required this.size, this.fromRestaurant = false});
+  NotifIconWidget({required this.color, required this.size, this.fromRestaurant = false});
 
   @override
   Widget build(BuildContext context) {

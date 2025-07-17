@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class QRCodeScannerWidget extends StatefulWidget {
   final List<CameraDescription> cameras;
 
-  QRCodeScannerWidget({@required this.cameras});
+  QRCodeScannerWidget({required this.cameras});
 
   @override
   _QRCodeScannerWidgetState createState() => _QRCodeScannerWidgetState();

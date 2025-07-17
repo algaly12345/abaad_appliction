@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ChatRepo {
   final ApiClient apiClient;
   final SharedPreferences sharedPreferences;
-  ChatRepo({@required this.apiClient, @required this.sharedPreferences});
+  ChatRepo({required this.apiClient, required this.sharedPreferences});
 
   Future<Response> getConversationList(int offset, String type) async {
     return apiClient.getData('${AppConstants.CONVERSATION_LIST_URI}?limit=10&offset=$offset&type=$type');

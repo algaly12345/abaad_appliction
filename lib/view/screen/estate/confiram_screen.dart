@@ -92,7 +92,7 @@ class _AddEstateScreenState extends State<AddEstateScreenTow> {
              const Center(
                child: SizedBox(
                  width: Dimensions.WEB_MAX_WIDTH,
-                 child: RegistrationStepperWidget(status: '1'),
+                // child: RegistrationStepperWidget(status: '1'),
                ),
              ),
             Column(
@@ -112,7 +112,7 @@ class _AddEstateScreenState extends State<AddEstateScreenTow> {
                           height: 39,
                           decoration: BoxDecoration(
                               color: _value == 0 ? Theme.of(context).secondaryHeaderColor : Colors.transparent,
-                              border: Border.all(width: 1,color: Colors.blue[500],),
+                              border: Border.all(width: 1,color: Colors.blue,),
                               borderRadius: BorderRadius.circular(2,)
                           ),
 
@@ -131,7 +131,7 @@ class _AddEstateScreenState extends State<AddEstateScreenTow> {
                         child: Container(
                           decoration: BoxDecoration(
                               color:_value == 1 ? Theme.of(context).secondaryHeaderColor : Colors.transparent,
-                              border: Border.all(width: 1,color: Colors.blue[500],),
+                              border: Border.all(width: 1,color: Colors.blue,),
                               borderRadius: BorderRadius.circular(2,)
                           ),
                           height: 39,

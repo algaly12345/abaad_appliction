@@ -5,7 +5,7 @@ import 'package:get/get_connect/http/src/response/response.dart';
 
 class ZoneRepo {
   final ApiClient apiClient;
-  ZoneRepo({@required this.apiClient});
+  ZoneRepo({required this.apiClient});
 
   Future<Response> getZoneList() async {
     return await apiClient.getData(AppConstants.ZONE_ALL);

@@ -10,7 +10,7 @@ class AccessLocationScreen extends StatelessWidget {
   final bool fromSignUp;
   final bool fromHome;
   final String route;
-  AccessLocationScreen({@required this.fromSignUp, @required this.fromHome, @required this.route});
+  AccessLocationScreen({required this.fromSignUp, required this.fromHome, required this.route});
 
   @override
   Widget build(BuildContext context) {

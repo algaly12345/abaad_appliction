@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 class ReportWidget extends StatefulWidget {
   final int estate_id;
-  const ReportWidget({Key key ,@required this.estate_id}) : super(key: key);
+  const ReportWidget({Key key ,required this.estate_id}) : super(key: key);
 
   @override
   State<ReportWidget> createState() => _ReportWidgetState();

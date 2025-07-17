@@ -34,7 +34,7 @@ import 'widgets/report_widget.dart';
 class EstateDetails extends StatefulWidget {
 final Estate estate;
 
-EstateDetails({@required this.estate});
+EstateDetails({required this.estate});
 
   @override
   State<EstateDetails> createState() => _EstateDetailsState();
@@ -45,7 +45,7 @@ class _EstateDetailsState extends State<EstateDetails> {
   final bool _ltr = Get.find<LocalizationController>().isLtr;
 
 
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
   @override
   void initState() {
     super.initState();
@@ -58,7 +58,8 @@ class _EstateDetailsState extends State<EstateDetails> {
   }
   @override
   Widget build(BuildContext context) {
-     List<Estate> restaurants;
+     List<Estate> ?restaurants;
+
     bool _isLoggedIn = Get.find<AuthController>().isLoggedIn();
 
      bool _isNull = true;
@@ -69,19 +70,21 @@ class _EstateDetailsState extends State<EstateDetails> {
     return  Scaffold(
       body: SingleChildScrollView(
         child: GetBuilder<EstateController>(builder: (estateController) {
-          _isNull = restaurants == null;
-          if(!_isNull) {
-            _length = restaurants.length;
+           _isNull = restaurants == null;
+          if (!_isNull) {
+            _length = restaurants!.length;
           }
+
           return  GetBuilder<UserController>(builder: (userController) {
 
             return (Get.find<AuthController>().isLoggedIn()  && userController.agentInfoModel == null &&estateController.isLoading) ? Center(child: CircularProgressIndicator()) :
             GetBuilder<CategoryController>(builder: (categoryController) {
 
 
-              Estate _estate;
+              Estate? _estate;
 
-            if(estateController.estate != null   && categoryController.categoryList != null) {
+
+              if(estateController.estate != null   && categoryController.categoryList != null) {
               _estate = estateController.estate;
             }
             estateController.setCategoryList();
@@ -596,7 +599,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -657,7 +660,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -688,7 +691,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -717,7 +720,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -753,7 +756,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -788,7 +791,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -818,7 +821,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -1054,7 +1057,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                               borderRadius: BorderRadius.circular(4.0),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Theme.of(context).backgroundColor,
+                                  color: Theme.of(context).colorScheme.background,
                                   spreadRadius: 1,
                                   blurRadius: 2,
                                   offset: Offset(0, 0.5), // changes position of shadow
@@ -1092,7 +1095,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -1213,56 +1216,111 @@ class _EstateDetailsState extends State<EstateDetails> {
 
                       estateController.estate.networkType. length >0&& estateController.estate.networkType  == null?    NetworkTypeItem(estate: estateController.estate,restaurants: estateController.estate.networkType):Container(),
                       estateController.estate.interface!=null? InterfaceItem(estate: estateController.estate,restaurants:   estateController.estate.interface)   :Container(),
-                      const MapDetailsView(
-                          fromView: true),
-                      estateController.isLoading && estateController.estate.otherAdvantages  == null?  Container:SizedBox(
-                          height: estateController.estate.otherAdvantages  == null?0:120,
-                          child:  GridView.builder(
-                            physics: BouncingScrollPhysics(),
-                            itemCount: estateController.estate.otherAdvantages.length,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3 ,
-                              childAspectRatio: (1/0.50),
-                            ),
-                            itemBuilder: (context, index) {
-                              return InkWell(
+                       MapDetailsView(
+                          fromView: true,mapController: estateController.),
+                      // estateController.isLoading && estateController.estate.otherAdvantages  == null?  Container:SizedBox(
+                      //     height: estateController.estate.otherAdvantages  == null?0:120,
+                      //     child:  GridView.builder(
+                      //       physics: BouncingScrollPhysics(),
+                      //       itemCount: estateController.estate.otherAdvantages.length,
+                      //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      //         crossAxisCount: 3 ,
+                      //         childAspectRatio: (1/0.50),
+                      //       ),
+                      //       itemBuilder: (context, index) {
+                      //         return InkWell(
+                      //
+                      //           child: Container(
+                      //             margin: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      //             padding: const EdgeInsets.symmetric(
+                      //               vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
+                      //             ),
+                      //             decoration: BoxDecoration(
+                      //               color: Theme.of(context).cardColor,
+                      //               borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                      //               boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
+                      //             ),
+                      //             alignment: Alignment.center,
+                      //             child:   Row(
+                      //
+                      //               children:  [
+                      //
+                      //                 SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      //                 Flexible(
+                      //                   flex: 1,
+                      //                     child: Text(
+                      //                 "${estateController.estate.otherAdvantages[index].name}",
+                      //                   style: robotoMedium.copyWith(
+                      //                     fontSize: Dimensions.fontSizeLarge,
+                      //                     color: Theme.of(context).textTheme.bodyText1.color,
+                      //                   ),
+                      //                   maxLines: 2, overflow: TextOverflow.ellipsis,
+                      //                 )),
+                      //               ],
+                      //             ),
+                      //           ),
+                      //         );
+                      //       },
+                      //     )
+                      // ),
+                      //
 
-                                child: Container(
-                                  margin: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                                    boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200], blurRadius: 5, spreadRadius: 1)],
-                                  ),
-                                  alignment: Alignment.center,
-                                  child:   Row(
+                      (estateController.isLoading && (estateController.estate.otherAdvantages == null || estateController.estate.otherAdvantages!.isEmpty))
+                          ? const SizedBox.shrink()
+                          : SizedBox(
+                        height: (estateController.estate.otherAdvantages == null || estateController.estate.otherAdvantages!.isEmpty) ? 0 : 120,
+                        child: GridView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: estateController.estate.otherAdvantages?.length ?? 0,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 1 / 0.5,
+                          ),
+                          itemBuilder: (context, index) {
+                            final advantage = estateController.estate.otherAdvantages![index];
 
-                                    children:  [
-
-                                      SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      Flexible(
-                                        flex: 1,
-                                          child: Text(
-                                      "${estateController.estate.otherAdvantages[index].name}",
+                            return InkWell(
+                              child: Container(
+                                margin: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL,
+                                  horizontal: Dimensions.PADDING_SIZE_SMALL,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey[Get.isDarkMode ? 800 : 200]!,
+                                      blurRadius: 5,
+                                      spreadRadius: 1,
+                                    )
+                                  ],
+                                ),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                    Flexible(
+                                      flex: 1,
+                                      child: Text(
+                                        advantage.name ?? '',
                                         style: robotoMedium.copyWith(
                                           fontSize: Dimensions.fontSizeLarge,
-                                          color: Theme.of(context).textTheme.bodyText1.color,
+                                          color: Theme.of(context).textTheme.bodyLarge?.color,
                                         ),
-                                        maxLines: 2, overflow: TextOverflow.ellipsis,
-                                      )),
-                                    ],
-                                  ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                          )
-                      ),
-
-
-
+                              ),
+                            );
+                          },
+                        ),
+                      )
+,
 
                       Divider(height: 1,),
                       Text("other_information".tr,
@@ -1279,7 +1337,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return Get.find<AuthController>().isLoggedIn() ? Container(child:      GetBuilder<EstateController>(builder: (wishController) {
-                                          return   ReportWidget();
+                                          return   ReportWidget(estate_id: 0,);
                                         })) : NotLoggedInScreen();
                                       },
                                     );
@@ -1309,7 +1367,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                                 ),
                                 GestureDetector(
                                   onTap: (){
-                                    Get.dialog(NearByView(esate: _estate,));
+                                    Get.dialog(NearByView(esate: _estate!,));
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(8),
@@ -1376,7 +1434,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -1411,7 +1469,7 @@ class _EstateDetailsState extends State<EstateDetails> {
                           borderRadius: BorderRadius.circular(4.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.background,
                               spreadRadius: 1,
                               blurRadius: 2,
                               offset: Offset(0, 0.5), // changes position of shadow
@@ -1448,7 +1506,14 @@ class _EstateDetailsState extends State<EstateDetails> {
                           decoration: BoxDecoration(
                             color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                            boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], spreadRadius: 1, blurRadius: 5)],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[Get.isDarkMode ? 700 : 300]!,
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                              ),
+                            ],
+
                           ),
                           child: Row(children: [
 
@@ -1557,10 +1622,10 @@ class _EstateDetailsState extends State<EstateDetails> {
         packageName: "sa.pdm.abaad.abaad",
         minimumVersion: 0,
       ),
-      iosParameters: IosParameters(
-        bundleId: "Bundle-ID",
-        minimumVersion: '0',
-      ),
+      // iosParameters: IosParameters(
+      //   bundleId: "Bundle-ID",
+      //   minimumVersion: '0',
+      // ),
       socialMetaTagParameters: SocialMetaTagParameters(
           description: '',
           imageUrl:
@@ -1600,8 +1665,12 @@ class _EstateDetailsState extends State<EstateDetails> {
   }
 }
 
+extension on DynamicLinkParameters {
+  buildShortLink() {}
+}
 
-Widget buildInfoTile(BuildContext context, {String label, @required String value}) {
+
+Widget buildInfoTile(BuildContext context, {required String label, required String value}) {
   return Container(
     height: 50,
     margin: EdgeInsets.only(bottom: 8), // مسافة بسيطة بين الحقول
@@ -1610,7 +1679,7 @@ Widget buildInfoTile(BuildContext context, {String label, @required String value
       borderRadius: BorderRadius.circular(4.0),
       boxShadow: [
         BoxShadow(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           spreadRadius: 1,
           blurRadius: 2,
           offset: Offset(0, 0.5),
@@ -1663,9 +1732,9 @@ Widget buildInfoTile(BuildContext context, {String label, @required String value
 
 
 Widget buildEndDateWithStatusBadge(BuildContext context, {
-  String label,
-  String value,
-  bool isExpired,
+  required String label,
+  required String value,
+  required bool isExpired,
 }) {
   return Container(
     height: 60,
@@ -1675,7 +1744,7 @@ Widget buildEndDateWithStatusBadge(BuildContext context, {
       borderRadius: BorderRadius.circular(4.0),
       boxShadow: [
         BoxShadow(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           spreadRadius: 1,
           blurRadius: 2,
           offset: Offset(0, 0.5),
@@ -1741,9 +1810,9 @@ Widget buildEndDateWithStatusBadge(BuildContext context, {
 
 
 Widget buildColoredInfoRow(BuildContext context, {
-  String label,
-  String value,
-  bool isExpired,
+  required String label,
+  required String value,
+  required bool isExpired,
 }) {
   return Container(
     height: 50,
@@ -1753,7 +1822,7 @@ Widget buildColoredInfoRow(BuildContext context, {
       borderRadius: BorderRadius.circular(4.0),
       boxShadow: [
         BoxShadow(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).primaryColor,
           spreadRadius: 1,
           blurRadius: 2,
           offset: Offset(0, 0.5),
@@ -1789,7 +1858,7 @@ Widget buildColoredInfoRow(BuildContext context, {
   );
 }
 String formatPrice(String priceStr) {
-  final num price = num.tryParse(priceStr);
+  final num? price = num.tryParse(priceStr);
   if (price == null) return priceStr;
 
   if (price >= 1000000) {

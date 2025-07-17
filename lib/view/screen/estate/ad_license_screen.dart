@@ -106,7 +106,7 @@ class _AdLicenseScreenState extends State<AdLicenseScreen> {
                       ),
                     ],
                     onChanged: (value) {
-                      estateController.setAdvertiserType(value); // تحديث القيمة بناءً على الاختيار
+                      estateController.setAdvertiserType(value!); // تحديث القيمة بناءً على الاختيار
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),

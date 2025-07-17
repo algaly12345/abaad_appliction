@@ -15,16 +15,16 @@ class ConfirmMapView extends StatefulWidget {
   final double lot;
   final bool add;
 
-  const ConfirmMapView({@required this.fromView, this.mapController,this.lat,this.lot,this.add});
+  const ConfirmMapView({required this.fromView, required this.mapController,required this.lat,required this.lot,required this.add});
 
   @override
   State<ConfirmMapView> createState() => _ConfirmMapViewState();
 }
 
 class _ConfirmMapViewState extends State<ConfirmMapView> {
-  CameraPosition _cameraPosition;
-  GoogleMapController _mapController;
-  Uint8List imageDataBytes;
+  late CameraPosition _cameraPosition;
+  late GoogleMapController _mapController;
+  late Uint8List imageDataBytes;
   var markerIcon;
   GlobalKey iconKey = GlobalKey();
 
@@ -97,7 +97,7 @@ class _ConfirmMapViewState extends State<ConfirmMapView> {
                   top: 10, right: 0,
                   child:      InkWell(
                     onTap: () {
-                      Get.to(ConfirmMapView(fromView: false, mapController: _mapController));
+                      Get.to(ConfirmMapView(fromView: false, mapController: _mapController, lat: 0,add:false ,lot: 0,));
                     },
 
                   ),
@@ -182,7 +182,7 @@ class _ConfirmMapViewState extends State<ConfirmMapView> {
                       top: 10, right: 0,
                       child: InkWell(
                         onTap: () {
-                          Get.to(ConfirmMapView(fromView: false, mapController: _mapController));
+                          Get.to(ConfirmMapView(fromView: false, mapController: _mapController,lat: 0,add:false ,lot: 0,));
                         },
                         child: Container(
                           width: 30, height: 30,

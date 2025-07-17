@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class NotificationDialog extends StatelessWidget {
   final NotificationModel notificationModel;
-  NotificationDialog({@required this.notificationModel});
+  NotificationDialog({required this.notificationModel});
 
   @override
   Widget build(BuildContext context) {

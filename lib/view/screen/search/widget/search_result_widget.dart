@@ -7,7 +7,7 @@
 //
 // class SearchResultWidget extends StatefulWidget {
 //   final String searchText;
-//   SearchResultWidget({@required this.searchText});
+//   SearchResultWidget({required this.searchText});
 //
 //   @override
 //   _SearchResultWidgetState createState() => _SearchResultWidgetState();

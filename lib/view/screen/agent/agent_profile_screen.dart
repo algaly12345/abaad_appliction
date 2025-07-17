@@ -23,14 +23,14 @@ import '../profile/widget/profile_bg_widget.dart';
 class AgentProfileScreen extends StatefulWidget {
   final Userinfo userInfo;
   final int  isMyProfile;
-   AgentProfileScreen({ @required Key key,  this.userInfo ,this.isMyProfile}) : super(key: key);
+   AgentProfileScreen({ required Key key,  required this.userInfo ,required this.isMyProfile}) : super(key: key);
 
   @override
   State<AgentProfileScreen> createState() => _AgentProfileScreenState();
 }
 
 class _AgentProfileScreenState extends State<AgentProfileScreen> {
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -191,7 +191,7 @@ class _AgentProfileScreenState extends State<AgentProfileScreen> {
                                     ),
                                     onPressed: (){
                                       __launchWhatsapp(userController.agentInfoModel.phone,userController.agentInfoModel.name);
-                                    }, icon: Icon(Icons.whatsapp), label: Text("whatsapp".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall))),
+                                    }, icon: Icon(Icons.chat_outlined), label: Text("whatsapp".tr,style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall))),
                             ),
                             const SizedBox(width:5),
                             Expanded(
@@ -355,7 +355,7 @@ class SocialIcon extends StatelessWidget {
   final String  iconData;
   final Function onPressed;
 
-  SocialIcon({this.color, this.iconData, this.onPressed});
+  SocialIcon({required this.color, required this.iconData, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

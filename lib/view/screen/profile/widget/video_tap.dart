@@ -20,7 +20,7 @@ class VideoTab extends StatefulWidget {
   final int index;
   Estate estate;
 
-  VideoTab({@required this.index,@required this.estate});
+  VideoTab({required this.index,required this.estate});
 
   @override
   State<VideoTab> createState() => _VideoTabState();
@@ -301,8 +301,8 @@ class VideoPlayerWidget extends StatefulWidget {
    bool isPlaying;
 
   VideoPlayerWidget({
-    @required this.videoUrl,
-    @required this.controller,
+    required this.videoUrl,
+    required this.controller,
    @ required this.isPlaying,
   });
 

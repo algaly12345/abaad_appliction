@@ -23,7 +23,7 @@ class EstateView extends StatefulWidget {
  final  Estate estate;
 
 
-  const EstateView({@required this.fromView,this.estate});
+  const EstateView({required this.fromView,required this.estate});
 
   @override
   State<EstateView> createState() => _EstateViewState();
@@ -139,7 +139,7 @@ class _EstateViewState extends State<EstateView> {
                                   ));
                                   }
                                 },
-                                  child: Icon(Icons.share, size: 23, color: Theme.of(context).textTheme.bodyText1.color)),
+                                  child: Icon(Icons.share, size: 23, color: Theme.of(context).textTheme.bodyLarge?.color)),
                             ]),
                       ),
                     Container(
@@ -188,7 +188,7 @@ class _EstateViewState extends State<EstateView> {
                                           onTap: () {
                                             if(Get.find<AuthController>().isLoggedIn()) {
                                               wishController.wishRestIdList.contains(widget.estate.id) ? wishController.removeFromWishList(widget.estate.id)
-                                                  : wishController.addToWishList(widget.estate, null);
+                                                  : wishController.addToWishList(widget.estate, false);
                                             }else {
                                               showCustomSnackBar('you_are_not_logged_in'.tr);
                                             }
@@ -275,10 +275,10 @@ class _EstateViewState extends State<EstateView> {
         packageName: "sa.pdm.abaad.abaad",
         minimumVersion: 0,
       ),
-      iosParameters: IosParameters(
-        bundleId: "Bundle-ID",
-        minimumVersion: '0',
-      ),
+      // iosParameters: IosParameters(
+      //   bundleId: "Bundle-ID",
+      //   minimumVersion: '0',
+      // ),
       socialMetaTagParameters: SocialMetaTagParameters(
           description: '',
           imageUrl:
@@ -292,6 +292,10 @@ class _EstateViewState extends State<EstateView> {
     await Share.share(desc, subject: title,);
 
   }
+}
+
+extension on DynamicLinkParameters {
+  buildShortLink() {}
 }
 class RadioModel {
   bool isSelected;

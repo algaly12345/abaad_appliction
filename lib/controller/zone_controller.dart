@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class ZoneController extends GetxController implements GetxService {
   final ZoneRepo zoneRepo;
-  ZoneController({@required this.zoneRepo});
+  ZoneController({required this.zoneRepo});
   LandModel _estateModel;
   List<Features> _estateList;
   List<int> _zoneIds = [];

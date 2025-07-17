@@ -12,8 +12,8 @@ class CustomButton extends StatelessWidget {
   final double fontSize;
   final double radius;
   final IconData icon;
-  CustomButton({this.onPressed, @required this.buttonText, this.transparent = false, this.margin, this.width, this.height,
-    this.fontSize, this.radius = 5, this.icon});
+  CustomButton({required this.onPressed, required this.buttonText, this.transparent = false, this.margin, this.width, this.height,
+    required this.fontSize, this.radius = 5, required this.icon});
 
   @override
   Widget build(BuildContext context) {

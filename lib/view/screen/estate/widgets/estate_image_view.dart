@@ -15,7 +15,7 @@ class EstateImageView extends StatefulWidget {
   final int  estate_id;
   final bool fromView;
 
-   EstateImageView({@required this.estate_id,this.fromView});
+   EstateImageView({required this.estate_id,required this.fromView});
 
   @override
   State<EstateImageView> createState() => _EstateImageViewState();
@@ -105,7 +105,7 @@ class _EstateImageViewState extends State<EstateImageView> {
                 return TabPageSelectorIndicator(
                   backgroundColor: index == estateController.currentIndex ? Theme.of(context).primaryColor
                       : Theme.of(context).primaryColor.withOpacity(0.5),
-                  borderColor: Theme.of(context).backgroundColor,
+                  borderColor: Theme.of(context).colorScheme.background,
                   size: index == estateController.currentIndex ? 10 : 7,
                 );
               }).toList(),

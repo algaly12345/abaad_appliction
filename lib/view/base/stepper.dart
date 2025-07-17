@@ -9,14 +9,14 @@ class NumberStepper extends StatelessWidget {
   final Color inactiveColor;
   final double lineWidth;
   NumberStepper({
-    Key key,
-    @required this.width,
-    @required this.curStep,
-    @required this.stepCompleteColor,
-    @required this.totalSteps,
-    @required this.inactiveColor,
-    @required this.currentStepColor,
-    @required this.lineWidth,
+    required Key key,
+    required this.width,
+    required this.curStep,
+    required this.stepCompleteColor,
+    required this.totalSteps,
+    required this.inactiveColor,
+    required this.currentStepColor,
+    required this.lineWidth,
   })  : assert(curStep > 0 == true && curStep <= totalSteps + 1),
         super(key: key);
 

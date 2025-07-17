@@ -15,7 +15,7 @@ class PlannedTab extends StatefulWidget {
   final int index;
   Estate estate;
 
-  PlannedTab({@required this.index,@required this.estate});
+  PlannedTab({required this.index,required this.estate});
 
   @override
   State<PlannedTab> createState() => _PlannedTabState();

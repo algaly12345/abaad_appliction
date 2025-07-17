@@ -10,7 +10,7 @@ class HistoryItem extends StatelessWidget {
   final int index;
   final bool fromWallet;
   final List<Transaction> data;
-  const HistoryItem({Key key, @required this.index, @required this.fromWallet, @required this.data}) : super(key: key);
+  const HistoryItem({Key key, required this.index, required this.fromWallet, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ class ApiClient extends GetxService {
   String token;
   Map<String, String> _mainHeaders;
 
-  ApiClient({@required this.appBaseUrl, @required this.sharedPreferences}) {
+  ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
     token = sharedPreferences.getString(AppConstants.TOKEN);
     debugPrint('Token: $token');
     AddressModel addressModel;

@@ -63,7 +63,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   final Map<String, Map<String, String>> languages;
   final NotificationBody body;
-  MyApp({@required this.languages, @required this.body});
+  MyApp({required this.languages, required this.body});
 
   void _route() {
     Get.find<SplashController>().getConfigData().then((bool isSuccess) async {

@@ -7,7 +7,7 @@ import 'package:get/utils.dart';
 class TitleWidget extends StatelessWidget {
   final String title;
   final Function onTap;
-  TitleWidget({@required this.title, this.onTap});
+  TitleWidget({required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

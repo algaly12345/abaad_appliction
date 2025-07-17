@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 class NotificationController extends GetxController implements GetxService {
   final NotificationRepo notificationRepo;
-  NotificationController({@required this.notificationRepo});
+  NotificationController({required this.notificationRepo});
 
   List<NotificationModel> _notificationList;
   bool _hasNotification = false;

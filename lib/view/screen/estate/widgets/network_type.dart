@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 class NetworkTypeItem extends StatelessWidget {
   final Estate estate;
   final List<NetworkType> restaurants;
-  const NetworkTypeItem({Key key,this.estate ,this.restaurants}) : super(key: key);
+  const NetworkTypeItem({Key? key,required this.estate ,required this.restaurants}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class NetworkTypeItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(4.0),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             spreadRadius: 1,
             blurRadius: 2,
             offset: Offset(0, 0.5), // changes position of shadow
@@ -66,7 +66,7 @@ class NetworkTypeItem extends StatelessWidget {
                         estate.networkType[index].name,
                         style: robotoMedium.copyWith(
                           fontSize: Dimensions.fontSizeSmall,
-                          color: Theme.of(context).textTheme.bodyText1.color,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
                         ), )// replace with your text
                     ],
                   ),

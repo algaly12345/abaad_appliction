@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService {
-   SharedPreferences _prefs;
+   late SharedPreferences _prefs;
 
   // تهيئة SharedPreferences
   Future<void> init() async {

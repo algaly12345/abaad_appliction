@@ -11,7 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LocationSearchDialog extends StatelessWidget {
   final GoogleMapController mapController;
-  LocationSearchDialog({@required this.mapController});
+  LocationSearchDialog({required this.mapController});
 
   @override
   Widget build(BuildContext context) {

@@ -26,7 +26,7 @@ import 'widget/condition_check_box.dart';
 
 class SignInScreen extends StatefulWidget {
   final bool exitFromApp;
-  SignInScreen({@required this.exitFromApp});
+  SignInScreen({required this.exitFromApp});
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -37,7 +37,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final FocusNode _passwordFocus = FocusNode();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String _countryDialCode;
+  late String _countryDialCode;
   bool _canExit = GetPlatform.isWeb ? true : false;
 
   @override

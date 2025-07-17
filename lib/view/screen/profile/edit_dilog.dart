@@ -55,7 +55,7 @@ class _EditDialogState extends State<EditDialog> {
 
   int zone_value=0;
   var isSelected2 = [true, false];
-  LatLng _initialPosition;
+  late LatLng _initialPosition;
   CameraPosition _cameraPosition;
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();

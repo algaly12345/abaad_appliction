@@ -10,8 +10,8 @@ class RegistrationStepper extends StatelessWidget {
   final bool rightActive;
   final bool onGoing;
   final bool processing;
-  const RegistrationStepper({Key key, @required this.isActive, @required this.haveLeftBar, @required this.haveRightBar,
-    @required this.title, @required this.rightActive, this.onGoing = false, this.processing = false}) : super(key: key);
+  const RegistrationStepper({Key key, required this.isActive, required this.haveLeftBar, required this.haveRightBar,
+    required this.title, required this.rightActive, this.onGoing = false, this.processing = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

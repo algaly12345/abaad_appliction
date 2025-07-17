@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 class ConditionCheckBox extends StatelessWidget {
   final AuthController authController;
-  ConditionCheckBox({@required this.authController});
+  ConditionCheckBox({required this.authController});
 
   @override
   Widget build(BuildContext context) {

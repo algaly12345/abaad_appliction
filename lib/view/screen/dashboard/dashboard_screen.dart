@@ -38,7 +38,7 @@ class DashboardScreen extends StatefulWidget {
   final bool fromHome;
   final String route;
   final int pageIndex;
-  DashboardScreen({@required this.fromSignUp, @required this.fromHome, @required this.route,@required this.pageIndex});
+  DashboardScreen({required this.fromSignUp, required this.fromHome, required this.route,required this.pageIndex});
   static Future<void> loadData(bool reload) async {
     if(Get.find<CategoryController>().categoryList == null) {
       Get.find<CategoryController>().getCategoryList(reload);

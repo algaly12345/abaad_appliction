@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 class NoDataScreen extends StatelessWidget {
   final bool isCart;
   final String text;
-  NoDataScreen({@required this.text, this.isCart = false});
+  NoDataScreen({required this.text, this.isCart = false});
 
   @override
   Widget build(BuildContext context) {

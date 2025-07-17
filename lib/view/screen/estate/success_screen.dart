@@ -22,7 +22,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class SuccessScreen extends StatefulWidget {
   final int  estate_id;
-  SuccessScreen({@required this.estate_id});
+  SuccessScreen({required this.estate_id});
 
   @override
   _SuccessScreenState createState() => _SuccessScreenState();
@@ -34,8 +34,8 @@ class _SuccessScreenState extends State<SuccessScreen> {
   double screenHeight = 400;
   Color textColor = const Color(0xFF32567A);
 
-  bool v;
-  bool s;
+  late bool v;
+  late bool s;
 
   @override
   void initState() {
@@ -50,14 +50,14 @@ class _SuccessScreenState extends State<SuccessScreen> {
 
   }
 
-  VideoPlayerController _videoController;
-  FilePickerResult _filePickerResult;
+  late VideoPlayerController _videoController;
+  late FilePickerResult _filePickerResult;
   double _uploadProgress = 0.0;
   bool _uploading = false;
 
 
-  VideoPlayerController _videoSkeyController;
-  FilePickerResult _fileSkyPickerResult;
+  late VideoPlayerController _videoSkeyController;
+  late FilePickerResult _fileSkyPickerResult;
   double _uploadSkyProgress = 0.0;
   bool _uploadingSky = false;
 
@@ -70,12 +70,12 @@ class _SuccessScreenState extends State<SuccessScreen> {
 
   Future<void> pickAndPreviewVideo() async {
 
-    FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.video);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
 
     if (result != null) {
       setState(() {
         _filePickerResult = result;
-        _videoController = VideoPlayerController.file(File(result.files.single.path))
+        _videoController = VideoPlayerController.file(File(result.files.single.path!))
           ..initialize().then((_) {
             setState(() {});
           });
@@ -86,12 +86,12 @@ class _SuccessScreenState extends State<SuccessScreen> {
 
   Future<void> pickSkyAndPreviewVideo() async {
 
-    FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.video);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
 
     if (result != null) {
       setState(() {
         _fileSkyPickerResult = result;
-        _videoSkeyController = VideoPlayerController.file(File(result.files.single.path))
+        _videoSkeyController = VideoPlayerController.file(File(result.files.single.path!))
           ..initialize().then((_) {
             setState(() {});
           });
@@ -101,12 +101,12 @@ class _SuccessScreenState extends State<SuccessScreen> {
   Future<void> uploadVideo() async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String  index_value = prefs.getString('estate_id');
+    String?  index_value = prefs.getString('estate_id');
     if (_filePickerResult != null) {
-      String filePath = _filePickerResult.files.single.path;
+      String? filePath = _filePickerResult.files.single.path;
       var request = http.MultipartRequest('POST', Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/upload-video'));
       request.fields['id'] = "${index_value}";
-      request.files.add(await http.MultipartFile.fromPath('video', filePath));
+      request.files.add(await http.MultipartFile.fromPath('video', filePath!));
 
       setState(() {
         _uploading = true;
@@ -116,7 +116,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
       response.stream.listen((event) {
         setState(() {
           _uploadProgress = response.contentLength != null
-              ? event.length / response.contentLength
+              ? event.length / response.contentLength!
               : 0;
         });
       }).onDone(() {
@@ -180,12 +180,12 @@ class _SuccessScreenState extends State<SuccessScreen> {
   Future<void> uploadSkyVideo() async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String  index_value = prefs.getString('estate_id');
+    String?  index_value = prefs.getString('estate_id');
     if (_fileSkyPickerResult != null) {
-      String filePath = _fileSkyPickerResult.files.single.path;
+      String? filePath = _fileSkyPickerResult.files.single.path;
       var request = http.MultipartRequest('POST', Uri.parse('${AppConstants.BASE_URL}/api/v1/estate/upload-sky-view'));
       request.fields['id'] = "${index_value}";
-      request.files.add(await http.MultipartFile.fromPath('video', filePath));
+      request.files.add(await http.MultipartFile.fromPath('video', filePath!));
 
       setState(() {
         _uploadingSky = true;
@@ -195,7 +195,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
       response.stream.listen((event) {
         setState(() {
           _uploadSkyProgress = response.contentLength != null
-              ? event.length / response.contentLength
+              ? event.length / response.contentLength!
               : 0;
         });
       }).onDone(() {
@@ -265,7 +265,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
           }, //icon data for elevated button
           child: Text("done".tr), //label text
           style: ElevatedButton.styleFrom(
-              primary:Theme.of(context).primaryColor //elevated btton background color
+              backgroundColor: Theme.of(context).primaryColor //elevated btton background color
           ),
         ),
         Container(
@@ -360,7 +360,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
               icon: Icon(Icons.upload_file),  //icon data for elevated button
               label: Text("download_video".tr), //label text
               style: ElevatedButton.styleFrom(
-                  primary:Theme.of(context).primaryColor //elevated btton background color
+                  backgroundColor: Theme.of(context).primaryColor //elevated btton background color
               ),
             ),
             // ElevatedButton(
@@ -447,7 +447,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
               icon: Icon(Icons.upload_file),  //icon data for elevated button
               label: Text("download_video".tr), //label text
               style: ElevatedButton.styleFrom(
-                  primary:Theme.of(context).primaryColor //elevated btton background color
+                  backgroundColor: Theme.of(context).primaryColor //elevated btton background color
               ),
             ),
 

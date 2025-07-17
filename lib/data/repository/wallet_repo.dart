@@ -5,7 +5,7 @@ import 'package:get/get_connect/http/src/response/response.dart';
 
 class WalletRepo {
   final ApiClient apiClient;
-  WalletRepo({@required this.apiClient});
+  WalletRepo({required this.apiClient});
 
   Future<Response> getWalletTransactionList(String offset) async {
     return await apiClient.getData('${AppConstants.WALLET_TRANSACTION_URL}?offset=$offset&limit=10');

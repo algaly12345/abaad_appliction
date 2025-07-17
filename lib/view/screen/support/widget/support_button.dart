@@ -9,7 +9,7 @@ class SupportButton extends StatelessWidget {
   final String info;
   final Color color;
   final Function onTap;
-  SupportButton({@required this.icon, @required this.title, @required this.info, @required this.color, @required this.onTap});
+  SupportButton({required this.icon, required this.title, required this.info, required this.color, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

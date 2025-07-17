@@ -17,7 +17,7 @@ import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 class ImageTab extends StatefulWidget {
   final int estateId;
 
-   ImageTab({ @required this.estateId});
+   ImageTab({ required this.estateId});
 
   @override
   State<ImageTab> createState() => _ImageTabState();
@@ -191,7 +191,7 @@ class _ImageTabState extends State<ImageTab> {
               width: double.infinity,
               child: ElevatedButton(
                   onPressed: _pickImages,style: ElevatedButton.styleFrom(
-                  primary:Theme.of(context).primaryColor),
+                  backgroundColor: Theme.of(context).primaryColor),
                   child:  Text('browse_and_add_photos'.tr)),),
           ),
           Container(

@@ -9,7 +9,7 @@ class SearchField extends StatefulWidget {
   final Function iconPressed;
   final Function onSubmit;
   final Function onChanged;
-  SearchField({@required this.controller, @required this.hint, @required this.suffixIcon, @required this.iconPressed, this.onSubmit, this.onChanged});
+  SearchField({required this.controller, required this.hint, required this.suffixIcon, required this.iconPressed, this.onSubmit, this.onChanged});
 
   @override
   State<SearchField> createState() => _SearchFieldState();

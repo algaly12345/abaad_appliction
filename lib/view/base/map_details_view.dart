@@ -12,16 +12,16 @@ class MapDetailsView extends StatefulWidget {
   final bool fromView;
   final GoogleMapController mapController;
 
-  const MapDetailsView({@required this.fromView, this.mapController});
+  const MapDetailsView({required this.fromView, required this.mapController});
 
   @override
   State<MapDetailsView> createState() => _MapDetailsViewState();
 }
 
 class _MapDetailsViewState extends State<MapDetailsView> {
-  CameraPosition _cameraPosition;
-  GoogleMapController _mapController;
-  Uint8List imageDataBytes;
+  late CameraPosition _cameraPosition;
+  late GoogleMapController _mapController;
+  late Uint8List imageDataBytes;
   var markerIcon;
   GlobalKey iconKey = GlobalKey();
 
@@ -116,7 +116,7 @@ class _MapDetailsViewState extends State<MapDetailsView> {
               buttonText: 'back'.tr,
               onPressed: () {
                 Get.back();
-              },
+              }, fontSize: 12,
             ) : SizedBox()
 
           ]),
